@@ -2,70 +2,63 @@ import os
 import subprocess
 
 
-def convert_tex_to_pdf_and_cleanup(tex_root, pdf_root):
-    """
-    Converts all .tex files in a directory and its subdirectories to .pdf files,
-    replicating the directory structure in a destination folder and cleaning up
-    auxiliary files.
+def convert_tex_to_pdf_guaranteed_cleanup(tex_root, pdf_root):
 
-    Args:
-        tex_root (str): The path to the root directory containing the .tex files.
-        pdf_root (str): The path to the root directory where the .pdf files will be saved.
-    """
-    # Define the common auxiliary file extensions to be removed
-    aux_extensions_to_delete = ['.aux', '.log', '.out', '.toc', '.synctex.gz']
+    aux_extensions_to_delete = [
+        '.aux', '.log', '.out', '.toc', '.synctex.gz',
+        '.fls', '.fdb_latexmk', '.bbl', '.blg'
+    ]
 
     for dirpath, _, filenames in os.walk(tex_root):
-        # Create the corresponding subdirectory in the pdf_root
         relative_dir = os.path.relpath(dirpath, tex_root)
         pdf_dir = os.path.join(pdf_root, relative_dir)
-
-        if not os.path.exists(pdf_dir):
-            os.makedirs(pdf_dir)
-            print(f"Created directory: {pdf_dir}")
+        os.makedirs(pdf_dir, exist_ok=True)
 
         for filename in filenames:
             if filename.endswith(".tex"):
                 tex_filepath = os.path.join(dirpath, filename)
-
-                # Get the base name of the file (e.g., "Homework 8.1 Arc Length")
                 base_name = os.path.splitext(filename)[0]
 
-                print(f"Processing {filename}...")
+                print(f"\nProcessing: {filename}")
 
-                # Run the pdflatex command
                 try:
-                    subprocess.run(
-                        ['pdflatex', '-interaction=nonstopmode', '-output-directory', pdf_dir, tex_filepath],
-                        check=True,
-                        capture_output=True,  # This hides the lengthy pdflatex output unless there's an error
-                        text=True
-                    )
-                    print(f"  -> Successfully converted to {base_name}.pdf")
+                    for i in range(1, 3):
+                        print(f"  -> Running compile pass {i}/2...")
+                        subprocess.run(
+                            ['pdflatex', '-interaction=nonstopmode', '-output-directory', pdf_dir, tex_filepath],
+                            check=True,
+                            capture_output=True
+                        )
+                    print(f"  -> Successfully created: {base_name}.pdf")
 
-                    # --- New Cleanup Section ---
-                    # After successful conversion, remove the auxiliary files from the pdf_dir
+                except subprocess.CalledProcessError as e:
+                    print(f"  -> ERROR: Failed to compile {filename}. See log below.")
+                    print("=" * 20 + " LaTeX Error Log " + "=" * 20)
+                    print(e.stdout.decode(errors='ignore'))
+                    print("=" * 57)
+
+                except FileNotFoundError:
+                    print("CRITICAL ERROR: 'pdflatex' command not found. Please install a LaTeX distribution.")
+                    return
+
+                finally:
+                    print("  -> Running cleanup...")
                     for ext in aux_extensions_to_delete:
                         aux_file_path = os.path.join(pdf_dir, base_name + ext)
                         if os.path.exists(aux_file_path):
-                            os.remove(aux_file_path)
-                    print("  -> Cleaned up auxiliary files.")
-
-                except subprocess.CalledProcessError as e:
-                    # If conversion fails, print the LaTeX error log for debugging
-                    print(f"  -> Error converting {filename}:")
-                    print(e.stdout)  # The stdout from pdflatex contains the detailed error log
-                except FileNotFoundError:
-                    print("Error: 'pdflatex' command not found.")
-                    print(
-                        "Please ensure you have a LaTeX distribution (like MiKTeX or TeX Live) installed and in your system's PATH.")
-                    return
+                            try:
+                                os.remove(aux_file_path)
+                            except OSError as e:
+                                print(f"    -> Warning: Could not delete {aux_file_path}. Reason: {e}")
+                    print("  -> Cleanup finished.")
 
 
 if __name__ == "__main__":
-    # Define your source .tex and destination .pdf directories
     tex_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\Courses\.tex"
     pdf_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\Courses\.pdf"
 
-    convert_tex_to_pdf_and_cleanup(tex_directory, pdf_directory)
-    print("\nBatch conversion process finished.")
+    if not os.path.isdir(tex_directory):
+        print(f"Error: Source directory not found at '{tex_directory}'")
+    else:
+        convert_tex_to_pdf_guaranteed_cleanup(tex_directory, pdf_directory)
+        print("\n\nBatch conversion process complete.")
