@@ -54,8 +54,8 @@ def convert_tex_to_pdf_guaranteed_cleanup(tex_root, pdf_root):
 
 
 if __name__ == "__main__":
-    tex_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\Courses\.tex"
-    pdf_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\Courses\.pdf"
+    tex_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\.tex"
+    pdf_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\.pdf"
 
     if not os.path.isdir(tex_directory):
         print(f"Error: Source directory not found at '{tex_directory}'")
