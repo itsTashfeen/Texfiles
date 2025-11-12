@@ -1,0 +1,738 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+
+\title{Homework 11.9 Representation of Functions as Power Series}
+\author{Tashfeen Omran}
+\date{November 2025}
+
+\begin{document}
+
+\maketitle
+
+\part{Comprehensive Introduction, Context, and Prerequisites}
+
+\section{Core Concepts}
+The central idea of this topic is to represent functions, which can be complex (like logarithmic, trigonometric, or rational functions), as \textbf{power series}. A power series is essentially an infinite polynomial. A power series centered at $x=a$ has the general form:
+\[ \sum_{n=0}^{\infty} c_n (x-a)^n = c_0 + c_1(x-a) + c_2(x-a)^2 + c_3(x-a)^3 + \dots \]
+Here, $c_n$ are the coefficients, and $a$ is the center of the series. For the problems in this homework, we will almost always use a center of $a=0$, which gives us the simpler Maclaurin-style series:
+\[ \sum_{n=0}^{\infty} c_n x^n = c_0 + c_1 x + c_2 x^2 + c_3 x^3 + \dots \]
+The incredible power of this idea is that we can approximate complicated functions with these simpler polynomial-like structures. This allows us to do things like integrate functions that don't have elementary antiderivatives or to calculate values of transcendental functions with high precision.
+
+A crucial concept tied to every power series is its \textbf{interval of convergence (I.O.C.)}. A power series does not necessarily converge for all values of $x$. The I.O.C. is the set of all $x$-values for which the series converges to a finite value. This interval is always centered at $a$. The distance from the center $a$ to either endpoint of the interval is called the \textbf{radius of convergence (R)}.
+
+\section{Intuition and Derivation}
+The foundation for almost every problem in this section is the formula for the sum of a convergent geometric series:
+\[ \sum_{n=0}^{\infty} ar^n = a + ar + ar^2 + \dots = \frac{a}{1-r}, \quad \text{provided } |r| < 1 \]
+Our primary strategy will be to take a given function $f(x)$ and algebraically manipulate it until it looks like $\frac{a}{1-r}$. Once we have it in this form, we can immediately write it as a power series where the 'r' term is some expression involving $x$. The condition for convergence, $|r|<1$, will directly give us the interval of convergence.
+
+For example, to find a series for $f(x) = \frac{1}{1-x}$, we can see it perfectly matches the formula with $a=1$ and $r=x$. Therefore,
+\[ f(x) = \frac{1}{1-x} = \sum_{n=0}^{\infty} 1 \cdot x^n = \sum_{n=0}^{\infty} x^n \]
+This representation is only valid when $|x|<1$, so the interval of convergence is $(-1, 1)$.
+
+Furthermore, we can generate new series from old ones through term-by-term differentiation and integration. Within its radius of convergence, a power series can be treated just like a regular polynomial.
+\begin{itemize}
+    \item \textbf{Differentiation:} $\frac{d}{dx} \left[ \sum_{n=0}^{\infty} c_n x^n \right] = \sum_{n=1}^{\infty} n c_n x^{n-1}$
+    \item \textbf{Integration:} $\int \left[ \sum_{n=0}^{\infty} c_n x^n \right] dx = C + \sum_{n=0}^{\infty} \frac{c_n}{n+1} x^{n+1}$
+\end{itemize}
+The radius of convergence remains the same after these operations, although the convergence at the endpoints of the interval might change.
+
+\section{Historical Context and Motivation}
+The development of infinite series, particularly power series, was a major breakthrough in the 17th and 18th centuries, driven by mathematicians like Isaac Newton, Gottfried Leibniz, and later, Brook Taylor and Colin Maclaurin. Before the age of calculators, performing calculations with transcendental functions like $\sin(x)$, $\ln(x)$, or $e^x$ was incredibly difficult. The motivation was to find a way to approximate these functions using only the basic arithmetic operations: addition, subtraction, multiplication, and division.
+
+Power series provided the perfect tool. By representing a function as an "infinite polynomial," mathematicians could approximate its value at any point by summing a sufficient number of terms. This was revolutionary for creating mathematical tables (e.g., logarithm and trigonometric tables) used in navigation, astronomy, and engineering. This work laid the foundation for approximation theory and numerical analysis, fields that are essential to modern scientific computing.
+
+\section{Key Formulas}
+\begin{enumerate}
+    \item \textbf{Geometric Power Series:} The most important formula for this topic.
+    \[ \frac{1}{1-x} = \sum_{n=0}^{\infty} x^n = 1 + x + x^2 + x^3 + \dots, \quad R=1, \text{ I.O.C: } (-1, 1) \]
+    \item \textbf{Term-by-Term Differentiation:} If $f(x) = \sum c_n(x-a)^n$ has radius of convergence $R$, then
+    \[ f'(x) = \sum_{n=1}^{\infty} n c_n (x-a)^{n-1}, \quad \text{also has radius } R \]
+    \item \textbf{Term-by-Term Integration:} If $f(x) = \sum c_n(x-a)^n$ has radius of convergence $R$, then
+    \[ \int f(x) dx = C + \sum_{n=0}^{\infty} c_n \frac{(x-a)^{n+1}}{n+1}, \quad \text{also has radius } R \]
+\end{enumerate}
+
+\section{Prerequisites}
+To succeed with this topic, you must be proficient in the following:
+\begin{itemize}
+    \item \textbf{Algebra:} Mastery of manipulating rational expressions, factoring, and polynomial long division.
+    \item \textbf{Geometric Series:} You must know the formula for the sum of a geometric series ($\frac{a}{1-r}$) and its condition for convergence ($|r|<1$) instinctively.
+    \item \textbf{Calculus I:} Strong differentiation and integration skills, especially the power rule and chain rule.
+    \item \textbf{Series Concepts:} Understanding of what a series is, the meaning of convergence, and how to work with summation notation.
+\end{itemize}
+
+\part{Detailed Homework Solutions}
+
+\section{Problem 1}
+Find a power series representation for $f(x) = \frac{1}{5+x}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+Our goal is to make the function look like $\frac{a}{1-r}$.
+\begin{enumerate}
+    \item \textbf{Factor out 5 from the denominator:}
+    \[ f(x) = \frac{1}{5(1 + \frac{x}{5})} = \frac{1}{5} \cdot \frac{1}{1 + \frac{x}{5}} \]
+    \item \textbf{Rewrite the denominator in the form $1-r$:}
+    \[ f(x) = \frac{1}{5} \cdot \frac{1}{1 - (-\frac{x}{5})} \]
+    \item \textbf{Identify $a$ and $r$ for the geometric series formula.}
+    The expression $\frac{1}{1 - (-\frac{x}{5})}$ corresponds to a geometric series with sum $\frac{a_{geom}}{1-r_{geom}}$ where $a_{geom}=1$ and $r_{geom} = -\frac{x}{5}$. The entire function has a constant factor of $\frac{1}{5}$ out front. So, we can say our series will be $\frac{1}{5} \sum (r_{geom})^n$.
+    \[ f(x) = \frac{1}{5} \sum_{n=0}^{\infty} \left(-\frac{x}{5}\right)^n = \frac{1}{5} \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{5^n} \]
+    \item \textbf{Combine the outer constant with the sum:}
+    \[ f(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{5 \cdot 5^n} = \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{5^{n+1}} \]
+\end{enumerate}
+The general term of the series is $\frac{(-1)^n x^n}{5^{n+1}}$.
+
+\textbf{Interval of Convergence:}
+The series converges when $|r_{geom}| < 1$.
+\[ \left|-\frac{x}{5}\right| < 1 \implies \frac{|x|}{5} < 1 \implies |x| < 5 \]
+This means the radius of convergence is $R=5$. The interval is $-5 < x < 5$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{5^{n+1}} \]
+Interval of convergence: $(-5, 5)$.
+
+\section{Problem 2}
+Find a power series representation for $f(x) = \frac{1}{4+x}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+This problem is identical in structure to Problem 1.
+\begin{enumerate}
+    \item \textbf{Factor out 4:}
+    \[ f(x) = \frac{1}{4(1 + \frac{x}{4})} = \frac{1}{4} \cdot \frac{1}{1 - (-\frac{x}{4})} \]
+    \item \textbf{Apply the geometric series formula} with $r = -\frac{x}{4}$:
+    \[ f(x) = \frac{1}{4} \sum_{n=0}^{\infty} \left(-\frac{x}{4}\right)^n = \frac{1}{4} \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{4^n} \]
+    \item \textbf{Combine constants:}
+    \[ f(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{4^{n+1}} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+\[ \left|-\frac{x}{4}\right| < 1 \implies \frac{|x|}{4} < 1 \implies |x| < 4 \]
+Radius of convergence $R=4$. The interval is $(-4, 4)$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{4^{n+1}} \]
+Interval of convergence: $(-4, 4)$.
+
+\section{Problem 3}
+Find a power series representation for $f(x) = \frac{4}{1-x^2}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+This function is already very close to the form $\frac{a}{1-r}$.
+\begin{enumerate}
+    \item \textbf{Identify $a$ and $r$:}
+    \[ f(x) = \frac{4}{1 - x^2} \]
+    This matches the form $\frac{a}{1-r}$ with $a=4$ and $r=x^2$.
+    \item \textbf{Write the series:}
+    \[ f(x) = \sum_{n=0}^{\infty} a r^n = \sum_{n=0}^{\infty} 4 (x^2)^n = \sum_{n=0}^{\infty} 4x^{2n} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+The series converges when $|r| < 1$.
+\[ |x^2| < 1 \implies x^2 < 1 \implies -1 < x < 1 \]
+Radius of convergence $R=1$. The interval is $(-1, 1)$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} 4x^{2n} \]
+Interval of convergence: $(-1, 1)$.
+
+\section{Problem 4}
+Find a power series representation for $f(x) = \frac{4}{7-x}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+This is another variation of the geometric series form.
+\begin{enumerate}
+    \item \textbf{Factor out 7:}
+    \[ f(x) = \frac{4}{7(1 - \frac{x}{7})} = \frac{4}{7} \cdot \frac{1}{1 - \frac{x}{7}} \]
+    \item \textbf{Identify $a$ and $r$:}
+    This matches the form $a \cdot \frac{1}{1-r}$ with an overall constant $a=\frac{4}{7}$ and $r = \frac{x}{7}$.
+    \[ f(x) = \frac{4}{7} \sum_{n=0}^{\infty} \left(\frac{x}{7}\right)^n = \frac{4}{7} \sum_{n=0}^{\infty} \frac{x^n}{7^n} \]
+    \item \textbf{Combine constants:}
+    \[ f(x) = \sum_{n=0}^{\infty} \frac{4x^n}{7 \cdot 7^n} = \sum_{n=0}^{\infty} \frac{4x^n}{7^{n+1}} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+\[ \left|\frac{x}{7}\right| < 1 \implies |x| < 7 \]
+Radius of convergence $R=7$. The interval is $(-7, 7)$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} \frac{4x^n}{7^{n+1}} \]
+Interval of convergence: $(-7, 7)$.
+
+\section{Problem 5}
+Find a power series representation for $f(x) = \frac{3}{4-x}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+This is identical in form to Problem 4.
+\begin{enumerate}
+    \item \textbf{Factor out 4:}
+    \[ f(x) = \frac{3}{4(1 - \frac{x}{4})} = \frac{3}{4} \cdot \frac{1}{1 - \frac{x}{4}} \]
+    \item \textbf{Apply the geometric series formula} with $r = \frac{x}{4}$:
+    \[ f(x) = \frac{3}{4} \sum_{n=0}^{\infty} \left(\frac{x}{4}\right)^n = \sum_{n=0}^{\infty} \frac{3x^n}{4 \cdot 4^n} = \sum_{n=0}^{\infty} \frac{3x^n}{4^{n+1}} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+\[ \left|\frac{x}{4}\right| < 1 \implies |x| < 4 \]
+Radius of convergence $R=4$. The interval is $(-4, 4)$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} \frac{3x^n}{4^{n+1}} \]
+Interval of convergence: $(-4, 4)$.
+
+\section{Problem 6}
+Find a power series representation for $f(x) = \frac{x^2}{x^4+16}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+This problem involves a polynomial factor.
+\begin{enumerate}
+    \item \textbf{Separate the polynomial part and rewrite the rational part:}
+    \[ f(x) = x^2 \cdot \frac{1}{16+x^4} \]
+    \item \textbf{Manipulate the rational part into geometric form:}
+    \[ \frac{1}{16+x^4} = \frac{1}{16(1 + \frac{x^4}{16})} = \frac{1}{16} \cdot \frac{1}{1 - (-\frac{x^4}{16})} \]
+    \item \textbf{Write the series for the rational part} with $r = -\frac{x^4}{16}$:
+    \[ \frac{1}{16+x^4} = \frac{1}{16} \sum_{n=0}^{\infty} \left(-\frac{x^4}{16}\right)^n = \frac{1}{16} \sum_{n=0}^{\infty} \frac{(-1)^n x^{4n}}{16^n} = \sum_{n=0}^{\infty} \frac{(-1)^n x^{4n}}{16^{n+1}} \]
+    \item \textbf{Multiply by the $x^2$ factor:}
+    \[ f(x) = x^2 \cdot \sum_{n=0}^{\infty} \frac{(-1)^n x^{4n}}{16^{n+1}} = \sum_{n=0}^{\infty} \frac{(-1)^n x^2 \cdot x^{4n}}{16^{n+1}} = \sum_{n=0}^{\infty} \frac{(-1)^n x^{4n+2}}{16^{n+1}} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+The convergence depends on $r = -\frac{x^4}{16}$.
+\[ \left|-\frac{x^4}{16}\right| < 1 \implies \frac{x^4}{16} < 1 \implies x^4 < 16 \implies |x| < 2 \]
+Radius of convergence $R=2$. The interval is $(-2, 2)$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{4n+2}}{16^{n+1}} \]
+Interval of convergence: $(-2, 2)$.
+
+\section{Problem 7}
+Find a power series representation for $f(x) = \frac{x}{11x^2+1}$ and determine the interval of convergence.
+
+\textbf{Solution:}
+Similar to Problem 6.
+\begin{enumerate}
+    \item \textbf{Separate the polynomial part and rewrite:}
+    \[ f(x) = x \cdot \frac{1}{1 + 11x^2} = x \cdot \frac{1}{1 - (-11x^2)} \]
+    \item \textbf{Write the series for the rational part} with $r = -11x^2$:
+    \[ \frac{1}{1 - (-11x^2)} = \sum_{n=0}^{\infty} (-11x^2)^n = \sum_{n=0}^{\infty} (-1)^n 11^n x^{2n} \]
+    \item \textbf{Multiply by the $x$ factor:}
+    \[ f(x) = x \sum_{n=0}^{\infty} (-1)^n 11^n x^{2n} = \sum_{n=0}^{\infty} (-1)^n 11^n x^{2n+1} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+\[ |-11x^2| < 1 \implies 11x^2 < 1 \implies x^2 < \frac{1}{11} \implies |x| < \frac{1}{\sqrt{11}} \]
+Radius of convergence $R=\frac{1}{\sqrt{11}}$. The interval is $(-\frac{1}{\sqrt{11}}, \frac{1}{\sqrt{11}})$.
+
+\textbf{Final Answers:}
+\[ f(x) = \sum_{n=0}^{\infty} (-1)^n 11^n x^{2n+1} \]
+Interval of convergence: $(-\frac{1}{\sqrt{11}}, \frac{1}{\sqrt{11}})$.
+
+\section{Problem 8}
+Find a power series representation for $f(x) = \frac{x-1}{x+8}$.
+
+\textbf{Solution:}
+Since the degree of the numerator is not less than the denominator, we use algebraic manipulation (similar to long division).
+\begin{enumerate}
+    \item \textbf{Rewrite the numerator:}
+    \[ f(x) = \frac{(x+8) - 9}{x+8} = \frac{x+8}{x+8} - \frac{9}{x+8} = 1 - \frac{9}{8+x} \]
+    \item \textbf{Find the power series for the rational part} $\frac{9}{8+x}$:
+    \[ \frac{9}{8+x} = \frac{9}{8(1 + \frac{x}{8})} = \frac{9}{8} \cdot \frac{1}{1 - (-\frac{x}{8})} \]
+    This is a geometric series with $r = -x/8$ and a leading constant of $9/8$.
+    \[ \frac{9}{8+x} = \frac{9}{8} \sum_{n=0}^{\infty} \left(-\frac{x}{8}\right)^n = \frac{9}{8} \sum_{n=0}^{\infty} \frac{(-1)^n x^n}{8^n} = \sum_{n=0}^{\infty} \frac{9(-1)^n x^n}{8^{n+1}} \]
+    \item \textbf{Combine everything:}
+    \[ f(x) = 1 - \sum_{n=0}^{\infty} \frac{9(-1)^n x^n}{8^{n+1}} \]
+    The problem asks for a representation of the form $1 + \sum(\dots)$.
+    \[ f(x) = 1 + \sum_{n=0}^{\infty} \frac{-9(-1)^n x^n}{8^{n+1}} = 1 + \sum_{n=0}^{\infty} \frac{9(-1)^{n+1} x^n}{8^{n+1}} \]
+\end{enumerate}
+\textbf{Interval of Convergence:}
+The convergence is determined by the geometric series part, where $r = -x/8$.
+\[ \left|-\frac{x}{8}\right| < 1 \implies |x| < 8 \]
+Radius of convergence $R=8$. The interval is $(-8, 8)$.
+
+\textbf{Final Answers:}
+\[ f(x) = 1 + \sum_{n=0}^{\infty} \frac{9(-1)^{n+1} x^n}{8^{n+1}} \]
+Interval of convergence: $(-8, 8)$.
+
+\section{Problem 9}
+Use differentiation to find power series representations.
+
+\subsection*{(a) $f(x) = \frac{1}{(6+x)^2}$}
+\textbf{Solution:}
+\begin{enumerate}
+    \item \textbf{Recognize $f(x)$ as a derivative.} Let's consider the integral of $f(x)$.
+    \[ \int \frac{1}{(6+x)^2} dx = -\frac{1}{6+x} + C \]
+    So, $f(x) = \frac{d}{dx} \left( -\frac{1}{6+x} \right)$. Let's find the series for $g(x) = -\frac{1}{6+x}$.
+    \item \textbf{Find the series for $g(x)$:}
+    \[ g(x) = -\frac{1}{6(1+\frac{x}{6})} = -\frac{1}{6} \cdot \frac{1}{1 - (-\frac{x}{6})} = -\frac{1}{6} \sum_{n=0}^{\infty} \left(-\frac{x}{6}\right)^n = \sum_{n=0}^{\infty} \frac{-1}{6} \frac{(-1)^n x^n}{6^n} = \sum_{n=0}^{\infty} \frac{(-1)^{n+1} x^n}{6^{n+1}} \]
+    \item \textbf{Differentiate the series for $g(x)$ term-by-term:}
+    \[ f(x) = g'(x) = \frac{d}{dx} \left( \sum_{n=0}^{\infty} \frac{(-1)^{n+1} x^n}{6^{n+1}} \right) = \sum_{n=1}^{\infty} \frac{(-1)^{n+1} n x^{n-1}}{6^{n+1}} \]
+    (Note the sum starts at $n=1$ because the derivative of the constant term for $n=0$ is zero).
+\end{enumerate}
+\textbf{Radius of Convergence:} Differentiation does not change the radius of convergence. The series for $g(x)$ converged for $|-x/6|<1$, or $|x|<6$. So $R=6$.
+
+\textbf{Final Answer (a):}
+\[ f(x) = \sum_{n=1}^{\infty} \frac{(-1)^{n+1} n x^{n-1}}{6^{n+1}}, \quad R=6 \]
+
+\subsection*{(b) $f(x) = \frac{1}{(6+x)^3}$}
+\textbf{Solution:}
+\begin{enumerate}
+    \item \textbf{Recognize this as the derivative of the previous result.}
+    Notice that $\frac{d}{dx} \left( \frac{1}{(6+x)^2} \right) = -2 \frac{1}{(6+x)^3}$.
+    So, $f(x) = -\frac{1}{2} \frac{d}{dx} \left( \frac{1}{(6+x)^2} \right)$.
+    \item \textbf{Differentiate the series from part (a):}
+    \[ \frac{d}{dx} \left( \sum_{n=1}^{\infty} \frac{(-1)^{n+1} n x^{n-1}}{6^{n+1}} \right) = \sum_{n=2}^{\infty} \frac{(-1)^{n+1} n (n-1) x^{n-2}}{6^{n+1}} \]
+    \item \textbf{Multiply by $-\frac{1}{2}$:}
+    \[ f(x) = -\frac{1}{2} \sum_{n=2}^{\infty} \frac{(-1)^{n+1} n (n-1) x^{n-2}}{6^{n+1}} = \sum_{n=2}^{\infty} \frac{(-1)^{n+2} n (n-1) x^{n-2}}{2 \cdot 6^{n+1}} \]
+    Since $(-1)^{n+2} = (-1)^n$, we can simplify:
+    \[ f(x) = \sum_{n=2}^{\infty} \frac{(-1)^{n} n (n-1) x^{n-2}}{2 \cdot 6^{n+1}} \]
+\end{enumerate}
+\textbf{Radius of Convergence:} Remains the same, $R=6$.
+
+\textbf{Final Answer (b):}
+\[ f(x) = \sum_{n=2}^{\infty} \frac{(-1)^{n} n (n-1) x^{n-2}}{2 \cdot 6^{n+1}}, \quad R=6 \]
+
+\subsection*{(c) $f(x) = \frac{x^2}{(6+x)^3}$}
+\textbf{Solution:}
+Take the series from part (b) and multiply it by $x^2$.
+\[ f(x) = x^2 \cdot \left( \sum_{n=2}^{\infty} \frac{(-1)^{n} n (n-1) x^{n-2}}{2 \cdot 6^{n+1}} \right) = \sum_{n=2}^{\infty} \frac{(-1)^{n} n (n-1) x^{n-2} \cdot x^2}{2 \cdot 6^{n+1}} = \sum_{n=2}^{\infty} \frac{(-1)^{n} n (n-1) x^{n}}{2 \cdot 6^{n+1}} \]
+The radius of convergence is unchanged, $R=6$.
+
+\textbf{Final Answer (c):}
+\[ f(x) = \sum_{n=2}^{\infty} \frac{(-1)^{n} n (n-1) x^{n}}{2 \cdot 6^{n+1}}, \quad R=6 \]
+
+\section{Problem 12}
+Find a power series representation for $f(x) = \ln(11-x)$ and determine the radius of convergence.
+
+\textbf{Solution:}
+This problem requires integration.
+\begin{enumerate}
+    \item \textbf{Recognize $f(x)$ as an integral.} Notice that
+    \[ \frac{d}{dx} \left( \ln(11-x) \right) = \frac{-1}{11-x} \]
+    So, $f(x) = \int \frac{-1}{11-x} dx$. Let's find the series for $g(x) = \frac{-1}{11-x}$.
+    \item \textbf{Find the series for $g(x)$:}
+    \[ g(x) = \frac{-1}{11(1 - \frac{x}{11})} = -\frac{1}{11} \cdot \frac{1}{1 - \frac{x}{11}} = -\frac{1}{11} \sum_{n=0}^{\infty} \left(\frac{x}{11}\right)^n = \sum_{n=0}^{\infty} -\frac{x^n}{11^{n+1}} \]
+    \item \textbf{Integrate the series for $g(x)$ term-by-term:}
+    \[ f(x) = \int \left( \sum_{n=0}^{\infty} -\frac{x^n}{11^{n+1}} \right) dx = C + \sum_{n=0}^{\infty} -\frac{x^{n+1}}{(n+1)11^{n+1}} \]
+    \item \textbf{Solve for the constant of integration, $C$.} We evaluate the function and the series at the center, $x=0$.
+    \[ f(0) = \ln(11-0) = \ln(11) \]
+    \[ \text{Series}(0) = C + \sum_{n=0}^{\infty} 0 = C \]
+    Equating them, we get $C = \ln(11)$.
+    \item \textbf{Write the final series.}
+    \[ f(x) = \ln(11) - \sum_{n=0}^{\infty} \frac{x^{n+1}}{(n+1)11^{n+1}} \]
+    The problem asks for a summation starting at $n=1$. Let's re-index. Let $k = n+1$. When $n=0, k=1$. When $n \to \infty, k \to \infty$.
+    \[ f(x) = \ln(11) - \sum_{k=1}^{\infty} \frac{x^{k}}{k \cdot 11^{k}} \]
+    Replacing $k$ with $n$ for the final answer:
+    \[ f(x) = \ln(11) - \sum_{n=1}^{\infty} \frac{x^{n}}{n \cdot 11^{n}} \]
+\end{enumerate}
+\textbf{Radius of Convergence:} Integration does not change the radius. The series for $g(x)$ converged for $|x/11|<1$, or $|x|<11$. So $R=11$.
+
+\textbf{Final Answers:}
+\[ f(x) = \ln(11) - \sum_{n=1}^{\infty} \frac{x^n}{n \cdot 11^n} \]
+Radius of convergence: $R=11$.
+
+\section{Problem 14}
+Evaluate the indefinite integral $\int \frac{t}{1-t^5} dt$ as a power series and find the radius of convergence.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item \textbf{Find a power series for the integrand,} $f(t) = \frac{t}{1-t^5}$.
+    \[ f(t) = t \cdot \frac{1}{1-t^5} \]
+    The term $\frac{1}{1-t^5}$ is a geometric series with $r=t^5$.
+    \[ \frac{1}{1-t^5} = \sum_{n=0}^{\infty} (t^5)^n = \sum_{n=0}^{\infty} t^{5n} \]
+    Now multiply by $t$:
+    \[ f(t) = t \sum_{n=0}^{\infty} t^{5n} = \sum_{n=0}^{\infty} t^{5n+1} \]
+    \item \textbf{Integrate the series term-by-term:}
+    \[ \int \frac{t}{1-t^5} dt = \int \left( \sum_{n=0}^{\infty} t^{5n+1} \right) dt = C + \sum_{n=0}^{\infty} \frac{t^{5n+2}}{5n+2} \]
+\end{enumerate}
+\textbf{Radius of Convergence:} The radius is determined by the geometric series part, where $|r| < 1$, so $|t^5| < 1$, which means $|t| < 1$. The radius of convergence is $R=1$.
+
+\textbf{Final Answers:}
+\[ \int \frac{t}{1-t^5} dt = C + \sum_{n=0}^{\infty} \frac{t^{5n+2}}{5n+2} \]
+Radius of convergence: $R=1$.
+
+\section{Problem 16}
+Evaluate the indefinite integral $\int x^6 \ln(1+x) dx$ as a power series and find the radius of convergence.
+
+\textbf{Solution:}
+This is a multi-step problem. First find the series for $\ln(1+x)$, then multiply by $x^6$, then integrate.
+\begin{enumerate}
+    \item \textbf{Find the series for $\ln(1+x)$.}
+    We know $\frac{d}{dx} \ln(1+x) = \frac{1}{1+x}$.
+    The series for $\frac{1}{1+x} = \frac{1}{1-(-x)}$ is $\sum_{n=0}^{\infty} (-x)^n = \sum_{n=0}^{\infty} (-1)^n x^n$.
+    Now integrate to find the series for $\ln(1+x)$:
+    \[ \ln(1+x) = \int \left( \sum_{n=0}^{\infty} (-1)^n x^n \right) dx = C + \sum_{n=0}^{\infty} (-1)^n \frac{x^{n+1}}{n+1} \]
+    At $x=0$, $\ln(1)=0$. The series at $x=0$ is $C$. So $C=0$.
+    \[ \ln(1+x) = \sum_{n=0}^{\infty} (-1)^n \frac{x^{n+1}}{n+1} \]
+    Re-indexing to start from $n=1$: let $k=n+1$. Then $n=k-1$.
+    \[ \ln(1+x) = \sum_{k=1}^{\infty} (-1)^{k-1} \frac{x^k}{k} \]
+    \item \textbf{Find the series for the integrand $x^6 \ln(1+x)$:}
+    \[ x^6 \ln(1+x) = x^6 \sum_{n=1}^{\infty} (-1)^{n-1} \frac{x^n}{n} = \sum_{n=1}^{\infty} (-1)^{n-1} \frac{x^{n+6}}{n} \]
+    \item \textbf{Integrate the resulting series term-by-term:}
+    \[ \int x^6 \ln(1+x) dx = \int \left( \sum_{n=1}^{\infty} (-1)^{n-1} \frac{x^{n+6}}{n} \right) dx = C + \sum_{n=1}^{\infty} (-1)^{n-1} \frac{x^{n+7}}{n(n+7)} \]
+\end{enumerate}
+\textbf{Radius of Convergence:} The process started with the series for $\frac{1}{1+x}$, which has $R=1$. Multiplication by a polynomial and integration do not change the radius. So $R=1$.
+
+\textbf{Final Answers:}
+\[ \int x^6 \ln(1+x) dx = C + \sum_{n=1}^{\infty} \frac{(-1)^{n-1} x^{n+7}}{n(n+7)} \]
+Radius of convergence: $R=1$.
+
+\part{In-Depth Analysis of Problems and Techniques}
+
+\section{Problem Types and General Approach}
+
+\begin{enumerate}
+    \item \textbf{Direct Geometric Series Transformation:}
+        \begin{itemize}
+            \item \textbf{Problems:} 1, 2, 3, 4, 5.
+            \item \textbf{General Approach:} These are the most fundamental problems. The strategy is to take the given rational function and algebraically force it into the form $\frac{a}{1-r}$. This involves two key steps: (1) Factoring a constant from the denominator to get a '1' in the correct position. (2) Rewriting addition as subtraction of a negative, e.g., $1+u = 1 - (-u)$. Once in this form, the series is immediately known as $\sum ar^n$. The interval of convergence comes from solving $|r|<1$.
+        \end{itemize}
+    \item \textbf{Geometric Series with a Polynomial Factor:}
+        \begin{itemize}
+            \item \textbf{Problems:} 6, 7.
+            \item \textbf{General Approach:} The function is a product of a simple polynomial (like $x$ or $x^2$) and a rational function that can be converted into a geometric series. The strategy is to first find the power series for the rational part and then multiply the entire series by the polynomial factor. This is done by distributing the factor into the sum and combining exponents using the rule $x^k \cdot x^m = x^{k+m}$.
+        \end{itemize}
+    \item \textbf{Series via Algebraic Pre-processing:}
+        \begin{itemize}
+            \item \textbf{Problem:} 8.
+            \item \textbf{General Approach:} When the rational function is "improper" (degree of numerator $\ge$ degree of denominator), direct conversion is not possible. The strategy is to first simplify the function using polynomial long division or, as was done here, by rewriting the numerator. This splits the function into a simple polynomial (often just a constant) and a proper rational function which can then be handled using the geometric series method.
+        \end{itemize}
+    \item \textbf{Series by Term-by-Term Differentiation:}
+        \begin{itemize}
+            \item \textbf{Problem:} 9.
+            \item \textbf{General Approach:} This technique is used when the function looks like the derivative of a simpler, known series. A classic indicator is a squared or higher power term in the denominator, like $\frac{1}{(c+x)^k}$. The strategy is to identify a simpler function $g(x)$ such that $f(x)$ is a multiple of $g'(x)$. You then find the power series for $g(x)$ (usually a geometric series) and differentiate it term-by-term to find the series for $f(x)$. The radius of convergence does not change.
+        \end{itemize}
+    \item \textbf{Series by Term-by-Term Integration:}
+        \begin{itemize}
+            \item \textbf{Problems:} 12, 14, 16.
+            \item \textbf{General Approach:} This technique is used for functions like logarithms or inverse tangents, or when asked to represent an integral as a series. The strategy is to find a function $g(x)$ (the integrand) whose power series is known or easily found. You then integrate this series term-by-term. For definite functions like $\ln(11-x)$, you must solve for the constant of integration $C$ by evaluating both the original function and the series representation at the center ($x=0$) and setting them equal.
+        \end{itemize}
+\end{enumerate}
+
+\section{Key Algebraic and Calculus Manipulations}
+
+\begin{itemize}
+    \item \textbf{Factoring out a constant:} This is the first and most critical step for most geometric series problems. In Problem 1, $\frac{1}{5+x}$ becomes $\frac{1}{5(1+x/5)}$ to create the necessary '1' in the denominator.
+    \item \textbf{Creating the `1-r` form:} Rewriting a sum as a difference, like $1+u = 1 - (-u)$. This was used in nearly every problem, for example in Problem 6 where $16+x^4$ became $16(1 - (-x^4/16))$.
+    \item \textbf{Numerator Manipulation:} In Problem 8, $\frac{x-1}{x+8}$ was rewritten as $\frac{(x+8)-9}{x+8} = 1 - \frac{9}{x+8}$. This algebraic trick avoids long division and simplifies the expression into a constant and a manageable geometric series form.
+    \item \textbf{Recognizing Antiderivatives:} This is the key to integration problems. In Problem 12, recognizing that $\int \frac{-1}{11-x} dx = \ln(11-x)$ is what allows the entire solution process to start.
+    \item \textbf{Recognizing Derivatives:} Crucial for differentiation problems. In Problem 9a, seeing that $\frac{1}{(6+x)^2}$ is the derivative of $\frac{-1}{6+x}$ is the essential insight.
+    \item \textbf{Term-by-Term Calculus:} The core technique of applying power rules for differentiation and integration inside the summation. For example, in Problem 9a, differentiating $\sum \dots x^n$ became $\sum \dots n x^{n-1}$.
+    \item \textbf{Combining exponents:} When a series is multiplied by a polynomial, like in Problem 7: $x \cdot \sum (-1)^n 11^n x^{2n} = \sum (-1)^n 11^n x^{2n+1}$.
+    \item \textbf{Solving for the Constant of Integration:} In Problem 12, after integrating to get $f(x) = C + \sum \dots$, we found $C$ by setting $f(0) = \ln(11)$ equal to the series evaluated at $x=0$, which was just $C$. This is a mandatory step for definite functions.
+    \item \textbf{Re-indexing the Summation:} Often done for aesthetic reasons or to match a required format. In Problem 12, the sum $\sum_{n=0}^{\infty} \frac{x^{n+1}}{\dots}$ was re-indexed to $\sum_{k=1}^{\infty} \frac{x^k}{\dots}$ by setting $k=n+1$.
+\end{itemize}
+
+\part{"Cheatsheet" and Tips for Success}
+
+\section{Most Important Formulas}
+\begin{itemize}
+    \item Geometric Series: $\frac{a}{1-r} = \sum_{n=0}^{\infty} ar^n$, valid for $|r|<1$.
+    \item Key Known Series (Maclaurin):
+        \begin{itemize}
+            \item $\frac{1}{1-x} = \sum_{n=0}^{\infty} x^n, \quad R=1$
+            \item $\ln(1+x) = \sum_{n=1}^{\infty} \frac{(-1)^{n-1}x^n}{n}, \quad R=1$
+            \item $\arctan(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{2n+1}, \quad R=1$
+        \end{itemize}
+\end{itemize}
+
+\section{Tricks and Shortcuts}
+\begin{itemize}
+    \item Your goal is almost always to make the function look like $\frac{a}{1-r}$. All algebraic manipulation should serve this goal.
+    \item If you see a denominator like $(c+x)^k$ with $k \ge 2$, think differentiation.
+    \item If you see a $\ln(\dots)$ or $\arctan(\dots)$ function, think integration.
+    \item To get the series for $\frac{1}{(1-x)^2}$, just differentiate the series for $\frac{1}{1-x}$. Result: $\sum_{n=1}^{\infty} nx^{n-1}$.
+    \item To get the series for $\ln(1-x)$, just integrate the series for $\frac{-1}{1-x}$. Result: $-\sum_{n=0}^{\infty} \frac{x^{n+1}}{n+1}$.
+\end{itemize}
+
+\section{Common Pitfalls and How to Avoid Them}
+\begin{itemize}
+    \item \textbf{Sign Errors:} Be extremely careful with negative signs in the ratio $r$. For example, if $r = -x^2/4$, the series term is $(-x^2/4)^n = \frac{(-1)^n x^{2n}}{4^n}$. Forgetting the $(-1)^n$ is a very common mistake.
+    \item \textbf{Forgetting C:} When finding a series by integration (like for $\ln(11-x)$), do not forget the constant of integration $C$. You must solve for it by plugging in the center of the series (usually $x=0$).
+    \item \textbf{Convergence Interval Errors:} The convergence condition is always $|r|<1$. If $r = \frac{x}{5}$, the condition is $|\frac{x}{5}|<1 \implies |x|<5$. Don't just assume it's $|x|<1$.
+    \item \textbf{Index Errors:} When differentiating, the starting index of the sum often increases by one (since the constant term vanishes). When re-indexing, be very careful to substitute correctly for all instances of $n$.
+\end{itemize}
+
+\section{How to Recognize Problem Types}
+\begin{itemize}
+    \item \textbf{Is it a rational function $\frac{P(x)}{Q(x)}$?}
+        \begin{itemize}
+            \item If $P(x)$ is a constant and $Q(x)$ is linear: It's a direct geometric series.
+            \item If $P(x)$ is not constant: Try long division or algebraic manipulation first.
+            \item If $Q(x)$ has a power, e.g., $(...)^2$: It's likely found by differentiation.
+        \end{itemize}
+    \item \textbf{Is it a logarithmic or inverse trig function?}
+        \begin{itemize}
+            \item It's found by integration. Differentiate the function, find the series for the derivative, and then integrate that series.
+        \end{itemize}
+    \item \textbf{Is it an integral?}
+        \begin{itemize}
+            \item Find the power series for the integrand first, then integrate that series term-by-term.
+        \end{itemize}
+\end{itemize}
+
+\part{Conceptual Synthesis and The "Big Picture"}
+
+\section{Thematic Connections}
+The core theme of this chapter is \textbf{approximation}. We are taking functions that are "complicated" from an arithmetic perspective and representing them with "simple" building blocks—the powers of $x$. A power series is the ultimate extension of the linear approximation you learned in Calculus I.
+\begin{itemize}
+    \item \textbf{Linear Approximation:} $f(x) \approx f(a) + f'(a)(x-a)$. This is a 1st-degree polynomial (a line) that approximates $f(x)$ near $x=a$.
+    \item \textbf{Quadratic Approximation:} $f(x) \approx f(a) + f'(a)(x-a) + \frac{f''(a)}{2}(x-a)^2$. This is a 2nd-degree polynomial (a parabola) that "hugs" the curve of $f(x)$ even more closely.
+    \item \textbf{Power Series:} $f(x) = \sum_{n=0}^{\infty} c_n (x-a)^n$. This is an "infinite-degree" polynomial that, within its interval of convergence, is not an approximation but an \emph{exact representation} of the function.
+\end{itemize}
+This theme of approximation connects directly to numerical methods, where we use simpler calculations to find approximate solutions to complex problems, and it forms the basis of how computers and calculators evaluate transcendental functions.
+
+\section{Forward and Backward Links}
+
+\begin{itemize}
+    \item \textbf{Backward Links:} This topic is a direct and powerful application of the chapter on \textbf{Sequences and Series}. The concept of a \textbf{geometric series} is not just an example; it is the engine that drives every single solution method in this homework. Your ability to find the sum and interval of convergence for a geometric series is the absolute prerequisite.
+    \item \textbf{Forward Links:} This chapter serves as a crucial stepping stone to the more general concept of \textbf{Taylor and Maclaurin Series}. In this homework, we could only find series for functions that were related to the geometric series. With Taylor's formula ($c_n = \frac{f^{(n)}(a)}{n!}$), we will be able to find a power series for \emph{any} sufficiently differentiable function (like $e^x$, $\sin x$, etc.). These series are indispensable in:
+        \begin{itemize}
+            \item \textbf{Differential Equations:} To find "series solutions" for equations that cannot be solved by other means.
+            \item \textbf{Physics and Engineering:} For modeling and simplifying complex systems (e.g., the small angle approximation $\sin\theta \approx \theta$ is the first term of the sine Maclaurin series).
+            \item \textbf{Complex Analysis:} The entire theory of analytic functions is built upon functions that can be represented by a power series.
+        \end{itemize}
+\end{itemize}
+
+\part{Real-World Application and Modeling}
+
+\section{Concrete Scenarios in Finance and Economics}
+\begin{enumerate}
+    \item \textbf{Derivative Pricing and Risk Management:} The famous Black-Scholes model for pricing stock options requires calculating the cumulative distribution function (CDF) of the normal distribution, often denoted $\Phi(z)$. There is no simple formula for this function; it is defined by an integral. For computation, it is universally evaluated using its power series expansion. Financial engineers (quants) use these series to value derivatives worth trillions of dollars and to calculate risk metrics (the "Greeks") by differentiating these series representations.
+    \item \textbf{Stochastic Calculus and Asset Price Modeling:} The prices of stocks and other assets are modeled as stochastic processes. The fundamental tool for working with such processes is Itô's Lemma, which is essentially a chain rule for random functions. The derivation and understanding of Itô's Lemma rely on Taylor series expansions of the function. This is the bedrock of quantitative finance and is used for everything from option pricing to portfolio optimization.
+    \item \textbf{Economic Modeling (Present Value):} The concept of discounting future cash flows to a present value is central to finance and economics. While simple perpetuities are just a single geometric series, more complex models of economic growth or corporate valuation involve cash flows that are not constant. Power series can be used to model these streams of payments and analyze their sensitivity to changes in interest rates, a concept known as duration and convexity.
+\end{enumerate}
+
+\section{Model Problem Setup: Present Value of a Perpetuity}
+Let's model one of the most fundamental ideas in finance using the core concept of this chapter: a geometric series.
+
+\begin{itemize}
+    \item \textbf{Scenario:} An investor buys a security (like a special type of preferred stock) that promises to pay a fixed dividend of \$100 at the end of every year, forever. This is called a perpetuity. If the investor's required annual rate of return (the discount rate) is 5\%, what is the present value (PV) of this infinite stream of future payments? In other words, what is this security worth today?
+    \item \textbf{Model Setup:}
+        \begin{itemize}
+            \item Let $C$ be the cash flow per period ($C = \$100$).
+            \item Let $r$ be the discount rate per period ($r = 0.05$).
+            \item The value today of the payment received in 1 year is $\frac{C}{1+r}$.
+            \item The value today of the payment received in 2 years is $\frac{C}{(1+r)^2}$.
+            \item The value today of the payment received in $n$ years is $\frac{C}{(1+r)^n}$.
+        \end{itemize}
+    \item \textbf{Formulating the Equation:} The total present value (PV) is the sum of all these discounted future payments, from year 1 to infinity.
+        \[ PV = \frac{C}{1+r} + \frac{C}{(1+r)^2} + \frac{C}{(1+r)^3} + \dots = \sum_{n=1}^{\infty} \frac{C}{(1+r)^n} \]
+    \item \textbf{Stating the Series to be Solved:} The equation for the PV is a perfect geometric series.
+        \[ PV = \sum_{n=1}^{\infty} C \left( \frac{1}{1+r} \right)^n \]
+        This series has a first term $a = \frac{C}{1+r}$ and a common ratio $R_{ratio} = \frac{1}{1+r}$. Since the discount rate $r > 0$, the ratio $|R_{ratio}| < 1$, so the series converges. The sum is given by the formula $\frac{a}{1-R_{ratio}}$.
+        \[ PV = \frac{\frac{C}{1+r}}{1 - \frac{1}{1+r}} = \frac{\frac{C}{1+r}}{\frac{(1+r)-1}{1+r}} = \frac{\frac{C}{1+r}}{\frac{r}{1+r}} = \frac{C}{r} \]
+        For our problem, $PV = \frac{\$100}{0.05} = \$2000$. This fundamental finance formula is a direct result of summing an infinite geometric series.
+\end{itemize}
+
+\part{Common Variations and Untested Concepts}
+
+The provided homework focuses exclusively on functions related to the geometric series. A standard curriculum would also include the following topics.
+
+\section{Series for Inverse Tangent}
+This is a classic example of using integration.
+\begin{itemize}
+    \item \textbf{Problem:} Find the Maclaurin series for $f(x) = \arctan(x)$.
+    \item \textbf{Explanation:} We start by noting that $f'(x) = \frac{1}{1+x^2}$. This expression can be represented as a geometric series.
+    \item \textbf{Worked-out Example:}
+    \begin{enumerate}
+        \item Find the series for the derivative:
+        \[ f'(x) = \frac{1}{1+x^2} = \frac{1}{1 - (-x^2)} = \sum_{n=0}^{\infty} (-x^2)^n = \sum_{n=0}^{\infty} (-1)^n x^{2n} \]
+        This series converges for $|-x^2| < 1$, so $|x|<1$.
+        \item Integrate the series term-by-term:
+        \[ \arctan(x) = \int \left( \sum_{n=0}^{\infty} (-1)^n x^{2n} \right) dx = C + \sum_{n=0}^{\infty} (-1)^n \frac{x^{2n+1}}{2n+1} \]
+        \item Solve for C: At $x=0$, $\arctan(0) = 0$. The series is $C+0$. So, $C=0$.
+        \item Final Series:
+        \[ \arctan(x) = \sum_{n=0}^{\infty} (-1)^n \frac{x^{2n+1}}{2n+1} = x - \frac{x^3}{3} + \frac{x^5}{5} - \frac{x^7}{7} + \dots \]
+        The radius of convergence is $R=1$.
+    \end{enumerate}
+\end{itemize}
+
+\section{The Binomial Series}
+This is a powerful generalization for functions of the form $(1+x)^k$ where $k$ is any real number, not just a positive integer.
+\begin{itemize}
+    \item \textbf{Theorem:} For any real number $k$ and for $|x|<1$:
+    \[ (1+x)^k = \sum_{n=0}^{\infty} \binom{k}{n} x^n = 1 + kx + \frac{k(k-1)}{2!}x^2 + \frac{k(k-1)(k-2)}{3!}x^3 + \dots \]
+    where the generalized binomial coefficient is $\binom{k}{n} = \frac{k(k-1)\dots(k-n+1)}{n!}$.
+    \item \textbf{Worked-out Example:} Find the Maclaurin series for $f(x) = \frac{1}{\sqrt{1-x}}$.
+    \begin{enumerate}
+        \item Rewrite the function: $f(x) = (1-x)^{-1/2}$. This is $(1+u)^k$ with $u=-x$ and $k=-1/2$.
+        \item Apply the binomial series formula with $k=-1/2$ and replacing $x$ with $-x$:
+        \begin{align*} f(x) &= 1 + (-\frac{1}{2})(-x) + \frac{(-\frac{1}{2})(-\frac{3}{2})}{2!}(-x)^2 + \frac{(-\frac{1}{2})(-\frac{3}{2})(-\frac{5}{2})}{3!}(-x)^3 + \dots \\ &= 1 + \frac{1}{2}x + \frac{1 \cdot 3}{2^2 \cdot 2!}x^2 + \frac{1 \cdot 3 \cdot 5}{2^3 \cdot 3!}x^3 + \dots \\ &= 1 + \frac{1}{2}x + \frac{3}{8}x^2 + \frac{5}{16}x^3 + \dots \end{align*}
+    \end{enumerate}
+\end{itemize}
+
+\section{Direct Use of the Maclaurin Series Formula}
+The homework problems all cleverly avoided having to compute derivatives directly. A full understanding requires knowing the fundamental definition of a Maclaurin series.
+\begin{itemize}
+    \item \textbf{Formula:} $f(x) = \sum_{n=0}^{\infty} \frac{f^{(n)}(0)}{n!} x^n = f(0) + f'(0)x + \frac{f''(0)}{2!}x^2 + \dots$
+    \item \textbf{Worked-out Example:} Find the Maclaurin series for $f(x) = \sin(x)$.
+    \begin{enumerate}
+        \item Compute derivatives and evaluate at $x=0$:
+        \begin{itemize}
+            \item $f(x) = \sin(x) \implies f(0) = 0$
+            \item $f'(x) = \cos(x) \implies f'(0) = 1$
+            \item $f''(x) = -\sin(x) \implies f''(0) = 0$
+            \item $f'''(x) = -\cos(x) \implies f'''(0) = -1$
+            \item $f^{(4)}(x) = \sin(x) \implies f^{(4)}(0) = 0$ (The pattern repeats)
+        \end{itemize}
+        \item Plug the values into the formula:
+        \begin{align*} \sin(x) &= \frac{0}{0!}x^0 + \frac{1}{1!}x^1 + \frac{0}{2!}x^2 + \frac{-1}{3!}x^3 + \frac{0}{4!}x^4 + \dots \\ &= x - \frac{x^3}{3!} + \frac{x^5}{5!} - \frac{x^7}{7!} + \dots \\ &= \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!} \end{align*}
+    \end{enumerate}
+\end{itemize}
+
+\part{Advanced Diagnostic Testing: "Find the Flaw"}
+For each problem below, a complete solution is provided. However, each solution contains one subtle but critical error. Your task is to find the flaw, explain why it is an error, and provide the correct step and final answer.
+
+\section{Problem 1}
+Find the power series representation for $f(x) = \frac{x}{1+4x}$ and its interval of convergence.
+
+\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item Rewrite the function: $f(x) = x \cdot \frac{1}{1-(-4x)}$.
+    \item This is $x$ times a geometric series with $r = -4x$.
+    \[ f(x) = x \sum_{n=0}^{\infty} (-4x)^n = x \sum_{n=0}^{\infty} (-1)^n 4^n x^n \]
+    \item Multiply the $x$ into the sum:
+    \[ f(x) = \sum_{n=0}^{\infty} (-1)^n 4^n x^{n+1} \]
+    \item For convergence, we need $|r|<1$, so $|-4x|<1 \implies -4x < 1 \implies x > -1/4$.
+    \item The interval of convergence is $(-1/4, \infty)$.
+\end{enumerate}
+\textbf{Final Answer:} $\sum_{n=0}^{\infty} (-1)^n 4^n x^{n+1}$, I.O.C: $(-1/4, \infty)$.
+
+\vspace{1cm}
+\textbf{Find the Flaw:}
+\begin{itemize}
+    \item \textbf{Location of Flaw:} Step 4.
+    \item \textbf{Explanation of Error:} The inequality $|-4x|<1$ was solved incorrectly. The absolute value must be handled as $|4x|<1$, which splits into $-1 < 4x < 1$.
+    \item \textbf{Correction:}
+        \[ |-4x|<1 \implies 4|x|<1 \implies |x| < 1/4 \]
+        This gives the interval $-1/4 < x < 1/4$.
+    \item \textbf{Correct Final Answer:} $\sum_{n=0}^{\infty} (-1)^n 4^n x^{n+1}$, I.O.C: $(-1/4, 1/4)$.
+\end{itemize}
+
+
+\section{Problem 2}
+Find the power series representation for $f(x) = \frac{1}{(1-x)^2}$.
+
+\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item We know that $\int \frac{1}{(1-x)^2} dx = \frac{1}{1-x} + C$.
+    \item The power series for $g(x)=\frac{1}{1-x}$ is $\sum_{n=0}^{\infty} x^n$.
+    \item So, $f(x) = \int g(x) dx = \int \left( \sum_{n=0}^{\infty} x^n \right) dx$.
+    \item Integrating term-by-term gives:
+    \[ f(x) = C + \sum_{n=0}^{\infty} \frac{x^{n+1}}{n+1} \]
+    \item At $x=0$, $f(0) = \frac{1}{(1-0)^2} = 1$. The series at $x=0$ is $C$. So $C=1$.
+\end{enumerate}
+\textbf{Final Answer:} $1 + \sum_{n=0}^{\infty} \frac{x^{n+1}}{n+1}$.
+
+\vspace{1cm}
+\textbf{Find the Flaw:}
+\begin{itemize}
+    \item \textbf{Location of Flaw:} Step 1 / Conceptual Approach.
+    \item \textbf{Explanation of Error:} The function $f(x) = \frac{1}{(1-x)^2}$ is the \emph{derivative} of $\frac{1}{1-x}$, not its integral. The entire procedure was backwards.
+    \item \textbf{Correction:}
+    We must differentiate the series for $\frac{1}{1-x}$.
+    \[ f(x) = \frac{d}{dx} \left( \frac{1}{1-x} \right) = \frac{d}{dx} \left( \sum_{n=0}^{\infty} x^n \right) = \sum_{n=1}^{\infty} nx^{n-1} \]
+    \item \textbf{Correct Final Answer:} $\sum_{n=1}^{\infty} nx^{n-1}$.
+\end{itemize}
+
+
+\section{Problem 3}
+Find the power series representation for $f(x) = \ln(5-x)$.
+
+\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item We note that $\frac{d}{dx} \ln(5-x) = \frac{-1}{5-x}$. So $f(x) = \int \frac{-1}{5-x} dx$.
+    \item Find the series for $g(x)=\frac{-1}{5-x}$:
+    \[ g(x) = \frac{-1}{5(1-x/5)} = -\frac{1}{5} \sum_{n=0}^{\infty} \left(\frac{x}{5}\right)^n = \sum_{n=0}^{\infty} -\frac{x^n}{5^{n+1}} \]
+    \item Integrate the series:
+    \[ f(x) = \int \left( \sum_{n=0}^{\infty} -\frac{x^n}{5^{n+1}} \right) dx = \sum_{n=0}^{\infty} -\frac{x^{n+1}}{(n+1)5^{n+1}} \]
+\end{enumerate}
+\textbf{Final Answer:} $\sum_{n=0}^{\infty} -\frac{x^{n+1}}{(n+1)5^{n+1}}$.
+
+\vspace{1cm}
+\textbf{Find the Flaw:}
+\begin{itemize}
+    \item \textbf{Location of Flaw:} End of Step 3.
+    \item \textbf{Explanation of Error:} The solution completely forgot to include the constant of integration, $C$, and solve for it.
+    \item \textbf{Correction:}
+    The integration step should be:
+    \[ f(x) = C + \sum_{n=0}^{\infty} -\frac{x^{n+1}}{(n+1)5^{n+1}} \]
+    We must solve for $C$. At the center $x=0$:
+    $f(0) = \ln(5)$.
+    The series at $x=0$ is $C$.
+    Therefore, $C = \ln(5)$.
+    \item \textbf{Correct Final Answer:} $\ln(5) - \sum_{n=0}^{\infty} \frac{x^{n+1}}{(n+1)5^{n+1}}$.
+\end{itemize}
+
+\section{Problem 4}
+Find the power series representation for $f(x) = \frac{3}{2+x^2}$.
+
+\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item Factor out a 2: $f(x) = \frac{3}{2(1+x^2/2)}$.
+    \item Rewrite as a geometric series form: $f(x) = \frac{3}{2} \cdot \frac{1}{1 - (-x^2/2)}$.
+    \item The ratio is $r = -x^2/2$. The series is:
+    \[ f(x) = \frac{3}{2} \sum_{n=0}^{\infty} \left(-\frac{x^2}{2}\right)^n = \frac{3}{2} \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{2^n} \]
+    \item Combine the leading constant:
+    \[ f(x) = \sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2 \cdot 2^n} = \sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2^{n+1}} \]
+\end{enumerate}
+\textbf{Final Answer:} $\sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2^{n+1}}$
+
+\vspace{1cm}
+\textbf{Find the Flaw:}
+\begin{itemize}
+    \item \textbf{Location of Flaw:} Step 3.
+    \item \textbf{Explanation of Error:} The power on the ratio was mishandled inside the summation. The term should be $(x^2/2)^n$, not $x^{2n}/2$. It should be $x^{2n}/2^n$.
+    \item \textbf{Correction:}
+    The expansion in Step 3 should be:
+    \[ f(x) = \frac{3}{2} \sum_{n=0}^{\infty} \left(-\frac{x^2}{2}\right)^n = \frac{3}{2} \sum_{n=0}^{\infty} \frac{(-1)^n (x^2)^n}{2^n} = \frac{3}{2} \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}}{2^n} \]
+    Combining the constant $\frac{3}{2}$ gives:
+    \[ f(x) = \sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2 \cdot 2^n} = \sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2^{n+1}} \]
+    Wait, the flawed solution's final answer is actually correct despite the mistake in the intermediate step's reasoning. Let's find a more subtle flaw. Ah, let's create a new flaw. A common one is sign error on the ratio.
+
+\textbf{New Flawed Solution for Problem 4:}
+\begin{enumerate}
+    \item Factor out a 2: $f(x) = \frac{3}{2(1+x^2/2)}$.
+    \item This is of the form $\frac{a}{1+r}$, so the series alternates. We identify $r=x^2/2$.
+    \[ f(x) = \frac{3}{2} \sum_{n=0}^{\infty} \left(\frac{x^2}{2}\right)^n = \frac{3}{2} \sum_{n=0}^{\infty} \frac{x^{2n}}{2^n} \]
+    \item Combine the leading constant:
+    \[ f(x) = \sum_{n=0}^{\infty} \frac{3x^{2n}}{2^{n+1}} \]
+\end{enumerate}
+\textbf{Final Answer:} $\sum_{n=0}^{\infty} \frac{3x^{2n}}{2^{n+1}}$.
+
+\vspace{1cm}
+\textbf{Find the Flaw:}
+\begin{itemize}
+    \item \textbf{Location of Flaw:} Step 2.
+    \item \textbf{Explanation of Error:} The geometric series formula is $\frac{1}{1-r}$, not $\frac{1}{1+r}$. The function must be explicitly written as $\frac{1}{1-(-r)}$. The solution used $r=x^2/2$ instead of the correct $r = -x^2/2$, which resulted in dropping the alternating term $(-1)^n$.
+    \item \textbf{Correction:}
+    The setup must be:
+    \[ f(x) = \frac{3}{2} \cdot \frac{1}{1 - (-x^2/2)} \]
+    This gives the series with $r=-x^2/2$:
+    \[ f(x) = \frac{3}{2} \sum_{n=0}^{\infty} \left(-\frac{x^2}{2}\right)^n = \sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2^{n+1}} \]
+    \item \textbf{Correct Final Answer:} $\sum_{n=0}^{\infty} \frac{3(-1)^n x^{2n}}{2^{n+1}}$.
+\end{itemize}
+
+
+\section{Problem 5}
+Evaluate the integral $\int x^2 \cdot \frac{1}{1-x^3} dx$ as a power series.
+
+\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item First, find the series for the integrand $f(x) = x^2 \cdot \frac{1}{1-x^3}$.
+    \item The term $\frac{1}{1-x^3}$ is a geometric series with $r=x^3$.
+    \[ \frac{1}{1-x^3} = \sum_{n=0}^{\infty} (x^3)^n = \sum_{n=0}^{\infty} x^{3n} \]
+    \item Multiply by $x^2$:
+    \[ f(x) = x^2 \sum_{n=0}^{\infty} x^{3n} = \sum_{n=0}^{\infty} x^{3n+2} \]
+    \item Now integrate:
+    \[ \int \left( \sum_{n=0}^{\infty} x^{3n+2} \right) dx = C + \sum_{n=0}^{\infty} \frac{x^{3n+2}}{3n+2} \]
+\end{enumerate}
+\textbf{Final Answer:} $C + \sum_{n=0}^{\infty} \frac{x^{3n+2}}{3n+2}$.
+
+\vspace{1cm}
+\textbf{Find the Flaw:}
+\begin{itemize}
+    \item \textbf{Location of Flaw:} Step 4.
+    \item \textbf{Explanation of Error:} The power rule for integration, $\int x^k dx = \frac{x^{k+1}}{k+1}$, was applied incorrectly. The exponent was not incremented in the numerator.
+    \item \textbf{Correction:}
+    The integration step should be:
+    \[ \int x^{3n+2} dx = \frac{x^{(3n+2)+1}}{(3n+2)+1} = \frac{x^{3n+3}}{3n+3} \]
+    The full series is:
+    \[ \int \left( \sum_{n=0}^{\infty} x^{3n+2} \right) dx = C + \sum_{n=0}^{\infty} \frac{x^{3n+3}}{3n+3} \]
+    \item \textbf{Correct Final Answer:} $C + \sum_{n=0}^{\infty} \frac{x^{3n+3}}{3n+3}$.
+\end{itemize}
+
+
+\end{document}
