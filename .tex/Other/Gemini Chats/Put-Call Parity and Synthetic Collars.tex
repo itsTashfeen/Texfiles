@@ -1,0 +1,172 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, geometry, hyperref, xcolor, graphicx, fancyhdr}
+\geometry{a4paper, margin=1in}
+
+% Meta-data
+\title{Option Mechanics: Put-Call Parity and Synthetic Collars}
+\author{Comprehensive Study Guide}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Conceptual Foundations}
+
+\subsection{The Governing Law: Put-Call Parity}
+Put-Call Parity is the fundamental no-arbitrage condition in options pricing. It establishes a rigid mathematical relationship between the prices of European call options, put options, the underlying asset, and a risk-free bond.
+
+The fundamental equation is:
+\[
+C + PV(K) = P + S
+\]
+Where:
+\begin{itemize}
+    \item $C$: Price of the Call option.
+    \item $P$: Price of the Put option.
+    \item $S$: Current spot price of the underlying asset (Stock).
+    \item $PV(K)$: Present Value of the strike price $K$ (often written as $Ke^{-rt}$).
+\end{itemize}
+
+\paragraph{Intuition}
+A portfolio consisting of a \textbf{Long Call} and a \textbf{Risk-Free Bond} (equal to the strike price) must have the exact same payoff at expiration as a portfolio consisting of a \textbf{Long Put} and the \textbf{Underlying Stock}. If they did not, an arbitrageur could buy the cheaper portfolio and sell the expensive one for a risk-free profit.
+
+\subsection{Defining "Synthetic" Positions}
+In options trading, a \textbf{synthetic} position is a strategy that replicates the risk and reward profile of a specific instrument using a combination of \textit{other} instruments.
+
+Synthetics allow traders to create the payoff of an option without actually trading that specific option. This is derived directly by rearranging the Put-Call Parity equation.
+
+\subsubsection{Synthetic Long Call}
+Rearranging parity to solve for $C$:
+\[
+C = P + S - PV(K)
+\]
+Disregarding the bond component for the directional exposure, the \textbf{Synthetic Long Call} is constructed via:
+\[
+\text{Synthetic Call} = \text{Long Stock } (S) + \text{Long Put } (P)
+\]
+\textbf{Intuition:} This is often called a "Married Put." 
+\begin{itemize}
+    \item If $S$ rises, you profit from the shares (unlimited upside).
+    \item If $S$ crashes, the Put option gains value, offsetting the stock loss (limited downside).
+    \item This creates the exact same payoff profile as buying a Call option.
+\end{itemize}
+
+\subsubsection{Synthetic Long Put}
+Rearranging parity to solve for $P$:
+\[
+P = C - S + PV(K)
+\]
+The \textbf{Synthetic Long Put} is constructed via:
+\[
+\text{Synthetic Put} = \text{Long Call } (C) + \text{Short Stock } (-S)
+\]
+\textbf{Intuition:} This is often called a "Married Call."
+\begin{itemize}
+    \item You are short the stock (profiting if it drops).
+    \item You hold a Long Call to protect against the price rising indefinitely.
+    \item This replicates the payoff of a Long Put (profit on downside, capped risk on upside).
+\end{itemize}
+
+\section{The Standard Collar Strategy}
+
+A standard collar is a hedging strategy used to protect a long stock position against downside risk while financing that protection by capping upside potential.
+
+The position consists of three parts:
+\begin{enumerate}
+    \item \textbf{Long Stock} ($+S$): The asset being protected.
+    \item \textbf{Long Put} ($+P_L$): Out-of-the-money (OTM) put at Strike $K_L$ (Floor).
+    \item \textbf{Short Call} ($-C_H$): Out-of-the-money (OTM) call at Strike $K_H$ (Ceiling).
+\end{enumerate}
+
+\[
+\text{Collar Payoff} = S + P_L - C_H
+\]
+Where $K_L < S < K_H$.
+
+\section{Deriving Collars via Put-Call Parity}
+
+Using Put-Call Parity, we can prove that a Collar is mathematically equivalent to other structures involving vertical spreads and bonds. We will derive two variations: one using two calls, and one using two puts.
+
+\subsection{Variation 1: The Collar Using Two Calls}
+\textbf{Objective:} Express the Collar equation using only Call options and bonds.
+
+We must replace the \textbf{Long Put ($P_L$)} in the standard collar with its synthetic equivalent.
+
+\textbf{Step 1: Parity at the Lower Strike ($K_L$)}
+\[
+P_L = C_L - S + PV(K_L)
+\]
+
+\textbf{Step 2: Substitution}
+Substitute this expression for $P_L$ into the Standard Collar equation:
+\begin{align*}
+\text{Collar} &= \underbrace{S}_{\text{Stock}} + \underbrace{(C_L - S + PV(K_L))}_{\text{Synthetic Put}} - \underbrace{C_H}_{\text{Short Call}}
+\end{align*}
+
+\textbf{Step 3: Simplification}
+The Long Stock ($+S$) and the Short Stock component inside the synthetic put ($-S$) cancel each other out.
+\[
+\text{Collar} = C_L - C_H + PV(K_L)
+\]
+
+\textbf{Result:}
+A Collar is synthetically equivalent to a \textbf{Bull Call Spread} plus a \textbf{Risk-Free Bond}.
+\begin{itemize}
+    \item Long Call at $K_L$.
+    \item Short Call at $K_H$.
+    \item Long Bond (Present Value of $K_L$).
+\end{itemize}
+
+\subsection{Variation 2: The Collar Using Two Puts}
+\textbf{Objective:} Express the Collar equation using only Put options and bonds.
+
+We must replace the \textbf{Short Call ($-C_H$)} in the standard collar with its synthetic equivalent.
+
+\textbf{Step 1: Parity at the Higher Strike ($K_H$)}
+\[
+C_H - P_H = S - PV(K_H)
+\]
+Multiplying by $-1$ to solve for the Short Call ($-C_H$):
+\[
+-C_H = PV(K_H) - P_H - S
+\]
+
+\textbf{Step 2: Substitution}
+Substitute this expression for $-C_H$ into the Standard Collar equation:
+\begin{align*}
+\text{Collar} &= \underbrace{S}_{\text{Stock}} + \underbrace{P_L}_{\text{Long Put}} + \underbrace{(PV(K_H) - P_H - S)}_{\text{Synthetic Short Call}}
+\end{align*}
+
+\textbf{Step 3: Simplification}
+The Long Stock ($+S$) cancels out with the Short Stock component ($-S$).
+\[
+\text{Collar} = P_L - P_H + PV(K_H)
+\]
+
+\textbf{Result:}
+A Collar is synthetically equivalent to a \textbf{Bull Put Spread} plus a \textbf{Risk-Free Bond}.
+\begin{itemize}
+    \item Long Put at $K_L$ (Lower Strike).
+    \item Short Put at $K_H$ (Higher Strike).
+    \item Long Bond (Present Value of $K_H$).
+\end{itemize}
+
+\section{Summary of Equivalences}
+
+By rigorously applying Put-Call Parity, we conclude that the risk profile of holding a stock with a collar is identical to holding a Bull Spread combined with a zero-coupon bond.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Strategy} & \textbf{Components} & \textbf{Equation} \\ \hline
+Standard Collar & Stock + Long Put ($K_L$) + Short Call ($K_H$) & $S + P_L - C_H$ \\ \hline
+Synthetic via Calls & Bull Call Spread + Bond ($K_L$) & $(C_L - C_H) + PV(K_L)$ \\ \hline
+Synthetic via Puts & Bull Put Spread + Bond ($K_H$) & $(P_L - P_H) + PV(K_H)$ \\ \hline
+\end{tabular}
+\caption{Mathematical Equivalence of Collar Strategies}
+\end{table}
+
+\end{document}

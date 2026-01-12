@@ -1,0 +1,262 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+% Page Geometry Setup
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+\title{\textbf{Deconstruction of Option Skewness \& Kelly Criterion}\\ \large Mathematical First Principles \& Stress Testing}
+\author{Tashfeen Omran}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Mathematical First Principles}
+
+\subsection{Variable Dictionary}
+
+\subsubsection*{Underlying Dynamics}
+\begin{itemize}
+    \item $S_t$: The spot price of the underlying asset at time $t$.
+    \item $\mu_{drift}$: The real-world drift (expected return) of the underlying asset.
+    \item $r$: The risk-free interest rate.
+    \item $\sigma$: The constant volatility of the underlying asset returns (Geometric Brownian Motion assumption).
+    \item $dW_t$: Increment of a Wiener process (Brownian motion).
+\end{itemize}
+
+\subsubsection*{Option Parameters}
+\begin{itemize}
+    \item $C, P$: The value of a European Call and Put respectively.
+    \item $X$ (or $K$): The strike price.
+    \item $\tau = T - t$: Time to expiration.
+    \item $d_1, d_2$: Standard Black-Scholes-Merton standardized moneyness terms.
+    \item $\Phi(\cdot)$ or $N(\cdot)$: The Cumulative Normal Distribution Function.
+    \item $\phi(\cdot)$: The Standard Normal Probability Density Function.
+\end{itemize}
+
+\subsubsection*{Kelly / Moments Notation}
+\begin{itemize}
+    \item $B_n$: Bankroll after $n$ trades.
+    \item $f$: The fraction of the bankroll wagered (The Kelly Fraction).
+    \item $g(x)$: The return payoff function of the trade.
+    \item $\mu$: The expected return (first moment) of the \textit{option position} (distinct from $\mu_{drift}$ of spot).
+    \item $\sigma^2_{opt}$: The variance of the option position returns.
+    \item $\lambda_k$: The $k$-th raw moment of the option return distribution ($E[r^k]$).
+    \item $\gamma_1$: Skewness (Standardized third moment).
+    \item $\kappa$: Kurtosis (Standardized fourth moment).
+\end{itemize}
+
+\subsection{Core Dynamics (SDEs)}
+
+The paper builds its foundation on the standard Black-Scholes-Merton framework to isolate the skewness inherent in the \textit{contract structure} rather than the underlying. Therefore, the underlying spot price $S_t$ follows \textbf{Geometric Brownian Motion (GBM)}.
+
+The SDE under the physical measure $\mathbb{P}$ is:
+\[
+dS_t = \mu_{drift} S_t dt + \sigma S_t dW_t
+\]
+
+The SDE under the risk-neutral measure $\mathbb{Q}$ (used for pricing the moments) is:
+\[
+dS_t = r S_t dt + \sigma S_t dW^\mathbb{Q}_t
+\]
+
+\subsection{The Intuition}
+
+\textbf{The Generator of Skewness:} \\
+Usually, skewness in finance arises from the "Leverage Effect" (spot down, vol up) modeled by stochastic volatility (e.g., Heston). However, this paper purposefully sets standard volatility $\sigma$ to a constant.
+The skewness here arises purely from the \textbf{non-linear transformation} of the log-normal probability density function (PDF) of $S_T$ by the option payoff function $\max(S_T - K, 0)$.
+
+\begin{itemize}
+    \item \textbf{Long Call ($C$):} The payoff is convex. It truncates the left tail (limited loss) and extends the right tail (unlimited gain). This forces positive skewness ($\gamma_1 > 0$).
+    \item \textbf{Short Call ($-C$):} The payoff is concave. It limits the gain (premium collected) and exposes the trader to unlimited downside. This forces negative skewness ($\gamma_1 < 0$).
+\end{itemize}
+
+The paper demonstrates that even in a "perfect" BSM world, a Mean-Variance optimizer (Standard Kelly) fails because it assumes the return distribution of the bet is symmetric (Gaussian), whereas the option payoff transforms a Log-Gaussian input into a highly skewed output.
+
+\subsection{The "Trick": Analytic Moment Integration \& Taylor Series Utility}
+
+The authors utilize two distinct mathematical techniques to close the system:
+
+\subsubsection*{Trick A: Analytical Integration of Moments}
+Instead of using Characteristic Functions (Fourier Transforms), they exploit the properties of the Log-Normal distribution. Since $S_T$ is Log-Normal, $S_T^n$ is also Log-Normal. They derive the $n$-th raw moment of the Call option $E[C^n]$ directly:
+
+\[
+E[C^n] = \int_0^\infty (S - X)^n \cdot p_{lognorm}(S) \, dS
+\]
+By expanding $(S-X)^n$ using the Binomial Theorem, they obtain a sum of integrals that can be solved in closed form using modified BSM terms (shifting the $d_1, d_2$ terms by $n\sigma\sqrt{T}$).
+
+\subsubsection*{Trick B: Taylor Expansion of the Kelly Criterion}
+The objective is to maximize the expected geometric growth rate $g(f)$:
+\[
+g(f) = E \left[ \ln(1 + f r) \right]
+\]
+Since the PDF of returns $r$ is non-trivial, numerical integration is usually required. The authors apply a Taylor Maclaurin series expansion to the function $H(f) = \ln(1+fr)$ around $f=0$:
+
+\[
+\ln(1+fr) \approx fr - \frac{1}{2}f^2 r^2 + \frac{1}{3}f^3 r^3 - \dots
+\]
+
+Taking the expectation $E[\cdot]$ of both sides allows them to express the utility function in terms of the raw moments $\lambda_k = E[r^k]$:
+\[
+E[\ln(1+fr)] \approx f\mu - \frac{1}{2}f^2 \lambda_2 + \frac{1}{3}f^3 \lambda_3 - \frac{1}{4}f^4 \lambda_4
+\]
+Differentiation with respect to $f$ and setting to 0 yields a polynomial (Cubic in the 4th order expansion) for the optimal fraction $f$:
+\[
+0 = \mu - f\lambda_2 + f^2\lambda_3 - f^3\lambda_4
+\]
+
+\newpage
+
+\section{"Find the Flaw" (Stress Testing)}
+
+\subsection{Corner Cases}
+
+\subsubsection*{Case A: The "Singularity" of Zero Skew}
+The paper notes that the quadratic approximation (truncating at 3rd moment) for the optimal fraction is:
+\[
+f_{opt} \approx \frac{\lambda_2 \pm \sqrt{\lambda_2^2 - 4\lambda_3\mu}}{2\lambda_3}
+\]
+As the skewness $\lambda_3 \to 0$, the denominator vanishes, creating a singularity. While the limit exists (converging to $\mu/\lambda_2$), a numerical solver in a production engine could crash or output \texttt{NaN} if the skew passes through zero (e.g., an ATM option exactly at the money where skewness transitions).
+
+\subsubsection*{Case B: The Taylor Divergence (Large Drawdowns)}
+The Taylor expansion of $\ln(1+x)$ is only valid for $|x| < 1$, and converges slowly as $x$ approaches $-1$.
+\begin{itemize}
+    \item In a "Short Volatility" strategy (e.g., Short Straddles), the return $r$ in a crash scenario is often $-100\%$ or worse (if leveraged).
+    \item When $f \cdot r \approx -1$ (ruin), the logarithm tends to $-\infty$.
+    \item The polynomial approximation (Eq 34) sees this merely as a large negative number in the power series, completely failing to capture the \textbf{barrier of ruin} (logarithmic singularity).
+    \item \textbf{Result:} The model may suggest a bet size that is "safe" by moment standards but mathematically allows for bankruptcy because the Taylor approximation smoothed out the "wall of death" at $-100\%$.
+\end{itemize}
+
+\subsection{Parameter Stability}
+
+\subsubsection*{The "Edge" ($\mu$) Sensitivity}
+The optimal fraction $f$ is linearly (or heavily) dependent on $\mu$ (Expected Return).
+\[
+\mu = \text{Theoretical Price} - \text{Market Price}
+\]
+In options, the "Expected Return" is derived from the difference between \textit{Realized Volatility} (future) and \textit{Implied Volatility} (current).
+\begin{itemize}
+    \item \textbf{Flaw:} Realized Volatility is a stochastic variable. The paper assumes a fixed "Edge" (e.g., \$5).
+    \item If Realized Vol spikes momentarily, the Edge $\mu$ becomes negative. The polynomial root will flip signs, suggesting a \textit{short} position becomes a \textit{long} position instantaneously. This creates "flickering" alpha that generates excessive transaction costs.
+\end{itemize}
+
+\subsubsection*{Implicit Normal Distribution of Underlying}
+The derivation assumes $S_T$ is Log-Normal.
+\begin{itemize}
+    \item \textbf{Reality:} Market returns exhibit excess kurtosis (Fat Tails) and negative skewness independent of the option structure.
+    \item \textbf{Impact:} The calculated $\lambda_3$ (Skew) and $\lambda_4$ (Kurtosis) in the paper are \textbf{underestimates} of the true risk. The "Intrinsic Option Skew" is compounded by the "Underlying Jump Skew."
+    \item Using this model to size Short Put positions will result in over-betting, as it assumes the underlying asset cannot gap down (Diffusion only).
+\end{itemize}
+
+\section{Implementation Guide}
+
+\subsection{Prerequisites \& Mathematical Requirements}
+To implement the \textit{Skew-Adjusted Kelly Criterion} for options, the quantitative developer requires the following foundational knowledge and libraries:
+
+\begin{itemize}
+    \item \textbf{Mathematical Frameworks:}
+    \begin{itemize}
+        \item \textbf{Black-Scholes-Merton (BSM) Mechanics:} Understanding $d_1, d_2$ and the pricing of Vanilla Europeans.
+        \item \textbf{Moment Calculus:} Ability to manipulate raw moments $E[x^n]$ and convert them to central moments (Variance, Skewness, Kurtosis).
+        \item \textbf{Numerical Root Finding:} Newton-Raphson or Brent's Method to solve cubic polynomials.
+    \end{itemize}
+    \item \textbf{Software Stack:}
+    \begin{itemize}
+        \item Python (NumPy/SciPy) or C++ (QuantLib/Boost).
+        \item A root-finding algorithm (e.g., \texttt{scipy.optimize.brentq}).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Step-by-Step Recreation Logic}
+
+\subsubsection*{Step 1: The Input Vector}
+Define the state of the market. The model requires two distinct volatility inputs to calculate the "Edge" ($\mu$).
+\begin{itemize}
+    \item \textbf{Market Data:} Spot ($S$), Strike ($K$), Time to Maturity ($T$), Risk-Free Rate ($r$), Market Price ($P_{mkt}$).
+    \item \textbf{Implied Volatility ($\sigma_{imp}$):} Backed out from $P_{mkt}$.
+    \item \textbf{Forecast Volatility ($\sigma_{fcst}$):} The trader's estimate of future realized volatility (e.g., from GARCH or realized estimator).
+\end{itemize}
+
+\subsubsection*{Step 2: The Moment Engine (Appendix A Implementation)}
+This is the computational core. You must implement the closed-form analytical equations for the moments of option value as derived in the paper's Appendix.
+
+\textbf{Pseudocode Logic:}
+\begin{enumerate}
+    \item Calculate baseline BSM parameters $d_1, d_2$ using $\sigma_{fcst}$.
+    \item \textbf{First Moment ($\mu_{opt}$):} Calculate Expected Option Payoff at expiry using BSM logic but with drift $\mu_{drift} = 0$ (if assuming driftless) or trader's drift.
+    \item \textbf{Higher Moments ($\lambda_k$):} Implement the raw moment integrals.
+    \[
+    \lambda_n = E[\text{Payoff}^n]
+    \]
+    \textit{Note:} For a Call option, calculating $\lambda_3$ involves terms like $N(3d_1 - 2d_2)$. Ensure your Normal CDF function has high precision.
+    \item \textbf{Standardization:} Convert raw payoff moments into return moments:
+    \[
+    \mu_{return} = \frac{E[\text{Payoff}] - P_{mkt}}{P_{mkt}}, \quad \lambda_{n, return} = E\left[\left(\frac{\text{Payoff} - P_{mkt}}{P_{mkt}}\right)^n\right]
+    \]
+\end{enumerate}
+
+\subsubsection*{Step 3: The Polynomial Solver}
+Construct the Taylor-expanded utility function derivative (Equation 34 in the paper).
+\[
+P(f) = \mu_{return} - f \lambda_2 + f^2 \lambda_3 - f^3 \lambda_4 = 0
+\]
+\begin{itemize}
+    \item Use a numerical solver to find roots for $f$.
+    \item \textbf{Filter Roots:} Discard complex roots. Discard roots where $f < 0$ (unless shorting) or $f > 1$ (unrealistic leverage constraints).
+    \item \textbf{Selection:} If multiple real positive roots exist, select the smallest positive root to remain conservative.
+\end{itemize}
+
+\subsection{Calibration Strategy}
+
+\begin{itemize}
+    \item \textbf{The "Edge" ($\mu$):} This is the most sensitive parameter.
+    \[
+    \mu \approx \text{BSM}(S, K, T, \sigma_{fcst}) - P_{mkt}(\sigma_{imp})
+    \]
+    Do \textit{not} use historical mean returns of options. Use the spread between your volatility forecast and the market's implied volatility.
+    \item \textbf{Safety Caps:} The Taylor approximation diverges if returns approach $-100\%$.
+    \textit{Heuristic:} Hard-code a "Ruin Constraint."
+    \[
+    f_{final} = \min(f_{poly}, \frac{1}{\text{Max Loss Scenario}})
+    \]
+\end{itemize}
+
+\section{Critical Analysis: Assumptions \& Flaws}
+
+\subsection{The "Hidden" Assumptions}
+
+\subsubsection*{Assumption A: The Taylor Series Validity Domain}
+The derivation relies on the expansion $\ln(1+x) \approx x - x^2/2 + x^3/3$.
+\begin{itemize}
+    \item \textbf{The Flaw:} This series converges only for $|x| < 1$.
+    \item \textbf{Reality Check:} In short option strategies (e.g., Short Straddles), a tail event can cause a loss of $500\%$ or more (if unhedged or leveraged). In these regions ($x \ll -1$), the Taylor approximation is mathematically invalid and underestimates the penalty for ruin.
+    \item \textbf{Risk:} The model might suggest a bet size that allows for a $-100\%$ portfolio wipeout because the polynomial "smooths over" the singularity of $\ln(0)$.
+\end{itemize}
+
+\subsubsection*{Assumption B: Log-Normality of the Underlying}
+The paper derives option skewness assuming the underlying stock follows Geometric Brownian Motion (GBM).
+\begin{itemize}
+    \item \textbf{The Flaw:} It assumes the underlying asset has zero skew and excess kurtosis of 0.
+    \item \textbf{Reality Check:} Equity indices have intrinsic negative skew (crashes are faster than rallies) and fat tails.
+    \item \textbf{Consequence:} The paper calculates the skewness \textit{generated by the contract}, but ignores the skewness \textit{inherited from the asset}. This leads to a systematic underestimation of risk for Short Put strategies.
+\end{itemize}
+
+\subsection{Practitioner Reality}
+
+\begin{itemize}
+    \item \textbf{Discrete Hedging vs. Continuous Theory:} The model assumes a "Buy and Hold" or single-period bet. It does not account for the path-dependency of delta-hedging or margin calls that occur \textit{during} the life of the option.
+    \item \textbf{Liquidity Gaps:} The math assumes a continuous probability density function. It cannot price "Gap Risk"—the scenario where the market closes at \$100 and opens at \$80. In such a scenario, the "Limited Loss" assumption of a calendar spread or the "Dynamic Hedge" capability vanishes.
+    \item \textbf{Parameter Instability:} The optimal $f$ is highly sensitive to the difference between $\sigma_{imp}$ and $\sigma_{real}$. Since $\sigma_{real}$ is an estimate, estimation error is leveraged. A small error in forecasting volatility can flip the sign of the Kelly fraction (telling you to go Long instead of Short).
+\end{itemize}
+
+\end{document}

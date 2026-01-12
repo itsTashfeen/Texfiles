@@ -1,0 +1,661 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Homework 11.8 Power Series}
+\author{Tashfeen Omran}
+\date{November 2025}
+
+\begin{document}
+
+\maketitle
+
+\part{Comprehensive Introduction, Context, and Prerequisites}
+
+\section{Core Concepts}
+A \textbf{power series} is a type of infinite series that can be thought of as a polynomial of infinite degree. It is a function of a variable $x$ and is defined in one of two general forms:
+\begin{enumerate}
+    \item A power series centered at $a=0$:
+    \[ \sum_{n=0}^{\infty} c_n x^n = c_0 + c_1 x + c_2 x^2 + c_3 x^3 + \dots \]
+    \item A power series centered at $x=a$:
+    \[ \sum_{n=0}^{\infty} c_n (x-a)^n = c_0 + c_1 (x-a) + c_2 (x-a)^2 + \dots \]
+\end{enumerate}
+Here, $x$ is a variable, the $c_n$ values are constants called the \textbf{coefficients} of the series, and $a$ is a constant called the \textbf{center} of the series.
+
+For any given power series, there are three possibilities for the set of $x$ values for which it converges.
+\begin{enumerate}
+    \item The series converges only at its center, $x=a$.
+    \item The series converges for all real numbers $x$.
+    \item There exists a positive number $R$ such that the series converges if $|x-a| < R$ and diverges if $|x-a| > R$.
+\end{enumerate}
+This number $R$ is called the \textbf{Radius of Convergence (R)}. In the first case, $R=0$. In the second case, $R=\infty$. In the third case, we must also test the endpoints, $x=a-R$ and $x=a+R$, to determine the full \textbf{Interval of Convergence (I)}. The interval of convergence is the complete set of $x$ values for which the series converges.
+
+\section{Intuition and Derivation}
+The core idea behind power series is to represent complicated functions (like $\sin(x)$, $e^x$, or $\ln(x)$) using an infinitely long polynomial. Polynomials are wonderful because they are easy to work with—they only involve addition, subtraction, multiplication, and non-negative integer powers, operations that are simple to compute.
+
+How do we find out for which $x$ values this "infinite polynomial" makes sense (i.e., converges to a finite value)? The most powerful tool for this is the \textbf{Ratio Test}. For a series $\sum a_n$, the Ratio Test examines the limit:
+\[ L = \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| \]
+The series converges absolutely if $L < 1$, diverges if $L > 1$, and the test is inconclusive if $L=1$.
+
+When we apply this to a power series, where the terms are $a_n = c_n(x-a)^n$, the ratio becomes:
+\[ \left| \frac{a_{n+1}}{a_n} \right| = \left| \frac{c_{n+1}(x-a)^{n+1}}{c_n(x-a)^n} \right| = \left| \frac{c_{n+1}}{c_n} \right| |x-a| \]
+Taking the limit gives us:
+\[ L = \lim_{n \to \infty} \left| \frac{c_{n+1}}{c_n} \right| |x-a| \]
+For convergence, we require $L < 1$:
+\[ |x-a| \lim_{n \to \infty} \left| \frac{c_{n+1}}{c_n} \right| < 1 \implies |x-a| < \frac{1}{\lim_{n \to \infty} \left| \frac{c_{n+1}}{c_n} \right|} \]
+This inequality naturally defines the Radius of Convergence, $R$. It is the value that keeps the limit $L$ less than 1, forcing the series to converge. The interval arises because the condition $|x-a| < R$ is equivalent to $-R < x-a < R$, or $a-R < x < a+R$.
+
+\section{Historical Context and Motivation}
+The development of power series, particularly Taylor and Maclaurin series, was a major achievement in the 18th century, driven by the need to approximate complex functions. Before the age of electronic calculators, computing values for functions like $\sin(37^\circ)$ or $\ln(1.5)$ was a formidable task. Mathematicians like Brook Taylor (who introduced the general series in 1715) and Colin Maclaurin (who focused on the case centered at 0) realized that these functions could be approximated by polynomials.
+
+The motivation was deeply practical: to create tables of values for logarithms, trigonometric functions, and other transcendental functions that were essential for navigation, astronomy, and physics. By using a finite number of terms from a power series (a Taylor polynomial), one could calculate a function's value to any desired degree of accuracy. This transformed difficult, abstract functions into a series of simple arithmetic operations, making them accessible for widespread scientific use.
+
+\section{Key Formulas}
+\begin{itemize}
+    \item \textbf{General Power Series (centered at $a$):}
+    \[ \sum_{n=0}^{\infty} c_n (x-a)^n \]
+    \item \textbf{Ratio Test for Power Series:} Let $a_n = c_n(x-a)^n$. The series converges if:
+    \[ \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| < 1 \]
+    \item \textbf{Radius of Convergence (R) from Ratio Test:}
+    \[ R = \lim_{n \to \infty} \left| \frac{c_n}{c_{n+1}} \right| \]
+    Assuming the limit exists. If the limit is 0, $R=0$. If the limit is $\infty$, $R=\infty$.
+    \item \textbf{Interval of Convergence (I):}
+    The interval $(a-R, a+R)$ plus any endpoints where the series converges.
+\end{itemize}
+
+\section{Prerequisites}
+To master power series, you must be proficient in the following:
+\begin{itemize}
+    \item \textbf{Infinite Series Convergence Tests:} Deep understanding of the Ratio Test is mandatory. Additionally, the p-Series Test, Alternating Series Test, and Divergence Test are crucial for checking the endpoints of the interval of convergence.
+    \item \textbf{Limits:} Skill in evaluating limits as $n \to \infty$, particularly those involving fractions of polynomials in $n$ and factorials.
+    \item \textbf{Algebra:} Facility with absolute value inequalities, interval notation, and simplifying complex fractions, especially those involving powers and factorials (e.g., $\frac{(n+1)!}{n!} = n+1$).
+    \item \textbf{Functions and Notation:} Familiarity with summation ($\Sigma$) notation is essential.
+\end{itemize}
+
+\part{Detailed Homework Solutions}
+
+\section{Problem 1}
+\subsection{(a) What is the radius of convergence of a power series? How do you find it?}
+\textbf{Solution:}
+The radius of convergence is \underline{a positive number $R$} if the series converges for $|x-a| < R$ and diverges for $|x-a| > R$. The radius is \underline{$R=0$} if the series converges only when $x=a$, and \underline{$R=\infty$} if the series converges for all $x$. We find it by applying the Ratio Test to the terms of the series and solving the resulting inequality for $|x-a|$.
+
+\subsection{(b) What is the interval of convergence of a power series? How do you find it?}
+\textbf{Solution:}
+The interval of convergence of a power series is the interval that consists of \underline{all values of $x$} for which the series converges. We must test the series for convergence at the endpoints of the interval $(a-R, a+R)$. In this case, we must test the series for \underline{convergence} at each endpoint to determine the interval of convergence.
+
+\section{Problem 2}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} 8(-1)^n n x^n$.
+\textbf{Solution:}
+Let $a_n = 8(-1)^n n x^n$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{8(-1)^{n+1} (n+1) x^{n+1}}{8(-1)^n n x^n} \right| \\
+&= \lim_{n \to \infty} \left| (-1) \frac{n+1}{n} x \right| \\
+&= |x| \lim_{n \to \infty} \frac{n+1}{n} \\
+&= |x| \cdot 1 = |x|
+\end{align*}
+For convergence, we need $L < 1$, so $|x| < 1$. The radius of convergence is $R=1$. This gives an open interval $(-1, 1)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=1$:} The series becomes $\sum_{n=1}^{\infty} 8(-1)^n n (1)^n = \sum_{n=1}^{\infty} 8(-1)^n n$.
+    The terms of this series are $a_n = 8(-1)^n n$. The limit $\lim_{n \to \infty} a_n$ does not exist (it oscillates and its magnitude grows). By the Divergence Test, the series diverges.
+    \item \textbf{Endpoint $x=-1$:} The series becomes $\sum_{n=1}^{\infty} 8(-1)^n n (-1)^n = \sum_{n=1}^{\infty} 8(-1)^{2n} n = \sum_{n=1}^{\infty} 8n$.
+    The terms $a_n = 8n$ approach $\infty$. By the Divergence Test, the series diverges.
+\end{itemize}
+Neither endpoint is included.
+
+\textbf{Final Answer:}
+$R = 1$
+$I = (-1, 1)$
+
+\section{Problem 3}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{(-1)^n x^n}{\sqrt{n}}$.
+\textbf{Solution:}
+Let $a_n = \frac{(-1)^n x^n}{\sqrt{n}}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{(-1)^{n+1} x^{n+1}}{\sqrt{n+1}} \cdot \frac{\sqrt{n}}{(-1)^n x^n} \right| \\
+&= \lim_{n \to \infty} \left| (-1) x \frac{\sqrt{n}}{\sqrt{n+1}} \right| \\
+&= |x| \lim_{n \to \infty} \sqrt{\frac{n}{n+1}} = |x| \cdot \sqrt{1} = |x|
+\end{align*}
+For convergence, we need $|x| < 1$. The radius of convergence is $R=1$, and the open interval is $(-1, 1)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=1$:} The series is $\sum_{n=1}^{\infty} \frac{(-1)^n (1)^n}{\sqrt{n}} = \sum_{n=1}^{\infty} \frac{(-1)^n}{\sqrt{n}}$. This is an alternating series with $b_n = 1/\sqrt{n}$. Since $b_{n+1} \le b_n$ and $\lim_{n \to \infty} b_n = 0$, the series converges by the Alternating Series Test.
+    \item \textbf{Endpoint $x=-1$:} The series is $\sum_{n=1}^{\infty} \frac{(-1)^n (-1)^n}{\sqrt{n}} = \sum_{n=1}^{\infty} \frac{(-1)^{2n}}{\sqrt{n}} = \sum_{n=1}^{\infty} \frac{1}{n^{1/2}}$. This is a p-series with $p = 1/2$. Since $p \le 1$, the series diverges.
+\end{itemize}
+The interval of convergence includes $x=1$ but not $x=-1$.
+
+\textbf{Final Answer:}
+$R = 1$
+$I = (-1, 1]$
+
+\section{Problem 4}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{n}{7^n} x^n$.
+\textbf{Solution:}
+Let $a_n = \frac{n x^n}{7^n}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{(n+1) x^{n+1}}{7^{n+1}} \cdot \frac{7^n}{n x^n} \right| \\
+&= \lim_{n \to \infty} \left| \frac{n+1}{n} \cdot \frac{x}{7} \right| \\
+&= \frac{|x|}{7} \lim_{n \to \infty} \frac{n+1}{n} = \frac{|x|}{7} \cdot 1 = \frac{|x|}{7}
+\end{align*}
+For convergence, we need $L < 1$, so $\frac{|x|}{7} < 1 \implies |x| < 7$. The radius of convergence is $R=7$. The open interval is $(-7, 7)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=7$:} The series is $\sum_{n=1}^{\infty} \frac{n}{7^n} (7)^n = \sum_{n=1}^{\infty} n$. The terms $a_n = n$ approach $\infty$. By the Divergence Test, the series diverges.
+    \item \textbf{Endpoint $x=-7$:} The series is $\sum_{n=1}^{\infty} \frac{n}{7^n} (-7)^n = \sum_{n=1}^{\infty} n (-1)^n$. The terms $a_n = n(-1)^n$ do not approach 0. By the Divergence Test, the series diverges.
+\end{itemize}
+Neither endpoint is included.
+
+\textbf{Final Answer:}
+$R = 7$
+$I = (-7, 7)$
+
+\section{Problem 5}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{x^n}{n 4^n}$.
+\textbf{Solution:}
+Let $a_n = \frac{x^n}{n 4^n}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{x^{n+1}}{(n+1) 4^{n+1}} \cdot \frac{n 4^n}{x^n} \right| \\
+&= \lim_{n \to \infty} \left| \frac{n}{n+1} \cdot \frac{x}{4} \right| \\
+&= \frac{|x|}{4} \lim_{n \to \infty} \frac{n}{n+1} = \frac{|x|}{4} \cdot 1 = \frac{|x|}{4}
+\end{align*}
+For convergence, we need $L < 1$, so $\frac{|x|}{4} < 1 \implies |x| < 4$. The radius of convergence is $R=4$. The open interval is $(-4, 4)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=4$:} The series is $\sum_{n=1}^{\infty} \frac{4^n}{n 4^n} = \sum_{n=1}^{\infty} \frac{1}{n}$. This is the harmonic series (a p-series with $p=1$), which diverges.
+    \item \textbf{Endpoint $x=-4$:} The series is $\sum_{n=1}^{\infty} \frac{(-4)^n}{n 4^n} = \sum_{n=1}^{\infty} \frac{(-1)^n 4^n}{n 4^n} = \sum_{n=1}^{\infty} \frac{(-1)^n}{n}$. This is the alternating harmonic series, which converges by the Alternating Series Test.
+\end{itemize}
+The interval includes $x=-4$ but not $x=4$.
+
+\textbf{Final Answer:}
+$R = 4$
+$I = [-4, 4)$
+
+\section{Problem 6}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{x^n}{4n-1}$.
+\textbf{Solution:}
+Let $a_n = \frac{x^n}{4n-1}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{x^{n+1}}{4(n+1)-1} \cdot \frac{4n-1}{x^n} \right| \\
+&= \lim_{n \to \infty} \left| x \frac{4n-1}{4n+3} \right| \\
+&= |x| \lim_{n \to \infty} \frac{4n-1}{4n+3} = |x| \cdot 1 = |x|
+\end{align*}
+For convergence, we need $|x| < 1$. The radius of convergence is $R=1$. The open interval is $(-1, 1)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=1$:} The series is $\sum_{n=1}^{\infty} \frac{1}{4n-1}$. We use the Limit Comparison Test with the divergent harmonic series $\sum \frac{1}{n}$.
+    \[ \lim_{n \to \infty} \frac{1/(4n-1)}{1/n} = \lim_{n \to \infty} \frac{n}{4n-1} = \frac{1}{4} \]
+    Since the limit is a finite positive number, both series share the same fate. Thus, the series diverges.
+    \item \textbf{Endpoint $x=-1$:} The series is $\sum_{n=1}^{\infty} \frac{(-1)^n}{4n-1}$. This is an alternating series with $b_n = \frac{1}{4n-1}$. Since $b_{n+1} \le b_n$ and $\lim_{n \to \infty} b_n = 0$, the series converges by the Alternating Series Test.
+\end{itemize}
+The interval includes $x=-1$ but not $x=1$.
+
+\textbf{Final Answer:}
+$R = 1$
+$I = [-1, 1)$
+
+\section{Problem 7}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{(-1)^n x^n}{n^7}$.
+\textbf{Solution:}
+Let $a_n = \frac{(-1)^n x^n}{n^7}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{(-1)^{n+1} x^{n+1}}{(n+1)^7} \cdot \frac{n^7}{(-1)^n x^n} \right| \\
+&= \lim_{n \to \infty} \left| (-1) x \left(\frac{n}{n+1}\right)^7 \right| \\
+&= |x| \lim_{n \to \infty} \left(\frac{n}{n+1}\right)^7 = |x| \cdot 1^7 = |x|
+\end{align*}
+For convergence, we need $|x| < 1$. The radius of convergence is $R=1$. The open interval is $(-1, 1)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=1$:} The series is $\sum_{n=1}^{\infty} \frac{(-1)^n (1)^n}{n^7} = \sum_{n=1}^{\infty} \frac{(-1)^n}{n^7}$. This series converges by the Alternating Series Test. It also converges absolutely, since $\sum \frac{1}{n^7}$ is a convergent p-series ($p=7>1$).
+    \item \textbf{Endpoint $x=-1$:} The series is $\sum_{n=1}^{\infty} \frac{(-1)^n (-1)^n}{n^7} = \sum_{n=1}^{\infty} \frac{1}{n^7}$. This is a p-series with $p=7$. Since $p > 1$, the series converges.
+\end{itemize}
+Both endpoints are included.
+
+\textbf{Final Answer:}
+$R = 1$
+$I = [-1, 1]$
+
+\section{Problem 8}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=2}^{\infty} \frac{x^{n+7}}{6n!}$.
+\textbf{Solution:}
+We can rewrite the series as $x^7 \sum_{n=2}^{\infty} \frac{x^n}{6n!}$. The constant factor $x^7$ does not affect convergence. Let's analyze $\sum_{n=2}^{\infty} \frac{x^n}{6n!}$.
+Let $a_n = \frac{x^n}{6n!}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{x^{n+1}}{6(n+1)!} \cdot \frac{6n!}{x^n} \right| \\
+&= \lim_{n \to \infty} \left| x \frac{6n!}{6(n+1)n!} \right| \\
+&= \lim_{n \to \infty} \left| \frac{x}{n+1} \right| = |x| \lim_{n \to \infty} \frac{1}{n+1} = |x| \cdot 0 = 0
+\end{align*}
+Since $L=0$ for all values of $x$, and $0 < 1$ is always true, the series converges for all real numbers.
+
+\textbf{Final Answer:}
+$R = \infty$
+$I = (-\infty, \infty)$
+
+\section{Problem 9}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{x^n}{n^4 6^n}$.
+\textbf{Solution:}
+Let $a_n = \frac{x^n}{n^4 6^n}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{x^{n+1}}{(n+1)^4 6^{n+1}} \cdot \frac{n^4 6^n}{x^n} \right| \\
+&= \lim_{n \to \infty} \left| \frac{x}{6} \left(\frac{n}{n+1}\right)^4 \right| \\
+&= \frac{|x|}{6} \lim_{n \to \infty} \left(\frac{n}{n+1}\right)^4 = \frac{|x|}{6} \cdot 1^4 = \frac{|x|}{6}
+\end{align*}
+For convergence, we need $L < 1$, so $\frac{|x|}{6} < 1 \implies |x| < 6$. The radius of convergence is $R=6$. The open interval is $(-6, 6)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=6$:} The series is $\sum_{n=1}^{\infty} \frac{6^n}{n^4 6^n} = \sum_{n=1}^{\infty} \frac{1}{n^4}$. This is a p-series with $p=4$. Since $p>1$, it converges.
+    \item \textbf{Endpoint $x=-6$:} The series is $\sum_{n=1}^{\infty} \frac{(-6)^n}{n^4 6^n} = \sum_{n=1}^{\infty} \frac{(-1)^n}{n^4}$. This is an alternating series that is absolutely convergent (since $\sum \frac{1}{n^4}$ converges), so it converges.
+\end{itemize}
+Both endpoints are included.
+
+\textbf{Final Answer:}
+$R = 6$
+$I = [-6, 6]$
+
+\section{Problem 10}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{x^n}{n^4 5^n}$.
+\textbf{Solution:}
+This problem is identical in structure to Problem 9. Let $a_n = \frac{x^n}{n^4 5^n}$.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{x^{n+1}}{(n+1)^4 5^{n+1}} \cdot \frac{n^4 5^n}{x^n} \right| = \frac{|x|}{5} \lim_{n \to \infty} \left(\frac{n}{n+1}\right)^4 = \frac{|x|}{5}
+\end{align*}
+For convergence, $|x| < 5$. So $R=5$. The open interval is $(-5, 5)$. Test endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=5$:} $\sum_{n=1}^{\infty} \frac{5^n}{n^4 5^n} = \sum_{n=1}^{\infty} \frac{1}{n^4}$. Converges (p-series, $p=4>1$).
+    \item \textbf{Endpoint $x=-5$:} $\sum_{n=1}^{\infty} \frac{(-5)^n}{n^4 5^n} = \sum_{n=1}^{\infty} \frac{(-1)^n}{n^4}$. Converges (absolutely convergent).
+\end{itemize}
+Both endpoints are included.
+
+\textbf{Final Answer:}
+$R = 5$
+$I = [-5, 5]$
+
+\section{Problem 11}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} 6^n n^2 x^n$.
+\textbf{Solution:}
+Let $a_n = 6^n n^2 x^n$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{6^{n+1} (n+1)^2 x^{n+1}}{6^n n^2 x^n} \right| \\
+&= \lim_{n \to \infty} \left| 6x \left(\frac{n+1}{n}\right)^2 \right| \\
+&= 6|x| \lim_{n \to \infty} \left(\frac{n+1}{n}\right)^2 = 6|x| \cdot 1^2 = 6|x|
+\end{align*}
+For convergence, we need $L < 1$, so $6|x| < 1 \implies |x| < \frac{1}{6}$. The radius of convergence is $R=\frac{1}{6}$. The open interval is $(-\frac{1}{6}, \frac{1}{6})$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=1/6$:} The series is $\sum_{n=1}^{\infty} 6^n n^2 (\frac{1}{6})^n = \sum_{n=1}^{\infty} n^2$. The terms $a_n=n^2$ approach $\infty$. By the Divergence Test, the series diverges.
+    \item \textbf{Endpoint $x=-1/6$:} The series is $\sum_{n=1}^{\infty} 6^n n^2 (-\frac{1}{6})^n = \sum_{n=1}^{\infty} (-1)^n n^2$. The terms $a_n=(-1)^n n^2$ do not approach 0. By the Divergence Test, the series diverges.
+\end{itemize}
+Neither endpoint is included.
+
+\textbf{Final Answer:}
+$R = \frac{1}{6}$
+$I = (-\frac{1}{6}, \frac{1}{6})$
+
+\section{Problem 12}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} \frac{x^{2n}}{n!}$.
+\textbf{Solution:}
+Let $a_n = \frac{x^{2n}}{n!}$. We apply the Ratio Test. Note that $a_{n+1}$ will have $x^{2(n+1)} = x^{2n+2}$.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{x^{2n+2}}{(n+1)!} \cdot \frac{n!}{x^{2n}} \right| \\
+&= \lim_{n \to \infty} \left| x^2 \frac{n!}{(n+1)n!} \right| \\
+&= \lim_{n \to \infty} \left| \frac{x^2}{n+1} \right| = |x^2| \lim_{n \to \infty} \frac{1}{n+1} = x^2 \cdot 0 = 0
+\end{align*}
+Since $L=0$ for all values of $x$, and $0 < 1$ is always true, the series converges for all real numbers.
+
+\textbf{Final Answer:}
+$R = \infty$
+$I = (-\infty, \infty)$
+
+\section{Problem 13}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=0}^{\infty} \frac{(x-8)^n}{n^2+1}$.
+\textbf{Solution:}
+This series is centered at $a=8$. Let $a_n = \frac{(x-8)^n}{n^2+1}$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{(x-8)^{n+1}}{(n+1)^2+1} \cdot \frac{n^2+1}{(x-8)^n} \right| \\
+&= \lim_{n \to \infty} \left| (x-8) \frac{n^2+1}{n^2+2n+2} \right| \\
+&= |x-8| \lim_{n \to \infty} \frac{n^2+1}{n^2+2n+2} = |x-8| \cdot 1 = |x-8|
+\end{align*}
+For convergence, we need $|x-8| < 1$. The radius of convergence is $R=1$. The series converges on the interval $(8-1, 8+1) = (7, 9)$. Now we test the endpoints.
+\begin{itemize}
+    \item \textbf{Endpoint $x=9$:} The series is $\sum_{n=0}^{\infty} \frac{(9-8)^n}{n^2+1} = \sum_{n=0}^{\infty} \frac{1}{n^2+1}$. We can use the Limit Comparison Test with the convergent p-series $\sum \frac{1}{n^2}$.
+    \[ \lim_{n \to \infty} \frac{1/(n^2+1)}{1/n^2} = \lim_{n \to \infty} \frac{n^2}{n^2+1} = 1 \]
+    Since the limit is 1, the series converges.
+    \item \textbf{Endpoint $x=7$:} The series is $\sum_{n=0}^{\infty} \frac{(7-8)^n}{n^2+1} = \sum_{n=0}^{\infty} \frac{(-1)^n}{n^2+1}$. This series is absolutely convergent because $\sum |\frac{(-1)^n}{n^2+1}| = \sum \frac{1}{n^2+1}$, which we just showed converges. Therefore, the series converges.
+\end{itemize}
+Both endpoints are included.
+
+\textbf{Final Answer:}
+$R = 1$
+$I = [7, 9]$
+
+\section{Problem 14}
+Find the radius of convergence, $R$, and interval, $I$, of the series $\sum_{n=0}^{\infty} \frac{(x-3)^n}{n^2+1}$.
+\textbf{Solution:}
+This problem is identical in structure to Problem 13, but centered at $a=3$. The Ratio Test yields:
+\[ L = |x-3| \lim_{n \to \infty} \frac{n^2+1}{(n+1)^2+1} = |x-3| \]
+For convergence, $|x-3| < 1$. So $R=1$. The interval is $(3-1, 3+1) = (2, 4)$.
+Endpoint testing is also identical.
+\begin{itemize}
+    \item \textbf{Endpoint $x=4$:} $\sum_{n=0}^{\infty} \frac{1}{n^2+1}$, which converges (by comparison with p-series, $p=2$).
+    \item \textbf{Endpoint $x=2$:} $\sum_{n=0}^{\infty} \frac{(-1)^n}{n^2+1}$, which converges (absolutely convergent).
+\end{itemize}
+Both endpoints are included.
+
+\textbf{Final Answer:}
+$R = 1$
+$I = [2, 4]$
+
+\section{Problem 15}
+Find the radius of convergence, $R$, and the interval, $I$, of the series $\sum_{n=1}^{\infty} n!(7x-1)^n$.
+\textbf{Solution:}
+First, we rewrite the term to fit the standard form: $n!(7(x - 1/7))^n = n! 7^n (x - 1/7)^n$. The series is centered at $a = 1/7$.
+Let $a_n = n! 7^n (x - 1/7)^n$. We apply the Ratio Test.
+\begin{align*}
+L &= \lim_{n \to \infty} \left| \frac{a_{n+1}}{a_n} \right| = \lim_{n \to \infty} \left| \frac{(n+1)! 7^{n+1} (x - 1/7)^{n+1}}{n! 7^n (x - 1/7)^n} \right| \\
+&= \lim_{n \to \infty} \left| (n+1) \cdot 7 \cdot (x - 1/7) \right| \\
+&= 7|x - 1/7| \lim_{n \to \infty} (n+1)
+\end{align*}
+The limit $\lim_{n \to \infty} (n+1)$ is $\infty$. Therefore, for any $x \neq 1/7$, the limit $L$ is $\infty$. Since $L > 1$, the series diverges for all $x \neq 1/7$. The series only converges when the terms are zero, which happens only at the center $x = 1/7$.
+
+\textbf{Final Answer:}
+$R = 0$
+$I = \{1/7\}$ (The homework options indicate `{0}` for a single point, but based on the center it should be $\{1/7\}$. The provided options are likely simplified.)
+
+\part{In-Depth Analysis of Problems and Techniques}
+
+\section{Problem Types and General Approach}
+The homework problems can be categorized into several distinct types, each with a clear strategic approach.
+
+\subsection{Standard Series (Centered at a=0)}
+\begin{itemize}
+    \item \textbf{Problems:** 2, 3, 4, 5, 6, 7, 9, 10, 11.}
+    \item \textbf{General Approach:** These are the most straightforward problems.}
+    \begin{enumerate}
+        \item Identify the general term $c_n$ of the series $\sum c_n x^n$.
+        \item Apply the Ratio Test by computing $L = |x| \lim_{n \to \infty} |\frac{c_{n+1}}{c_n}|$.
+        \item Solve the inequality $L < 1$ to find $|x| < R$. This $R$ is the radius of convergence.
+        \item Test the endpoints $x = R$ and $x = -R$ by substituting them into the original series and using an appropriate convergence test (p-Series, Alternating Series Test, etc.).
+        \item Write the final Interval of Convergence based on the endpoint results.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Series Centered at a $\neq$ 0}
+\begin{itemize}
+    \item \textbf{Problems:** 13, 14, 15.}
+    \item \textbf{General Approach:** The strategy is nearly identical to the standard case, but with a shift.}
+    \begin{enumerate}
+        \item Identify the center $a$ and the coefficient $c_n$ from the form $\sum c_n (x-a)^n$. For problem 15, this required rewriting $7x-1$ as $7(x-1/7)$.
+        \item Apply the Ratio Test to get an inequality of the form $|x-a| < R$.
+        \item The interval is initially $(a-R, a+R)$.
+        \item Test the endpoints $x = a-R$ and $x = a+R$.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Series with Factorials}
+\begin{itemize}
+    \item \textbf{Problems:** 8, 12, 15.}
+    \item \textbf{General Approach:** These problems are prime candidates for the Ratio Test, as factorials simplify beautifully in ratios.}
+    \begin{enumerate}
+        \item When setting up the Ratio Test, be prepared for significant cancellations, such as $\frac{n!}{(n+1)!} = \frac{1}{n+1}$.
+        \item \textbf{Key Insight:} A factorial in the denominator (like in problems 8 and 12) often causes the limit $L$ to go to 0, resulting in $R=\infty$. A factorial in the numerator (problem 15) often causes the limit $L$ to go to $\infty$, resulting in $R=0$.
+    \end{enumerate}
+\end{itemize}
+
+\subsection{Conceptual Questions}
+\begin{itemize}
+    \item \textbf{Problem:** 1.}
+    \item \textbf{General Approach:** These questions test the definitions directly. The solution involves recalling the formal definitions of Radius and Interval of Convergence and the process for finding them.}
+\end{itemize}
+
+\section{Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{The Ratio Test Setup:} This was the cornerstone of every calculation problem. The key is to correctly write the $(n+1)$-th term by replacing every $n$ with $(n+1)$ and then form the ratio $|a_{n+1}/a_n|$.
+    
+    \item \textbf{Simplification of Ratios:}
+    \begin{itemize}
+        \item \textbf{Powers:} In every problem, terms like $\frac{|x^{n+1}|}{|x^n|} = |x|$ and $\frac{c^{n}}{c^{n+1}} = \frac{1}{c}$ appeared. This is the most fundamental simplification.
+        \item \textbf{Factorials:} In Problem 15, the simplification $\frac{(n+1)!}{n!} = n+1$ was critical. This algebraic trick is why the Ratio Test is so effective for series with factorials.
+        \item \textbf{Polynomials/Rational Functions of n:} In problems like 6 and 13, we had to evaluate limits like $\lim_{n \to \infty} \frac{4n-1}{4n+3}$. This was done by recognizing that for large $n$, the ratio behaves like $\frac{4n}{4n}$, which goes to 1.
+    \end{itemize}
+    
+    \item \textbf{Endpoint Analysis - p-Series Test:} This was essential for determining convergence at one of the endpoints.
+    \begin{itemize}
+        \item \textbf{Example:} In Problem 5, at endpoint $x=4$, we got $\sum \frac{1}{n}$. This is the harmonic series, a p-series with $p=1$, which diverges. In Problem 9, at $x=6$, we got $\sum \frac{1}{n^4}$, a p-series with $p=4 > 1$, which converges. Recognizing these forms is crucial.
+    \end{itemize}
+
+    \item \textbf{Endpoint Analysis - Alternating Series Test (AST):} This was used for the other endpoint in most cases where one endpoint included a $(-1)^n$ term.
+    \begin{itemize}
+        \item \textbf{Example:} In Problem 5, at endpoint $x=-4$, we got the alternating harmonic series $\sum \frac{(-1)^n}{n}$. The AST applies because the terms $1/n$ are positive, decreasing, and have a limit of 0. Thus, it converges.
+    \end{itemize}
+
+    \item \textbf{Endpoint Analysis - Divergence Test:} This was the first check for endpoints where the terms did not obviously converge.
+    \begin{itemize}
+        \item \textbf{Example:} In Problem 2, at endpoint $x=1$, the series was $\sum 8(-1)^n n$. The terms $8(-1)^n n$ do not approach zero, so the series diverges by the Divergence Test.
+    \end{itemize}
+\end{itemize}
+
+\part{"Cheatsheet" and Tips for Success}
+
+\section{Summary of Formulas}
+\begin{itemize}
+    \item \textbf{Power Series Form:} $\sum c_n (x-a)^n$
+    \item \textbf{Condition for Convergence (Ratio Test):} $\lim_{n \to \infty} \left| \frac{c_{n+1}(x-a)^{n+1}}{c_n(x-a)^n} \right| < 1$
+    \item \textbf{Result of Ratio Test:} $|x-a| \cdot L < 1$, where $L = \lim_{n \to \infty} |\frac{c_{n+1}}{c_n}|$.
+    \item \textbf{Radius of Convergence:} $R = 1/L$.
+\end{itemize}
+
+\section{Tricks and Shortcuts}
+\begin{itemize}
+    \item \textbf{Ratio Test First:} For finding the radius of convergence, the Ratio Test is almost always the most efficient method.
+    \item \textbf{Factorial Rule of Thumb:} If $n!$ is in the denominator, $R$ is likely $\infty$. If $n!$ is in the numerator, $R$ is likely $0$.
+    \item \textbf{Geometric Series Recognition:} If the coefficients $c_n$ are constant or simple powers like $k^n$, the Ratio Test will resemble that of a geometric series.
+    \item \textbf{Identify the Center First:} For a series like $\sum n!(7x-1)^n$, immediately rewrite it as $\sum n!7^n(x-1/7)^n$ to see that the center is $a=1/7$, not $1$.
+\end{itemize}
+
+\section{Common Pitfalls and Mistakes}
+\begin{itemize}
+    \item \textbf{Forgetting Endpoint Testing:} This is the single most common mistake. Finding $R$ only gives you the open interval; the full Interval of Convergence requires checking $x = a \pm R$.
+    \item \textbf{Algebraic Errors in the Ratio Test:} Be very careful when simplifying the fraction $|a_{n+1}/a_n|$. Write out the terms clearly before cancelling.
+    \item \textbf{Incorrect Endpoint Analysis:} Using the wrong test at an endpoint. For example, trying to use the Ratio Test at an endpoint will always yield a limit of 1, which is inconclusive. You \textit{must} switch to a different test (p-series, AST, etc.).
+    \item \textbf{Mixing Up $R$ and $I$:} The radius $R$ is a single non-negative number, while the interval $I$ is a set of points (e.g., $[-1, 1)$).
+    \item \textbf{Ignoring Absolute Values:} The Ratio Test requires absolute values. Forgetting them can lead to errors, especially when dealing with alternating series components.
+\end{itemize}
+
+\section{How to Recognize Problem Types}
+\begin{itemize}
+    \item If you see $(x-a)^n$, the center is $a$. If you just see $x^n$, the center is $0$.
+    \item If you see $n!$, use the Ratio Test.
+    \item After finding $R$, if plugging in an endpoint like $x=a+R$ results in a series like $\sum \frac{1}{n^p}$ or $\sum \frac{k}{n^p}$, use the p-Series Test.
+    \item If plugging in an endpoint results in a series with $(-1)^n$, immediately check the conditions for the Alternating Series Test.
+\end{itemize}
+
+\part{Conceptual Synthesis and The "Big Picture"}
+
+\section{Thematic Connections}
+The core theme of this chapter is \textbf{approximating complex functions with infinite polynomials}. This powerful idea is not new; it is the ultimate extension of concepts we have seen before.
+\begin{itemize}
+    \item \textbf{Connection to Linear Approximation:} In first-semester calculus, we learned that the tangent line to a function $f(x)$ at $x=a$ is the best linear (degree 1 polynomial) approximation of the function near that point. A power series is the logical conclusion of this idea: why stop at degree 1? A power series provides the best "infinite-degree polynomial" approximation, capturing the function's behavior with perfect accuracy within its interval of convergence.
+    \item \textbf{Connection to Numerical Methods:} When we study numerical integration (like Simpson's Rule), we approximate a function with parabolas (degree 2 polynomials) to estimate its definite integral. Power series offer a more powerful method: if we can represent a function as a power series, we can often integrate it simply by integrating the polynomial term-by-term, a much easier task.
+\end{itemize}
+
+\section{Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Link (Foundation):} The entire machinery of power series relies on the theory of infinite series. Without a firm grasp of convergence tests (Ratio Test, AST, p-Series, etc.), determining the interval of convergence would be impossible. The concept of a limit is the bedrock upon which the entire topic is built.
+    \item \textbf{Forward Link (Application):} This chapter is the gateway to one of the most important topics in calculus: \textbf{Taylor and Maclaurin Series}. While this homework focused on finding \textit{where} a given series converges, the next step is to learn how to find the specific power series that represents a given function (like $e^x = \sum \frac{x^n}{n!}$). These Taylor series are fundamental in physics, engineering, computer science, and finance for approximating function behavior, solving differential equations, and simplifying complex models. They also form the basis for understanding more advanced topics in differential equations and complex analysis.
+\end{itemize}
+
+\part{Real-World Application and Modeling}
+
+\section{Concrete Scenarios in Finance and Economics}
+Power series are not merely abstract mathematical tools; they are essential for solving tangible problems in quantitative finance and economics.
+
+\begin{enumerate}
+    \item \textbf{Derivative Pricing and the Black-Scholes Model:} One of the cornerstones of financial mathematics is the Black-Scholes model for pricing options. The formula involves the cumulative distribution function (CDF) of the standard normal distribution, denoted $\Phi(z)$. There is no simple, closed-form function for this integral. To compute its value, which is critical for determining an option's price, practitioners use its power series (Maclaurin series) expansion. This allows for a very fast and highly accurate approximation of the probabilities needed, which is essential in high-frequency trading and risk management systems.
+    
+    \item \textbf{Stochastic Calculus and Modeling Asset Prices:} The prices of stocks and other financial assets are often modeled using stochastic differential equations (SDEs), which are equations involving random processes. The theoretical underpinning for manipulating these SDEs is Itô's Lemma, which can be thought of as a version of the chain rule for stochastic processes. Itô's Lemma itself is derived using \textbf{stochastic Taylor expansions}, which are generalizations of the Taylor series to random functions. These expansions are fundamental for deriving pricing formulas, developing hedging strategies, and simulating future asset price paths.
+    
+    \item \textbf{Economic Modeling and Perturbation Methods:} Economists often build complex models of markets or entire economies. These models are frequently too complicated to solve directly. A common technique is to find a simple equilibrium point and then analyze how the system behaves when it is slightly perturbed or "shocked." This analysis is done by taking a Taylor series expansion of the model's equations around the equilibrium point. By keeping only the first few (linear and quadratic) terms of the series, economists can create a simplified, solvable model that accurately describes the local dynamics of the complex system.
+\end{enumerate}
+
+\section{Model Problem Setup: Approximating the Normal CDF}
+\textbf{Scenario:} A financial analyst needs to calculate the value of a European call option. A critical input is $\Phi(d_2)$, the probability of the option finishing "in the money". This requires calculating the integral of the standard normal distribution's probability density function (PDF), $\phi(z) = \frac{1}{\sqrt{2\pi}}e^{-z^2/2}$.
+
+\textbf{Mathematical Model Setup:}
+The goal is to calculate $\Phi(x) = \int_{-\infty}^{x} \frac{1}{\sqrt{2\pi}}e^{-t^2/2} dt$. Since there is no elementary antiderivative, we use a power series.
+
+\begin{enumerate}
+    \item \textbf{Start with the known Maclaurin series for $e^u$:}
+    \[ e^u = \sum_{n=0}^{\infty} \frac{u^n}{n!} = 1 + u + \frac{u^2}{2!} + \frac{u^3}{3!} + \dots \]
+    This series has a radius of convergence $R=\infty$.
+    
+    \item \textbf{Substitute $u = -t^2/2$:}
+    \[ e^{-t^2/2} = \sum_{n=0}^{\infty} \frac{(-t^2/2)^n}{n!} = \sum_{n=0}^{\infty} \frac{(-1)^n t^{2n}}{2^n n!} = 1 - \frac{t^2}{2} + \frac{t^4}{8} - \frac{t^6}{48} + \dots \]
+    
+    \item \textbf{Multiply by the constant and integrate term-by-term:} Since $\Phi(x) = \Phi(0) + \int_{0}^{x} \phi(t) dt$, and we know $\Phi(0)=0.5$, the integral we need to solve is:
+    \[ \int_{0}^{x} \frac{1}{\sqrt{2\pi}} \left( \sum_{n=0}^{\infty} \frac{(-1)^n t^{2n}}{2^n n!} \right) dt \]
+    
+    \item \textbf{Formulate the final series:} Integrating term by term gives:
+    \[ \Phi(x) \approx 0.5 + \frac{1}{\sqrt{2\pi}} \sum_{n=0}^{\infty} \left[ \frac{(-1)^n t^{2n+1}}{2^n n! (2n+1)} \right]_{0}^{x} \]
+    \[ \Phi(x) \approx 0.5 + \frac{1}{\sqrt{2\pi}} \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{2^n n! (2n+1)} \]
+\end{enumerate}
+This final expression is a power series in $x$. The analyst can now plug in the value of $d_2$ for $x$ and compute the sum using a finite number of terms to get a highly accurate approximation of the required probability.
+
+\part{Common Variations and Untested Concepts}
+
+The provided homework gives a solid foundation in the mechanics of finding the Radius and Interval of Convergence using the Ratio Test. However, a standard calculus curriculum includes other important related concepts.
+
+\section{The Root Test}
+The Root Test is an alternative to the Ratio Test, and it is particularly useful when the series terms involve $n$-th powers. It states that for a series $\sum a_n$, we compute $L = \lim_{n \to \infty} \sqrt[n]{|a_n|}$. The conclusions are the same: convergence for $L < 1$, divergence for $L > 1$, and inconclusive for $L=1$.
+
+\begin{itemize}
+    \item \textbf{Worked-out Example:} Find the radius of convergence for $\sum_{n=1}^{\infty} \left(\frac{n}{2n+1}\right)^n x^n$.
+    \item \textbf{Solution:} The $n$-th power structure suggests the Root Test.
+    \begin{align*}
+    L &= \lim_{n \to \infty} \sqrt[n]{\left| \left(\frac{n}{2n+1}\right)^n x^n \right|} \\
+      &= \lim_{n \to \infty} \left| \left(\frac{n}{2n+1}\right) x \right| \\
+      &= |x| \lim_{n \to \infty} \frac{n}{2n+1} = |x| \cdot \frac{1}{2} = \frac{|x|}{2}
+    \end{align*}
+    For convergence, we need $\frac{|x|}{2} < 1$, which implies $|x| < 2$. Thus, the radius of convergence is $R=2$.
+\end{itemize}
+
+\section{Term-by-Term Differentiation and Integration}
+A remarkable property of power series is that within their interval of convergence (but not necessarily at the endpoints), they can be differentiated and integrated term-by-term, just like a regular polynomial. The new series created by differentiation or integration has the \textbf{same radius of convergence} as the original series. The interval of convergence might change, however, as endpoint behavior can be altered.
+
+\begin{itemize}
+    \item \textbf{Worked-out Example:} We know the geometric series formula $\frac{1}{1-x} = \sum_{n=0}^{\infty} x^n$ for $R=1$ and $I=(-1,1)$. Find a power series for $\frac{1}{(1-x)^2}$.
+    \item \textbf{Solution:} Notice that $\frac{d}{dx}\left(\frac{1}{1-x}\right) = \frac{1}{(1-x)^2}$. We can differentiate the power series term-by-term.
+    \begin{align*}
+    \frac{1}{(1-x)^2} &= \frac{d}{dx} \left( \sum_{n=0}^{\infty} x^n \right) = \frac{d}{dx} (1 + x + x^2 + x^3 + \dots) \\
+    &= 0 + 1 + 2x + 3x^2 + \dots = \sum_{n=1}^{\infty} n x^{n-1}
+    \end{align*}
+    This new series has the same radius of convergence, $R=1$.
+\end{itemize}
+
+\part{Advanced Diagnostic Testing: "Find the Flaw"}
+This section contains five problems with solved solutions. Each solution contains one subtle but critical error. Your task is to find the flaw, explain why it is wrong, and provide the correct solution.
+
+\section{Problem 1}
+Find the radius and interval of convergence for $\sum_{n=1}^{\infty} \frac{(x-2)^n}{n \cdot 3^n}$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:}
+    Apply the Ratio Test. Let $a_n = \frac{(x-2)^n}{n \cdot 3^n}$.
+    \begin{align*}
+    L &= \lim_{n \to \infty} \left| \frac{(x-2)^{n+1}}{(n+1)3^{n+1}} \cdot \frac{n \cdot 3^n}{(x-2)^n} \right| \\
+    &= \lim_{n \to \infty} \left| \frac{x-2}{3} \cdot \frac{n}{n+1} \right| = \frac{|x-2|}{3} \cdot 1 = \frac{|x-2|}{3}
+    \end{align*}
+    For convergence, $\frac{|x-2|}{3} < 1 \implies |x-2| < 3$. So $R=3$.
+    The interval is $(2-3, 2+3) = (-1, 5)$.
+    Test endpoint $x=5$: $\sum \frac{3^n}{n \cdot 3^n} = \sum \frac{1}{n}$. This is the harmonic series, which diverges.
+    Test endpoint $x=-1$: $\sum \frac{(-3)^n}{n \cdot 3^n} = \sum \frac{(-1)^n}{n}$. This is the alternating harmonic series, which converges.
+    So, $I = (-1, 5]$.
+    
+    \item \textbf{Find the Flaw:}
+    \textbf{Location of Flaw:} Final Interval.
+    \textbf{Explanation of Error:} The interval includes the endpoint $x=-1$ where the alternating harmonic series converges, but it is written as $(-1, 5]$ instead of $[-1, 5)$.
+    \textbf{Correction:}
+    The interval should be $I = [-1, 5)$.
+\end{itemize}
+
+\section{Problem 2}
+Find the radius and interval of convergence for $\sum_{n=1}^{\infty} \frac{(-1)^n x^{2n}}{n^2}$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:}
+    Apply the Ratio Test. Let $a_n = \frac{(-1)^n x^{2n}}{n^2}$.
+    \begin{align*}
+    L &= \lim_{n \to \infty} \left| \frac{(-1)^{n+1} x^{2(n+1)}}{(n+1)^2} \cdot \frac{n^2}{(-1)^n x^{2n}} \right| \\
+    &= \lim_{n \to \infty} \left| (-1) x^2 \left(\frac{n}{n+1}\right)^2 \right| = |x^2| \cdot 1 = x^2
+    \end{align*}
+    For convergence, $x^2 < 1 \implies |x| < 1$. So $R=1$.
+    The interval is $(-1, 1)$.
+    Test endpoint $x=1$: $\sum \frac{(-1)^n (1)^{2n}}{n^2} = \sum \frac{(-1)^n}{n^2}$. Converges by AST.
+    Test endpoint $x=-1$: $\sum \frac{(-1)^n (-1)^{2n}}{n^2} = \sum \frac{(-1)^n}{n^2}$. Converges by AST.
+    So, $I = [-1, 1]$.
+
+    \item \textbf{Find the Flaw:}
+    \textbf{Location of Flaw:} The reasoning for convergence at the endpoints.
+    \textbf{Explanation of Error:} While the series do converge, the reason given (AST) is not the strongest. The series $\sum \frac{(-1)^n}{n^2}$ is absolutely convergent because $\sum \frac{1}{n^2}$ is a convergent p-series ($p=2 > 1$). Mentioning absolute convergence is a more complete justification.
+    \textbf{Correction:}
+    Test endpoint $x=1$: $\sum \frac{(-1)^n}{n^2}$. This series is absolutely convergent since $\sum \frac{1}{n^2}$ is a convergent p-series ($p=2$). Therefore, it converges.
+    Test endpoint $x=-1$: $\sum \frac{(-1)^n}{n^2}$. This is the same series and also converges. The final answer $I = [-1, 1]$ is correct, but the reasoning was incomplete.
+\end{itemize}
+
+\section{Problem 3}
+Find the radius and interval of convergence for $\sum_{n=0}^{\infty} n! (x+5)^n$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:}
+    Apply the Ratio Test.
+    \begin{align*}
+    L &= \lim_{n \to \infty} \left| \frac{(n+1)!(x+5)^{n+1}}{n!(x+5)^n} \right| \\
+    &= \lim_{n \to \infty} |(n+1)(x+5)| = |x+5| \lim_{n \to \infty} (n+1)
+    \end{align*}
+    For any $x \neq -5$, this limit is $\infty$. Thus the series only converges at $x=5$. So $R=0$ and $I=\{5\}$.
+
+    \item \textbf{Find the Flaw:}
+    \textbf{Location of Flaw:} Stating the interval of convergence.
+    \textbf{Explanation of Error:} The series is centered at $a=-5$, so it converges only at its center. The solution incorrectly states the center as $x=5$.
+    \textbf{Correction:}
+    The series only converges at its center, $x=-5$. The radius is $R=0$ and the interval of convergence is $I=\{-5\}$.
+\end{itemize}
+
+\section{Problem 4}
+Find the radius and interval of convergence for $\sum_{n=1}^{\infty} \frac{(2x)^n}{n}$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:}
+    Apply the Ratio Test. Let $a_n = \frac{(2x)^n}{n}$.
+    \begin{align*}
+    L &= \lim_{n \to \infty} \left| \frac{(2x)^{n+1}}{n+1} \cdot \frac{n}{(2x)^n} \right| \\
+    &= \lim_{n \to \infty} \left| 2x \frac{n}{n+1} \right| = |2x| \cdot 1 = 2|x|
+    \end{align*}
+    For convergence, $2|x| < 1 \implies |x| < 1$. So $R=1$.
+    The interval is $(-1, 1)$.
+    Test endpoint $x=1$: $\sum \frac{2^n}{n}$, which diverges.
+    Test endpoint $x=-1$: $\sum \frac{(-2)^n}{n}$, which diverges.
+    So, $I = (-1, 1)$.
+
+    \item \textbf{Find the Flaw:}
+    \textbf{Location of Flaw:} The radius of convergence calculation.
+    \textbf{Explanation of Error:} The condition for convergence is $2|x| < 1$, which simplifies to $|x| < 1/2$, not $|x| < 1$. The factor of 2 was ignored when determining R.
+    \textbf{Correction:}
+    The condition for convergence is $|x| < 1/2$. Therefore, the radius of convergence is $R=1/2$. The interval to check is $(-1/2, 1/2)$.
+    Test endpoint $x=1/2$: $\sum \frac{(2 \cdot 1/2)^n}{n} = \sum \frac{1^n}{n} = \sum \frac{1}{n}$. Diverges (harmonic series).
+    Test endpoint $x=-1/2$: $\sum \frac{(2 \cdot -1/2)^n}{n} = \sum \frac{(-1)^n}{n}$. Converges (alternating harmonic).
+    The correct interval is $I = [-1/2, 1/2)$.
+\end{itemize}
+
+\section{Problem 5}
+Find the radius and interval of convergence for $\sum_{n=1}^{\infty} \frac{x^n}{\sqrt{n^2+3}}$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:}
+    Apply the Ratio Test.
+    \begin{align*}
+    L &= \lim_{n \to \infty} \left| \frac{x^{n+1}}{\sqrt{(n+1)^2+3}} \cdot \frac{\sqrt{n^2+3}}{x^n} \right| \\
+    &= |x| \lim_{n \to \infty} \frac{\sqrt{n^2+3}}{\sqrt{n^2+2n+4}} = |x| \cdot 1 = |x|
+    \end{align*}
+    For convergence, $|x| < 1$. So $R=1$. The interval is $(-1, 1)$.
+    Test endpoint $x=1$: $\sum \frac{1}{\sqrt{n^2+3}}$. We compare to $\sum \frac{1}{n}$. Since $\frac{1}{\sqrt{n^2+3}} < \frac{1}{n}$ and $\sum \frac{1}{n}$ diverges, the test is inconclusive.
+    Test endpoint $x=-1$: $\sum \frac{(-1)^n}{\sqrt{n^2+3}}$. The terms approach zero, so by AST it converges.
+    So, $I = [-1, 1)$.
+
+    \item \textbf{Find the Flaw:}
+    \textbf{Location of Flaw:} Analysis of endpoint $x=1$.
+    \textbf{Explanation of Error:} The Direct Comparison Test was applied incorrectly. For a divergent series, you must show your series is *larger* than the divergent series, not smaller. The correct test to use here is the Limit Comparison Test.
+    \textbf{Correction:}
+    For the endpoint $x=1$, we have the series $\sum \frac{1}{\sqrt{n^2+3}}$. Use the Limit Comparison Test with the divergent harmonic series $\sum \frac{1}{n}$.
+    \[ \lim_{n \to \infty} \frac{1/\sqrt{n^2+3}}{1/n} = \lim_{n \to \infty} \frac{n}{\sqrt{n^2+3}} = \lim_{n \to \infty} \frac{n}{\sqrt{n^2(1+3/n^2)}} = \lim_{n \to \infty} \frac{n}{n\sqrt{1+3/n^2}} = 1 \]
+    Since the limit is a finite positive number (1), and $\sum \frac{1}{n}$ diverges, our series also diverges. The rest of the solution is correct. The final interval is indeed $I = [-1, 1)$.
+\end{itemize}
+
+\end{document}
