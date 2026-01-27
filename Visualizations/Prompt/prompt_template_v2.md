@@ -15,18 +15,8 @@
 
 ## PROMPT TEMPLATE
 
-```text
-I want to create comprehensive Manim Community Edition visualizations for the mathematical topic: [TOPIC_NAME]
 
-Project Name: [PROJECT_NAME]
-
-I have attached:
-- Homework problems PDF covering this topic
-- style_utils.py (my base styling file)
-- common_issues.md (known problems to avoid)
-- [Optional: Study guide or textbook sections]
-
-Please create a complete Manim script following these specifications.
+**Please create a complete Manim script following these specifications.**
 
 ### 1. FOUNDATION: Project Setup & Dependencies
 
@@ -37,7 +27,7 @@ C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\
 
 **Output Directory:**
 ```
-C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]\720p30\
+C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]\
 ```
 
 **Dependencies:**
@@ -158,7 +148,7 @@ import subprocess
 import os
 
 # Configuration
-video_dir = r"C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]\720p30"
+video_dir = r"C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]"
 project_name = "[PROJECT_NAME]"
 
 # List all scene videos in order

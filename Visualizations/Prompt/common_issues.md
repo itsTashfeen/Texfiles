@@ -73,7 +73,7 @@ os.environ['MANIM_OUTPUT_DIR'] = os.path.join(BASE_DIR, 'media')
 config.output_file = "project_name"  # Sets folder name
 ```
 
-**Result:** Videos save to `media/videos/project_name/720p30/`
+**Result:** Videos save to `media/videos/project_name/`
 
 **Status:** ✅ Fixed in template v2.0
 
