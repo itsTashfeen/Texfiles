@@ -1,6 +1,6 @@
-```markdown
 # Manim Styling & Formatting Guide
 ## For Mathematical Education Videos
+**Version 2.0 - Updated January 2026**
 
 This document establishes the visual standards for all Manim mathematical visualization projects. Following these guidelines ensures consistency, professionalism, and optimal learning outcomes.
 
@@ -74,6 +74,8 @@ GRID_Y_RANGE = [-3.5, 3.5]     # NEVER exceed 3.5 to avoid title collision
 GRID_X_RANGE = [-7, 7]
 ```
 
+**⚠️ CRITICAL RULE:** All `NumberPlane` objects MUST have `y_range` that does not exceed [-3.5, 3.5] and MUST be shifted to content zone using `POS_GRID_CENTER`.
+
 ---
 
 ## 📏 SIZING STANDARDS
@@ -122,7 +124,12 @@ axes_2d = NumberPlane(
         "stroke_width": 1
     }
 ).add_coordinates()
+
+# MANDATORY: Shift to content zone
+axes_2d.shift(POS_GRID_CENTER)
 ```
+
+**Best Practice:** Use `BaseScene.get_standard_grid()` which handles all safety checks automatically.
 
 ### Axis Labels
 ```python
@@ -155,6 +162,8 @@ box = SurroundingRectangle(
 self.play(Create(box), Write(content))
 ```
 
+**Best Practice:** Use `BaseScene.create_formula_box()` helper method.
+
 ---
 
 ## ⏱️ TIMING STANDARDS
@@ -178,6 +187,8 @@ PAUSE_SCENE_END = 3.0         # End of scene
 3. Complex calculations: 1.5s per step minimum
 4. Final results: 2-3s hold time
 
+**Target Scene Length:** 60-70 seconds per scene
+
 ---
 
 ## 📝 FORMULA FORMATTING
@@ -187,6 +198,8 @@ PAUSE_SCENE_END = 3.0         # End of scene
 \vec{a}              # Named vectors
 \langle 3, 4 \rangle # Component form
 |\vec{a}|            # Magnitude
+\cdot                # Dot product
+\times               # Cross product
 ```
 
 ### Layout Strategy
@@ -197,7 +210,117 @@ PAUSE_SCENE_END = 3.0         # End of scene
 
 ---
 
-## 🔄 VERSION CONTROL
+## 🎬 SCENE STRUCTURE TEMPLATE
 
-Current Version: **1.1.0** (Updated for Safe Zones & Dynamic Sizing)
-Last Updated: January 2026
+Every scene should follow this structure:
+
+```python
+class SceneXX_Name(BaseScene):
+    def __init__(self, **kwargs):
+        super().__init__(title="Scene Title", **kwargs)
+    
+    def construct(self):
+        # [0-5s] Title
+        title = self.add_title("Scene Title")
+        self.wait(PAUSE_MEDIUM)
+        
+        # [5-15s] Setup/Introduction
+        # Introduce the problem or concept
+        
+        # [15-45s] Main Content
+        # Core visualization in CONTENT ZONE
+        
+        # [45-60s] Summary/Conclusion
+        # Key takeaway in FOOTER ZONE
+        
+        # [60-65s] Final pause
+        self.wait(PAUSE_SCENE_END)
+```
+
+---
+
+## 🚫 COMMON MISTAKES TO AVOID
+
+1. **Grid Too Tall:** Y-range exceeds 3.5 → overlaps title
+2. **Text Without Background:** Unreadable over grid lines
+3. **Fixed-Size Boxes:** Content spills outside rectangle
+4. **Rushed Pacing:** Animations stack without pauses
+5. **Inconsistent Colors:** Using random colors instead of palette
+6. **Missing Labels:** Vectors without identification
+7. **Footer Overflow:** Formulas placed above Y = -2.5
+
+---
+
+## ✅ QUALITY CHECKLIST
+
+Before finalizing any scene:
+
+- [ ] Title stays above Y = 3.0
+- [ ] Grid Y-range does not exceed [-3.5, 3.5]
+- [ ] Grid shifted with `POS_GRID_CENTER` or `DOWN * 0.5`
+- [ ] All text over grids has background rectangle
+- [ ] Colors follow palette (Blue/Red/Green/Yellow/Orange)
+- [ ] Font sizes match standards (48/36/40/28/24/20)
+- [ ] Animations have proper pauses (0.5s/1s/2s/3s)
+- [ ] Scene length is 60-70 seconds
+- [ ] Dynamic boxes used for formulas (no fixed sizes)
+- [ ] All vectors have labels with background
+
+---
+
+## 📚 HELPER METHODS REFERENCE
+
+### BaseScene Methods
+
+```python
+# Add title (automatically in safe zone)
+title = self.add_title("Title Text")
+
+# Get safe grid (Y-restricted, auto-shifted)
+grid = self.get_standard_grid()
+
+# Create dynamic formula box
+box = self.create_formula_box(formula1, formula2, position=DOWN*2.5)
+
+# Add labeled vector
+vector = self.add_vector_with_label(start, end, COLOR_VECTOR_A, r"\vec{a}")
+```
+
+### Utility Functions
+
+```python
+# Add background to any text
+add_background_to_text(text_obj, buff=0.1, opacity=0.8)
+
+# Create angle arc
+arc = create_angle_arc(vertex, start_point, end_point, radius=ANGLE_RADIUS)
+```
+
+---
+
+## 📄 VERSION CONTROL
+
+**Current Version:** 2.0  
+**Last Updated:** January 2026  
+**Changes from 1.1:**
+- Added consolidated scene block workflow
+- Added FFmpeg concatenation guidelines
+- Added quality checklist
+- Added common mistakes section
+- Updated helper methods reference
+
+---
+
+## 📞 TROUBLESHOOTING
+
+See `common_issues.md` for detailed solutions to known problems.
+
+Quick reminders:
+- Grid overlapping title → Use `get_standard_grid()`
+- Text unreadable → Add `.add_background_rectangle()`
+- Videos wrong location → Check Cell 1 setup
+- Import errors → Check absolute path in `sys.path.append()`
+
+---
+
+**End of Styling Guide**
