@@ -1,0 +1,567 @@
+    \documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, geometry, graphicx, hyperref, color}
+\geometry{letterpaper, margin=1in}
+
+\title{\textbf{Homework 15.8: Triple Integrals in Spherical Coordinates}}
+\author{Tashfeen Omran}
+\date{May 2024}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+Triple integrals allow us to calculate volumes, masses, and average values over three-dimensional regions. While the Cartesian coordinate system $(x, y, z)$ is excellent for rectangular boxes, it becomes incredibly cumbersome when dealing with spherical objects or cones. This introduces the need for \textbf{Spherical Coordinates}, denoted by $(\rho, \theta, \phi)$.
+
+Instead of moving left/right, forward/backward, and up/down, spherical coordinates locate a point in 3D space using one distance and two angles:
+\begin{itemize}
+    \item $\rho$ (rho) is the straight-line distance from the origin to the point. ($\rho \ge 0$)
+    \item $\theta$ (theta) is the azimuthal angle in the $xy$-plane, measured counterclockwise from the positive $x$-axis. This is identical to $\theta$ in polar/cylindrical coordinates. ($0 \le \theta \le 2\pi$)
+    \item $\phi$ (phi) is the polar angle, measured downwards from the positive $z$-axis. ($0 \le \phi \le \pi$). Notice that the $xy$-plane corresponds to $\phi = \pi/2$.
+\end{itemize}
+
+\subsection{Intuition and Derivation: The Spherical Volume Element}
+When converting an integral from Cartesian to spherical coordinates, the infinitesimal volume element $dV = dx \, dy \, dz$ must change. If we slightly vary our coordinates by $d\rho$, $d\theta$, and $d\phi$, we carve out a tiny ``spherical wedge."
+The lengths of the edges of this wedge are approximately:
+1. $d\rho$ (outward along the radial line)
+2. $\rho \, d\phi$ (downward arc)
+3. $\rho \sin\phi \, d\theta$ (horizontal arc, where the radius of the circular cross-section at angle $\phi$ is $r = \rho \sin\phi$)
+
+Multiplying these three orthogonal edge lengths yields the volume of the wedge:
+\[ dV = (d\rho) \cdot (\rho \, d\phi) \cdot (\rho \sin\phi \, d\theta) = \rho^2 \sin\phi \, d\rho \, d\theta \, d\phi \]
+This extra factor, $\rho^2 \sin\phi$, is the absolute value of the Jacobian determinant of the coordinate transformation. You \textbf{must} include it every time you switch to spherical integrals.
+
+\subsection{Historical Context and Motivation}
+Spherical coordinates were historically motivated by astronomy, geodesy, and the physical sciences. Mathematicians like Alexis Clairaut and Pierre-Simon Laplace in the 18th century needed a system to model the gravitational pull of celestial bodies and solve Laplace's equation for the Earth and the planets. Modeling a planet in $(x, y, z)$ leads to impossible boundary conditions, but modeling it as a sphere $\rho = R$ simplifies the boundary to a constant. This system revolutionized orbital mechanics and the study of electromagnetism.
+
+\subsection{Key Formulas}
+Coordinate Conversion (Spherical to Cartesian):
+\[ x = \rho \sin\phi \cos\theta \quad \quad y = \rho \sin\phi \sin\theta \quad \quad z = \rho \cos\phi \]
+Coordinate Conversion (Cartesian to Spherical):
+\[ \rho^2 = x^2 + y^2 + z^2 \quad \quad \tan\theta = \frac{y}{x} \quad \quad \cos\phi = \frac{z}{\rho} = \frac{z}{\sqrt{x^2+y^2+z^2}} \]
+The Triple Integral Conversion:
+\[ \iiint_E f(x,y,z) \, dV = \iiint_E f(\rho \sin\phi \cos\theta, \, \rho \sin\phi \sin\theta, \, \rho \cos\phi) \, \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta \]
+
+\subsection{Prerequisites}
+To succeed in this chapter, you must be comfortable with:
+1. \textbf{Polar/Cylindrical Coordinates:} Recognizing $x^2 + y^2 = r^2$ and handling bounds for $\theta$.
+2. \textbf{Trigonometric Identities:} The Pythagorean identities (e.g., $1 - \cos^2\phi = \sin^2\phi$) and double-angle formulas.
+3. \textbf{Integration Techniques:} Specifically, $u$-substitution for integrals involving odd/even powers of sine and cosine (e.g., integrating $\sin^3\phi$).
+4. \textbf{3D Visualization:} Recognizing equations of spheres ($\rho = c$) and cones ($\phi = c$).
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+
+\subsection*{Problem 1}
+\textbf{Question:} Plot the point whose spherical coordinates are given. Then find the rectangular coordinates of the point.
+(a) $(7, \frac{3\pi}{4}, \frac{\pi}{2})$
+(b) $(9, -\frac{\pi}{3}, \frac{\pi}{4})$
+
+\textbf{Solution (a):}
+We are given $(\rho, \theta, \phi) = (7, \frac{3\pi}{4}, \frac{\pi}{2})$.
+Apply the conversion formulas:
+\[ x = \rho \sin\phi \cos\theta = 7 \sin\left(\frac{\pi}{2}\right) \cos\left(\frac{3\pi}{4}\right) = 7(1)\left(-\frac{\sqrt{2}}{2}\right) = -\frac{7\sqrt{2}}{2} \]
+\[ y = \rho \sin\phi \sin\theta = 7 \sin\left(\frac{\pi}{2}\right) \sin\left(\frac{3\pi}{4}\right) = 7(1)\left(\frac{\sqrt{2}}{2}\right) = \frac{7\sqrt{2}}{2} \]
+\[ z = \rho \cos\phi = 7 \cos\left(\frac{\pi}{2}\right) = 7(0) = 0 \]
+\textbf{Final Answer (a):} $\left( -\frac{7\sqrt{2}}{2}, \frac{7\sqrt{2}}{2}, 0 \right)$
+
+\textbf{Solution (b):}
+We are given $(\rho, \theta, \phi) = (9, -\frac{\pi}{3}, \frac{\pi}{4})$.
+\[ x = 9 \sin\left(\frac{\pi}{4}\right) \cos\left(-\frac{\pi}{3}\right) = 9 \left(\frac{\sqrt{2}}{2}\right) \left(\frac{1}{2}\right) = \frac{9\sqrt{2}}{4} \]
+\[ y = 9 \sin\left(\frac{\pi}{4}\right) \sin\left(-\frac{\pi}{3}\right) = 9 \left(\frac{\sqrt{2}}{2}\right) \left(-\frac{\sqrt{3}}{2}\right) = -\frac{9\sqrt{6}}{4} \]
+\[ z = 9 \cos\left(\frac{\pi}{4}\right) = 9 \left(\frac{\sqrt{2}}{2}\right) = \frac{9\sqrt{2}}{2} \]
+\textbf{Final Answer (b):} $\left( \frac{9\sqrt{2}}{4}, -\frac{9\sqrt{6}}{4}, \frac{9\sqrt{2}}{2} \right)$
+
+---
+
+\subsection*{Problem 2}
+\textbf{Question:} Change from rectangular to spherical coordinates. Let $\rho \ge 0, 0 \le \theta \le 2\pi, 0 \le \phi \le \pi$.
+(a) $(9, 9, 0)$
+(b) $(6, -2\sqrt{3}, 4)$
+
+\textbf{Solution (a):}
+Given $(x, y, z) = (9, 9, 0)$.
+\[ \rho = \sqrt{x^2 + y^2 + z^2} = \sqrt{9^2 + 9^2 + 0^2} = \sqrt{81 + 81} = \sqrt{162} = 9\sqrt{2} \]
+\[ \cos\phi = \frac{z}{\rho} = \frac{0}{9\sqrt{2}} = 0 \implies \phi = \frac{\pi}{2} \]
+\[ \tan\theta = \frac{y}{x} = \frac{9}{9} = 1 \]
+Since $x>0$ and $y>0$, $\theta$ is in Quadrant I, so $\theta = \frac{\pi}{4}$.
+\textbf{Final Answer (a):} $\left( 9\sqrt{2}, \frac{\pi}{4}, \frac{\pi}{2} \right)$
+
+\textbf{Solution (b):}
+Given $(x, y, z) = (6, -2\sqrt{3}, 4)$.
+\[ \rho = \sqrt{6^2 + (-2\sqrt{3})^2 + 4^2} = \sqrt{36 + 12 + 16} = \sqrt{64} = 8 \]
+\[ \cos\phi = \frac{z}{\rho} = \frac{4}{8} = \frac{1}{2} \implies \phi = \frac{\pi}{3} \]
+\[ \tan\theta = \frac{y}{x} = \frac{-2\sqrt{3}}{6} = -\frac{\sqrt{3}}{3} \]
+Since $x>0$ and $y<0$, $\theta$ is in Quadrant IV. Within $[0, 2\pi]$, $\theta = \frac{11\pi}{6}$.
+\textbf{Final Answer (b):} $\left( 8, \frac{11\pi}{6}, \frac{\pi}{3} \right)$
+
+---
+
+\subsection*{Problem 3}
+\textbf{Question:} Change from rectangular to spherical coordinates.
+(a) $(0, 2, -2)$
+(b) $(-9, 9, 9\sqrt{6})$
+
+\textbf{Solution (a):}
+\[ \rho = \sqrt{0^2 + 2^2 + (-2)^2} = \sqrt{0 + 4 + 4} = \sqrt{8} = 2\sqrt{2} \]
+\[ \cos\phi = \frac{z}{\rho} = \frac{-2}{2\sqrt{2}} = -\frac{1}{\sqrt{2}} \implies \phi = \frac{3\pi}{4} \]
+\[ \tan\theta = \frac{y}{x} = \frac{2}{0} \]
+Because $x=0$ and $y$ is positive, the point lies on the positive $y$-axis in the $xy$-projection. Thus, $\theta = \frac{\pi}{2}$.
+\textbf{Final Answer (a):} $\left( 2\sqrt{2}, \frac{\pi}{2}, \frac{3\pi}{4} \right)$
+
+\textbf{Solution (b):}
+\[ \rho = \sqrt{(-9)^2 + 9^2 + (9\sqrt{6})^2} = \sqrt{81 + 81 + 81(6)} = \sqrt{81(1+1+6)} = \sqrt{81(8)} = 9\sqrt{8} = 18\sqrt{2} \]
+\[ \cos\phi = \frac{z}{\rho} = \frac{9\sqrt{6}}{18\sqrt{2}} = \frac{\sqrt{3}}{2} \implies \phi = \frac{\pi}{6} \]
+\[ \tan\theta = \frac{y}{x} = \frac{9}{-9} = -1 \]
+Since $x<0$ and $y>0$, $\theta$ is in Quadrant II, so $\theta = \frac{3\pi}{4}$.
+\textbf{Final Answer (b):} $\left( 18\sqrt{2}, \frac{3\pi}{4}, \frac{\pi}{6} \right)$
+
+---
+
+\subsection*{Problem 4}
+\textbf{Question:} Identify the surface whose equation is given: $\rho \cos(\phi) = 9$.
+
+\textbf{Solution:}
+We use the direct conversion formula $z = \rho \cos\phi$.
+Substitute this into the equation:
+\[ z = 9 \]
+This represents a flat horizontal plane.
+\textbf{Final Answer:} The plane $z = 9$.
+
+---
+
+\subsection*{Problem 5}
+\textbf{Question:} Write the equation in spherical coordinates.
+(a) $x^2 + y^2 + z^2 = 16$
+(b) $x^2 - y^2 - z^2 = 1$
+
+\textbf{Solution (a):}
+We know the identity $\rho^2 = x^2 + y^2 + z^2$.
+Substitute into the equation:
+\[ \rho^2 = 16 \implies \rho = 4 \]
+\textbf{Final Answer (a):} $\rho = 4$
+
+\textbf{Solution (b):}
+Substitute the spherical conversions for $x, y,$ and $z$:
+\[ (\rho \sin\phi \cos\theta)^2 - (\rho \sin\phi \sin\theta)^2 - (\rho \cos\phi)^2 = 1 \]
+Factor out $\rho^2 \sin^2\phi$ from the first two terms:
+\[ \rho^2 \sin^2\phi (\cos^2\theta - \sin^2\theta) - \rho^2 \cos^2\phi = 1 \]
+Use the double angle identity $\cos(2\theta) = \cos^2\theta - \sin^2\theta$:
+\[ \rho^2 \sin^2\phi \cos(2\theta) - \rho^2 \cos^2\phi = 1 \]
+Factor out $\rho^2$:
+\[ \rho^2 (\sin^2\phi \cos(2\theta) - \cos^2\phi) = 1 \]
+\textbf{Final Answer (b):} $\rho^2 (\sin^2\phi \cos(2\theta) - \cos^2\phi) = 1$
+
+---
+
+\subsection*{Problem 6}
+\textbf{Question:} Write the equation in spherical coordinates.
+(a) $z = 5x^2 + 5y^2$
+(b) $z = 7x^2 - 7y^2$
+
+\textbf{Solution (a):}
+Factor the right side: $z = 5(x^2 + y^2)$.
+In cylindrical coordinates, $x^2 + y^2 = r^2$. In spherical, $r = \rho \sin\phi$. Thus, $x^2 + y^2 = \rho^2 \sin^2\phi$.
+Substitute $z = \rho \cos\phi$ and $(x^2+y^2)$:
+\[ \rho \cos\phi = 5(\rho^2 \sin^2\phi) \]
+Assuming $\rho \neq 0$, divide by $\rho$:
+\[ \cos\phi = 5\rho \sin^2\phi \]
+Solve for $\rho$:
+\[ \rho = \frac{\cos\phi}{5 \sin^2\phi} = \frac{1}{5} \csc\phi \cot\phi \]
+\textbf{Final Answer (a):} $\rho = \frac{1}{5} \csc\phi \cot\phi$
+
+\textbf{Solution (b):}
+Substitute spherical conversions into $z = 7(x^2 - y^2)$:
+\[ \rho \cos\phi = 7((\rho \sin\phi \cos\theta)^2 - (\rho \sin\phi \sin\theta)^2) \]
+\[ \rho \cos\phi = 7\rho^2 \sin^2\phi (\cos^2\theta - \sin^2\theta) \]
+\[ \rho \cos\phi = 7\rho^2 \sin^2\phi \cos(2\theta) \]
+Assuming $\rho \neq 0$, divide by $\rho$ and solve for $\rho$:
+\[ \cos\phi = 7\rho \sin^2\phi \cos(2\theta) \implies \rho = \frac{\cos\phi}{7 \sin^2\phi \cos(2\theta)} \]
+\textbf{Final Answer (b):} $\rho = \frac{\cos\phi}{7 \sin^2\phi \cos(2\theta)}$
+
+---
+
+\subsection*{Problem 7}
+\textbf{Question:} Sketch the solid described by the inequalities: $\rho \le 3$, $0 \le \phi \le \frac{\pi}{6}$, $0 \le \theta \le \pi$. Select the proper descriptions.
+
+\textbf{Solution:}
+Let's analyze the boundaries:
+- $0 \le \theta \le \pi$: This spans quadrants I and II in the $xy$-plane, meaning $y \ge 0$. The solid has positive and zero $y$-values, and both positive and negative $x$-values.
+- $0 \le \phi \le \pi/6$: This starts at the positive $z$-axis and opens downward to form a cone. It implies all $z$-values are positive.
+- $\rho \le 3$: This bounds the solid within a sphere of radius 3 centered at the origin.
+Thus, the solid is a wedge of a spherical cone.
+\textbf{Final Answer:} 
+- The solid has \textbf{all} $x$-values (technically both positive and negative are present).
+- The solid has \textbf{positive} $y$-values (since $y \ge 0$).
+- The solid has \textbf{positive} $z$-values.
+- The top of the solid is part of a \textbf{sphere}.
+- The bottom of the solid is part of a \textbf{cone}.
+
+---
+
+\subsection*{Problem 8}
+\textbf{Question:} Sketch the solid: $3 \le \rho \le 4$, $\frac{\pi}{2} \le \phi \le \pi$.
+
+\textbf{Solution:}
+- No restriction on $\theta$ is explicitly given, so we assume $0 \le \theta \le 2\pi$ (all $x$ and $y$ values).
+- $\frac{\pi}{2} \le \phi \le \pi$: This restricts the solid to the lower hemisphere (below the $xy$-plane), so $z \le 0$ (negative $z$-values).
+- $3 \le \rho \le 4$: The solid lies between two concentric spheres.
+\textbf{Final Answer:}
+- The solid has \textbf{all} $x$-values.
+- The solid has \textbf{all} $y$-values.
+- The solid has \textbf{negative} $z$-values.
+- The inside of the solid is part of a \textbf{sphere} (radius 3).
+- The outside of the solid is part of a \textbf{sphere} (radius 4).
+
+---
+
+\subsection*{Problem 9}
+\textbf{Question:} A solid lies inside the sphere $x^2+y^2+z^2 = 14z$ and outside the cone $z = \sqrt{x^2+y^2}$. Write a description in inequalities involving spherical coords.
+
+\textbf{Solution:}
+First, convert the sphere $x^2+y^2+z^2 = 14z$:
+\[ \rho^2 = 14\rho\cos\phi \implies \rho = 14\cos\phi \]
+Second, convert the cone $z = \sqrt{x^2+y^2}$:
+\[ \rho\cos\phi = \sqrt{\rho^2 \sin^2\phi \cos^2\theta + \rho^2 \sin^2\phi \sin^2\theta} = \rho\sin\phi \]
+Divide by $\rho\cos\phi$:
+\[ 1 = \tan\phi \implies \phi = \frac{\pi}{4} \]
+The solid is "outside" (meaning a wider angle from the $z$-axis) the cone, so $\phi \ge \frac{\pi}{4}$.
+The solid is inside the sphere. Note that the sphere $\rho = 14\cos\phi$ sits entirely above the $xy$-plane, meaning it exists only where $z \ge 0 \implies \phi \le \frac{\pi}{2}$.
+Therefore, the bounds are:
+\[ \frac{\pi}{4} \le \phi \le \frac{\pi}{2}, \quad 0 \le \rho \le 14\cos\phi \]
+\textbf{Final Answer:} $\frac{\pi}{4} \le \phi \le \frac{\pi}{2}, \quad 0 \le \rho \le 14\cos\phi$
+
+---
+
+\subsection*{Problem 10}
+\textbf{Question:} Evaluate $\int_0^{\pi/6} \int_0^{\pi/2} \int_0^4 \rho^2 \sin\phi \, d\rho \, d\theta \, d\phi$.
+
+\textbf{Solution:}
+This represents a region in the first octant bounded by a sphere ($\rho=4$) and a cone ($\phi=\pi/6$). (Matches the top-left sketch in the options).
+Because the limits are constants and the integrand factors, we can split the integral:
+\[ = \left( \int_0^{\pi/6} \sin\phi \, d\phi \right) \cdot \left( \int_0^{\pi/2} d\theta \right) \cdot \left( \int_0^4 \rho^2 \, d\rho \right) \]
+Evaluate each part separately:
+1. $\int_0^4 \rho^2 \, d\rho = \left[ \frac{\rho^3}{3} \right]_0^4 = \frac{64}{3}$
+2. $\int_0^{\pi/2} d\theta = \left[ \theta \right]_0^{\pi/2} = \frac{\pi}{2}$
+3. $\int_0^{\pi/6} \sin\phi \, d\phi = \left[ -\cos\phi \right]_0^{\pi/6} = -\cos\left(\frac{\pi}{6}\right) - (-\cos(0)) = -\frac{\sqrt{3}}{2} + 1 = 1 - \frac{\sqrt{3}}{2}$
+
+Multiply them together:
+\[ V = \left( 1 - \frac{\sqrt{3}}{2} \right) \left( \frac{\pi}{2} \right) \left( \frac{64}{3} \right) = \left( \frac{2-\sqrt{3}}{2} \right) \left( \frac{64\pi}{6} \right) = \frac{32\pi(2-\sqrt{3})}{6} = \frac{16\pi(2-\sqrt{3})}{3} \]
+\textbf{Final Answer:} $\frac{16\pi(2-\sqrt{3})}{3}$
+
+---
+
+\subsection*{Problem 11}
+\textbf{Question:} Evaluate $\int_0^{\pi/6} \int_0^{\pi/2} \int_0^6 \rho^2 \sin\phi \, d\rho \, d\theta \, d\phi$.
+
+\textbf{Solution:}
+This is identical in structure to Problem 10, except the upper limit for $\rho$ is 6 instead of 4.
+\[ = \left( \int_0^{\pi/6} \sin\phi \, d\phi \right) \cdot \left( \int_0^{\pi/2} d\theta \right) \cdot \left( \int_0^6 \rho^2 \, d\rho \right) \]
+1. $\int_0^6 \rho^2 \, d\rho = \frac{6^3}{3} = \frac{216}{3} = 72$
+2. $\int_0^{\pi/2} d\theta = \frac{\pi}{2}$
+3. $\int_0^{\pi/6} \sin\phi \, d\phi = 1 - \frac{\sqrt{3}}{2} = \frac{2-\sqrt{3}}{2}$
+
+Multiply:
+\[ V = \left( \frac{2-\sqrt{3}}{2} \right) \left( \frac{\pi}{2} \right) (72) = \frac{72\pi(2-\sqrt{3})}{4} = 18\pi(2-\sqrt{3}) \]
+\textbf{Final Answer:} $18\pi(2-\sqrt{3})$
+
+---
+
+\subsection*{Problem 12}
+\textbf{Question:} Consider $f(x, y, z) = \sqrt{x^2+y^2+z^2}$ and solid $E$ bounded by $z = \sqrt{x^2+y^2}$ and the spheres $x^2+y^2+z^2=16$ and $x^2+y^2+z^2=36$. Express the triple integral as an iterated integral and evaluate.
+
+\textbf{Solution (a): Setting up the integral}
+Function: $f(x,y,z) = \sqrt{x^2+y^2+z^2} = \rho$.
+Region $E$:
+- Bounded below by cone $z = \sqrt{x^2+y^2} \implies \phi = \frac{\pi}{4}$. Thus, $0 \le \phi \le \frac{\pi}{4}$.
+- Between spheres $\rho^2=16 \implies \rho=4$ and $\rho^2=36 \implies \rho=6$. Thus, $4 \le \rho \le 6$.
+- Full rotation around $z$-axis: $0 \le \theta \le 2\pi$.
+Integrand: $f(\rho) \cdot dV = (\rho) \cdot (\rho^2 \sin\phi \, d\rho \, d\theta \, d\phi) = \rho^3 \sin\phi \, d\rho \, d\theta \, d\phi$.
+\textbf{Final Answer (a):} $\int_0^{2\pi} \int_0^{\pi/4} \int_4^6 \rho^3 \sin\phi \, d\rho \, d\phi \, d\theta$
+
+\textbf{Solution (b): Evaluation}
+\[ = \left( \int_0^{2\pi} d\theta \right) \left( \int_0^{\pi/4} \sin\phi \, d\phi \right) \left( \int_4^6 \rho^3 \, d\rho \right) \]
+1. $\int_0^{2\pi} d\theta = 2\pi$
+2. $\int_0^{\pi/4} \sin\phi \, d\phi = [-\cos\phi]_0^{\pi/4} = -\frac{\sqrt{2}}{2} - (-1) = 1 - \frac{\sqrt{2}}{2} = \frac{2-\sqrt{2}}{2}$
+3. $\int_4^6 \rho^3 \, d\rho = \left[ \frac{\rho^4}{4} \right]_4^6 = \frac{1296 - 256}{4} = \frac{1040}{4} = 260$
+
+Multiply:
+\[ = (2\pi) \left( \frac{2-\sqrt{2}}{2} \right) (260) = \pi(2-\sqrt{2})(260) = 260\pi(2-\sqrt{2}) \]
+\textbf{Final Answer (b):} $260\pi(2-\sqrt{2})$
+
+---
+
+\subsection*{Problem 13}
+\textbf{Question:} Evaluate $\iiint_B (x^2+y^2+z^2)^2 \, dV$, where $B$ is the ball with center at the origin and radius 1.
+
+\textbf{Solution:}
+Ball $B$ means $0 \le \rho \le 1$, $0 \le \phi \le \pi$, $0 \le \theta \le 2\pi$.
+Integrand: $(x^2+y^2+z^2)^2 = (\rho^2)^2 = \rho^4$.
+Include the Jacobian $dV = \rho^2 \sin\phi \, d\rho \, d\theta \, d\phi$.
+\[ I = \int_0^{2\pi} \int_0^\pi \int_0^1 (\rho^4)(\rho^2 \sin\phi) \, d\rho \, d\phi \, d\theta = \int_0^{2\pi} d\theta \int_0^\pi \sin\phi \, d\phi \int_0^1 \rho^6 \, d\rho \]
+1. $\int_0^{2\pi} d\theta = 2\pi$
+2. $\int_0^\pi \sin\phi \, d\phi = [-\cos\phi]_0^\pi = -(-1) - (-1) = 2$
+3. $\int_0^1 \rho^6 \, d\rho = \left[ \frac{\rho^7}{7} \right]_0^1 = \frac{1}{7}$
+Multiply: $I = 2\pi \cdot 2 \cdot \frac{1}{7} = \frac{4\pi}{7}$.
+\textbf{Final Answer:} $\frac{4\pi}{7}$
+
+---
+
+\subsection*{Problem 14}
+\textbf{Question:} Evaluate $\iiint_B (x^2+y^2+z^2)^2 \, dV$, where $B$ is the ball with center at the origin and radius 2.
+
+\textbf{Solution:}
+Identical setup to Problem 13, but limits for $\rho$ are $0 \to 2$.
+\[ I = (2\pi) \cdot (2) \cdot \int_0^2 \rho^6 \, d\rho \]
+\[ \int_0^2 \rho^6 \, d\rho = \left[ \frac{\rho^7}{7} \right]_0^2 = \frac{128}{7} \]
+Multiply: $I = 4\pi \cdot \frac{128}{7} = \frac{512\pi}{7}$.
+\textbf{Final Answer:} $\frac{512\pi}{7}$
+
+---
+
+\subsection*{Problem 15}
+\textbf{Question:} Evaluate $\iiint_E y^2 z^2 \, dV$, where $E$ lies above the cone $\phi = \frac{\pi}{3}$ and below the sphere $\rho=1$.
+
+\textbf{Solution:}
+Bounds: "Above the cone" means geometrically higher, which corresponds to smaller $\phi$ angles. Thus, $0 \le \phi \le \frac{\pi}{3}$. "Below sphere" means $0 \le \rho \le 1$. $0 \le \theta \le 2\pi$.
+Substitute spherical coords into integrand:
+\[ y^2 z^2 = (\rho \sin\phi \sin\theta)^2 (\rho \cos\phi)^2 = \rho^4 \sin^2\phi \cos^2\phi \sin^2\theta \]
+Multiply by $dV$:
+\[ I = \int_0^{2\pi} \int_0^{\pi/3} \int_0^1 \left(\rho^4 \sin^2\phi \cos^2\phi \sin^2\theta\right) (\rho^2 \sin\phi) \, d\rho \, d\phi \, d\theta \]
+\[ I = \int_0^{2\pi} \sin^2\theta \, d\theta \cdot \int_0^{\pi/3} \sin^3\phi \cos^2\phi \, d\phi \cdot \int_0^1 \rho^6 \, d\rho \]
+1. $\int_0^1 \rho^6 \, d\rho = \frac{1}{7}$
+2. $\int_0^{2\pi} \sin^2\theta \, d\theta = \frac{1}{2} \int_0^{2\pi} (1-\cos(2\theta)) \, d\theta = \frac{1}{2} [2\pi] = \pi$
+3. $\int_0^{\pi/3} \sin^3\phi \cos^2\phi \, d\phi$. Let $u = \cos\phi \implies du = -\sin\phi \, d\phi$.
+Limits: $\phi=0 \implies u=1$, $\phi=\pi/3 \implies u=1/2$.
+\[ \int_{1/2}^1 (1-u^2)u^2 \, du = \int_{1/2}^1 (u^2 - u^4) \, du = \left[ \frac{u^3}{3} - \frac{u^5}{5} \right]_{1/2}^1 \]
+Evaluate at upper limit 1: $\frac{1}{3} - \frac{1}{5} = \frac{2}{15}$.
+Evaluate at lower limit $1/2$: $\frac{1/8}{3} - \frac{1/32}{5} = \frac{1}{24} - \frac{1}{160} = \frac{20}{480} - \frac{3}{480} = \frac{17}{480}$.
+Difference: $\frac{2}{15} - \frac{17}{480} = \frac{64}{480} - \frac{17}{480} = \frac{47}{480}$.
+Multiply results: $I = (\pi) \left(\frac{47}{480}\right) \left(\frac{1}{7}\right) = \frac{47\pi}{3360}$.
+\textbf{Final Answer:} $\frac{47\pi}{3360}$
+
+---
+
+\subsection*{Problem 16}
+\textbf{Question:} Evaluate $\iiint_E (x^2+y^2) \, dV$, where $E$ lies between the spheres $\rho=3$ and $\rho=4$.
+
+\textbf{Solution:}
+Bounds: $3 \le \rho \le 4$, $0 \le \phi \le \pi$, $0 \le \theta \le 2\pi$.
+Integrand: $x^2+y^2 = (\rho\sin\phi\cos\theta)^2 + (\rho\sin\phi\sin\theta)^2 = \rho^2 \sin^2\phi$.
+Multiply by $dV$:
+\[ I = \int_0^{2\pi} \int_0^\pi \int_3^4 (\rho^2 \sin^2\phi) (\rho^2 \sin\phi) \, d\rho \, d\phi \, d\theta = \int_0^{2\pi} d\theta \int_0^\pi \sin^3\phi \, d\phi \int_3^4 \rho^4 \, d\rho \]
+1. $\int_0^{2\pi} d\theta = 2\pi$
+2. $\int_3^4 \rho^4 \, d\rho = \left[ \frac{\rho^5}{5} \right]_3^4 = \frac{1024 - 243}{5} = \frac{781}{5}$
+3. $\int_0^\pi \sin^3\phi \, d\phi$. Let $u=\cos\phi \implies du=-\sin\phi \, d\phi$. Bounds $1 \to -1$.
+\[ \int_{-1}^1 (1-u^2) \, du = \left[ u - \frac{u^3}{3} \right]_{-1}^1 = \left(1 - \frac{1}{3}\right) - \left(-1 + \frac{1}{3}\right) = \frac{2}{3} - \left(-\frac{2}{3}\right) = \frac{4}{3} \]
+Multiply: $I = (2\pi) \left(\frac{781}{5}\right) \left(\frac{4}{3}\right) = \frac{6248\pi}{15}$.
+\textbf{Final Answer:} $\frac{6248\pi}{15}$
+
+---
+
+\subsection*{Problem 17}
+\textbf{Question:} Evaluate $\iiint_E x e^{x^2+y^2+z^2} \, dV$, where $E$ is the portion of the unit ball that lies in the first octant.
+
+\textbf{Solution:}
+Bounds: First octant implies $x, y, z \ge 0$, which restricts $0 \le \theta \le \frac{\pi}{2}$ and $0 \le \phi \le \frac{\pi}{2}$. Unit ball means $0 \le \rho \le 1$.
+Integrand: $x = \rho \sin\phi \cos\theta$. $e^{x^2+y^2+z^2} = e^{\rho^2}$.
+Multiply by $dV$:
+\[ I = \int_0^{\pi/2} \int_0^{\pi/2} \int_0^1 (\rho \sin\phi \cos\theta)(e^{\rho^2})(\rho^2 \sin\phi) \, d\rho \, d\phi \, d\theta \]
+\[ I = \int_0^{\pi/2} \cos\theta \, d\theta \cdot \int_0^{\pi/2} \sin^2\phi \, d\phi \cdot \int_0^1 \rho^3 e^{\rho^2} \, d\rho \]
+1. $\int_0^{\pi/2} \cos\theta \, d\theta = [\sin\theta]_0^{\pi/2} = 1$
+2. $\int_0^{\pi/2} \sin^2\phi \, d\phi = \frac{1}{2} \int_0^{\pi/2} (1-\cos(2\phi)) \, d\phi = \frac{1}{2} \left[ \phi - \frac{\sin(2\phi)}{2} \right]_0^{\pi/2} = \frac{\pi}{4}$
+3. $\int_0^1 \rho^3 e^{\rho^2} \, d\rho$. Let $u = \rho^2 \implies du = 2\rho \, d\rho$. $\rho^3 d\rho = \frac{1}{2} u \, du$.
+\[ \frac{1}{2} \int_0^1 u e^u \, du \]
+Use integration by parts: $w = u, dw = du; dv = e^u du, v = e^u$.
+\[ \frac{1}{2} \left( [u e^u]_0^1 - \int_0^1 e^u \, du \right) = \frac{1}{2} \left( e - [e^u]_0^1 \right) = \frac{1}{2} (e - (e - 1)) = \frac{1}{2} \]
+Multiply: $I = (1) \left(\frac{\pi}{4}\right) \left(\frac{1}{2}\right) = \frac{\pi}{8}$.
+\textbf{Final Answer:} $\frac{\pi}{8}$
+
+---
+
+\subsection*{Problem 18}
+\textbf{Question:} Evaluate $\iiint_E \sqrt{x^2+y^2+z^2} \, dV$, where $E$ lies above the cone $z = \sqrt{x^2+y^2}$ and between the spheres $\rho=1$ and $\rho=8$.
+
+\textbf{Solution:}
+Bounds: Cone $z = \sqrt{x^2+y^2} \implies \phi = \frac{\pi}{4}$. "Above" the cone means $0 \le \phi \le \frac{\pi}{4}$. Spheres give $1 \le \rho \le 8$. Full rotation $0 \le \theta \le 2\pi$.
+Integrand: $\sqrt{x^2+y^2+z^2} = \rho$.
+Multiply by $dV$:
+\[ I = \int_0^{2\pi} \int_0^{\pi/4} \int_1^8 (\rho)(\rho^2 \sin\phi) \, d\rho \, d\phi \, d\theta = \int_0^{2\pi} d\theta \int_0^{\pi/4} \sin\phi \, d\phi \int_1^8 \rho^3 \, d\rho \]
+1. $\int_0^{2\pi} d\theta = 2\pi$
+2. $\int_0^{\pi/4} \sin\phi \, d\phi = [-\cos\phi]_0^{\pi/4} = 1 - \frac{\sqrt{2}}{2}$
+3. $\int_1^8 \rho^3 \, d\rho = \left[ \frac{\rho^4}{4} \right]_1^8 = \frac{8^4 - 1}{4} = \frac{4096 - 1}{4} = \frac{4095}{4}$
+Multiply: $I = (2\pi) \left( 1 - \frac{\sqrt{2}}{2} \right) \left( \frac{4095}{4} \right) = \pi \left( \frac{2-\sqrt{2}}{2} \right) \left( \frac{4095}{2} \right) = \frac{4095\pi(2-\sqrt{2})}{4}$.
+\textbf{Final Answer:} $\frac{4095\pi(2-\sqrt{2})}{4}$
+
+---
+
+\subsection*{Problem 19}
+\textbf{Question:} Find the volume of the solid that lies within the sphere $x^2+y^2+z^2=16$, above the $xy$-plane, and below the cone $z=\sqrt{x^2+y^2}$.
+
+\textbf{Solution:}
+Bounds:
+- Sphere: $\rho^2 = 16 \implies 0 \le \rho \le 4$.
+- Cone: $z = \sqrt{x^2+y^2} \implies \phi = \frac{\pi}{4}$.
+- "Below" the cone means dropping further down toward the $xy$-plane, so $\phi \ge \frac{\pi}{4}$.
+- "Above" the $xy$-plane means $z \ge 0$, which stops at $\phi = \frac{\pi}{2}$.
+- Therefore, $\frac{\pi}{4} \le \phi \le \frac{\pi}{2}$.
+- Full rotation: $0 \le \theta \le 2\pi$.
+To find volume, integrate $1 \, dV$.
+\[ V = \int_0^{2\pi} \int_{\pi/4}^{\pi/2} \int_0^4 \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta \]
+1. $\int_0^4 \rho^2 \, d\rho = \frac{64}{3}$
+2. $\int_0^{2\pi} d\theta = 2\pi$
+3. $\int_{\pi/4}^{\pi/2} \sin\phi \, d\phi = [-\cos\phi]_{\pi/4}^{\pi/2} = 0 - \left(-\frac{\sqrt{2}}{2}\right) = \frac{\sqrt{2}}{2}$
+Multiply: $V = \left( \frac{64}{3} \right)(2\pi)\left( \frac{\sqrt{2}}{2} \right) = \frac{64\sqrt{2}\pi}{3}$.
+\textbf{Final Answer:} $\frac{64\sqrt{2}\pi}{3}$
+
+---
+
+\subsection*{Problem 20}
+\textbf{Question:} Evaluate the integral by changing to spherical coordinates:
+\[ \int_0^4 \int_0^{\sqrt{16-x^2}} \int_{\sqrt{x^2+y^2}}^{\sqrt{32-x^2-y^2}} xy \, dz \, dy \, dx \]
+
+\textbf{Solution:}
+\textbf{Step 1: Determine the geometric region.}
+- $x: 0 \to 4$ and $y: 0 \to \sqrt{16-x^2}$. This is the first quadrant of a circle of radius 4 in the $xy$-plane. Thus, $0 \le \theta \le \frac{\pi}{2}$.
+- $z$: Bounded below by cone $z = \sqrt{x^2+y^2}$ ($\phi = \pi/4$) and above by sphere $z = \sqrt{32-x^2-y^2}$, which is $x^2+y^2+z^2=32 \implies \rho = \sqrt{32} = 4\sqrt{2}$.
+- Since the region is "above" the cone (inside it, near the $z$-axis), the angle is $0 \le \phi \le \frac{\pi}{4}$.
+Bounds are: $0 \le \rho \le 4\sqrt{2}$, $0 \le \phi \le \frac{\pi}{4}$, $0 \le \theta \le \frac{\pi}{2}$.
+
+\textbf{Step 2: Convert the integrand.}
+\[ xy = (\rho \sin\phi \cos\theta)(\rho \sin\phi \sin\theta) = \rho^2 \sin^2\phi \sin\theta \cos\theta \]
+Include Jacobian $dV = \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta$.
+\[ I = \int_0^{\pi/2} \int_0^{\pi/4} \int_0^{4\sqrt{2}} \left(\rho^4 \sin^3\phi \sin\theta \cos\theta\right) d\rho \, d\phi \, d\theta \]
+
+\textbf{Step 3: Evaluate.}
+1. $\int_0^{\pi/2} \sin\theta \cos\theta \, d\theta = \left[ \frac{\sin^2\theta}{2} \right]_0^{\pi/2} = \frac{1}{2}$
+2. $\int_0^{4\sqrt{2}} \rho^4 \, d\rho = \left[ \frac{\rho^5}{5} \right]_0^{4\sqrt{2}} = \frac{(4\sqrt{2})^5}{5} = \frac{1024 \times 4\sqrt{2}}{5} = \frac{4096\sqrt{2}}{5}$
+3. $\int_0^{\pi/4} \sin^3\phi \, d\phi = \int_0^{\pi/4} (1-\cos^2\phi)\sin\phi \, d\phi$. Let $u = \cos\phi$. Bounds: $1 \to \frac{\sqrt{2}}{2}$.
+\[ \int_{\sqrt{2}/2}^1 (1-u^2) \, du = \left[ u - \frac{u^3}{3} \right]_{\sqrt{2}/2}^1 = \left( 1 - \frac{1}{3} \right) - \left( \frac{\sqrt{2}}{2} - \frac{2\sqrt{2}/8}{3} \right) \]
+\[ = \frac{2}{3} - \left( \frac{\sqrt{2}}{2} - \frac{\sqrt{2}}{12} \right) = \frac{2}{3} - \left( \frac{6\sqrt{2} - \sqrt{2}}{12} \right) = \frac{8 - 5\sqrt{2}}{12} \]
+
+\textbf{Step 4: Multiply.}
+\[ I = \left(\frac{1}{2}\right) \left(\frac{8 - 5\sqrt{2}}{12}\right) \left(\frac{4096\sqrt{2}}{5}\right) = \frac{4096\sqrt{2}(8 - 5\sqrt{2})}{120} = \frac{512\sqrt{2}(8 - 5\sqrt{2})}{15} = \frac{4096\sqrt{2} - 5120}{15} \]
+\textbf{Final Answer:} $\frac{4096\sqrt{2} - 5120}{15}$
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+1. \textbf{Coordinate Conversion (Qs 1-6):} 
+   \textit{Strategy:} Rely entirely on algebraic substitution using fundamental identities. Recognize that replacing $x^2+y^2+z^2$ with $\rho^2$ immediately strips away complexity.
+2. \textbf{Geometric Visualization (Qs 7-9):} 
+   \textit{Strategy:} Map constant coordinate equations to their 3D shapes. $\rho=c$ is a sphere, $\phi=c$ is a cone, and $\theta=c$ is a vertical half-plane. Use inequalities to describe the "filling" between these surfaces.
+3. \textbf{Separable Integrals over "Spherical Rectangles" (Qs 10, 11, 13, 14, 16):} 
+   \textit{Strategy:} When all bounds are constant, factor the triple integral into a product of three single-variable integrals. This drastic simplification prevents nested integration mistakes.
+4. \textbf{Cartesian to Spherical Integral Conversion (Q 20):} 
+   \textit{Strategy:} Deduce the bounds by looking at the Cartesian limits. Sketching the 2D projection in the $xy$-plane provides $\theta$ bounds, and tracing a radial line from the origin through the 3D surface gives $\rho$ and $\phi$ bounds.
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{The Essential Jacobian:} The absolute most critical technique is multiplying by $\rho^2 \sin\phi$. In Problem 13, integrating $(x^2+y^2+z^2)^2$ purely as $\rho^4$ without the Jacobian would yield an incorrect result.
+    \item \textbf{Integration by Parts with U-Substitution:} In Problem 17, the term $e^{\rho^2} \rho^3 \, d\rho$ requires breaking $\rho^3$ into $\rho^2 \cdot \rho$. We substituted $u = \rho^2, du = 2\rho \, d\rho$, yielding an integral of the form $\int u e^u \, du$, solvable via Integration by Parts.
+    \item \textbf{Odd Power Trigonometric Integrals:} In several problems (e.g., 15, 16, 20), we faced $\int \sin^3\phi \, d\phi$. The universal trick is breaking it into $\sin^2\phi \cdot \sin\phi$, replacing $\sin^2\phi$ with $(1 - \cos^2\phi)$, and performing $u$-substitution with $u = \cos\phi$.
+    \item \textbf{Double Angle Substitution:} To simplify algebraic equations in Q5(b) and Q6(b), recognizing $\cos^2\theta - \sin^2\theta = \cos(2\theta)$ avoids clunky trigonometric expansions.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Formula Summary}
+\begin{itemize}
+    \item \textbf{Transformation:} $x = \rho \sin\phi \cos\theta, \quad y = \rho \sin\phi \sin\theta, \quad z = \rho \cos\phi$
+    \item \textbf{Reverse Transformation:} $\rho = \sqrt{x^2+y^2+z^2}, \quad \tan\theta = y/x, \quad \cos\phi = z/\rho$
+    \item \textbf{Volume Element:} $dV = \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta$
+\end{itemize}
+
+\subsection{Tricks and "Cheats"}
+\begin{itemize}
+    \item \textbf{The "Constant Bounds" Factor Trick:} If limits are numbers and the integrand factors into $f(\rho)g(\phi)h(\theta)$, \textit{always} separate them into three distinct multiplied integrals. It drastically saves time.
+    \item \textbf{Spotting Spherical Coordinates:} If an integrand or boundary contains $(x^2+y^2+z^2)$, or geometric descriptors like "cone," "sphere," or "ball" are used, convert to spherical immediately. Cartesian integration is a trap here.
+\end{itemize}
+
+\subsection{Common Pitfalls}
+\begin{itemize}
+    \item \textbf{Forgetting the Jacobian:} Leaving out the $\rho^2 \sin\phi$ from $dV$ is the \#1 cause of point loss.
+    \item \textbf{Misinterpreting $\phi$ Bounds:} Remember that $\phi$ starts at $0$ on the \textbf{positive $z$-axis}. The $xy$-plane is not $\phi=0$, it is $\phi=\pi/2$. The negative $z$-axis is $\phi=\pi$.
+    \item \textbf{Mixing up "Inside/Outside" and "Above/Below":} For a cone $\phi=c$, "inside" or "above" typically means closer to the $z$-axis, so $0 \le \phi \le c$. "Outside" or "below" means further from the $z$-axis, so $c \le \phi \le \pi/2$ (or up to $\pi$).
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The core theme of spherical triple integrals is \textbf{exploiting symmetry}. In Calculus I, we learned that evaluating areas bounded by curves is easiest when our coordinate system matches the boundary geometry (e.g., using polar coordinates for circles). Spherical integration scales this principle to 3D. By choosing axes that naturally wrap around a central point, complex radical boundaries like $\sqrt{16-x^2-y^2}$ collapse into a simple constant ($\rho=4$), turning monstrous algebraic evaluations into basic polynomial arithmetic.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward:} This is the direct evolutionary successor to 2D Polar Coordinates ($r, \theta$) and 3D Cylindrical Coordinates ($r, \theta, z$). The logic of modifying the area element $dA = r \, dr \, d\theta$ maps perfectly to modifying the volume element $dV = \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta$.
+\textbf{Forward:} The ability to parameterize volumes using spherical symmetry is the bedrock for the \textbf{Divergence Theorem (Gauss's Theorem)}, heavily tested later in Vector Calculus.
+
+\newpage
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios}
+\textbf{1. Financial Modeling: Multivariate Risk Integration.} In quantitative finance, risk models (like Value at Risk) evaluate the probability of extreme losses across multiple correlated assets. If three independent assets follow standard normal returns, their joint probability density function is spherically symmetric. To find the probability that the "magnitude" of the combined shock exceeds a threshold, quants integrate a 3D Gaussian function over a spherical region.
+\textbf{2. Statistics/Stochastic Processes: Expected Distance in Random Walks.} In a 3D random walk (such as modeling volatility jumps or pricing path-dependent derivatives), calculating the expected Euclidean distance from the origin at time $T$ requires integrating $\rho \cdot \text{PDF}(\rho, \theta, \phi)$ over all 3D space.
+
+\subsection{B) Model Problem Setup: 3D Asset Shock Probability}
+Let $X, Y,$ and $Z$ represent the independent normal returns of three underlying stocks, each with mean 0 and variance 1. The joint probability density function is given by:
+\[ f(x,y,z) = \frac{1}{(2\pi)^{3/2}} e^{-\frac{x^2+y^2+z^2}{2}} \]
+A hedge fund will trigger a margin call if the Euclidean norm of this return vector, $R = \sqrt{x^2+y^2+z^2}$, is greater than a critical threshold $K$. To calculate the total probability of remaining \textbf{safe} (no margin call), we must integrate the PDF over a solid ball $B$ of radius $K$:
+\[ P(R \le K) = \iiint_B \frac{1}{(2\pi)^{3/2}} e^{-\frac{x^2+y^2+z^2}{2}} \, dV \]
+In spherical coordinates, the model drastically simplifies to:
+\[ P(R \le K) = \frac{1}{(2\pi)^{3/2}} \int_0^{2\pi} \int_0^\pi \int_0^K e^{-\rho^2/2} \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta \]
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Center of Mass / Centroids}
+Your homework covered volume ($\iiint 1 \, dV$) and general triple integrals, but did not ask for the physical applications of finding the \textbf{Center of Mass} $(\bar{x}, \bar{y}, \bar{z})$.
+\textbf{Concept:} The $z$-coordinate of the centroid is given by $\bar{z} = \frac{\iiint z \, dV}{\iiint 1 \, dV}$.
+\textbf{Worked Example:} Find the $z$-centroid of a uniform upper solid hemisphere of radius $R$.
+\textit{Solution:}
+Volume (denominator) is well known: $V = \frac{2}{3}\pi R^3$.
+Now calculate the moment $M_{xy} = \iiint z \, dV$:
+\[ M_{xy} = \int_0^{2\pi} \int_0^{\pi/2} \int_0^R (\rho\cos\phi) (\rho^2\sin\phi) \, d\rho \, d\phi \, d\theta \]
+\[ = \left( \int_0^{2\pi} d\theta \right) \left( \int_0^{\pi/2} \sin\phi \cos\phi \, d\phi \right) \left( \int_0^R \rho^3 \, d\rho \right) = (2\pi) \left( \left[ \frac{\sin^2\phi}{2} \right]_0^{\pi/2} \right) \left( \frac{R^4}{4} \right) \]
+\[ = (2\pi) \left(\frac{1}{2}\right) \left(\frac{R^4}{4}\right) = \frac{\pi R^4}{4} \]
+Therefore, $\bar{z} = \frac{\pi R^4 / 4}{2\pi R^3 / 3} = \frac{3}{8}R$.
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+\textbf{Problem 1:} Find the volume of a sphere of radius 3.
+\textit{Flawed Solution:} 
+\[ V = \int_0^{2\pi} \int_0^\pi \int_0^3 1 \, d\rho \, d\phi \, d\theta = (2\pi)(\pi)(3) = 6\pi^2 \]
+\textit{Critique:} The solution forgot to include the Jacobian volume element $\rho^2 \sin\phi$ in the integrand.
+\textit{Correct Step:} Integrate $\rho^2 \sin\phi \, d\rho \, d\phi \, d\theta$ to get $36\pi$.
+
+\textbf{Problem 2:} Find the volume of a cone bounded above by $z=4$ and below by $\phi=\pi/4$.
+\textit{Flawed Solution:} 
+$0 \le \theta \le 2\pi$, $0 \le \phi \le \pi/4$, and $\rho$ goes from $0$ to $4$. Volume is $\int_0^{2\pi} \int_0^{\pi/4} \int_0^4 \rho^2 \sin\phi \, d\rho \, d\phi \, d\theta$.
+\textit{Critique:} The top bound is a flat plane $z=4$, not a sphere $\rho=4$; the correct bound must be converted using $z = \rho\cos\phi = 4 \implies \rho = 4\sec\phi$.
+\textit{Correct Step:} Upper limit for $\rho$ must be $4\sec\phi$.
+
+\textbf{Problem 3:} Integrate $f(x,y,z) = z$ over the upper hemisphere $x^2+y^2+z^2 \le 16$, $z \ge 0$.
+\textit{Flawed Solution:}
+\[ \int_0^{2\pi} \int_0^\pi \int_0^4 (\rho\cos\phi)(\rho^2\sin\phi) \, d\rho \, d\phi \, d\theta \]
+\textit{Critique:} The upper hemisphere restricts $z \ge 0$, which means $\phi$ should only go from $0$ to $\pi/2$, not all the way to $\pi$.
+\textit{Correct Step:} Change the $\phi$ upper bound to $\pi/2$.
+
+\textbf{Problem 4:} Convert $\int_{-1}^1 \int_{-\sqrt{1-x^2}}^{\sqrt{1-x^2}} \int_{0}^{\sqrt{1-x^2-y^2}} d z \, d y \, d x$.
+\textit{Flawed Solution:}
+This is a full upper hemisphere. The bounds are $0 \le \rho \le 1$, $0 \le \phi \le \pi/2$, and $0 \le \theta \le \pi$.
+\textit{Critique:} The $x$ limits are $-1$ to $1$ and $y$ goes from negative to positive root, representing a full circle in the $xy$-plane, meaning $\theta$ should go to $2\pi$, not $\pi$.
+\textit{Correct Step:} Set $\theta$ limits to $0 \le \theta \le 2\pi$.
+
+\textbf{Problem 5:} Evaluate $\int_0^{\pi/2} \sin^3\phi \, d\phi$.
+\textit{Flawed Solution:}
+Let $u = \sin\phi$, $du = \cos\phi \, d\phi$. The integral evaluates directly to $[\frac{\sin^4\phi}{4}]_0^{\pi/2} = 1/4$.
+\textit{Critique:} The substitution is algebraically invalid because there is no $\cos\phi$ factor in the integrand to absorb the $du$.
+\textit{Correct Step:} Rewrite as $\sin^2\phi \sin\phi = (1-\cos^2\phi)\sin\phi$, then let $u = \cos\phi$.
+
+\end{document}

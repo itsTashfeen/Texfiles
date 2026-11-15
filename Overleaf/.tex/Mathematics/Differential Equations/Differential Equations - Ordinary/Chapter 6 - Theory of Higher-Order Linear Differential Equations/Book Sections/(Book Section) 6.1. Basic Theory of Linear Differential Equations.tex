@@ -1,0 +1,472 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{mdframed}
+\usepackage{xcolor}
+
+\geometry{
+    top=1in,
+    bottom=1in,
+    left=1in,
+    right=1in
+}
+
+\title{\textbf{Homework Chapter 6: Theory of Higher-Order Linear Differential Equations}}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The study of higher-order linear differential equations is a natural generalization of the theory developed for first- and second-order equations. An $n$-th order linear differential equation is an equation that can be written in the standard form:
+\[ y^{(n)} + p_1(x)y^{(n-1)} + \dots + p_n(x)y = g(x) \]
+where $y^{(n)}$ denotes the $n$-th derivative of $y$ with respect to $x$. 
+
+If $g(x) = 0$ for all $x$ in the interval of interest, the equation is called \textbf{homogeneous}. If $g(x) \neq 0$, it is \textbf{nonhomogeneous}. 
+
+The foundational concepts introduced in this chapter include:
+\begin{itemize}
+    \item \textbf{The Differential Operator $L$}: We can express the left side of the differential equation as a linear operator $L$ acting on the function $y$, such that $L[y] = g(x)$. The operator $L$ satisfies the linearity property: $L[c_1 y_1 + c_2 y_2] = c_1 L[y_1] + c_2 L[y_2]$.
+    \item \textbf{Linear Independence}: A set of functions $\{y_1, y_2, \dots, y_n\}$ is linearly independent on an interval $I$ if the only constants that satisfy $c_1 y_1(x) + c_2 y_2(x) + \dots + c_n y_n(x) = 0$ for all $x \in I$ are $c_1 = c_2 = \dots = c_n = 0$.
+    \item \textbf{The Wronskian}: A determinant used to test for linear independence of solutions to a differential equation.
+    \item \textbf{Fundamental Solution Set}: A set of $n$ linearly independent solutions to an $n$-th order homogeneous linear differential equation.
+\end{itemize}
+
+\subsection{Intuition and Derivation}
+Why do we need $n$ linearly independent solutions for an $n$-th order homogeneous equation? The intuition stems from integration. Solving an $n$-th order equation inherently requires $n$ integrations, each producing an arbitrary constant of integration. To satisfy an Initial Value Problem (IVP) with $n$ initial conditions (e.g., $y(x_0), y'(x_0), \dots, y^{(n-1)}(x_0)$), we need exactly $n$ degrees of freedom (constants). 
+
+The Wronskian arises directly from linear algebra. When we plug our general solution $y = c_1 y_1 + \dots + c_n y_n$ into the $n$ initial conditions, we get a system of $n$ linear equations for the $n$ unknown constants $c_1, \dots, c_n$. By Cramer's Rule, this system has a unique solution if and only if the determinant of the coefficient matrix is non-zero. This determinant is precisely the Wronskian, $W[y_1, \dots, y_n](x_0)$.
+
+\subsection{Historical Context and Motivation}
+The theory of higher-order linear differential equations was heavily developed in the 18th and 19th centuries by mathematicians such as Leonhard Euler, Joseph-Louis Lagrange, and Niels Henrik Abel. The motivation was deeply rooted in classical mechanics and astronomy. For instance, modeling the vibrations of interconnected spring-mass systems, the bending of elastic beams, or the perturbations in planetary orbits naturally yielded differential equations of order three, four, or higher. Mathematicians needed a systematic framework to guarantee that their mathematical models had unique solutions that matched physical reality.
+
+\subsection{Key Formulas}
+\begin{itemize}
+    \item \textbf{Standard Form}: \[ y^{(n)} + p_1(x)y^{(n-1)} + \dots + p_n(x)y = g(x) \]
+    \item \textbf{Wronskian}: 
+    \[ W[y_1, \dots, y_n](x) = \begin{vmatrix} y_1 & y_2 & \dots & y_n \\ y_1' & y_2' & \dots & y_n' \\ \vdots & \vdots & \ddots & \vdots \\ y_1^{(n-1)} & y_2^{(n-1)} & \dots & y_n^{(n-1)} \end{vmatrix} \]
+    \item \textbf{General Solution (Homogeneous)}: \[ y_c(x) = c_1 y_1(x) + c_2 y_2(x) + \dots + c_n y_n(x) \]
+    \item \textbf{General Solution (Nonhomogeneous)}: \[ y(x) = y_p(x) + y_c(x) \] where $y_p$ is any particular solution.
+\end{itemize}
+
+\subsection{Prerequisites}
+To master this topic, you must be proficient in:
+\begin{itemize}
+    \item \textbf{Calculus}: Computing higher-order derivatives, product rule, and chain rule.
+    \item \textbf{Linear Algebra}: Evaluating $n \times n$ determinants, solving systems of linear equations, and understanding the concept of linear combinations and vector spaces.
+    \item \textbf{Second-Order ODEs}: Familiarity with the characteristic equation and the structure of solutions for second-order linear equations.
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+\textit{Note: Per the strategic problem selection protocol, a representative subset of problems covering every distinct archetype and technique has been selected to maximize learning efficiency without redundant repetition.}
+
+\subsection{Archetype 1: Interval of Existence and Uniqueness}
+
+\textbf{Problem 1:} Determine the largest interval $(a,b)$ for which Theorem 1 guarantees the existence of a unique solution to the given initial value problem.
+\[ xy''' - 3y'' + e^x y = x^2 - 1; \quad y(-2) = 1, \quad y'(-2) = 0, \quad y''(-2) = 2 \]
+
+\textbf{Solution:}
+\textbf{Step 1: Rewrite the equation in standard form.}
+Theorem 1 requires the differential equation to be in the standard form $y^{(n)} + p_1(x)y^{(n-1)} + \dots + p_n(x)y = g(x)$. We divide the entire equation by the leading coefficient, $x$:
+\[ y''' - \frac{3}{x}y'' + \frac{e^x}{x}y = \frac{x^2 - 1}{x} \]
+
+\textbf{Step 2: Identify the coefficient functions and their points of discontinuity.}
+From the standard form, we have:
+\[ p_1(x) = -\frac{3}{x}, \quad p_2(x) = 0, \quad p_3(x) = \frac{e^x}{x}, \quad g(x) = \frac{x^2 - 1}{x} \]
+All of these functions are continuous everywhere except where the denominator is zero, which is at $x = 0$.
+
+\textbf{Step 3: Determine the possible intervals of validity.}
+The point of discontinuity $x = 0$ divides the real number line into two open intervals where all functions are simultaneously continuous:
+\[ (-\infty, 0) \quad \text{and} \quad (0, \infty) \]
+
+\textbf{Step 4: Select the interval containing the initial point.}
+The initial conditions are given at $x_0 = -2$. We must choose the interval that contains $-2$.
+Since $-2 \in (-\infty, 0)$, the largest interval guaranteed by Theorem 1 is $(-\infty, 0)$.
+
+\textbf{Final Answer:} The largest interval is $(-\infty, 0)$.
+
+\vspace{0.5cm}
+
+\textbf{Problem 4:} Determine the largest interval $(a,b)$ for which Theorem 1 guarantees the existence of a unique solution.
+\[ x(x+1)y''' - 3xy' + y = 0; \quad y(-1/2) = 1, \quad y'(-1/2) = y''(-1/2) = 0 \]
+
+\textbf{Solution:}
+\textbf{Step 1: Rewrite in standard form.}
+Divide by the leading coefficient $x(x+1)$:
+\[ y''' - \frac{3x}{x(x+1)}y' + \frac{1}{x(x+1)}y = 0 \]
+Simplifying the $y'$ coefficient:
+\[ y''' - \frac{3}{x+1}y' + \frac{1}{x(x+1)}y = 0 \]
+
+\textbf{Step 2: Identify discontinuities.}
+The coefficient functions are $p_1(x) = 0$, $p_2(x) = -\frac{3}{x+1}$, and $p_3(x) = \frac{1}{x(x+1)}$.
+These functions are discontinuous at $x = -1$ and $x = 0$.
+
+\textbf{Step 3: Determine possible intervals.}
+The discontinuities divide the real line into three open intervals:
+\[ (-\infty, -1), \quad (-1, 0), \quad (0, \infty) \]
+
+\textbf{Step 4: Select the interval containing the initial point.}
+The initial conditions are given at $x_0 = -1/2$. 
+Since $-1/2 \in (-1, 0)$, this is our interval of validity.
+
+\textbf{Final Answer:} The largest interval is $(-1, 0)$.
+
+\subsection{Archetype 2: Linear Dependence and Independence}
+
+\textbf{Problem 7:} Determine whether the given functions are linearly dependent or linearly independent on the specified interval. Justify your decisions.
+\[ \{e^x, e^{5x}, e^{-x}\} \quad \text{on} \quad (-\infty, \infty) \]
+
+\textbf{Solution:}
+\textbf{Step 1: Set up the Wronskian.}
+To test for linear independence of $n$ sufficiently differentiable functions, we can compute their Wronskian. If $W \neq 0$ at any point in the interval, the functions are linearly independent.
+\[ W(x) = \begin{vmatrix} e^x & e^{5x} & e^{-x} \\ \frac{d}{dx}(e^x) & \frac{d}{dx}(e^{5x}) & \frac{d}{dx}(e^{-x}) \\ \frac{d^2}{dx^2}(e^x) & \frac{d^2}{dx^2}(e^{5x}) & \frac{d^2}{dx^2}(e^{-x}) \end{vmatrix} = \begin{vmatrix} e^x & e^{5x} & e^{-x} \\ e^x & 5e^{5x} & -e^{-x} \\ e^x & 25e^{5x} & e^{-x} \end{vmatrix} \]
+
+\textbf{Step 2: Evaluate the determinant.}
+We can factor out $e^x$ from the first column, $e^{5x}$ from the second column, and $e^{-x}$ from the third column:
+\[ W(x) = e^x \cdot e^{5x} \cdot e^{-x} \begin{vmatrix} 1 & 1 & 1 \\ 1 & 5 & -1 \\ 1 & 25 & 1 \end{vmatrix} = e^{5x} \begin{vmatrix} 1 & 1 & 1 \\ 1 & 5 & -1 \\ 1 & 25 & 1 \end{vmatrix} \]
+Now, compute the determinant of the $3 \times 3$ matrix using cofactor expansion along the first row:
+\[ \begin{vmatrix} 1 & 1 & 1 \\ 1 & 5 & -1 \\ 1 & 25 & 1 \end{vmatrix} = 1(5(1) - (-1)(25)) - 1(1(1) - (-1)(1)) + 1(1(25) - 5(1)) \]
+\[ = 1(5 + 25) - 1(1 + 1) + 1(25 - 5) = 30 - 2 + 20 = 48 \]
+Thus, $W(x) = 48e^{5x}$.
+
+\textbf{Step 3: Conclusion.}
+Since $e^{5x} > 0$ for all real $x$, $W(x) \neq 0$ for all $x \in (-\infty, \infty)$. Therefore, the functions are linearly independent.
+
+\textbf{Final Answer:} The functions are linearly independent.
+
+\vspace{0.5cm}
+
+\textbf{Problem 10:} Determine whether the given functions are linearly dependent or linearly independent.
+\[ \{\sin x, \cos x, \tan x\} \quad \text{on} \quad (-\pi/2, \pi/2) \]
+
+\textbf{Solution:}
+\textbf{Step 1: Use the definition of linear independence.}
+Assume there exist constants $c_1, c_2, c_3$ such that:
+\[ c_1 \sin x + c_2 \cos x + c_3 \tan x = 0 \]
+for all $x \in (-\pi/2, \pi/2)$. We want to show that $c_1 = c_2 = c_3 = 0$ is the only solution.
+
+\textbf{Step 2: Evaluate at specific points in the interval.}
+Let $x = 0$:
+\[ c_1 \sin(0) + c_2 \cos(0) + c_3 \tan(0) = 0 \implies c_1(0) + c_2(1) + c_3(0) = 0 \implies c_2 = 0 \]
+Now the equation reduces to:
+\[ c_1 \sin x + c_3 \tan x = 0 \]
+Let $x = \pi/4$:
+\[ c_1 \sin(\pi/4) + c_3 \tan(\pi/4) = 0 \implies c_1 \left(\frac{\sqrt{2}}{2}\right) + c_3 (1) = 0 \implies c_3 = -c_1 \frac{\sqrt{2}}{2} \]
+Let $x = \pi/3$:
+\[ c_1 \sin(\pi/3) + c_3 \tan(\pi/3) = 0 \implies c_1 \left(\frac{\sqrt{3}}{2}\right) + c_3 (\sqrt{3}) = 0 \]
+Substitute $c_3 = -c_1 \frac{\sqrt{2}}{2}$ into this equation:
+\[ c_1 \frac{\sqrt{3}}{2} + \left(-c_1 \frac{\sqrt{2}}{2}\right) \sqrt{3} = 0 \]
+\[ c_1 \frac{\sqrt{3}}{2} - c_1 \frac{\sqrt{6}}{2} = 0 \implies c_1 \left( \frac{\sqrt{3} - \sqrt{6}}{2} \right) = 0 \]
+Since $\frac{\sqrt{3} - \sqrt{6}}{2} \neq 0$, we must have $c_1 = 0$.
+If $c_1 = 0$, then $c_3 = -0 \cdot \frac{\sqrt{2}}{2} = 0$.
+
+\textbf{Step 3: Conclusion.}
+Since $c_1 = c_2 = c_3 = 0$ is the only solution, the functions are linearly independent.
+
+\textbf{Final Answer:} The functions are linearly independent.
+
+\subsection{Archetype 3: Wronskian and Fundamental Solution Sets}
+
+\textbf{Problem 15:} Verify that the given functions form a fundamental solution set for the given differential equation and find a general solution.
+\[ y''' + 2y'' - 11y' - 12y = 0; \quad \{e^{3x}, e^{-x}, e^{-4x}\} \]
+
+\textbf{Solution:}
+\textbf{Step 1: Verify each function is a solution.}
+Let $y_1 = e^{3x}$. Then $y_1' = 3e^{3x}$, $y_1'' = 9e^{3x}$, $y_1''' = 27e^{3x}$.
+Substitute into the ODE:
+\[ 27e^{3x} + 2(9e^{3x}) - 11(3e^{3x}) - 12(e^{3x}) = e^{3x}(27 + 18 - 33 - 12) = e^{3x}(45 - 45) = 0. \quad \text{(Verified)} \]
+Let $y_2 = e^{-x}$. Then $y_2' = -e^{-x}$, $y_2'' = e^{-x}$, $y_2''' = -e^{-x}$.
+Substitute:
+\[ -e^{-x} + 2(e^{-x}) - 11(-e^{-x}) - 12(e^{-x}) = e^{-x}(-1 + 2 + 11 - 12) = e^{-x}(13 - 13) = 0. \quad \text{(Verified)} \]
+Let $y_3 = e^{-4x}$. Then $y_3' = -4e^{-4x}$, $y_3'' = 16e^{-4x}$, $y_3''' = -64e^{-4x}$.
+Substitute:
+\[ -64e^{-4x} + 2(16e^{-4x}) - 11(-4e^{-4x}) - 12(e^{-4x}) = e^{-4x}(-64 + 32 + 44 - 12) = e^{-4x}(76 - 76) = 0. \quad \text{(Verified)} \]
+
+\textbf{Step 2: Compute the Wronskian to verify linear independence.}
+\[ W(x) = \begin{vmatrix} e^{3x} & e^{-x} & e^{-4x} \\ 3e^{3x} & -e^{-x} & -4e^{-4x} \\ 9e^{3x} & e^{-x} & 16e^{-4x} \end{vmatrix} \]
+Factor out the exponentials from each column:
+\[ W(x) = e^{3x}e^{-x}e^{-4x} \begin{vmatrix} 1 & 1 & 1 \\ 3 & -1 & -4 \\ 9 & 1 & 16 \end{vmatrix} = e^{-2x} \begin{vmatrix} 1 & 1 & 1 \\ 3 & -1 & -4 \\ 9 & 1 & 16 \end{vmatrix} \]
+Evaluate the determinant:
+\[ \begin{vmatrix} 1 & 1 & 1 \\ 3 & -1 & -4 \\ 9 & 1 & 16 \end{vmatrix} = 1(-16 - (-4)) - 1(48 - (-36)) + 1(3 - (-9)) \]
+\[ = 1(-12) - 1(84) + 1(12) = -12 - 84 + 12 = -84 \]
+So, $W(x) = -84e^{-2x}$. Since $e^{-2x} \neq 0$ for all $x$, $W(x) \neq 0$. The functions are linearly independent and thus form a fundamental solution set.
+
+\textbf{Step 3: Write the general solution.}
+By Theorem 2, the general solution is a linear combination of the fundamental set:
+\[ y(x) = c_1 e^{3x} + c_2 e^{-x} + c_3 e^{-4x} \]
+
+\textbf{Final Answer:} The functions form a fundamental set because they are solutions and their Wronskian is $-84e^{-2x} \neq 0$. The general solution is $y(x) = c_1 e^{3x} + c_2 e^{-x} + c_3 e^{-4x}$.
+
+\subsection{Archetype 4: Nonhomogeneous Equations and Initial Value Problems}
+
+\textbf{Problem 19:} A particular solution and a fundamental solution set are given for a nonhomogeneous equation and its corresponding homogeneous equation. (a) Find a general solution. (b) Find the solution that satisfies the specified initial conditions.
+\[ y''' + y'' + 3y' - 5y = 2 + 6x - 5x^2; \quad y(0) = -1, \quad y'(0) = 1, \quad y''(0) = -3 \]
+\[ y_p = x^2; \quad \{e^x, e^{-x}\cos 2x, e^{-x}\sin 2x\} \]
+
+\textbf{Solution:}
+\textbf{Part (a): Find the general solution.}
+The general solution to a nonhomogeneous equation is $y(x) = y_p(x) + y_c(x)$, where $y_c(x)$ is the general solution to the homogeneous equation.
+Given the fundamental set for the homogeneous equation, we have:
+\[ y_c(x) = c_1 e^x + c_2 e^{-x}\cos 2x + c_3 e^{-x}\sin 2x \]
+Adding the particular solution $y_p(x) = x^2$:
+\[ y(x) = x^2 + c_1 e^x + c_2 e^{-x}\cos 2x + c_3 e^{-x}\sin 2x \]
+
+\textbf{Part (b): Find the specific solution satisfying the initial conditions.}
+We need to compute $y'(x)$ and $y''(x)$ to apply the initial conditions.
+\[ y(x) = x^2 + c_1 e^x + c_2 e^{-x}\cos 2x + c_3 e^{-x}\sin 2x \]
+Using the product rule for the trigonometric terms:
+\[ y'(x) = 2x + c_1 e^x + c_2(-e^{-x}\cos 2x - 2e^{-x}\sin 2x) + c_3(-e^{-x}\sin 2x + 2e^{-x}\cos 2x) \]
+\[ y''(x) = 2 + c_1 e^x + c_2(e^{-x}\cos 2x + 2e^{-x}\sin 2x + 2e^{-x}\sin 2x - 4e^{-x}\cos 2x) \]
+\[ \quad + c_3(e^{-x}\sin 2x - 2e^{-x}\cos 2x - 2e^{-x}\cos 2x - 4e^{-x}\sin 2x) \]
+Simplify $y''(x)$:
+\[ y''(x) = 2 + c_1 e^x + c_2(-3e^{-x}\cos 2x + 4e^{-x}\sin 2x) + c_3(-3e^{-x}\sin 2x - 4e^{-x}\cos 2x) \]
+
+Now, apply the initial conditions at $x = 0$:
+1) $y(0) = -1$:
+\[ 0^2 + c_1 e^0 + c_2 e^0 \cos(0) + c_3 e^0 \sin(0) = -1 \implies c_1 + c_2 = -1 \]
+2) $y'(0) = 1$:
+\[ 2(0) + c_1 e^0 + c_2(-1 - 0) + c_3(0 + 2) = 1 \implies c_1 - c_2 + 2c_3 = 1 \]
+3) $y''(0) = -3$:
+\[ 2 + c_1 e^0 + c_2(-3 + 0) + c_3(0 - 4) = -3 \implies 2 + c_1 - 3c_2 - 4c_3 = -3 \implies c_1 - 3c_2 - 4c_3 = -5 \]
+
+We have a system of three equations:
+\begin{align*}
+    c_1 + c_2 &= -1 \quad \text{(Eq. 1)} \\
+    c_1 - c_2 + 2c_3 &= 1 \quad \text{(Eq. 2)} \\
+    c_1 - 3c_2 - 4c_3 &= -5 \quad \text{(Eq. 3)}
+\end{align*}
+From (Eq. 1), $c_1 = -1 - c_2$. Substitute into (Eq. 2) and (Eq. 3):
+\[ (-1 - c_2) - c_2 + 2c_3 = 1 \implies -2c_2 + 2c_3 = 2 \implies -c_2 + c_3 = 1 \implies c_3 = c_2 + 1 \]
+\[ (-1 - c_2) - 3c_2 - 4c_3 = -5 \implies -4c_2 - 4c_3 = -4 \implies c_2 + c_3 = 1 \]
+Substitute $c_3 = c_2 + 1$ into $c_2 + c_3 = 1$:
+\[ c_2 + (c_2 + 1) = 1 \implies 2c_2 + 1 = 1 \implies 2c_2 = 0 \implies c_2 = 0 \]
+If $c_2 = 0$, then $c_3 = 0 + 1 = 1$.
+If $c_2 = 0$, then $c_1 = -1 - 0 = -1$.
+
+Substitute $c_1 = -1, c_2 = 0, c_3 = 1$ back into the general solution:
+\[ y(x) = x^2 - e^x + 0 \cdot e^{-x}\cos 2x + 1 \cdot e^{-x}\sin 2x \]
+
+\textbf{Final Answer:} 
+(a) $y(x) = x^2 + c_1 e^x + c_2 e^{-x}\cos 2x + c_3 e^{-x}\sin 2x$
+(b) $y(x) = x^2 - e^x + e^{-x}\sin 2x$
+
+\subsection{Archetype 5: Superposition Principle}
+
+\textbf{Problem 23:} Let $L[y] := y''' + y' + xy$. $y_1(x) = \sin x$ and $y_2(x) = x$. Verify that $L[y_1](x) = x \sin x$ and $L[y_2](x) = x^2 + 1$. Then use the superposition principle (linearity) to find a solution to the differential equation:
+(a) $L[y] = 2x \sin x - x^2 - 1$
+(b) $L[y] = 4x^2 + 4 - 6x \sin x$
+
+\textbf{Solution:}
+\textbf{Step 1: Verify the operator actions.}
+For $y_1 = \sin x$: $y_1' = \cos x$, $y_1'' = -\sin x$, $y_1''' = -\cos x$.
+\[ L[y_1] = -\cos x + \cos x + x(\sin x) = x \sin x. \quad \text{(Verified)} \]
+For $y_2 = x$: $y_2' = 1$, $y_2'' = 0$, $y_2''' = 0$.
+\[ L[y_2] = 0 + 1 + x(x) = x^2 + 1. \quad \text{(Verified)} \]
+
+\textbf{Step 2: Apply linearity for part (a).}
+We want to solve $L[y] = 2x \sin x - (x^2 + 1)$.
+Notice that the right side is exactly $2L[y_1] - L[y_2]$.
+Because $L$ is a linear operator, $2L[y_1] - L[y_2] = L[2y_1 - y_2]$.
+Therefore, a solution is $y = 2y_1 - y_2 = 2\sin x - x$.
+
+\textbf{Step 3: Apply linearity for part (b).}
+We want to solve $L[y] = 4x^2 + 4 - 6x \sin x = 4(x^2 + 1) - 6(x \sin x)$.
+This right side is exactly $4L[y_2] - 6L[y_1]$.
+By linearity, $4L[y_2] - 6L[y_1] = L[4y_2 - 6y_1]$.
+Therefore, a solution is $y = 4y_2 - 6y_1 = 4x - 6\sin x$.
+
+\textbf{Final Answer:} 
+(a) $y(x) = 2\sin x - x$
+(b) $y(x) = 4x - 6\sin x$
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Interval of Validity Problems (e.g., Problems 1, 4)}: 
+    \textit{Strategy}: Always begin by forcing the ODE into the standard form $y^{(n)} + p_1(x)y^{(n-1)} + \dots = g(x)$ by dividing by the leading coefficient $a_n(x)$. Identify all points where any $p_i(x)$ or $g(x)$ is undefined or discontinuous. These points act as "walls" that break the real number line into open intervals. Select the single interval that contains the initial condition $x_0$.
+    
+    \item \textbf{Linear Independence via Definition (e.g., Problem 10)}: 
+    \textit{Strategy}: Set up the equation $c_1 f_1(x) + c_2 f_2(x) + \dots = 0$. Since this must hold for \textit{all} $x$ in the interval, you can strategically pick convenient values of $x$ (like $0, \pi/4, \pi/3$) to generate a system of algebraic equations for the constants $c_i$. If the only solution is the trivial one ($c_i = 0$), they are independent.
+    
+    \item \textbf{Wronskian and Fundamental Sets (e.g., Problems 7, 15)}: 
+    \textit{Strategy}: Construct the $n \times n$ matrix where the first row contains the functions, the second row their first derivatives, up to the $(n-1)$-th derivative. Compute the determinant. If $W \neq 0$, the functions are linearly independent. If they are also solutions to an $n$-th order homogeneous ODE, they form a fundamental set.
+    
+    \item \textbf{Nonhomogeneous IVPs (e.g., Problem 19)}: 
+    \textit{Strategy}: Form the general solution $y = y_p + c_1 y_1 + \dots + c_n y_n$. \textbf{Crucial step}: You must take derivatives of this \textit{entire} general solution (including $y_p$) before plugging in the initial conditions to solve for $c_1, \dots, c_n$.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Determinant Simplification (Factoring)}: In Problems 7 and 15, calculating a $3 \times 3$ determinant directly with exponential functions is messy. The key algebraic trick was factoring out common terms from columns \textit{before} expanding the determinant. For example, $\begin{vmatrix} e^x & e^{5x} \\ e^x & 5e^{5x} \end{vmatrix} = e^x e^{5x} \begin{vmatrix} 1 & 1 \\ 1 & 5 \end{vmatrix}$. This drastically reduces the chance of algebraic errors.
+    \item \textbf{Product Rule with Exponentials and Trig Functions}: In Problem 19, finding $y'$ and $y''$ required careful application of the product rule: $\frac{d}{dx}[e^{-x}\cos 2x] = -e^{-x}\cos 2x - 2e^{-x}\sin 2x$. Grouping like terms (sine and cosine) immediately after differentiating prevents the expression from becoming unmanageable.
+    \item \textbf{Linear Operator Algebra}: In Problem 23, recognizing that $L$ distributes over addition and scalar multiplication ($L[af + bg] = aL[f] + bL[g]$) allowed us to solve a complex differential equation purely through algebraic matching, bypassing integration entirely.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Summary of Important Formulas}
+\begin{mdframed}[backgroundcolor=gray!10]
+\textbf{Standard Form:} $y^{(n)} + p_1(x)y^{(n-1)} + \dots + p_n(x)y = g(x)$ \\
+\textbf{Wronskian:} $W[y_1, \dots, y_n](x) = \det \begin{pmatrix} y_1 & \dots & y_n \\ \vdots & \ddots & \vdots \\ y_1^{(n-1)} & \dots & y_n^{(n-1)} \end{pmatrix}$ \\
+\textbf{General Solution:} $y(x) = y_p(x) + c_1 y_1(x) + \dots + c_n y_n(x)$ \\
+\textbf{Abel's Identity:} $W[y_1, \dots, y_n](x) = W(x_0) \exp\left( -\int_{x_0}^x p_1(t) dt \right)$
+\end{mdframed}
+
+\subsection{Tricks and "Cheats"}
+\begin{itemize}
+    \item \textbf{The "Zero-Point" Wronskian Cheat}: If you only need to prove linear independence (and not find the general formula for the Wronskian), evaluate the Wronskian matrix at a highly convenient point, usually $x = 0$. If the determinant of that numerical matrix is non-zero, the functions are independent everywhere.
+    \item \textbf{The "Missing Derivative" Check}: When setting up the Wronskian for $n$ functions, the matrix must be $n \times n$. This means you only differentiate up to the $(n-1)$-th derivative. A common mistake is going up to the $n$-th derivative, which makes the matrix non-square.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The Leading Coefficient Trap}: When finding the interval of validity, students often look at the original equation $a_n(x)y^{(n)} + \dots = g(x)$ and only check where $g(x)$ or the other coefficients are discontinuous. \textbf{You must divide by $a_n(x)$ first!} Any $x$ where $a_n(x) = 0$ is a discontinuity.
+    \item \textbf{The IVP Particular Solution Trap}: When solving an IVP for a nonhomogeneous equation, students often solve for $c_1, c_2$ using only the homogeneous solution $y_c$, and \textit{then} add $y_p$ at the end. This is mathematically incorrect. You must apply the initial conditions to the full equation $y = y_p + y_c$.
+    \item \textbf{Wronskian Zero Trap}: If $W(x) = 0$, it does \textit{not} automatically mean the functions are linearly dependent, \textit{unless} you already know those functions are solutions to a linear homogeneous ODE.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The central theme of this topic is \textbf{Linearity and Vector Spaces}. If you have taken Linear Algebra, this chapter is simply the application of linear algebra to the vector space of functions. 
+The set of all solutions to an $n$-th order homogeneous linear ODE forms an $n$-dimensional vector space. The "fundamental solution set" is exactly what linear algebra calls a \textbf{basis}. The Wronskian is a functional determinant used to verify that these basis vectors are linearly independent, much like checking if the determinant of a matrix of column vectors is non-zero. The superposition principle is just the definition of a linear transformation: $T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v})$.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Links}: This topic is a direct extension of Chapter 4 (Second-Order Linear Equations). Everything you learned there—characteristic equations, undetermined coefficients, variation of parameters—scales up to $n$-th order. The only difference is the algebra becomes heavier (e.g., factoring cubic or quartic polynomials instead of quadratics).
+
+\textbf{Forward Links}: Understanding linear operators and fundamental sets is the absolute bedrock for:
+1. \textbf{Systems of Differential Equations}: Later, you will convert an $n$-th order ODE into a system of $n$ first-order ODEs ($\vec{x}' = A\vec{x}$). The Wronskian will become the determinant of the fundamental matrix.
+2. \textbf{Fourier Series and PDEs}: Solving the Heat or Wave equation relies on finding infinite fundamental sets of orthogonal functions (like sines and cosines) and using superposition to build a general solution.
+
+\newpage
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+1. \textbf{Quantitative Finance (Jump-Diffusion Models)}: In advanced options pricing, standard Black-Scholes (which uses a 2nd-order parabolic PDE) fails to capture sudden market crashes. Jump-diffusion models introduce integro-differential equations. When approximated, these can lead to higher-order linear ODEs describing the spatial distribution of asset prices, where the fundamental solutions represent different market regimes (e.g., mean-reverting vs. trending).
+2. \textbf{Machine Learning (Neural ODEs)}: Continuous-depth neural networks model the hidden state of a network as a continuous trajectory governed by an ODE, $\frac{dh(t)}{dt} = f(h(t), t, \theta)$. For highly complex sequential data (like high-frequency trading signals), researchers use higher-order Neural ODEs. The state space is expanded, and the linearity of the local operator $L$ is crucial for ensuring the backpropagation through time (via the adjoint sensitivity method) remains stable and uniquely solvable.
+
+\subsection{B) Model Problem Setup: State-Space Tracking in Algorithmic Trading}
+Let us formulate a rigorous model for tracking a latent momentum signal in algorithmic trading using a 3rd-order linear stochastic system.
+
+\textbf{State Space and Variables:}
+Let $P(t)$ be the log-price of an asset. We hypothesize that the price is driven by a latent "momentum" state $y(t)$, which itself follows a 3rd-order linear ODE with mean-reverting characteristics, perturbed by Gaussian white noise.
+The deterministic part of the momentum follows:
+\[ y'''(t) + \alpha y''(t) + \beta y'(t) + \gamma y(t) = 0 \]
+where $\alpha, \beta, \gamma > 0$ are learned parameters representing friction, elasticity, and mean-reversion strength.
+
+\textbf{Mathematical Formulation:}
+To implement this in a Kalman Filter for real-time trading, we must convert this 3rd-order ODE into a system of first-order equations. We define the state vector $\mathbf{X}(t) = \begin{bmatrix} y(t) \\ y'(t) \\ y''(t) \end{bmatrix}$.
+The system is governed by the stochastic differential equation (SDE):
+\[ d\mathbf{X}(t) = A \mathbf{X}(t) dt + \Sigma d\mathbf{W}(t) \]
+where $\mathbf{W}(t)$ is a standard 3-dimensional Brownian motion, $\Sigma$ is the volatility matrix, and the transition matrix $A$ is the companion matrix of our linear operator:
+\[ A = \begin{bmatrix} 0 & 1 & 0 \\ 0 & 0 & 1 \\ -\gamma & -\beta & -\alpha \end{bmatrix} \]
+\textbf{Theoretical Framework:}
+To ensure the trading signal $y(t)$ does not explode (stability), the eigenvalues of $A$ must have strictly negative real parts. The fundamental solution set of the unperturbed ODE, $\{y_1(t), y_2(t), y_3(t)\}$, dictates the transient behavior of the momentum. The Wronskian $W[y_1, y_2, y_3](t) = W(0)e^{-\alpha t}$ (by Abel's Identity) proves that the phase-space volume of our uncertainty shrinks over time at a rate strictly determined by the friction parameter $\alpha$. The optimization problem for the ML model is to minimize the negative log-likelihood of the observed prices $P(t)$ by adjusting $\alpha, \beta, \gamma$, subject to the constraint that the Wronskian remains non-zero and exponentially decaying.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Missing Concept: Finding the Fundamental Set for Higher-Order Constant Coefficient ODEs}
+The provided homework focuses heavily on \textit{verifying} given fundamental sets using the Wronskian. However, a critical skill in this chapter is \textit{finding} that fundamental set from scratch for an equation like $a_n y^{(n)} + \dots + a_0 y = 0$.
+
+\textbf{Explanation:}
+Just like 2nd-order equations, we guess $y = e^{rx}$, which leads to the characteristic polynomial:
+\[ a_n r^n + a_{n-1} r^{n-1} + \dots + a_1 r + a_0 = 0 \]
+By the Fundamental Theorem of Algebra, this polynomial has exactly $n$ roots (counting multiplicities and complex roots).
+\begin{itemize}
+    \item \textbf{Distinct Real Roots} $r_1, r_2, \dots$: Solutions are $e^{r_1 x}, e^{r_2 x}, \dots$
+    \item \textbf{Repeated Real Roots} (multiplicity $k$ for root $r$): Solutions are $e^{rx}, xe^{rx}, x^2e^{rx}, \dots, x^{k-1}e^{rx}$.
+    \item \textbf{Complex Roots} $\alpha \pm i\beta$: Solutions are $e^{\alpha x}\cos(\beta x)$ and $e^{\alpha x}\sin(\beta x)$.
+\end{itemize}
+
+\textbf{Worked Example:}
+Find the general solution to $y''' - 3y'' + 3y' - y = 0$.
+
+\textbf{Step 1: Characteristic Equation.}
+\[ r^3 - 3r^2 + 3r - 1 = 0 \]
+\textbf{Step 2: Factor the polynomial.}
+Recognize this as the binomial expansion of $(r - 1)^3$.
+\[ (r - 1)^3 = 0 \]
+The root is $r = 1$ with a multiplicity of $k = 3$.
+
+\textbf{Step 3: Construct the fundamental set.}
+Because the root is repeated 3 times, we multiply by $x$ for each repetition.
+The fundamental set is $\{e^x, xe^x, x^2e^x\}$.
+
+\textbf{Step 4: General Solution.}
+\[ y(x) = c_1 e^x + c_2 xe^x + c_3 x^2e^x \]
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+\textit{Instructions: Below are 5 problems with fully worked solutions. Each solution contains a single, subtle, yet critical flaw. Act as the grader: identify the error, explain why it is wrong in one sentence, and provide the correct final solution.}
+
+\subsection{Flawed Problem 1}
+\textbf{Problem:} Find the largest interval of validity for the IVP: $(x-2)y''' + y = 0, \quad y(0)=1, y'(0)=0, y''(0)=0$.
+\textbf{Flawed Solution:}
+1. The coefficient functions are $p_1(x) = x-2$ and $p_2(x) = 1$.
+2. These are polynomials, so they are continuous everywhere on $(-\infty, \infty)$.
+3. Therefore, the largest interval of validity is $(-\infty, \infty)$.
+
+\textbf{Grader Analysis:}
+\textbf{Error:} The student failed to put the differential equation into standard form by dividing by the leading coefficient $(x-2)$.
+\textbf{Correct Solution:} Standard form is $y''' + \frac{1}{x-2}y = 0$. The discontinuity is at $x=2$. The intervals are $(-\infty, 2)$ and $(2, \infty)$. Since $x_0 = 0$ is in $(-\infty, 2)$, the correct interval is $(-\infty, 2)$.
+
+\subsection{Flawed Problem 2}
+\textbf{Problem:} Compute the Wronskian of $\{1, x, x^2\}$ at $x=1$.
+\textbf{Flawed Solution:}
+\[ W(x) = \begin{vmatrix} 1 & x & x^2 \\ 0 & 1 & 2x \\ 0 & 0 & 2x \end{vmatrix} \]
+Evaluating the determinant along the first column: $W(x) = 1(1 \cdot 2x - 0) = 2x$.
+At $x=1$, $W(1) = 2(1) = 2$.
+
+\textbf{Grader Analysis:}
+\textbf{Error:} The student incorrectly differentiated $2x$ as $2x$ in the bottom right entry of the matrix; the derivative of $2x$ is $2$.
+\textbf{Correct Solution:} The matrix should be $\begin{vmatrix} 1 & x & x^2 \\ 0 & 1 & 2x \\ 0 & 0 & 2 \end{vmatrix}$. The determinant is $1(1 \cdot 2 - 0) = 2$. So $W(x) = 2$ for all $x$. At $x=1$, $W(1) = 2$.
+
+\subsection{Flawed Problem 3}
+\textbf{Problem:} Solve the IVP $y'' - y = 2x; \quad y(0)=1, y'(0)=0$. Given $y_c = c_1 e^x + c_2 e^{-x}$ and $y_p = -2x$.
+\textbf{Flawed Solution:}
+1. Apply initial conditions to $y_c$: $y_c(0) = c_1 + c_2 = 1$.
+2. $y_c'(x) = c_1 e^x - c_2 e^{-x} \implies y_c'(0) = c_1 - c_2 = 0$.
+3. Solving gives $c_1 = 1/2, c_2 = 1/2$.
+4. General solution is $y = y_p + y_c = -2x + \frac{1}{2}e^x + \frac{1}{2}e^{-x}$.
+
+\textbf{Grader Analysis:}
+\textbf{Error:} The student applied the initial conditions to the complementary solution $y_c$ instead of the full general solution $y = y_p + y_c$.
+\textbf{Correct Solution:} $y = -2x + c_1 e^x + c_2 e^{-x}$. $y' = -2 + c_1 e^x - c_2 e^{-x}$. $y(0) = c_1 + c_2 = 1$. $y'(0) = -2 + c_1 - c_2 = 0 \implies c_1 - c_2 = 2$. Solving gives $c_1 = 3/2, c_2 = -1/2$. Final answer: $y = -2x + \frac{3}{2}e^x - \frac{1}{2}e^{-x}$.
+
+\subsection{Flawed Problem 4}
+\textbf{Problem:} Are $f_1(x) = x^2$ and $f_2(x) = x|x|$ linearly independent on $(-1, 1)$?
+\textbf{Flawed Solution:}
+1. Compute Wronskian: $W(x) = x^2(2|x|) - x|x|(2x) = 2x^2|x| - 2x^2|x| = 0$.
+2. Since $W(x) = 0$ for all $x$ in $(-1, 1)$, the functions are linearly dependent.
+
+\textbf{Grader Analysis:}
+\textbf{Error:} The student assumed that $W(x) = 0$ implies linear dependence, which is only guaranteed if the functions are solutions to a standard linear homogeneous ODE (which these are not).
+\textbf{Correct Solution:} Use the definition. $c_1 x^2 + c_2 x|x| = 0$. At $x=1$: $c_1 + c_2 = 0$. At $x=-1$: $c_1 - c_2 = 0$. Solving gives $c_1=0, c_2=0$. The functions are linearly independent despite $W(x)=0$.
+
+\subsection{Flawed Problem 5}
+\textbf{Problem:} Given $L[y_1] = e^x$ and $L[y_2] = \sin x$, find a solution to $L[y] = e^x \sin x$.
+\textbf{Flawed Solution:}
+1. By the superposition principle, if we multiply the outputs, we multiply the inputs.
+2. Therefore, $y = y_1 \cdot y_2$.
+
+\textbf{Grader Analysis:}
+\textbf{Error:} The student fundamentally misunderstood the linearity principle; linear operators distribute over addition and scalar multiplication, not over the multiplication of functions.
+\textbf{Correct Solution:} The superposition principle cannot be used to solve $L[y] = e^x \sin x$ given only $L[y_1] = e^x$ and $L[y_2] = \sin x$. A different technique (like undetermined coefficients or variation of parameters) must be used to find the particular solution.
+
+\end{document}

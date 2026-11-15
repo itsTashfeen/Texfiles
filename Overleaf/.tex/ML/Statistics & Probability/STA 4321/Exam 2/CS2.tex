@@ -1,0 +1,187 @@
+\documentclass[10pt]{article}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage[landscape, margin=0.4in]{geometry}
+
+% Compress spacing to fit beautifully on 2 pages while remaining readable
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+
+\begin{document}
+
+\begin{center}
+\textbf{\Large Probability Distributions Summary}
+\end{center}
+
+\vspace{-2mm}
+\renewcommand{\arraystretch}{1.6}
+\begin{center}
+\begin{tabular}{@{}l c c c c@{}}
+\toprule
+\textbf{Distribution} & \textbf{PMF/PDF} & \textbf{E[Y]} & \textbf{Var[Y]} & \textbf{MGF} \\
+\midrule
+\multicolumn{5}{l}{\textbf{Discrete Distributions}} \\
+Binomial & $p(y) = \binom{n}{y} p^y (1-p)^{n-y}$ & $np$ & $np(1-p)$ & $[pe^t + (1-p)]^n$ \\
+Geometric & $p(y) = p(1-p)^{y-1}$ & $\frac{1}{p}$ & $\frac{1-p}{p^2}$ & $\frac{pe^t}{1-(1-p)e^t}$ \\
+Hypergeometric & $p(y) = \frac{\binom{r}{y}\binom{N-r}{n-y}}{\binom{N}{n}}$ & $n\frac{r}{N}$ & $n\left(\frac{r}{N}\right)\left(1-\frac{r}{N}\right)\left(\frac{N-n}{N-1}\right)$ & -- \\
+Poisson & $p(y) = \frac{\lambda^y e^{-\lambda}}{y!}$ & $\lambda$ & $\lambda$ & $\exp[\lambda(e^t - 1)]$ \\
+Negative binomial & $p(y) = \binom{y-1}{r-1} p^r (1-p)^{y-r}$ & $\frac{r}{p}$ & $\frac{r(1-p)}{p^2}$ & $\left[\frac{pe^t}{1-(1-p)e^t}\right]^r$ \\
+\midrule
+\multicolumn{5}{l}{\textbf{Continuous Distributions}} \\
+Uniform & $f(y) = \frac{1}{\theta_2 - \theta_1}; \quad \theta_1 \le y \le \theta_2$ & $\frac{\theta_1 + \theta_2}{2}$ & $\frac{(\theta_2 - \theta_1)^2}{12}$ & $\frac{e^{t\theta_2} - e^{t\theta_1}}{t(\theta_2 - \theta_1)}$ \\
+Normal & $f(y) = \frac{1}{\sigma\sqrt{2\pi}}\exp\left[-\left(\frac{1}{2\sigma^2}\right)(y-\mu)^2\right]$ & $\mu$ & $\sigma^2$ & $\exp\left(\mu t + \frac{t^2\sigma^2}{2}\right)$ \\
+Exponential & $f(y) = \frac{1}{\beta}e^{-y/\beta}; \quad \beta > 0$ & $\beta$ & $\beta^2$ & $(1-\beta t)^{-1}$ \\
+Gamma & $f(y) = \left[\frac{1}{\Gamma(\alpha)\beta^\alpha}\right] y^{\alpha-1}e^{-y/\beta}$ & $\alpha\beta$ & $\alpha\beta^2$ & $(1-\beta t)^{-\alpha}$ \\
+Chi-square & $f(y) = \frac{(y)^{(\nu/2)-1}e^{-y/2}}{2^{\nu/2}\Gamma(\nu/2)}$ & $\nu$ & $2\nu$ & $(1-2t)^{-\nu/2}$ \\
+Beta & $f(y) = \left[\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}\right] y^{\alpha-1}(1-y)^{\beta-1}$ & $\frac{\alpha}{\alpha+\beta}$ & $\frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}$ & -- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{2mm}
+\hrule
+\vspace{3mm}
+
+\begin{multicols*}{3}
+
+\textbf{Tchebysheff's Theorem}\\
+Let $Y$ be a random variable with mean $\mu$ and finite variance $\sigma^2$. For any constant $k > 0$:
+$$ P(|Y-\mu| < k\sigma) \ge 1 - \frac{1}{k^2} \quad \text{or} \quad P(|Y-\mu| \ge k\sigma) \le \frac{1}{k^2} $$
+\textbf{Proof using Markov's Inequality:}\\
+Markov's Inequality states: $P(X \ge a) \le \frac{E[X]}{a}$ for $X \ge 0, a > 0$.\\
+Let $X = (Y-\mu)^2$ and $a = k^2\sigma^2$. Then:
+$$ P(|Y-\mu| \ge k\sigma) = P((Y-\mu)^2 \ge k^2\sigma^2) \le \frac{E[(Y-\mu)^2]}{k^2\sigma^2} = \frac{\sigma^2}{k^2\sigma^2} = \frac{1}{k^2} $$
+
+\vspace{2mm}
+\hrule
+\vspace{2mm}
+
+\begin{center}
+\textbf{Part I: Discrete Distributions}
+\end{center}
+
+\textbf{1. Binomial:} $Y \sim \text{Bin}(n, p)$, $q = 1-p$\\
+\textit{Ex:} Out of 7 customized sandwiches, the probability of the customization being perfectly right is 0.3. Probability that 3 or fewer are perfect?\\
+\textit{Form:} $P(Y \le 3) = \sum_{y=0}^{3} \binom{7}{y} (0.3)^y (0.7)^{7-y}$\\
+$E[Y] = \sum_{y=1}^{n} y \frac{n!}{y!(n-y)!} p^y q^{n-y} = np \sum_{y=1}^{n} \frac{(n-1)!}{(y-1)!(n-y)!} p^{y-1} q^{n-y}$\\
+Let $k=y-1$: $E[Y] = np \sum_{k=0}^{n-1} \binom{n-1}{k} p^k q^{(n-1)-k} = np(p+q)^{n-1} = np$\\
+$E[Y(Y-1)] = \sum_{y=2}^{n} y(y-1) \binom{n}{y} p^y q^{n-y} = n(n-1)p^2 \sum_{y=2}^{n} \binom{n-2}{y-2} p^{y-2} q^{n-y} = n(n-1)p^2$\\
+$Var(Y) = E[Y(Y-1)] + E[Y] - (E[Y])^2 = n(n-1)p^2 + np - (np)^2 = np(1-p)$\\
+\textit{MGF:} $E[e^{tY}] = \sum_{y=0}^{n} e^{ty} \binom{n}{y} p^y q^{n-y} = \sum_{y=0}^{n} \binom{n}{y} (pe^t)^y q^{n-y} = (pe^t + q)^n$
+
+\vspace{2mm}
+
+\textbf{2. Geometric:} $Y \sim \text{Geo}(p)$\\
+\textit{Ex:} A server request fails with probability 0.5. Probability it takes 3 or more requests to get the first success?\\
+\textit{Form:} $P(Y \ge 3) = (1-0.5)^{3-1} = (0.5)^2 = 0.25$\\
+$E[Y] = \sum_{y=1}^{\infty} y q^{y-1} p = p \frac{d}{dq} (\sum_{y=0}^{\infty} q^y) = p \frac{d}{dq} (\frac{1}{1-q}) = \frac{p}{(1-q)^2} = \frac{1}{p}$\\
+$E[Y(Y-1)] = \sum_{y=2}^{\infty} y(y-1) q^{y-1} p = pq \frac{d^2}{dq^2} (\frac{1}{1-q}) = \frac{2pq}{(1-q)^3} = \frac{2q}{p^2}$\\
+$Var(Y) = E[Y(Y-1)] + E[Y] - (E[Y])^2 = \frac{2q}{p^2} + \frac{1}{p} - \frac{1}{p^2} = \frac{1-p}{p^2}$\\
+\textit{MGF:} $E[e^{tY}] = \sum_{y=1}^{\infty} e^{ty} q^{y-1} p = \frac{p}{q} \sum_{y=1}^{\infty} (qe^t)^y = \frac{p}{q} \frac{qe^t}{1-qe^t} = \frac{pe^t}{1-qe^t}$
+
+\vspace{2mm}
+
+\textbf{3. Negative Binomial:} $Y \sim \text{NB}(r, p)$\\
+\textit{Ex:} Probability a Topgolf swing clears 150 yards is 0.4. Probability that the 3rd swing clearing 150 yards is exactly the 7th attempt?\\
+\textit{Form:} $P(Y=7) = \binom{7-1}{3-1} (0.4)^3 (0.6)^{7-3}$\\
+$E[Y] = \sum_{y=r}^{\infty} y \binom{y-1}{r-1} p^r q^{y-r} = r \sum_{y=r}^{\infty} \binom{y}{r} p^r q^{y-r} = \frac{r}{p} \sum_{w=r+1}^{\infty} \binom{w-1}{r} p^{r+1} q^{w-(r+1)} = \frac{r}{p}$\\
+$E[Y(Y+1)] = \sum_{y=r}^{\infty} y(y+1)\binom{y-1}{r-1}p^r q^{y-r} = r(r+1)\sum_{y=r}^{\infty} \binom{y+1}{r+1}p^r q^{y-r} = \frac{r(r+1)}{p^2}$\\
+$Var(Y) = E[Y(Y+1)] - E[Y] - (E[Y])^2 = \frac{r(r+1)}{p^2} - \frac{r}{p} - \frac{r^2}{p^2} = \frac{r(1-p)}{p^2}$\\
+\textit{MGF:} Sum of $r$ iid Geometric RVs. $M_Y(t) = [M_{Geo}(t)]^r = (\frac{pe^t}{1-qe^t})^r$
+
+\vspace{2mm}
+
+\textbf{4. Hypergeometric:} $Y \sim \text{HG}(N, r, n)$\\
+\textit{Ex:} From 8 Papa John's slices, 4 have jalapeños. If you eat 4 slices, probability exactly 2 have jalapeños?\\
+\textit{Form:} $P(Y=2) = \frac{\binom{4}{2}\binom{8-4}{4-2}}{\binom{8}{4}} = \frac{\binom{4}{2}\binom{4}{2}}{\binom{8}{4}}$\\
+$E[Y] = \sum_{y=1}^{n} y \frac{\binom{r}{y}\binom{N-r}{n-y}}{\binom{N}{n}} = \frac{r}{\binom{N}{n}} \sum_{y=1}^{n} \binom{r-1}{y-1} \binom{N-r}{n-y} = r \frac{\binom{N-1}{n-1}}{\binom{N}{n}} = \frac{nr}{N}$\\
+$E[Y(Y-1)] = \frac{r(r-1)}{\binom{N}{n}} \sum_{y=2}^{n} \binom{r-2}{y-2} \binom{N-r}{n-y} = r(r-1) \frac{\binom{N-2}{n-2}}{\binom{N}{n}} = \frac{r(r-1)n(n-1)}{N(N-1)}$\\
+$Var(Y) = \frac{r(r-1)n(n-1)}{N(N-1)} + \frac{nr}{N} - (\frac{nr}{N})^2 = n(\frac{r}{N})(1-\frac{r}{N})(\frac{N-n}{N-1})$
+
+\vspace{2mm}
+
+\textbf{5. Poisson:} $Y \sim \text{Pois}(\lambda)$\\
+\textit{Ex:} Utility service goes out at an average rate of 6 times a year. Probability of strictly less than 2 outages this year?\\
+\textit{Form:} $P(Y < 2) = P(Y=0) + P(Y=1) = \frac{6^0 e^{-6}}{0!} + \frac{6^1 e^{-6}}{1!}$\\
+$E[Y] = \sum_{y=1}^{\infty} y \frac{\lambda^y e^{-\lambda}}{y!} = \lambda e^{-\lambda} \sum_{y=1}^{\infty} \frac{\lambda^{y-1}}{(y-1)!} = \lambda e^{-\lambda} e^\lambda = \lambda$\\
+$E[Y(Y-1)] = \sum_{y=2}^{\infty} y(y-1) \frac{\lambda^y e^{-\lambda}}{y!} = \lambda^2 e^{-\lambda} \sum_{y=2}^{\infty} \frac{\lambda^{y-2}}{(y-2)!} = \lambda^2$\\
+$Var(Y) = E[Y(Y-1)] + E[Y] - (E[Y])^2 = \lambda^2 + \lambda - \lambda^2 = \lambda$\\
+\textit{MGF:} $E[e^{tY}] = \sum_{y=0}^{\infty} e^{ty} \frac{\lambda^y e^{-\lambda}}{y!} = e^{-\lambda} \sum_{y=0}^{\infty} \frac{(\lambda e^t)^y}{y!} = e^{-\lambda} e^{\lambda e^t} = e^{\lambda(e^t - 1)}$
+
+\vspace{2mm}
+\hrule
+\vspace{2mm}
+
+\begin{center}
+\textbf{Part II: Continuous Distributions}
+\end{center}
+
+\textbf{6. Uniform:} $Y \sim U(\theta_1, \theta_2)$\\
+\textit{Ex:} [Space for continuous example]\\
+\textit{Form:} [Space for formula]\\
+$E[Y] = \int_{\theta_1}^{\theta_2} \frac{y}{\theta_2 - \theta_1} dy = \frac{1}{\theta_2 - \theta_1} [\frac{y^2}{2}]_{\theta_1}^{\theta_2} = \frac{\theta_2^2 - \theta_1^2}{2(\theta_2 - \theta_1)} = \frac{\theta_1 + \theta_2}{2}$\\
+$E[Y^2] = \int_{\theta_1}^{\theta_2} \frac{y^2}{\theta_2 - \theta_1} dy = \frac{\theta_2^3 - \theta_1^3}{3(\theta_2 - \theta_1)} = \frac{\theta_1^2 + \theta_1\theta_2 + \theta_2^2}{3}$\\
+$Var(Y) = E[Y^2] - (E[Y])^2 = \frac{\theta_1^2 + \theta_1\theta_2 + \theta_2^2}{3} - \frac{(\theta_1 + \theta_2)^2}{4} = \frac{(\theta_2 - \theta_1)^2}{12}$\\
+\textit{MGF:} $E[e^{tY}] = \int_{\theta_1}^{\theta_2} \frac{e^{ty}}{\theta_2 - \theta_1} dy = \frac{1}{t(\theta_2 - \theta_1)} [e^{ty}]_{\theta_1}^{\theta_2} = \frac{e^{t\theta_2} - e^{t\theta_1}}{t(\theta_2 - \theta_1)}$
+
+\vspace{2mm}
+
+\textbf{7. Normal:} $Y \sim N(\mu, \sigma^2)$\\
+\textit{Ex:} [Space for continuous example]\\
+\textit{Form:} [Space for formula]\\
+Let $z = \frac{y-\mu}{\sigma} \implies y = \sigma z + \mu, dy = \sigma dz$\\
+$E[Y] = \int_{-\infty}^{\infty} (\sigma z + \mu) \frac{1}{\sqrt{2\pi}} e^{-z^2/2} dz = \sigma(0) + \mu(1) = \mu$\\
+$Var(Y) = \int_{-\infty}^{\infty} (y-\mu)^2 f(y) dy = \sigma^2 \int_{-\infty}^{\infty} z^2 \frac{1}{\sqrt{2\pi}} e^{-z^2/2} dz$\\
+Using integration by parts: $Var(Y) = \frac{\sigma^2}{\sqrt{2\pi}} (\sqrt{2\pi}) = \sigma^2$\\
+\textit{MGF:} $E[e^{tY}] = \int_{-\infty}^{\infty} e^{ty} \frac{1}{\sigma\sqrt{2\pi}} e^{\frac{-(y-\mu)^2}{2\sigma^2}} dy$. Let $y=z\sigma+\mu$, \\
+$E[e^{tY}] = e^{\mu t} \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}(z^2 - 2t\sigma z)} dz$\\
+Complete the square: $-\frac{1}{2}(z^2 - 2t\sigma z) = -\frac{1}{2}(z-t\sigma)^2 + \frac{1}{2}t^2\sigma^2$\\
+$M(t) = e^{\mu t + \frac{1}{2}\sigma^2 t^2} \int_{-\infty}^{\infty} \frac{1}{\sqrt{2\pi}} e^{-\frac{1}{2}(z-t\sigma)^2} dz = e^{\mu t + \frac{1}{2}\sigma^2 t^2}$
+
+\vspace{2mm}
+
+\textbf{8. Exponential:} $Y \sim \text{Exp}(\beta)$\\
+\textit{Ex:} [Space for continuous example]\\
+\textit{Form:} [Space for formula]\\
+$E[Y] = \int_{0}^{\infty} \frac{y}{\beta} e^{-y/\beta} dy = [-y e^{-y/\beta}]_{0}^{\infty} + \int_{0}^{\infty} e^{-y/\beta} dy = \beta$\\
+$E[Y^2] = \int_{0}^{\infty} \frac{y^2}{\beta} e^{-y/\beta} dy = [-y^2 e^{-y/\beta}]_{0}^{\infty} + 2\beta \int_{0}^{\infty} \frac{y}{\beta} e^{-y/\beta} dy = 2\beta(\beta) = 2\beta^2$\\
+$Var(Y) = E[Y^2] - (E[Y])^2 = 2\beta^2 - \beta^2 = \beta^2$\\
+\textit{MGF:} $E[e^{tY}] = \int_{0}^{\infty} \frac{1}{\beta} e^{-y(\frac{1}{\beta}-t)} dy = \frac{1}{\beta(\frac{1}{\beta}-t)} = \frac{1}{1-\beta t} = (1-\beta t)^{-1}$
+
+\vspace{2mm}
+
+\textbf{9. Gamma:} $Y \sim \text{Gamma}(\alpha, \beta)$\\
+\textit{Ex:} [Space for continuous example]\\
+\textit{Form:} [Space for formula]\\
+$E[Y] = \frac{1}{\beta^\alpha \Gamma(\alpha)} \int_{0}^{\infty} y^{\alpha} e^{-y/\beta} dy = \frac{\beta^{\alpha+1} \Gamma(\alpha+1)}{\beta^\alpha \Gamma(\alpha)} = \frac{\beta \alpha \Gamma(\alpha)}{\Gamma(\alpha)} = \alpha\beta$\\
+$E[Y^2] = \frac{1}{\beta^\alpha \Gamma(\alpha)} \int_{0}^{\infty} y^{\alpha+1} e^{-y/\beta} dy = \frac{\beta^{\alpha+2} \Gamma(\alpha+2)}{\beta^\alpha \Gamma(\alpha)} = \alpha(\alpha+1)\beta^2$\\
+$Var(Y) = E[Y^2] - (E[Y])^2 = \alpha(\alpha+1)\beta^2 - (\alpha\beta)^2 = \alpha\beta^2$\\
+\textit{MGF:} $E[e^{tY}] = \int_{0}^{\infty} \frac{y^{\alpha-1}}{\beta^\alpha \Gamma(\alpha)} e^{-y(\frac{1}{\beta}-t)} dy$. Let $u = \frac{1}{\beta}-t$.\\
+$E[e^{tY}] = \frac{1}{\beta^\alpha \Gamma(\alpha)} \int_{0}^{\infty} y^{\alpha-1} e^{-yu} dy = \frac{u^{-\alpha} \Gamma(\alpha)}{\beta^\alpha \Gamma(\alpha)} = (\frac{1}{\beta u})^\alpha = (1-\beta t)^{-\alpha}$
+
+\vspace{2mm}
+
+\textbf{10. Chi-Square:} $Y \sim \chi^2(\nu)$\\
+\textit{Ex:} [Space for continuous example]\\
+\textit{Form:} [Space for formula]\\
+Special case of Gamma with $\alpha = \nu/2$ and $\beta = 2$.\\
+$E[Y] = \alpha\beta = (\nu/2)(2) = \nu$\\
+$Var(Y) = \alpha\beta^2 = (\nu/2)(2)^2 = 2\nu$\\
+\textit{MGF:} Substitute $\alpha = \nu/2, \beta=2$ into Gamma MGF $\implies (1-2t)^{-\nu/2}$
+
+\vspace{2mm}
+
+\textbf{11. Beta:} $Y \sim \text{Beta}(\alpha, \beta)$, $B(\alpha, \beta) = \frac{\Gamma(\alpha)\Gamma(\beta)}{\Gamma(\alpha+\beta)}$\\
+\textit{Ex:} [Space for continuous example]\\
+\textit{Form:} [Space for formula]\\
+$E[Y] = \int_{0}^{1} y \frac{y^{\alpha-1} (1-y)^{\beta-1}}{B(\alpha, \beta)} dy = \frac{B(\alpha+1, \beta)}{B(\alpha, \beta)} = \frac{\Gamma(\alpha+1)\Gamma(\alpha+\beta)}{\Gamma(\alpha+\beta+1)\Gamma(\alpha)} = \frac{\alpha}{\alpha+\beta}$\\
+$E[Y^2] = \int_{0}^{1} y^2 \frac{y^{\alpha-1} (1-y)^{\beta-1}}{B(\alpha, \beta)} dy = \frac{B(\alpha+2, \beta)}{B(\alpha, \beta)} = \frac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)}$\\
+$Var(Y) = E[Y^2] - (E[Y])^2 = \frac{\alpha(\alpha+1)}{(\alpha+\beta)(\alpha+\beta+1)} - \frac{\alpha^2}{(\alpha+\beta)^2} = \frac{\alpha\beta}{(\alpha+\beta)^2(\alpha+\beta+1)}$
+
+\end{multicols*}
+\end{document}

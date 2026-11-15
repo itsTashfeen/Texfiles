@@ -19,7 +19,7 @@ ModuleNotFoundError: No module named 'style_utils'
 **Solution:** Add absolute path to Cell 1 BEFORE imports:
 ```python
 import sys
-sys.path.append(r'C:\Users\Computer\Documents\GitHub\MathTex\Visualizations')
+sys.path.append(r'D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations')
 
 # Then import
 from manim import *
@@ -43,7 +43,7 @@ ParsingError: Source contains parsing errors: WindowsPath('manim.cfg')
 **Solution:** Remove ALL markdown syntax. Config file must be plain INI format:
 ```ini
 [CLI]
-media_dir = C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media
+media_dir = D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations\media
 video_dir = {media_dir}/videos
 
 [output]
@@ -67,7 +67,7 @@ verbosity = WARNING
 
 **Solution:** Set environment variables and working directory in Cell 1:
 ```python
-BASE_DIR = r'C:\Users\Computer\Documents\GitHub\MathTex\Visualizations'
+BASE_DIR = r'D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations'
 os.chdir(BASE_DIR)
 os.environ['MANIM_OUTPUT_DIR'] = os.path.join(BASE_DIR, 'media')
 config.output_file = "project_name"  # Sets folder name

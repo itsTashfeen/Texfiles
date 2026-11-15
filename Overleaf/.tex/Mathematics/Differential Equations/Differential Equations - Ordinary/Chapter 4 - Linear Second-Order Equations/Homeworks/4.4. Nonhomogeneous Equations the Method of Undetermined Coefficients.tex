@@ -1,0 +1,467 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, geometry}
+\geometry{letterpaper, margin=1in}
+
+\title{Homework 4.4: Nonhomogeneous Equations: The Method of Undetermined Coefficients}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+In previous chapters, we focused on solving \textbf{homogeneous} linear differential equations, which take the form $ay'' + by' + cy = 0$. The solutions to these equations represent the ``natural'' or unforced behavior of a system. In this chapter, we introduce \textbf{nonhomogeneous} equations of the form:
+\[ ay'' + by' + cy = f(t) \]
+where $f(t)$ is a non-zero function representing an external force or input driving the system. 
+
+The general solution to a nonhomogeneous equation is given by the principle of superposition:
+\[ y(t) = y_h(t) + y_p(t) \]
+Here, $y_h(t)$ is the general solution to the associated homogeneous equation (the complementary solution), and $y_p(t)$ is any \textbf{particular solution} that satisfies the nonhomogeneous equation. The \textbf{Method of Undetermined Coefficients} is a systematic technique for finding $y_p(t)$ by making an educated guess about its mathematical form based on the form of $f(t)$.
+
+\subsection{Intuition and Derivation}
+The core intuition behind this method relies on the fact that the derivatives of certain functions---specifically polynomials, exponentials, sines, and cosines---result in functions of the exact same type. For example, the derivative of an exponential is an exponential, and the derivative of a sine is a cosine. 
+
+If $f(t) = e^{3t}$, it is highly logical to guess that $y_p(t)$ must also involve $e^{3t}$, because plugging $e^{3t}$ into the left side of the differential equation will yield a multiple of $e^{3t}$. We guess a form with unknown (undetermined) coefficients, such as $y_p(t) = A e^{3t}$, substitute it into the differential equation, and solve algebraically for $A$.
+
+However, a complication arises if our guess is already a solution to the homogeneous equation $y_h(t)$. If we plug such a guess into the left side, it will evaluate to zero, making it impossible to match $f(t)$. To fix this linear dependence, we multiply our guess by $t^s$, where $s$ is the smallest positive integer that ensures no term in our guess is a solution to the homogeneous equation.
+
+\subsection{Historical Context and Motivation}
+The development of techniques to solve nonhomogeneous differential equations was heavily driven by 18th and 19th-century physics, particularly by mathematicians like Leonhard Euler and Joseph-Louis Lagrange. They were studying mechanical systems subjected to external forces, such as a pendulum being pushed periodically or a mass on a spring subjected to friction and an external driving motor. The homogeneous solution described the system's natural transient state (which often decays over time due to damping), while the particular solution described the steady-state response forced upon the system by the external input.
+
+\subsection{Key Formulas}
+To find a particular solution to $ay'' + by' + cy = C t^m e^{\alpha t} \cos \beta t$ or $C t^m e^{\alpha t} \sin \beta t$, we use the trial form:
+\[ y_p(t) = t^s \left( (A_m t^m + \dots + A_0) e^{\alpha t} \cos \beta t + (B_m t^m + \dots + B_0) e^{\alpha t} \sin \beta t \right) \]
+where $s$ is determined by the roots of the auxiliary equation $ar^2 + br + c = 0$:
+\begin{itemize}
+    \item $s = 0$ if $\alpha + i\beta$ is \textbf{not} a root of the auxiliary equation.
+    \item $s = 1$ if $\alpha + i\beta$ is a \textbf{simple root} (multiplicity 1) of the auxiliary equation.
+    \item $s = 2$ if $\alpha + i\beta$ is a \textbf{double root} (multiplicity 2) of the auxiliary equation.
+\end{itemize}
+
+\subsection{Prerequisites}
+To master this topic, you must be proficient in:
+\begin{itemize}
+    \item Solving homogeneous linear differential equations with constant coefficients (finding roots of characteristic equations).
+    \item Advanced differentiation using the Product Rule and Chain Rule.
+    \item Algebraic manipulation, specifically grouping like terms and solving systems of linear equations.
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+
+\subsection{Problem 1}
+\textbf{Question:} Decide whether or not the method of undetermined coefficients can be applied to $y'' + 2y' - y = t^{-1} e^t$.
+
+\textbf{Solution:}
+The nonhomogeneous term is $f(t) = t^{-1} e^t$. The method of undetermined coefficients strictly requires the polynomial component of $f(t)$ to have non-negative integer powers (i.e., $t^m$ where $m = 0, 1, 2, \dots$). Because $f(t)$ contains $t^{-1}$, the method \textbf{cannot} be applied.
+
+\subsection{Problem 2}
+\textbf{Question:} Decide whether or not the method of undetermined coefficients can be applied to $5y'' - 3y' + 2y = t^3 \cos 4t$.
+
+\textbf{Solution:}
+The nonhomogeneous term is $f(t) = t^3 \cos 4t$. This is a product of a polynomial with a non-negative integer power ($t^3$) and a cosine function. This perfectly matches the standard form $C t^m e^{\alpha t} \cos \beta t$ (with $\alpha = 0$). Thus, the method \textbf{can} be applied.
+
+\subsection{Problem 5}
+\textbf{Question:} Decide whether or not the method of undetermined coefficients can be applied to $y''(\theta) + 3y'(\theta) - y(\theta) = \sec \theta$.
+
+\textbf{Solution:}
+The nonhomogeneous term is $f(\theta) = \sec \theta$. The method only applies to polynomials, exponentials, sines, cosines, or finite products/sums of these. It does not apply to secant, tangent, logarithms, or rational functions. Thus, the method \textbf{cannot} be applied.
+
+\subsection{Problem 9}
+\textbf{Question:} Find a particular solution to $y'' + 3y = -9$.
+
+\textbf{Solution:}
+First, find the roots of the associated homogeneous equation $y'' + 3y = 0$.
+The characteristic equation is $r^2 + 3 = 0$, which gives roots $r = \pm i\sqrt{3}$.
+The nonhomogeneous term is $f(t) = -9$. This can be viewed as $-9 t^0 e^{0t}$. Here, $\alpha = 0$ and $\beta = 0$, so we check if $0$ is a root. It is not, so $s = 0$.
+We guess a constant function:
+\[ y_p(t) = A \]
+Differentiating yields:
+\[ y_p'(t) = 0, \quad y_p''(t) = 0 \]
+Substitute these into the original differential equation:
+\[ 0 + 3(A) = -9 \]
+\[ 3A = -9 \implies A = -3 \]
+The particular solution is:
+\[ y_p(t) = -3 \]
+
+\subsection{Problem 13}
+\textbf{Question:} Find a particular solution to $y'' - y' + 9y = 3 \sin 3t$.
+
+\textbf{Solution:}
+First, find the roots of the characteristic equation $r^2 - r + 9 = 0$.
+Using the quadratic formula:
+\[ r = \frac{1 \pm \sqrt{1 - 36}}{2} = \frac{1 \pm i\sqrt{35}}{2} \]
+The nonhomogeneous term is $f(t) = 3 \sin 3t$. Here, $\alpha = 0$ and $\beta = 3$, so we check if $\alpha + i\beta = 3i$ is a root. It is not, so $s = 0$.
+We guess the form:
+\[ y_p(t) = A \cos 3t + B \sin 3t \]
+Differentiate to find $y_p'$ and $y_p''$:
+\begin{align*}
+    y_p'(t) &= -3A \sin 3t + 3B \cos 3t \\
+    y_p''(t) &= -9A \cos 3t - 9B \sin 3t
+\end{align*}
+Substitute into the differential equation:
+\begin{align*}
+    (-9A \cos 3t - 9B \sin 3t) - (-3A \sin 3t + 3B \cos 3t) + 9(A \cos 3t + B \sin 3t) &= 3 \sin 3t
+\end{align*}
+Group the cosine and sine terms:
+\begin{align*}
+    (-9A - 3B + 9A)\cos 3t + (-9B + 3A + 9B)\sin 3t &= 3 \sin 3t \\
+    -3B \cos 3t + 3A \sin 3t &= 3 \sin 3t
+\end{align*}
+Equating the coefficients on both sides:
+\begin{align*}
+    -3B &= 0 \implies B = 0 \\
+    3A &= 3 \implies A = 1
+\end{align*}
+The particular solution is:
+\[ y_p(t) = \cos 3t \]
+
+\subsection{Problem 15}
+\textbf{Question:} Find a particular solution to $y'' - 5y' + 6y = x e^x$.
+
+\textbf{Solution:}
+Find the roots of the characteristic equation $r^2 - 5r + 6 = 0$.
+Factoring yields $(r-2)(r-3) = 0$, so the roots are $r = 2$ and $r = 3$.
+The nonhomogeneous term is $f(x) = x e^x$. Here, $\alpha = 1$ and $\beta = 0$. Since $1$ is not a root of the characteristic equation, $s = 0$.
+Because $f(x)$ contains a first-degree polynomial multiplied by $e^x$, our guess must include a general first-degree polynomial:
+\[ y_p(x) = (Ax + B)e^x \]
+Differentiate using the product rule:
+\begin{align*}
+    y_p'(x) &= A e^x + (Ax + B)e^x = (Ax + A + B)e^x \\
+    y_p''(x) &= A e^x + (Ax + A + B)e^x = (Ax + 2A + B)e^x
+\end{align*}
+Substitute into the differential equation:
+\[ (Ax + 2A + B)e^x - 5(Ax + A + B)e^x + 6(Ax + B)e^x = x e^x \]
+Divide the entire equation by $e^x$ (since $e^x \neq 0$):
+\[ Ax + 2A + B - 5Ax - 5A - 5B + 6Ax + 6B = x \]
+Group the $x$ terms and the constant terms:
+\[ (A - 5A + 6A)x + (2A - 5A + B - 5B + 6B) = x \]
+\[ 2Ax + (-3A + 2B) = x \]
+Equating coefficients:
+\begin{align*}
+    2A &= 1 \implies A = \frac{1}{2} \\
+    -3A + 2B &= 0 \implies -3\left(\frac{1}{2}\right) + 2B = 0 \implies 2B = \frac{3}{2} \implies B = \frac{3}{4}
+\end{align*}
+The particular solution is:
+\[ y_p(x) = \left(\frac{1}{2}x + \frac{3}{4}\right)e^x \]
+
+\subsection{Problem 18}
+\textbf{Question:} Find a particular solution to $y'' - 2y' + y = 8e^t$.
+
+\textbf{Solution:}
+Find the roots of the characteristic equation $r^2 - 2r + 1 = 0$.
+Factoring yields $(r-1)^2 = 0$, so $r = 1$ is a double root (multiplicity 2).
+The nonhomogeneous term is $f(t) = 8e^t$. Here, $\alpha = 1$. Since $1$ is a double root of the characteristic equation, we must multiply our standard guess by $t^2$, meaning $s = 2$.
+Our guess is:
+\[ y_p(t) = A t^2 e^t \]
+Differentiate using the product rule:
+\begin{align*}
+    y_p'(t) &= 2At e^t + A t^2 e^t = A(t^2 + 2t)e^t \\
+    y_p''(t) &= A(2t + 2)e^t + A(t^2 + 2t)e^t = A(t^2 + 4t + 2)e^t
+\end{align*}
+Substitute into the differential equation:
+\[ A(t^2 + 4t + 2)e^t - 2A(t^2 + 2t)e^t + A t^2 e^t = 8e^t \]
+Divide by $e^t$ and expand:
+\[ A t^2 + 4At + 2A - 2A t^2 - 4At + A t^2 = 8 \]
+Notice how all the $t^2$ and $t$ terms perfectly cancel out (this is the magic of the $t^s$ multiplier!):
+\[ (A - 2A + A)t^2 + (4A - 4A)t + 2A = 8 \]
+\[ 2A = 8 \implies A = 4 \]
+The particular solution is:
+\[ y_p(t) = 4t^2 e^t \]
+
+\subsection{Problem 24}
+\textbf{Question:} Find a particular solution to $y''(x) + y(x) = 4x \cos x$.
+
+\textbf{Solution:}
+Find the roots of the characteristic equation $r^2 + 1 = 0 \implies r = \pm i$.
+The nonhomogeneous term is $f(x) = 4x \cos x$. Here, $\alpha = 0$ and $\beta = 1$, so $\alpha + i\beta = i$. Since $i$ is a simple root of the characteristic equation, $s = 1$.
+The polynomial part is degree 1, so our base guess is $(Ax+B)\cos x + (Cx+D)\sin x$. Multiplying by $x^1$ gives:
+\[ y_p(x) = (Ax^2 + Bx)\cos x + (Cx^2 + Dx)\sin x \]
+Differentiate (carefully applying the product rule):
+\begin{align*}
+    y_p'(x) &= (2Ax + B)\cos x - (Ax^2 + Bx)\sin x + (2Cx + D)\sin x + (Cx^2 + Dx)\cos x \\
+    &= (Cx^2 + (2A+D)x + B)\cos x + (-Ax^2 + (2C-B)x + D)\sin x
+\end{align*}
+Differentiate again:
+\begin{align*}
+    y_p''(x) &= (2Cx + 2A+D)\cos x - (Cx^2 + (2A+D)x + B)\sin x \\
+    &\quad + (-2Ax + 2C-B)\sin x + (-Ax^2 + (2C-B)x + D)\cos x \\
+    &= (-Ax^2 + (4C-B)x + 2A+2D)\cos x + (-Cx^2 - (4A+D)x + 2C-2B)\sin x
+\end{align*}
+Substitute $y_p''$ and $y_p$ into $y'' + y = 4x \cos x$:
+\begin{align*}
+    y_p'' + y_p &= \left[ (-Ax^2 + (4C-B)x + 2A+2D) + (Ax^2 + Bx) \right] \cos x \\
+    &\quad + \left[ (-Cx^2 - (4A+D)x + 2C-2B) + (Cx^2 + Dx) \right] \sin x \\
+    &= (4Cx + 2A+2D)\cos x + (-4Ax + 2C-2B)\sin x = 4x \cos x
+\end{align*}
+Equating coefficients for each function type:
+\begin{align*}
+    x \cos x &: \quad 4C = 4 \implies C = 1 \\
+    \cos x &: \quad 2A + 2D = 0 \implies A = -D \\
+    x \sin x &: \quad -4A = 0 \implies A = 0 \implies D = 0 \\
+    \sin x &: \quad 2C - 2B = 0 \implies 2(1) - 2B = 0 \implies B = 1
+\end{align*}
+Substituting $A=0, B=1, C=1, D=0$ into our guess:
+\[ y_p(x) = x \cos x + x^2 \sin x \]
+
+\subsection{Problem 27}
+\textbf{Question:} Determine the form of a particular solution for $y'' + 9y = 4t^3 \sin 3t$. (Do not evaluate coefficients).
+
+\textbf{Solution:}
+Characteristic equation: $r^2 + 9 = 0 \implies r = \pm 3i$.
+For $f(t) = 4t^3 \sin 3t$, we have $\alpha = 0, \beta = 3 \implies \alpha + i\beta = 3i$.
+Since $3i$ is a root of multiplicity 1, we must multiply our guess by $t^1$ ($s=1$).
+The polynomial $4t^3$ is of degree 3, so we need general third-degree polynomials for both the sine and cosine terms.
+\[ y_p(t) = t \left( (A_3 t^3 + A_2 t^2 + A_1 t + A_0)\cos 3t + (B_3 t^3 + B_2 t^2 + B_1 t + B_0)\sin 3t \right) \]
+
+\subsection{Problem 28}
+\textbf{Question:} Determine the form of a particular solution for $y'' - 6y' + 9y = 5t^6 e^{3t}$. (Do not evaluate coefficients).
+
+\textbf{Solution:}
+Characteristic equation: $r^2 - 6r + 9 = 0 \implies (r-3)^2 = 0 \implies r = 3$ (double root).
+For $f(t) = 5t^6 e^{3t}$, we have $\alpha = 3, \beta = 0$.
+Since $3$ is a double root, we must multiply our guess by $t^2$ ($s=2$).
+The polynomial $5t^6$ is of degree 6, so we need a general sixth-degree polynomial.
+\[ y_p(t) = t^2 (A_6 t^6 + A_5 t^5 + A_4 t^4 + A_3 t^3 + A_2 t^2 + A_1 t + A_0) e^{3t} \]
+
+\subsection{Problem 33}
+\textbf{Question:} Use the method of undetermined coefficients to find a particular solution to the higher-order equation $y''' - y'' + y = \sin t$.
+
+\textbf{Solution:}
+Although this is a third-order equation, the logic remains identical.
+Characteristic equation: $r^3 - r^2 + 1 = 0$.
+For $f(t) = \sin t$, we have $\alpha = 0, \beta = 1 \implies \alpha + i\beta = i$.
+We check if $i$ is a root of the characteristic equation:
+\[ (i)^3 - (i)^2 + 1 = -i - (-1) + 1 = 2 - i \neq 0 \]
+Since $i$ is not a root, $s = 0$.
+Guess: $y_p(t) = A \cos t + B \sin t$.
+Differentiate up to the third derivative:
+\begin{align*}
+    y_p'(t) &= -A \sin t + B \cos t \\
+    y_p''(t) &= -A \cos t - B \sin t \\
+    y_p'''(t) &= A \sin t - B \cos t
+\end{align*}
+Substitute into $y''' - y'' + y = \sin t$:
+\[ (A \sin t - B \cos t) - (-A \cos t - B \sin t) + (A \cos t + B \sin t) = \sin t \]
+Group terms:
+\[ (A + B + B)\sin t + (-B + A + A)\cos t = \sin t \]
+\[ (A + 2B)\sin t + (2A - B)\cos t = \sin t \]
+Equating coefficients:
+\begin{align*}
+    2A - B &= 0 \implies B = 2A \\
+    A + 2B &= 1 \implies A + 2(2A) = 1 \implies 5A = 1 \implies A = \frac{1}{5}
+\end{align*}
+Since $B = 2A$, $B = \frac{2}{5}$.
+The particular solution is:
+\[ y_p(t) = \frac{1}{5} \cos t + \frac{2}{5} \sin t \]
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Applicability Checks (Problems 1, 2, 5):} These problems test the fundamental limits of the method. The strategy is to strictly check if $f(t)$ is formed \textit{only} by sums and products of constants, polynomials with non-negative integer powers, exponentials, sines, and cosines. If terms like $t^{-1}$ or $\sec \theta$ appear, the method fails.
+    \item \textbf{Basic Undetermined Coefficients (Problems 9, 13, 15):} These represent the standard workflow. The strategy is to identify the form of $f(t)$, confirm that its parameters do not overlap with the homogeneous roots, set up the general guess, differentiate, substitute, and solve the resulting linear system.
+    \item \textbf{Root Overlap / Resonance Problems (Problems 18, 24):} These are the most critical problems. The strategy requires checking the roots of the characteristic equation \textit{before} making a guess. If the parameters of $f(t)$ match a root, the standard guess will vanish upon substitution. The fix is multiplying the entire guess by $t^s$.
+    \item \textbf{Form Setup Only (Problems 27, 28):} These problems test the ability to construct complex guesses without getting bogged down in algebra. The strategy is to identify the degree of the polynomial in $f(t)$ and the multiplicity of the root overlap to construct a robust, generalized trial function.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Grouping by Function Type (Problem 24):} When substituting a complex guess into the ODE, you will generate a massive string of terms. The crucial algebraic trick is to immediately factor and group terms by their function type (e.g., group all $x \cos x$ terms together, all $\sin x$ terms together). This transforms a chaotic equation into a clean system of linear equations.
+    \item \textbf{The $t^s$ Multiplier Cancellation (Problem 18):} When you correctly apply the $t^s$ multiplier for a root overlap, a specific algebraic phenomenon occurs during substitution: all the lower-degree terms that would normally cause a contradiction perfectly cancel out. In Problem 18, the $t^2$ and $t$ terms vanished, leaving only the constant term to match the right side. If they do not cancel, you have made a differentiation error.
+    \item \textbf{Simultaneous Linear Equations (Problem 15, 33):} Equating coefficients always results in a system of linear equations. The trick is to look for the easiest variable to isolate first. In Problem 33, the cosine coefficient equation $2A - B = 0$ immediately gave $B = 2A$, making the substitution into the sine equation trivial.
+\end{itemize}
+
+\newpage
+\section{Part 4: ``Cheatsheet'' and Tips for Success}
+
+\subsection{Summary of Formulas}
+For $ay'' + by' + cy = C t^m e^{\alpha t} \cos \beta t$ or $C t^m e^{\alpha t} \sin \beta t$:
+\[ y_p(t) = t^s \left( P_m(t) e^{\alpha t} \cos \beta t + Q_m(t) e^{\alpha t} \sin \beta t \right) \]
+Where $P_m(t)$ and $Q_m(t)$ are general polynomials of degree $m$.
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Root of Auxiliary Eq.} & \textbf{Value of $s$} \\
+\hline
+$\alpha + i\beta$ is NOT a root & $s = 0$ \\
+$\alpha + i\beta$ is a simple root & $s = 1$ \\
+$\alpha + i\beta$ is a double root & $s = 2$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Cheats, Tricks, and Shortcuts}
+\begin{itemize}
+    \item \textbf{The Complex Exponential Trick:} For problems involving $x \cos x$ or $x \sin x$ (like Problem 24), the product rule derivatives get extremely messy. A powerful shortcut is to replace the trig function with $e^{i\beta x}$, solve the equation using the much simpler exponential derivatives, and then take the real (for cosine) or imaginary (for sine) part of the final answer.
+    \item \textbf{Always Check Roots First:} Never write down your guess $y_p(t)$ without first solving the homogeneous equation. This is the number one way to save time and avoid dead ends.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The ``Missing Sibling'' Trap:} If $f(t) = \sin t$, you \textbf{must} guess $y_p = A \cos t + B \sin t$. A common mistake is guessing only $A \sin t$. Because derivatives of sine produce cosine, you need both terms to balance the equation.
+    \item \textbf{The ``Lazy Polynomial'' Trap:} If $f(t) = t e^t$, the guess must be $(At + B)e^t$. Do not just guess $A t e^t$. You must include all lower-degree terms of the polynomial.
+    \item \textbf{Forgetting the Chain Rule:} When differentiating terms like $e^{3t} \cos 2t$, students frequently forget the inner derivatives, leading to incorrect coefficients.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The ``Big Picture''}
+
+\subsection{A) Thematic Connections}
+The central theme of this topic is \textbf{Linearity and Superposition}. Because the differential operator $L[y] = ay'' + by' + cy$ is linear, it distributes over addition: $L[y_1 + y_2] = L[y_1] + L[y_2]$. This is why we can split the solution into a homogeneous part (where $L[y_h] = 0$) and a particular part (where $L[y_p] = f(t)$). This theme of breaking a complex problem into a ``zero-state'' and a ``forced-state'' appears everywhere in mathematics, from linear algebra (null space and particular solutions to $A\mathbf{x} = \mathbf{b}$) to circuit analysis.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Links:} This topic is the direct, logical extension of solving homogeneous equations. The roots of the characteristic equation, which previously gave us the natural solution, now act as a diagnostic tool to determine if our system is experiencing ``resonance'' (when the forcing function matches the natural frequency, requiring the $t^s$ multiplier). \\
+\textbf{Forward Links:} The Method of Undetermined Coefficients is powerful but limited to specific types of functions. Understanding its limitations provides the exact motivation for the next major topic: \textbf{Variation of Parameters}, a more universal (but computationally heavier) method that can handle functions like $\sec t$ or $\ln t$. Furthermore, this sets the stage for \textbf{Laplace Transforms}, which offer an algebraic way to solve these exact same nonhomogeneous problems, especially when the forcing function $f(t)$ is discontinuous.
+
+\newpage
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios in Finance and Economics}
+\begin{itemize}
+    \item \textbf{Macroeconomic Business Cycles (Samuelson-Hicks Model):} In macroeconomics, the fluctuation of National Income (GDP) can be modeled as a second-order differential equation where the ``restoring force'' is the investment accelerator and the ``damping'' is the marginal propensity to save. If the government introduces a periodic stimulus package (e.g., increased spending every election cycle), this acts as a nonhomogeneous forcing function $f(t) = C \cos(\omega t)$. The particular solution $y_p(t)$ models the forced economic cycle dictated by the government, while the homogeneous solution models the natural market corrections.
+    \item \textbf{Quantitative Finance (Interest Rate Modeling):} While advanced interest rate models (like Hull-White) use stochastic differential equations, their deterministic expectations often reduce to linear ODEs. If a central bank has a time-dependent, deterministic target rate that grows exponentially or periodically, the deviation of the actual short-rate from the baseline can be modeled as a nonhomogeneous ODE. The method of undetermined coefficients is used to find the steady-state trajectory of the interest rate.
+\end{itemize}
+
+\subsection{B) Model Problem Setup: The Forced Business Cycle}
+Let us set up a mathematical model for the macroeconomic scenario described above.
+\textbf{Variables:}
+\begin{itemize}
+    \item $Y(t)$: The deviation of National Income (GDP) from its long-term trend at time $t$.
+    \item $\alpha$: The damping coefficient, representing the marginal propensity to save (how much money is removed from circulation).
+    \item $\beta$: The restoring force coefficient, related to the investment accelerator (how past changes in income affect current investment).
+    \item $G(t)$: The external government stimulus. Let's assume the government increases spending exponentially to combat a recession: $G(t) = G_0 e^{kt}$.
+\end{itemize}
+\textbf{The Model Equation:}
+The continuous-time business cycle can be modeled as:
+\[ Y''(t) + \alpha Y'(t) + \beta Y(t) = G_0 e^{kt} \]
+\textbf{Finding the Solution:}
+To find the forced trajectory of the economy due to the stimulus, an economist would need to find the particular solution $Y_p(t)$. Assuming the growth rate $k$ is not a root of the characteristic equation $r^2 + \alpha r + \beta = 0$, the economist would use the method of undetermined coefficients with the guess:
+\[ Y_p(t) = A e^{kt} \]
+Substituting this into the model would allow them to solve for $A$, revealing exactly how the amplitude of the GDP deviation responds to the specific rate of government spending $k$.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Superposition of Multiple Nonhomogeneous Terms}
+A common variation not explicitly solved in the selected homework is when $f(t)$ is a sum of different types of functions, such as $f(t) = t + e^t$. 
+\textbf{Concept:} Because the differential operator is linear, you can split the problem into two separate nonhomogeneous equations, solve for a particular solution for each, and add them together.
+\textbf{Example:} Find the form of $y_p$ for $y'' + y = t + e^t$.
+\textbf{Solution:} 
+Split into two problems:
+1) $y'' + y = t$. The guess is $y_{p1}(t) = At + B$.
+2) $y'' + y = e^t$. The guess is $y_{p2}(t) = C e^t$.
+The final particular solution form is simply the sum: $y_p(t) = At + B + C e^t$.
+
+\subsection{Products of Three Function Types}
+Another advanced variation is when $f(t)$ contains a polynomial, an exponential, \textit{and} a trigonometric function simultaneously.
+\textbf{Concept:} The standard form handles this seamlessly. You simply combine all the rules: use the polynomial degree to set the coefficients, the exponential for $\alpha$, and the trig function for $\beta$.
+\textbf{Example:} Find the form of $y_p$ for $y'' - y = t e^t \sin t$.
+\textbf{Solution:}
+Roots of $r^2 - 1 = 0$ are $\pm 1$.
+For $f(t) = t e^t \sin t$, $\alpha = 1, \beta = 1 \implies \alpha + i\beta = 1 + i$.
+Since $1+i$ is not a root, $s=0$.
+The polynomial is degree 1.
+The correct form is: $y_p(t) = e^t \left( (At + B)\cos t + (Ct + D)\sin t \right)$.
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: ``Find the Flaw''}
+
+Below are five problems with complete, step-by-step solutions. However, each solution contains a single, critical conceptual or algebraic flaw. Your task as the grader is to find the error, explain why it is wrong in one sentence, and provide the correct solution.
+
+\subsection{Flawed Solution 1}
+\textbf{Problem:} Find a particular solution to $y'' - 4y' + 4y = e^{2t}$. \\
+\textbf{Solution:}
+The nonhomogeneous term is $e^{2t}$, so we guess $y_p(t) = A e^{2t}$.
+$y_p'(t) = 2A e^{2t}$
+$y_p''(t) = 4A e^{2t}$
+Substituting into the equation:
+\[ 4A e^{2t} - 4(2A e^{2t}) + 4(A e^{2t}) = e^{2t} \]
+\[ (4A - 8A + 4A)e^{2t} = e^{2t} \]
+\[ 0 = e^{2t} \]
+This implies there is no solution to the differential equation.
+
+\textbf{Correction Space (For the Grader):}
+\vspace{2cm}
+
+\subsection{Flawed Solution 2}
+\textbf{Problem:} Find a particular solution to $y'' + 2y' + y = \sin t$. \\
+\textbf{Solution:}
+Since the right side is $\sin t$, we guess $y_p(t) = A \sin t$.
+$y_p'(t) = A \cos t$
+$y_p''(t) = -A \sin t$
+Substitute into the ODE:
+\[ -A \sin t + 2(A \cos t) + A \sin t = \sin t \]
+\[ 2A \cos t = \sin t \]
+Because we cannot equate a cosine function to a sine function for all $t$, the method fails here.
+
+\textbf{Correction Space (For the Grader):}
+\vspace{2cm}
+
+\subsection{Flawed Solution 3}
+\textbf{Problem:} Determine the form of the particular solution for $y'' + 16y = t \cos 4t$. \\
+\textbf{Solution:}
+The characteristic equation is $r^2 + 16 = 0$, so $r = \pm 4i$.
+The nonhomogeneous term is $t \cos 4t$, which corresponds to $\alpha = 0, \beta = 4$.
+Since $4i$ is a root of the characteristic equation, we must multiply our guess by $t$.
+The correct form is $y_p(t) = t (A \cos 4t + B \sin 4t)$.
+
+\textbf{Correction Space (For the Grader):}
+\vspace{2cm}
+
+\subsection{Flawed Solution 4}
+\textbf{Problem:} Find a particular solution to $y'' - y = \frac{1}{t}$. \\
+\textbf{Solution:}
+The nonhomogeneous term is $t^{-1}$. We guess a polynomial of the same degree, so $y_p(t) = A t^{-1}$.
+$y_p'(t) = -A t^{-2}$
+$y_p''(t) = 2A t^{-3}$
+Substitute:
+\[ 2A t^{-3} - A t^{-1} = t^{-1} \]
+This cannot be solved for a constant $A$, meaning we made an arithmetic error in our derivatives.
+
+\textbf{Correction Space (For the Grader):}
+\vspace{2cm}
+
+\subsection{Flawed Solution 5}
+\textbf{Problem:} Find a particular solution to $y'' - 3y' + 2y = t e^{t}$. \\
+\textbf{Solution:}
+The characteristic equation is $r^2 - 3r + 2 = 0$, with roots $r=1$ and $r=2$.
+The nonhomogeneous term is $t e^t$. Since $r=1$ is a root, we must multiply our guess by $t$.
+We guess $y_p(t) = t (A e^t) = A t e^t$.
+$y_p'(t) = A(t+1)e^t$
+$y_p''(t) = A(t+2)e^t$
+Substitute:
+\[ A(t+2)e^t - 3A(t+1)e^t + 2A t e^t = t e^t \]
+\[ (At + 2A - 3At - 3A + 2At)e^t = t e^t \]
+\[ -A e^t = t e^t \]
+This is impossible, so the roots must have been calculated incorrectly.
+
+\textbf{Correction Space (For the Grader):}
+\vspace{2cm}
+
+\newpage
+\section*{Answer Key for Part 8: "Find the Flaw"}
+\textit{(To be reviewed after attempting the problems)}
+
+\textbf{Flaw 1:} The characteristic equation has a double root at $r=2$, which matches the exponent in $e^{2t}$, so the guess must be multiplied by $t^2$, not just $t^0$.
+\textbf{Correct Step:} Guess $y_p(t) = A t^2 e^{2t}$. Solving yields $y_p(t) = \frac{1}{2} t^2 e^{2t}$.
+
+\textbf{Flaw 2:} The guess must include both sine and cosine terms even if the nonhomogeneous term only contains one of them.
+\textbf{Correct Step:} Guess $y_p(t) = A \cos t + B \sin t$. Solving yields $y_p(t) = -\frac{1}{2} \cos t$.
+
+\textbf{Flaw 3:} The nonhomogeneous term includes a polynomial of degree 1 ($t$), so the coefficients in the guess must also be polynomials of degree 1, not constants.
+\textbf{Correct Step:} $y_p(t) = t ((At + B)\cos 4t + (Ct + D)\sin 4t)$.
+
+\textbf{Flaw 4:} The method of undetermined coefficients does not apply to negative powers of $t$; the failure is conceptual, not arithmetic.
+\textbf{Correct Step:} State that the method cannot be used (Variation of Parameters is required).
+
+\textbf{Flaw 5:} The nonhomogeneous term has a polynomial of degree 1, so the base guess must include a degree 1 polynomial before multiplying by the $t$ multiplier.
+\textbf{Correct Step:} Guess $y_p(t) = t(At + B)e^t = (At^2 + Bt)e^t$. Solving yields $y_p(t) = \left(-\frac{1}{2}t^2 - t\right)e^t$.
+
+\end{document}

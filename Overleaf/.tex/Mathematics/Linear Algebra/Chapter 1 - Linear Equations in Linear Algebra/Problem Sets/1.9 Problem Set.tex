@@ -1,0 +1,396 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{letterpaper, margin=1in}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{Linear Algebra Problem Set: The Matrix of a Linear Transformation}
+\author{Based on Homework 1.9 Concepts}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+
+% ---------------------------------------------------------
+% STRUCTURE OF DOCUMENT
+% - Contents
+% - Concept Checklist & Question Mapping
+% - Problem Sets
+% - Detailed Solutions
+% - Concept Checklist & Question Mapping (Repeated)
+% ---------------------------------------------------------
+
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------
+\section{Concept Checklist \& Question Mapping}
+\label{sec:checklist_start}
+% ---------------------------------------------------------
+The following checklist outlines the core concepts, problem types, and crucial algebraic tricks found in Section 1.9. Each concept is mapped to the corresponding questions in the problem set to ensure comprehensive coverage.
+
+\begin{itemize}
+    \item \textbf{C1: Matrix Construction from Basis Vectors (Type 1):} Generating the standard matrix by transcribing the images of standard basis vectors $T(\mathbf{e}_i)$ into the columns of matrix $A$.
+    \textit{Mapped Questions: 1, 2, 3, 4}
+    
+    \item \textbf{C2: Pure Geometric Transformations (Type 2a):} Finding the standard matrix for standard 2D geometric actions (rotations, reflections) using standard trigonometric matrices. 
+    \textit{Mapped Questions: 5, 6, 7, 8}
+    
+    \item \textbf{C3: Composite Geometric Transformations (Type 2b):} Translating multiple visual/verbal actions into a single matrix. Requires right-to-left matrix multiplication ($A = F \times R$).
+    \textit{Mapped Questions: 9, 10, 11, 12, 13}
+    
+    \item \textbf{C4: Formula to Matrix Translation (Type 3):} Extracting coefficients from an abstract algebraic representation of a transformation to build the matrix column-by-column (or row-by-row).
+    \textit{Mapped Questions: 14, 15, 16, 17}
+    
+    \item \textbf{C5: Finding Pre-Image / Solving Equations:} Using the standard matrix $A$ to find an input vector $\mathbf{x}$ given an output $\mathbf{b}$ by solving the linear system $A\mathbf{x} = \mathbf{b}$.
+    \textit{Mapped Questions: 18, 19, 20}
+    
+    \item \textbf{C6: Injectivity (One-to-One) and Surjectivity (Onto) Analysis (Type 4):} Boiling down conceptual definitions to pivot positions (pivot in every column vs. pivot in every row).
+    \textit{Mapped Questions: 21, 22, 23, 24}
+    
+    \item \textbf{C7: Constructing a Matrix from NON-Basis Vectors (Variation):} Using the linearity property $T(c\mathbf{u} + d\mathbf{v}) = cT(\mathbf{u}) + dT(\mathbf{v})$ to deduce $T(\mathbf{e}_1)$ and $T(\mathbf{e}_2)$ when given arbitrary inputs.
+    \textit{Mapped Questions: 25, 26, 27}
+    
+    \item \textbf{C8: Conceptual Diagnostics \& "Find the Flaw":} Identifying common mathematical pitfalls, such as assuming translations are linear mappings, improper composition order, or confusing pivot rules.
+    \textit{Mapped Questions: 28, 29, 30}
+\end{itemize}
+
+\clearpage
+
+% ---------------------------------------------------------
+\section{Problem Sets}
+% ---------------------------------------------------------
+
+\subsection*{Constructing from Basis Vectors}
+\begin{enumerate}
+    \item Assume $T: \mathbb{R}^2 \rightarrow \mathbb{R}^3$ is a linear transformation. Find the standard matrix of $T$ given $T(\mathbf{e}_1) = (3, -1, 4)$ and $T(\mathbf{e}_2) = (0, 5, 2)$.
+    
+    \item Assume $T: \mathbb{R}^3 \rightarrow \mathbb{R}^2$ is a linear transformation. Find the standard matrix of $T$ given $T(\mathbf{e}_1) = (1, 4)$, $T(\mathbf{e}_2) = (-2, 3)$, and $T(\mathbf{e}_3) = (0, -1)$.
+    
+    \item Assume $T$ is a linear transformation from $\mathbb{R}^2$ to $\mathbb{R}^4$ mapping $\mathbf{e}_1 \mapsto (1, 0, -1, 3)$ and $\mathbf{e}_2 \mapsto (2, -2, 5, 0)$. Construct the standard matrix $A$.
+    
+    \item Find the standard matrix for $T: \mathbb{R}^3 \rightarrow \mathbb{R}^3$ given $T(\mathbf{e}_1) = \mathbf{e}_1 + 2\mathbf{e}_2 + 3\mathbf{e}_3$, $T(\mathbf{e}_2) = 4\mathbf{e}_1 + 5\mathbf{e}_2 + 6\mathbf{e}_3$, and $T(\mathbf{e}_3) = 7\mathbf{e}_1 + 8\mathbf{e}_2 + 9\mathbf{e}_3$.
+\end{enumerate}
+
+\subsection*{Pure Geometric Transformations}
+\begin{enumerate}[resume]
+    \item Find the standard matrix of the transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that rotates points about the origin by $\pi/3$ radians counterclockwise.
+    
+    \item Find the standard matrix of the transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that rotates points about the origin by $\pi$ radians counterclockwise.
+    
+    \item Find the standard matrix of the transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that reflects points across the vertical $x_2$-axis (the $y$-axis).
+    
+    \item Find the standard matrix of the transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that reflects points across the line $x_2 = x_1$ (the line $y = x$).
+\end{enumerate}
+
+\subsection*{Composite Geometric Transformations}
+\begin{enumerate}[resume]
+    \item Find the standard matrix of $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that first rotates points by $\pi/2$ radians counterclockwise, and then reflects points across the horizontal $x_1$-axis.
+    
+    \item Find the standard matrix of $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that first reflects points across the line $x_2 = x_1$, and then rotates the points $\pi$ radians counterclockwise.
+    
+    \item Find the standard matrix of $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that first reflects points across the $x_2$-axis, and then rotates the points by $\pi/2$ radians clockwise.
+    
+    \item Find the standard matrix of $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that first rotates points by $\pi/4$ radians counterclockwise, and then reflects points across the line $x_2 = -x_1$.
+    
+    \item Let $T$ be a transformation that first reflects points across the $x_1$-axis, and then reflects the result across the $x_2$-axis. Find the standard matrix and state an equivalent single pure geometric transformation.
+\end{enumerate}
+
+\subsection*{Formula to Matrix Translation}
+\begin{enumerate}[resume]
+    \item Find the standard matrix for $T(x_1, x_2) = (3x_1 - x_2, 4x_1 + 2x_2)$.
+    
+    \item Find the standard matrix for $T(x_1, x_2, x_3) = (x_1 + x_3, x_2 - x_1)$.
+    
+    \item Show that $T$ is a linear transformation by finding a matrix that implements the mapping: $T(x_1, x_2, x_3, x_4) = (x_1 - 2x_2, x_2 + 3x_3, 4x_4, 0)$.
+    
+    \item Find the standard matrix for the linear transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^4$ given by $T(x_1, x_2) = (x_1, x_1+x_2, x_2, x_1-x_2)$.
+\end{enumerate}
+
+\subsection*{Finding Pre-Image / Solving Equations}
+\begin{enumerate}[resume]
+    \item Let $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ be defined by $T(x_1, x_2) = (2x_1 + 3x_2, 4x_1 - x_2)$. Find the vector $\mathbf{x}$ such that $T(\mathbf{x}) = (8, 2)$.
+    
+    \item Let $T: \mathbb{R}^3 \rightarrow \mathbb{R}^2$ be defined by $T(x_1, x_2, x_3) = (x_1 + x_2, x_2 + x_3)$. Find the general form of the vector $\mathbf{x}$ such that $T(\mathbf{x}) = (3, 5)$.
+    
+    \item A linear transformation $T$ has the standard matrix $A = \begin{bmatrix} 1 & -1 \\ 2 & 1 \end{bmatrix}$. Find $\mathbf{x}$ such that $T(\mathbf{x}) = (1, 5)$.
+\end{enumerate}
+
+\subsection*{Injectivity and Surjectivity Analysis}
+\begin{enumerate}[resume]
+    \item Determine if the transformation with standard matrix $A = \begin{bmatrix} 1 & 2 \\ 3 & 6 \end{bmatrix}$ is (a) one-to-one and (b) onto. Justify your answer using pivot properties.
+    
+    \item Determine if the transformation with standard matrix $A = \begin{bmatrix} 1 & 0 & 2 \\ 0 & 1 & 3 \end{bmatrix}$ is (a) one-to-one and (b) onto. Justify your answer using pivot properties.
+    
+    \item Determine if the transformation with standard matrix $A = \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 2 & -1 \end{bmatrix}$ is (a) one-to-one and (b) onto. Justify your answer.
+    
+    \item Let $T(x_1, x_2, x_3) = (x_1 - x_2, x_2 - x_3, x_3 - x_1)$. Is $T$ one-to-one? Is it onto? Justify by analyzing the pivots of its standard matrix.
+\end{enumerate}
+
+\subsection*{Constructing from Non-Basis Vectors}
+\begin{enumerate}[resume]
+    \item Suppose $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ is a linear transformation. You are given that $T(1, 1) = (4, 2)$ and $T(1, -1) = (2, 0)$. Find the standard matrix $A$ for $T$.
+    
+    \item Let $T$ be a linear transformation where $T(2, 0) = (6, -2)$ and $T(0, 3) = (0, 9)$. Find the standard matrix $A$.
+    
+    \item Suppose $T(1, 2) = (5, 5)$ and $T(2, 1) = (4, 7)$ for a linear transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$. Find the standard matrix $A$.
+\end{enumerate}
+
+\subsection*{Advanced Diagnostic: "Find the Flaw"}
+\begin{enumerate}[resume]
+    \item \textbf{Question:} Find the standard matrix for $T(x_1, x_2) = (x_1 + 2, x_2 - 1)$. \\
+    \textbf{Flawed Solution:} We find $T(\mathbf{e}_1) = (1+2, 0) = (3, 0)$ and $T(\mathbf{e}_2) = (0, 1-1) = (0, 0)$. Therefore, the matrix is $A = \begin{bmatrix} 3 & 0 \\ 0 & 0 \end{bmatrix}$. \\
+    \textbf{Task:} Identify the conceptual error and provide the correct answer.
+    
+    \item \textbf{Question:} Find the matrix for $T$ that first reflects points across the $x_1$-axis (Matrix $F$), and then rotates them by $\pi/2$ (Matrix $R$). \\
+    \textbf{Flawed Solution:} The combined transformation is the product $F \times R$. \\
+    \textbf{Task:} Identify the algebraic error and state the correct matrix operation order.
+    
+    \item \textbf{Question:} A transformation $T: \mathbb{R}^3 \rightarrow \mathbb{R}^3$ has a standard matrix $A$ which reduces to $\begin{bmatrix} 1 & 0 & 5 \\ 0 & 1 & 2 \\ 0 & 0 & 0 \end{bmatrix}$. Is $T$ onto? \\
+    \textbf{Flawed Solution:} Yes. There are two pivots, which means there are independent vectors spanning the space, so it maps onto $\mathbb{R}^3$. \\
+    \textbf{Task:} Identify the conceptual error regarding the 'onto' condition.
+\end{enumerate}
+
+\clearpage
+
+% ---------------------------------------------------------
+\section{Detailed Solutions}
+% ---------------------------------------------------------
+
+\begin{enumerate}
+    % Solution 1
+    \item \textbf{Solution:}\\
+    The standard matrix $A$ is formed by placing the images of the standard basis vectors into the columns of $A$. \\
+    $T(\mathbf{e}_1) = \begin{bmatrix} 3 \\ -1 \\ 4 \end{bmatrix}$ and $T(\mathbf{e}_2) = \begin{bmatrix} 0 \\ 5 \\ 2 \end{bmatrix}$. \\
+    $A = \begin{bmatrix} T(\mathbf{e}_1) & T(\mathbf{e}_2) \end{bmatrix} = \begin{bmatrix} 3 & 0 \\ -1 & 5 \\ 4 & 2 \end{bmatrix}$.
+
+    % Solution 2
+    \item \textbf{Solution:}\\
+    The transformation maps from $\mathbb{R}^3 \rightarrow \mathbb{R}^2$, requiring a $2 \times 3$ matrix. \\
+    $A = \begin{bmatrix} T(\mathbf{e}_1) & T(\mathbf{e}_2) & T(\mathbf{e}_3) \end{bmatrix} = \begin{bmatrix} 1 & -2 & 0 \\ 4 & 3 & -1 \end{bmatrix}$.
+
+    % Solution 3
+    \item \textbf{Solution:}\\
+    The output vectors have 4 components, so the matrix is $4 \times 2$. \\
+    $A = \begin{bmatrix} 1 & 2 \\ 0 & -2 \\ -1 & 5 \\ 3 & 0 \end{bmatrix}$.
+
+    % Solution 4
+    \item \textbf{Solution:}\\
+    By reading the coefficients of the basis vectors, we extract the column vectors:\\
+    $T(\mathbf{e}_1) = (1, 2, 3)$, $T(\mathbf{e}_2) = (4, 5, 6)$, $T(\mathbf{e}_3) = (7, 8, 9)$. \\
+    $A = \begin{bmatrix} 1 & 4 & 7 \\ 2 & 5 & 8 \\ 3 & 6 & 9 \end{bmatrix}$.
+
+    % Solution 5
+    \item \textbf{Solution:}\\
+    Use the standard rotation matrix $R_\theta = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix}$ for $\theta = \pi/3$. \\
+    $A = \begin{bmatrix} \cos(\pi/3) & -\sin(\pi/3) \\ \sin(\pi/3) & \cos(\pi/3) \end{bmatrix} = \begin{bmatrix} 1/2 & -\sqrt{3}/2 \\ \sqrt{3}/2 & 1/2 \end{bmatrix}$.
+
+    % Solution 6
+    \item \textbf{Solution:}\\
+    Using the standard rotation matrix for $\theta = \pi$: \\
+    $A = \begin{bmatrix} \cos(\pi) & -\sin(\pi) \\ \sin(\pi) & \cos(\pi) \end{bmatrix} = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}$.
+
+    % Solution 7
+    \item \textbf{Solution:}\\
+    A reflection across the $x_2$-axis (the $y$-axis) negates the $x_1$ coordinate but leaves the $x_2$ coordinate unchanged. \\
+    $T(\mathbf{e}_1) = (-1, 0)$ and $T(\mathbf{e}_2) = (0, 1)$. \\
+    $A = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$.
+
+    % Solution 8
+    \item \textbf{Solution:}\\
+    A reflection across the line $x_2 = x_1$ swaps the coordinates. \\
+    $T(\mathbf{e}_1) = (0, 1)$ and $T(\mathbf{e}_2) = (1, 0)$. \\
+    $A = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+
+    % Solution 9
+    \item \textbf{Solution:}\\
+    Let $R$ be rotation by $\pi/2$: $R = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix}$. \\
+    Let $F$ be reflection across $x_1$: $F = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$. \\
+    The sequence is Rotate THEN Reflect. Order of multiplication is Right-to-Left: $A = F \times R$. \\
+    $A = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & -1 \\ -1 & 0 \end{bmatrix}$.
+
+    % Solution 10
+    \item \textbf{Solution:}\\
+    Let $F$ be reflection across $y = x$: $F = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$. \\
+    Let $R$ be rotation by $\pi$: $R = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}$. \\
+    The composition is Reflect THEN Rotate. $A = R \times F$. \\
+    $A = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & -1 \\ -1 & 0 \end{bmatrix}$.
+
+    % Solution 11
+    \item \textbf{Solution:}\\
+    Let $F$ be reflection across $x_2$: $F = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$. \\
+    Let $R$ be rotation by $-\pi/2$ (clockwise implies a negative angle): $R = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix}$. \\
+    $A = R \times F = \begin{bmatrix} 0 & 1 \\ -1 & 0 \end{bmatrix} \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+
+    % Solution 12
+    \item \textbf{Solution:}\\
+    Let $R$ be rotation by $\pi/4$: $R = \begin{bmatrix} \sqrt{2}/2 & -\sqrt{2}/2 \\ \sqrt{2}/2 & \sqrt{2}/2 \end{bmatrix}$. \\
+    Let $F$ be reflection across $x_2 = -x_1$: $F = \begin{bmatrix} 0 & -1 \\ -1 & 0 \end{bmatrix}$. \\
+    $A = F \times R = \begin{bmatrix} 0 & -1 \\ -1 & 0 \end{bmatrix} \begin{bmatrix} \sqrt{2}/2 & -\sqrt{2}/2 \\ \sqrt{2}/2 & \sqrt{2}/2 \end{bmatrix} = \begin{bmatrix} -\sqrt{2}/2 & -\sqrt{2}/2 \\ -\sqrt{2}/2 & \sqrt{2}/2 \end{bmatrix}$.
+
+    % Solution 13
+    \item \textbf{Solution:}\\
+    Let $F_1$ be reflection across $x_1$: $F_1 = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}$. \\
+    Let $F_2$ be reflection across $x_2$: $F_2 = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix}$. \\
+    $A = F_2 \times F_1 = \begin{bmatrix} -1 & 0 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} = \begin{bmatrix} -1 & 0 \\ 0 & -1 \end{bmatrix}$. \\
+    Notice this final matrix is exactly the same as rotation by $\pi$ radians.
+
+    % Solution 14
+    \item \textbf{Solution:}\\
+    The input is $\mathbb{R}^2$, the output is $\mathbb{R}^2$. Extract coefficients of $x_1, x_2$. \\
+    Row 1: $3x_1 - 1x_2 \rightarrow [3 \quad -1]$. \\
+    Row 2: $4x_1 + 2x_2 \rightarrow [4 \quad 2]$. \\
+    $A = \begin{bmatrix} 3 & -1 \\ 4 & 2 \end{bmatrix}$.
+
+    % Solution 15
+    \item \textbf{Solution:}\\
+    The input is $\mathbb{R}^3$, the output is $\mathbb{R}^2$. Matrix must be $2 \times 3$. \\
+    Row 1: $1x_1 + 0x_2 + 1x_3 \rightarrow [1 \quad 0 \quad 1]$. \\
+    Row 2: $-1x_1 + 1x_2 + 0x_3 \rightarrow [-1 \quad 1 \quad 0]$. \\
+    $A = \begin{bmatrix} 1 & 0 & 1 \\ -1 & 1 & 0 \end{bmatrix}$.
+
+    % Solution 16
+    \item \textbf{Solution:}\\
+    Because we can represent $T(\mathbf{x})$ exactly in the form $A\mathbf{x}$, it is a linear transformation. \\
+    The $4 \times 4$ matrix $A$ is derived from coefficients: \\
+    $A = \begin{bmatrix} 1 & -2 & 0 & 0 \\ 0 & 1 & 3 & 0 \\ 0 & 0 & 0 & 4 \\ 0 & 0 & 0 & 0 \end{bmatrix}$.
+
+    % Solution 17
+    \item \textbf{Solution:}\\
+    The mapping is $\mathbb{R}^2 \rightarrow \mathbb{R}^4$, generating a $4 \times 2$ matrix. \\
+    $A = \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \\ 1 & -1 \end{bmatrix}$.
+
+    % Solution 18
+    \item \textbf{Solution:}\\
+    Construct the matrix $A = \begin{bmatrix} 2 & 3 \\ 4 & -1 \end{bmatrix}$. Solve $A\mathbf{x} = \mathbf{b}$ where $\mathbf{b} = \begin{bmatrix} 8 \\ 2 \end{bmatrix}$. \\
+    Using augmented matrix: $\left[\begin{array}{cc|c} 2 & 3 & 8 \\ 4 & -1 & 2 \end{array}\right]$. \\
+    $R_2 \leftarrow R_2 - 2R_1 \implies \left[\begin{array}{cc|c} 2 & 3 & 8 \\ 0 & -7 & -14 \end{array}\right]$. \\
+    $-7x_2 = -14 \implies x_2 = 2$. \\
+    $2x_1 + 3(2) = 8 \implies 2x_1 = 2 \implies x_1 = 1$. \\
+    Answer: $\mathbf{x} = \begin{bmatrix} 1 \\ 2 \end{bmatrix}$.
+
+    % Solution 19
+    \item \textbf{Solution:}\\
+    Matrix $A = \begin{bmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \end{bmatrix}$. Solve $A\mathbf{x} = \begin{bmatrix} 3 \\ 5 \end{bmatrix}$. \\
+    The augmented matrix is already in echelon form: $\left[\begin{array}{ccc|c} 1 & 1 & 0 & 3 \\ 0 & 1 & 1 & 5 \end{array}\right]$. \\
+    $x_3$ is a free variable. Let $x_3 = t$. \\
+    $x_2 + t = 5 \implies x_2 = 5 - t$. \\
+    $x_1 + (5 - t) = 3 \implies x_1 = t - 2$. \\
+    General form: $\mathbf{x} = \begin{bmatrix} t - 2 \\ 5 - t \\ t \end{bmatrix}$ for any $t \in \mathbb{R}$.
+
+    % Solution 20
+    \item \textbf{Solution:}\\
+    Solve $\begin{bmatrix} 1 & -1 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 1 \\ 5 \end{bmatrix}$. \\
+    Augmented matrix: $\left[\begin{array}{cc|c} 1 & -1 & 1 \\ 2 & 1 & 5 \end{array}\right]$. \\
+    $R_2 \leftarrow R_2 - 2R_1 \implies \left[\begin{array}{cc|c} 1 & -1 & 1 \\ 0 & 3 & 3 \end{array}\right]$. \\
+    $3x_2 = 3 \implies x_2 = 1$. \\
+    $x_1 - 1 = 1 \implies x_1 = 2$. \\
+    Answer: $\mathbf{x} = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$.
+
+    % Solution 21
+    \item \textbf{Solution:}\\
+    Row reduce $A = \begin{bmatrix} 1 & 2 \\ 3 & 6 \end{bmatrix}$. $R_2 \leftarrow R_2 - 3R_1$ yields $\begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}$. \\
+    The $2 \times 2$ matrix has only 1 pivot. \\
+    (a) Not one-to-one because it does not have a pivot in every column (free variable exists). \\
+    (b) Not onto because it does not have a pivot in every row (row 2 is all zeros).
+
+    % Solution 22
+    \item \textbf{Solution:}\\
+    $A = \begin{bmatrix} 1 & 0 & 2 \\ 0 & 1 & 3 \end{bmatrix}$. This matrix is already in RREF. \\
+    It has 2 pivots in 3 columns and 2 rows. \\
+    (a) Not one-to-one: 3 columns but only 2 pivots implies a free variable ($x_3$). \\
+    (b) Onto: 2 rows and 2 pivots implies a pivot in every row, so the columns span $\mathbb{R}^2$.
+
+    % Solution 23
+    \item \textbf{Solution:}\\
+    $A = \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 2 & -1 \end{bmatrix}$. Reducing yields a pivot in column 1 and column 2, but a zero row at the bottom. \\
+    (a) One-to-one: Yes. There is a pivot in every column (no free variables). \\
+    (b) Onto: No. There is not a pivot in every row (the third row will become zeros).
+
+    % Solution 24
+    \item \textbf{Solution:}\\
+    First, find standard matrix $A = \begin{bmatrix} 1 & -1 & 0 \\ 0 & 1 & -1 \\ -1 & 0 & 1 \end{bmatrix}$. \\
+    Row reduce: $R_3 \leftarrow R_3 + R_1 \implies \begin{bmatrix} 1 & -1 & 0 \\ 0 & 1 & -1 \\ 0 & -1 & 1 \end{bmatrix}$. \\
+    $R_3 \leftarrow R_3 + R_2 \implies \begin{bmatrix} 1 & -1 & 0 \\ 0 & 1 & -1 \\ 0 & 0 & 0 \end{bmatrix}$. \\
+    There are 2 pivots in a $3 \times 3$ matrix. \\
+    Not one-to-one (missing a pivot in column 3). Not onto (missing a pivot in row 3).
+
+    % Solution 25
+    \item \textbf{Solution:}\\
+    We need $T(\mathbf{e}_1)$ and $T(\mathbf{e}_2)$. Note that $\mathbf{e}_1 = (1, 0) = \frac{1}{2}(1, 1) + \frac{1}{2}(1, -1)$. \\
+    $T(\mathbf{e}_1) = \frac{1}{2}T(1, 1) + \frac{1}{2}T(1, -1) = \frac{1}{2}(4, 2) + \frac{1}{2}(2, 0) = (2, 1) + (1, 0) = (3, 1)$. \\
+    Note that $\mathbf{e}_2 = (0, 1) = \frac{1}{2}(1, 1) - \frac{1}{2}(1, -1)$. \\
+    $T(\mathbf{e}_2) = \frac{1}{2}(4, 2) - \frac{1}{2}(2, 0) = (2, 1) - (1, 0) = (1, 1)$. \\
+    $A = \begin{bmatrix} 3 & 1 \\ 1 & 1 \end{bmatrix}$.
+
+    % Solution 26
+    \item \textbf{Solution:}\\
+    Using the linearity scalar property: $T(c\mathbf{v}) = cT(\mathbf{v})$. \\
+    $T(2, 0) = 2T(1, 0) = (6, -2) \implies T(\mathbf{e}_1) = (3, -1)$. \\
+    $T(0, 3) = 3T(0, 1) = (0, 9) \implies T(\mathbf{e}_2) = (0, 3)$. \\
+    $A = \begin{bmatrix} 3 & 0 \\ -1 & 3 \end{bmatrix}$.
+
+    % Solution 27
+    \item \textbf{Solution:}\\
+    We find linear combinations to get $\mathbf{e}_1$ and $\mathbf{e}_2$. \\
+    Observe $2(1, 2) - (2, 1) = (0, 3) = 3\mathbf{e}_2$. \\
+    $3T(\mathbf{e}_2) = 2T(1, 2) - T(2, 1) = 2(5, 5) - (4, 7) = (10, 10) - (4, 7) = (6, 3)$. \\
+    Therefore, $T(\mathbf{e}_2) = (2, 1)$. \\
+    Observe $2(2, 1) - (1, 2) = (3, 0) = 3\mathbf{e}_1$. \\
+    $3T(\mathbf{e}_1) = 2T(2, 1) - T(1, 2) = 2(4, 7) - (5, 5) = (8, 14) - (5, 5) = (3, 9)$. \\
+    Therefore, $T(\mathbf{e}_1) = (1, 3)$. \\
+    $A = \begin{bmatrix} 1 & 2 \\ 3 & 1 \end{bmatrix}$.
+
+    % Solution 28
+    \item \textbf{Solution:}\\
+    \textbf{The Error:} The student assumed the function was a linear transformation. However, a transformation involving translation (adding constants) violates linearity. A linear transformation must map the zero vector to the zero vector. $T(0, 0) = (2, -1) \neq (0, 0)$. \\
+    \textbf{Correct Answer:} Because $T$ is not a linear transformation, no standard matrix $A$ exists.
+
+    % Solution 29
+    \item \textbf{Solution:}\\
+    \textbf{The Error:} The student multiplied left-to-right following the English sentence. Matrix composition is functional composition, meaning transformations closest to the vector $x$ are applied first. $T(\mathbf{x}) = R(F(\mathbf{x}))$. \\
+    \textbf{Correct Answer:} The correct sequence of multiplication is Right-to-Left relative to the geometric actions. The correct matrix is $A = R \times F$.
+
+    % Solution 30
+    \item \textbf{Solution:}\\
+    \textbf{The Error:} The student confused the condition for "onto" with general basis vectors. For a transformation to map $\mathbb{R}^n$ \textit{onto} $\mathbb{R}^m$, its standard matrix must have a pivot in \textit{every row}. \\
+    \textbf{Correct Answer:} The matrix has 3 rows but only 2 pivots (the last row is entirely zeros). Therefore, the columns do not span $\mathbb{R}^3$, and the mapping is NOT onto.
+\end{enumerate}
+
+\clearpage
+
+% ---------------------------------------------------------
+\section{Concept Checklist \& Question Mapping (Repeated)}
+\label{sec:checklist_end}
+% ---------------------------------------------------------
+As requested, here is the reference mapping of concepts and problem types to quickly locate specific variants for review.
+
+\begin{itemize}
+    \item \textbf{C1: Matrix Construction from Basis Vectors (Type 1):} 
+    \textit{Mapped Questions: 1, 2, 3, 4}
+    
+    \item \textbf{C2: Pure Geometric Transformations (Type 2a):} 
+    \textit{Mapped Questions: 5, 6, 7, 8}
+    
+    \item \textbf{C3: Composite Geometric Transformations (Type 2b):} 
+    \textit{Mapped Questions: 9, 10, 11, 12, 13}
+    
+    \item \textbf{C4: Formula to Matrix Translation (Type 3):} 
+    \textit{Mapped Questions: 14, 15, 16, 17}
+    
+    \item \textbf{C5: Finding Pre-Image / Solving Equations:} 
+    \textit{Mapped Questions: 18, 19, 20}
+    
+    \item \textbf{C6: Injectivity (One-to-One) and Surjectivity (Onto) Analysis (Type 4):} 
+    \textit{Mapped Questions: 21, 22, 23, 24}
+    
+    \item \textbf{C7: Constructing a Matrix from NON-Basis Vectors (Variation):} 
+    \textit{Mapped Questions: 25, 26, 27}
+    
+    \item \textbf{C8: Conceptual Diagnostics \& "Find the Flaw":} 
+    \textit{Mapped Questions: 28, 29, 30}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,1294 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Homework 1.2: First-Order Linear Equations}
+\rhead{Tashfeen Omran}
+\cfoot{\thepage}
+
+\title{\textbf{Homework 1.2: First-Order Linear Equations}}
+\author{Tashfeen Omran}
+\date{October 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+% PART 1: COMPREHENSIVE INTRODUCTION, CONTEXT, AND PREREQUISITES
+% ============================================================================
+\section{Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+A \textbf{Partial Differential Equation (PDE)} is an equation involving an unknown multivariable function $u = u(x, y)$ (or $u(x, t)$) and its partial derivatives, such as $u_x = \frac{\partial u}{\partial x}$ and $u_y = \frac{\partial u}{\partial y}$. In Section 1.2, we examine \textbf{first-order linear PDEs}, which take the general form:
+\[
+a(x, y)u_x + b(x, y)u_y + c(x, y)u = f(x, y)
+\]
+where the highest derivative is of the first order, and the unknown function $u$ and its derivatives appear to the first power without being multiplied together. If $f(x, y) = 0$, the equation is called \textbf{homogeneous}; otherwise, it is \textbf{inhomogeneous}.
+
+Unlike Ordinary Differential Equations (ODEs), whose general solutions depend on arbitrary constants (e.g., $y(x) = Ce^x$), the general solution to a first-order PDE in two variables depends on an \textbf{arbitrary function} of a single variable, typically denoted $f(\cdot)$ or $g(\cdot)$. To pinpoint a unique physical solution, one must supply an \textbf{auxiliary condition}—usually an initial condition (specifying $u$ at $t=0$) or a boundary condition (specifying $u$ along a curve in the $xy$-plane).
+
+\subsection{Intuition and Derivation}
+There are two primary methods for solving first-order linear PDEs: the \textbf{Geometric Method} (Method of Characteristics) and the \textbf{Coordinate Method}.
+
+\subsubsection*{1. The Geometric Method (Method of Characteristics)}
+Consider the homogeneous equation with constant or variable coefficients:
+\[
+a(x, y)u_x + b(x, y)u_y = 0
+\]
+From multivariable calculus, the gradient of $u$ is $\nabla u = (u_x, u_y)$. If we define a vector field $\mathbf{V} = (a(x, y), b(x, y))$, the left-hand side of the PDE is precisely the dot product $\mathbf{V} \cdot \nabla u$:
+\[
+\mathbf{V} \cdot \nabla u = (a(x, y), b(x, y)) \cdot (u_x, u_y) = a(x, y)u_x + b(x, y)u_y = 0
+\]
+Recall that $\mathbf{V} \cdot \nabla u$ is proportional to the \textbf{directional derivative} of $u$ in the direction of $\mathbf{V}$. Since this directional derivative is zero everywhere, the function $u(x, y)$ must be completely constant as we move along any curve in the $xy$-plane whose tangent vector at every point $(x, y)$ is given by $\mathbf{V} = (a(x, y), b(x, y))$.
+
+The slope of a curve with tangent vector $(a(x, y), b(x, y))$ is the ratio of its vertical component to its horizontal component:
+\[
+\frac{dy}{dx} = \frac{b(x, y)}{a(x, y)}
+\]
+Solving this first-order ODE yields a family of curves in the $xy$-plane parameterized by an integration constant $C$, which we can write implicitly as $\phi(x, y) = C$. These curves are called the \textbf{characteristic curves} (or simply \textbf{characteristics}) of the PDE. 
+
+We can verify mathematically that $u$ is constant along any characteristic curve $y = y(x)$ by applying the single-variable chain rule to $u(x, y(x))$:
+\[
+\frac{d}{dx}u(x, y(x)) = \frac{\partial u}{\partial x}\frac{dx}{dx} + \frac{\partial u}{\partial y}\frac{dy}{dx} = u_x + \left(\frac{b(x, y)}{a(x, y)}\right)u_y = \frac{1}{a(x, y)}\left(a(x, y)u_x + b(x, y)u_y\right) = 0
+\]
+Because $u$ does not change along a curve where $\phi(x, y) = C$, the value of $u$ depends \emph{only} on which characteristic curve the point $(x, y)$ lies on—that is, it depends only on the value of $C$. Thus, $u(x, y) = f(C)$, or:
+\[
+u(x, y) = f(\phi(x, y))
+\]
+For the constant-coefficient case $au_x + bu_y = 0$, the characteristic ODE is $\frac{dy}{dx} = \frac{b}{a}$, which integrates to $bx - ay = C$. Thus, the characteristic curves are straight lines, and the general solution is $u(x, y) = f(bx - ay)$.
+
+\subsubsection*{2. The Coordinate Method}
+For constant-coefficient equations $au_x + bu_y + cu = f(x, y)$, we can align our coordinate system with the characteristic lines. We introduce a rotated and scaled set of orthogonal coordinates $(x', y')$:
+\[
+x' = ax + by, \quad y' = bx - ay
+\]
+Notice that $y' = \text{constant}$ corresponds exactly to the characteristic lines $bx - ay = C$. By the multivariable chain rule:
+\[
+u_x = \frac{\partial u}{\partial x'}\frac{\partial x'}{\partial x} + \frac{\partial u}{\partial y'}\frac{\partial y'}{\partial x} = a u_{x'} + b u_{y'}
+\]
+\[
+u_y = \frac{\partial u}{\partial x'}\frac{\partial x'}{\partial y} + \frac{\partial u}{\partial y'}\frac{\partial y'}{\partial y} = b u_{x'} - a u_{y'}
+\]
+Substituting these into $au_x + bu_y$ yields:
+\[
+au_x + bu_y = a(au_{x'} + bu_{y'}) + b(bu_{x'} - au_{y'}) = (a^2 + b^2)u_{x'}
+\]
+Because $a$ and $b$ are not both zero, $a^2 + b^2 \neq 0$. The partial derivative with respect to $y'$ completely vanishes! This transforms the PDE into an ODE with respect to the single variable $x'$ (treating $y'$ as a fixed parameter), which can then be solved using standard first-order ODE techniques.
+
+\subsection{Historical Context and Motivation}
+The study of first-order partial differential equations emerged in the 18th century alongside the birth of continuum mechanics, hydrodynamics, and analytical mechanics. Pioneers such as Leonhard Euler and Jean le Rond d'Alembert encountered first-order PDEs when modeling the transport of fluid particles and the propagation of waves. Specifically, the constant-coefficient equation $u_t + cu_x = 0$ is the classic \textbf{unidirectional transport (or advection) equation}, which describes how a conserved scalar quantity (such as pollutant concentration, heat, or fluid density) is carried along at a constant velocity $c$ without changing shape.
+
+Later in the late 18th and early 19th centuries, Joseph-Louis Lagrange, Gaspard Monge, and Augustin-Louis Cauchy formalized the \textbf{Method of Characteristics}. Monge provided the geometric interpretation of characteristics as curves along which information propagates, while Lagrange and Cauchy extended these ideas to nonlinear first-order equations (leading to the Hamilton-Jacobi equations in classical mechanics and geometrical optics). Understanding how information travels along characteristic curves remains the foundational stepping stone to the entire theory of hyperbolic PDEs, shock waves, and gas dynamics.
+
+\subsection{Key Formulas}
+\begin{enumerate}
+    \item \textbf{Constant Coefficient Homogeneous PDE:}
+    \[
+    au_x + bu_y = 0 \implies u(x, y) = f(bx - ay)
+    \]
+    where $f$ is an arbitrary differentiable function of one variable.
+    
+    \item \textbf{Characteristic ODE for Variable Coefficients:}
+    For $a(x, y)u_x + b(x, y)u_y = 0$, the characteristic curves satisfy:
+    \[
+    \frac{dy}{dx} = \frac{b(x, y)}{a(x, y)} \quad \text{or in symmetric form:} \quad \frac{dx}{a(x, y)} = \frac{dy}{b(x, y)}
+    \]
+    If the general solution to this ODE is written implicitly as $\phi(x, y) = C$, the general solution to the PDE is:
+    \[
+    u(x, y) = f(\phi(x, y))
+    \]
+    
+    \item \textbf{Orthogonal Coordinate Transformation:}
+    \[
+    \begin{cases} x' = ax + by \\ y' = bx - ay \end{cases} \iff \begin{cases} x = \frac{ax' + by'}{a^2 + b^2} \\ y = \frac{bx' - ay'}{a^2 + b^2} \end{cases}
+    \]
+    Under this transformation, the differential operator becomes:
+    \[
+    a\frac{\partial}{\partial x} + b\frac{\partial}{\partial y} = (a^2 + b^2)\frac{\partial}{\partial x'}
+    \]
+    
+    \item \textbf{First-Order Linear ODE Integrating Factor (for $u_{x'}$ equations):}
+    To solve $\frac{\partial u}{\partial x'} + P(x', y')u = Q(x', y')$, multiply by the integrating factor $\mu(x', y') = \exp\left(\int P(x', y')\,dx'\right)$:
+    \[
+    \frac{\partial}{\partial x'}\left[\mu(x', y') u\right] = \mu(x', y')Q(x', y') \implies u(x', y') = \frac{1}{\mu(x', y')}\left[\int \mu(x', y')Q(x', y')\,dx' + g(y')\right]
+    \]
+\end{enumerate}
+
+\subsection{Prerequisites}
+To master this chapter, you must be proficient in the following foundational topics:
+\begin{itemize}
+    \item \textbf{Multivariable Calculus:} Partial differentiation, the multivariable chain rule, gradients ($\nabla u$), directional derivatives, and line integrals with respect to arc length ($\int_L f\,ds$).
+    \item \textbf{First-Order Ordinary Differential Equations:} Separation of variables, integrating factors for linear first-order ODEs ($y' + P(x)y = Q(x)$), and Method of Undetermined Coefficients.
+    \item \textbf{Vector Algebra and Analytic Geometry:} Dot products, testing for orthogonality ($\mathbf{u} \cdot \mathbf{v} = 0$), parameterization of lines, and solving $2 \times 2$ linear systems of equations.
+    \item \textbf{Single-Variable Calculus and Algebra:} Standard integrals (including inverse trigonometric integrals like $\int \frac{dx}{1+x^2} = \arctan x$ and $\int \frac{dx}{\sqrt{1-x^2}} = \arcsin x$), trigonometric identities, and function composition/inversion (finding $f(w)$ given $f(g(x)) = h(x)$).
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 2: DETAILED HOMEWORK SOLUTIONS
+% ============================================================================
+\section{Detailed Homework Solutions}
+
+\subsection*{Problem 1}
+\textbf{Problem Statement:} Solve the first-order equation $2u_t + 3u_x = 0$ with the auxiliary condition $u = \sin x$ when $t = 0$.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Identify the general solution of the PDE.} \\
+    We have a constant-coefficient linear homogeneous PDE in the variables $(t, x)$:
+    \[
+    2u_t + 3u_x = 0
+    \]
+    Here, the directional derivative of $u(t, x)$ in the direction of the vector $\mathbf{V} = (2, 3)$ in the $tx$-plane is zero. The characteristic lines satisfy the ODE:
+    \[
+    \frac{dx}{dt} = \frac{3}{2} \implies 2\,dx = 3\,dt \implies 2x - 3t = C \quad (\text{or } 3t - 2x = C')
+    \]
+    By formula (2) in the text, $u(t, x)$ is constant along these characteristic lines, so the general solution is:
+    \[
+    u(t, x) = f(2x - 3t)
+    \]
+    where $f$ is an arbitrary differentiable function of one variable.
+
+    \item \textbf{Apply the auxiliary (initial) condition.} \\
+    We are given that $u(0, x) = \sin x$ when $t = 0$. Substituting $t = 0$ into our general solution gives:
+    \[
+    u(0, x) = f(2x - 3(0)) = f(2x) = \sin x
+    \]
+
+    \item \textbf{Solve for the function $f$.} \\
+    Let $w = 2x$, which implies $x = \frac{w}{2}$. Substituting this into the relation above yields:
+    \[
+    f(w) = \sin\left(\frac{w}{2}\right)
+    \]
+
+    \item \textbf{Substitute $w = 2x - 3t$ to obtain the unique solution.} \\
+    Replacing the dummy variable $w$ with the characteristic coordinate $2x - 3t$:
+    \[
+    u(t, x) = \sin\left(\frac{2x - 3t}{2}\right) = \sin\left(x - \frac{3}{2}t\right)
+    \]
+
+    \item \textbf{Check the solution.} \\
+    Computing the partial derivatives:
+    \[
+    u_t = -\frac{3}{2}\cos\left(x - \frac{3}{2}t\right), \quad u_x = \cos\left(x - \frac{3}{2}t\right)
+    \]
+    Substituting into the PDE:
+    \[
+    2u_t + 3u_x = 2\left(-\frac{3}{2}\cos\left(x - \frac{3}{2}t\right)\right) + 3\cos\left(x - \frac{3}{2}t\right) = 0
+    \]
+    At $t = 0$, $u(0, x) = \sin(x - 0) = \sin x$. Both conditions are satisfied.
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(t, x) = \sin\left(x - \frac{3}{2}t\right)}
+\]
+
+\hrulefill
+
+\subsection*{Problem 2}
+\textbf{Problem Statement:} Solve the equation $3u_y + u_{xy} = 0$. (\emph{Hint:} Let $v = u_y$.)
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Reduce the second-order PDE to a first-order PDE.} \\
+    Following the hint, let $v(x, y) = u_y(x, y) = \frac{\partial u}{\partial y}$. Assuming $u$ is sufficiently smooth, the mixed partial derivative is $u_{xy} = \frac{\partial}{\partial x}(u_y) = v_x$. Substituting $v$ into the original equation gives:
+    \[
+    3v + v_x = 0 \implies \frac{\partial v}{\partial x} + 3v = 0
+    \]
+
+    \item \textbf{Solve the first-order equation for $v(x, y)$.} \\
+    For any fixed $y$, this is a standard first-order linear homogeneous ODE in $x$:
+    \[
+    \frac{\partial v}{\partial x} = -3v
+    \]
+    Multiplying by the integrating factor $e^{3x}$ (or separating variables in $x$):
+    \[
+    \frac{\partial}{\partial x}\left(e^{3x}v(x, y)\right) = 0
+    \]
+    Integrating both sides partially with respect to $x$, the "constant" of integration can be any arbitrary function of $y$, which we call $g(y)$:
+    \[
+    e^{3x}v(x, y) = g(y) \implies v(x, y) = e^{-3x}g(y)
+    \]
+
+    \item \textbf{Integrate with respect to $y$ to find $u(x, y)$.} \\
+    Since $v(x, y) = \frac{\partial u}{\partial y}$, we now have:
+    \[
+    \frac{\partial u}{\partial y} = e^{-3x}g(y)
+    \]
+    Integrating both sides with respect to $y$ while holding $x$ constant:
+    \[
+    u(x, y) = \int e^{-3x}g(y)\,dy + k(x) = e^{-3x}\int g(y)\,dy + k(x)
+    \]
+    where $k(x)$ is an arbitrary function of $x$ arising as the constant of integration. Since $g(y)$ is an arbitrary function of $y$, its antiderivative $f(y) = \int g(y)\,dy$ is also an arbitrary differentiable function of $y$. Thus:
+    \[
+    u(x, y) = e^{-3x}f(y) + k(x)
+    \]
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = e^{-3x}f(y) + k(x)}
+\]
+where $f(y)$ and $k(x)$ are arbitrary functions of one variable.
+
+\hrulefill
+
+\subsection*{Problem 3}
+\textbf{Problem Statement:} Solve the equation $(1 + x^2)u_x + u_y = 0$. Sketch some of the characteristic curves.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Set up the characteristic ODE.} \\
+    The PDE states that the directional derivative of $u$ in the direction of $\mathbf{V} = (1 + x^2, 1)$ is zero. The characteristic curves in the $xy$-plane have tangent vectors parallel to $(1 + x^2, 1)$, so their slope is given by:
+    \[
+    \frac{dy}{dx} = \frac{1}{1 + x^2}
+    \]
+
+    \item \textbf{Solve the characteristic ODE by separation of variables.} \\
+    The variables are already separated:
+    \[
+    dy = \frac{1}{1 + x^2}\,dx
+    \]
+    Integrating both sides:
+    \[
+    \int dy = \int \frac{1}{1 + x^2}\,dx \implies y = \arctan x + C
+    \]
+    Solving for the constant $C$:
+    \[
+    y - \arctan x = C
+    \]
+
+    \item \textbf{Write the general solution of the PDE.} \\
+    Since $u(x, y)$ is constant along each characteristic curve $y - \arctan x = C$, $u$ depends only on $C$:
+    \[
+    u(x, y) = f(y - \arctan x)
+    \]
+    where $f$ is an arbitrary differentiable function of one variable.
+
+    \item \textbf{Describe and sketch the characteristic curves.} \\
+    The characteristic curves are the family of curves given by:
+    \[
+    y(x) = \arctan x + C
+    \]
+    for various real constants $C \in \mathbb{R}$. 
+    \begin{itemize}
+        \item \textbf{Shape:} Each curve is a vertical translation of the principal inverse tangent curve $y = \arctan x$.
+        \item \textbf{Intercepts:} For a given $C$, the $y$-intercept at $x = 0$ is $(0, C)$.
+        \item \textbf{Monotonicity and Slope:} Since $\frac{dy}{dx} = \frac{1}{1+x^2} > 0$, all curves are strictly increasing across the entire $xy$-plane. At $x = 0$, the curves are steepest with slope $1$ (an inflection point since $\frac{d^2y}{dx^2} = \frac{-2x}{(1+x^2)^2}$ changes sign at $x = 0$).
+        \item \textbf{Horizontal Asymptotes:} As $x \to +\infty$, $y \to C + \frac{\pi}{2}$. As $x \to -\infty$, $y \to C - \frac{\pi}{2}$.
+        \item \textbf{Non-intersection:} For different values of $C$ (e.g., $C = -2, -1, 0, 1, 2$), the curves are parallel vertical shifts of one another and fill the entire $xy$-plane without ever intersecting.
+    \end{itemize}
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = f(y - \arctan x)}
+\]
+(where the characteristic curves $y = \arctan x + C$ are vertically shifted $\arctan x$ curves with horizontal asymptotes at $y = C \pm \frac{\pi}{2}$ and inflection points at $(0, C)$).
+
+\hrulefill
+
+\subsection*{Problem 4}
+\textbf{Problem Statement:} Check that (7) indeed solves (4). \\
+\emph{Note from text:} Equation (4) is $u_x + yu_y = 0$, and Equation (7) is $u(x, y) = f(e^{-x}y)$.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Define the composite function.} \\
+    Let $w(x, y) = e^{-x}y$, so that Equation (7) is written as $u(x, y) = f(w)$, where $f$ is any differentiable single-variable function.
+
+    \item \textbf{Compute the partial derivative $u_x$ using the Chain Rule.} \\
+    Differentiating $u(x, y) = f(e^{-x}y)$ with respect to $x$ while holding $y$ constant:
+    \[
+    u_x = \frac{\partial}{\partial x}\left[f(e^{-x}y)\right] = f'(w)\frac{\partial w}{\partial x} = f'(e^{-x}y)\cdot \left(-e^{-x}y\right) = -ye^{-x}f'(e^{-x}y)
+    \]
+
+    \item \textbf{Compute the partial derivative $u_y$ using the Chain Rule.} \\
+    Differentiating $u(x, y) = f(e^{-x}y)$ with respect to $y$ while holding $x$ constant:
+    \[
+    u_y = \frac{\partial}{\partial y}\left[f(e^{-x}y)\right] = f'(w)\frac{\partial w}{\partial y} = f'(e^{-x}y)\cdot \left(e^{-x}\right) = e^{-x}f'(e^{-x}y)
+    \]
+
+    \item \textbf{Substitute $u_x$ and $u_y$ into the left-hand side of Equation (4).} \\
+    \[
+    u_x + yu_y = -ye^{-x}f'(e^{-x}y) + y\left[e^{-x}f'(e^{-x}y)\right] = -ye^{-x}f'(e^{-x}y) + ye^{-x}f'(e^{-x}y) = 0
+    \]
+    Since the left-hand side identically equals $0$ for all $(x, y)$, Equation (7) satisfies Equation (4).
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u_x + yu_y = -ye^{-x}f'(e^{-x}y) + y\left(e^{-x}f'(e^{-x}y)\right) = 0 \quad \text{(Verified)}}
+\]
+
+\hrulefill
+
+\subsection*{Problem 5}
+\textbf{Problem Statement:} Solve the equation $xu_x + yu_y = 0$.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Set up the characteristic ODE.} \\
+    The directional derivative of $u$ in the direction of the radial vector field $\mathbf{V} = (x, y)$ is zero. For $x \neq 0$, the characteristic curves satisfy:
+    \[
+    \frac{dy}{dx} = \frac{y}{x}
+    \]
+
+    \item \textbf{Solve the ODE by separation of variables.} \\
+    Separating $x$ and $y$ (for $x, y \neq 0$):
+    \[
+    \frac{1}{y}\,dy = \frac{1}{x}\,dx
+    \]
+    Integrating both sides:
+    \[
+    \int \frac{1}{y}\,dy = \int \frac{1}{x}\,dx \implies \ln|y| = \ln|x| + C_0
+    \]
+    Exponentiating both sides:
+    \[
+    |y| = e^{C_0}|x| \implies y = Cx
+    \]
+    where $C = \pm e^{C_0}$ (and $C = 0$ covers $y = 0$). Geometrically, the characteristic curves are rays (or straight lines) passing through the origin $(0, 0)$.
+
+    \item \textbf{Solve for $C$ and write the general solution.} \\
+    For $x \neq 0$, solving for the characteristic parameter $C$ gives:
+    \[
+    C = \frac{y}{x}
+    \]
+    Since $u(x, y)$ is constant along each radial line through the origin, $u(x, y)$ depends only on the slope $\frac{y}{x}$ (or $\frac{x}{y}$ for $y \neq 0$). Thus:
+    \[
+    u(x, y) = f\left(\frac{y}{x}\right)
+    \]
+    where $f$ is an arbitrary differentiable function of one variable. (Note: Because the characteristic rays all intersect at $(0, 0)$, any continuous solution on the entire plane must actually be a constant everywhere, whereas away from the origin $u(x,y) = f(y/x)$ is smooth and well-defined on any half-plane not containing the origin).
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = f\left(\frac{y}{x}\right)}
+\]
+
+\hrulefill
+
+\subsection*{Problem 6}
+\textbf{Problem Statement:} Solve the equation $\sqrt{1 - x^2}u_x + u_y = 0$ with the condition $u(0, y) = y$.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Set up the characteristic ODE.} \\
+    On the domain $-1 < x < 1$, the directional derivative of $u$ in the direction of $(\sqrt{1 - x^2}, 1)$ is zero. The characteristic curves satisfy:
+    \[
+    \frac{dy}{dx} = \frac{1}{\sqrt{1 - x^2}}
+    \]
+
+    \item \textbf{Solve the characteristic ODE.} \\
+    Separating variables:
+    \[
+    dy = \frac{1}{\sqrt{1 - x^2}}\,dx
+    \]
+    Integrating both sides:
+    \[
+    \int dy = \int \frac{1}{\sqrt{1 - x^2}}\,dx \implies y = \arcsin x + C
+    \]
+    Solving for the constant $C$:
+    \[
+    y - \arcsin x = C
+    \]
+
+    \item \textbf{Formulate the general solution.} \\
+    Since $u(x, y)$ is constant along each characteristic curve, the general solution is:
+    \[
+    u(x, y) = f(y - \arcsin x)
+    \]
+    where $f$ is an arbitrary function of one variable.
+
+    \item \textbf{Apply the auxiliary condition $u(0, y) = y$.} \\
+    Setting $x = 0$ in the general solution and noting that $\arcsin(0) = 0$:
+    \[
+    u(0, y) = f(y - \arcsin(0)) = f(y) = y
+    \]
+    Since $f$ is the identity function $f(w) = w$, substituting $w = y - \arcsin x$ gives the unique solution:
+    \[
+    u(x, y) = y - \arcsin x
+    \]
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = y - \arcsin x}
+\]
+
+\hrulefill
+
+\subsection*{Problem 7}
+\textbf{Problem Statement:} \\
+(a) Solve the equation $yu_x + xu_y = 0$ with $u(0, y) = e^{-y^2}$. \\
+(b) In which region of the $xy$ plane is the solution uniquely determined?
+
+\textbf{Solution:}
+
+\subsubsection*{Part (a)}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Set up and solve the characteristic ODE.} \\
+    The characteristic curves have tangent vectors parallel to $(y, x)$, so they satisfy the ODE:
+    \[
+    \frac{dy}{dx} = \frac{x}{y}
+    \]
+    Separating variables:
+    \[
+    y\,dy = x\,dx
+    \]
+    Integrating both sides:
+    \[
+    \int y\,dy = \int x\,dx \implies \frac{1}{2}y^2 = \frac{1}{2}x^2 + C_0 \implies y^2 - x^2 = C
+    \]
+    where $C = 2C_0$. Thus, the characteristic curves are hyperbolas $y^2 - x^2 = C$ (along with their asymptotes $y = \pm x$ when $C = 0$).
+
+    \item \textbf{Write the general solution.} \\
+    Since $u(x, y)$ is constant on each characteristic branch, the general solution is:
+    \[
+    u(x, y) = f(y^2 - x^2)
+    \]
+
+    \item \textbf{Apply the auxiliary condition $u(0, y) = e^{-y^2}$.} \\
+    Evaluating the general solution at $x = 0$:
+    \[
+    u(0, y) = f(y^2 - 0^2) = f(y^2) = e^{-y^2}
+    \]
+    Let $w = y^2$ (note that since $y \in \mathbb{R}$, $w = y^2 \ge 0$). Then for all $w \ge 0$:
+    \[
+    f(w) = e^{-w}
+    \]
+    Substituting $w = y^2 - x^2$ into $f(w)$ gives:
+    \[
+    u(x, y) = e^{-(y^2 - x^2)} = e^{x^2 - y^2}
+    \]
+\end{enumerate}
+
+\subsubsection*{Part (b)}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Analyze how the auxiliary data propagates along characteristics.} \\
+    The auxiliary condition $u(0, y) = e^{-y^2}$ is given along the $y$-axis ($x = 0$). A point $(x, y)$ in the $xy$-plane has its value $u(x, y)$ uniquely determined by the initial data on the $y$-axis \emph{if and only if} the characteristic curve passing through $(x, y)$ intersects the $y$-axis.
+
+    \item \textbf{Determine which characteristics intersect the $y$-axis.} \\
+    The characteristic curve passing through a point $(x, y)$ has the equation:
+    \[
+    Y^2 - X^2 = C, \quad \text{where } C = y^2 - x^2
+    \]
+    For this curve to intersect the $y$-axis ($X = 0$), there must exist a real coordinate $Y$ such that:
+    \[
+    Y^2 - 0^2 = C \implies Y^2 = y^2 - x^2
+    \]
+    Since the square of a real number $Y$ is always non-negative ($Y^2 \ge 0$), a characteristic curve intersects the $y$-axis if and only if $C \ge 0$ (or strictly $C > 0$ for regular interior points where the hyperbola opens vertically up and down and crosses the $y$-axis at $(0, \pm\sqrt{y^2 - x^2})$). 
+    
+    Algebraically, in Part (a) we found $f(w) = e^{-w}$ from $f(y^2) = e^{-y^2}$. Because $y^2 \ge 0$ for all real $y$, the function $f(w)$ is \emph{only} determined for non-negative arguments $w \ge 0$! For $w < 0$ (i.e., $y^2 - x^2 < 0$), the hyperbolas $Y^2 - X^2 = C$ open horizontally to the left and right and never touch the $y$-axis; thus, $f(w)$ can be chosen completely arbitrarily for $w < 0$ without violating the condition at $x = 0$.
+    
+    (Note: Even more subtle, each hyperbola $y^2 - x^2 = C > 0$ has two disconnected branches—an upper branch $y > |x|$ intersecting the positive $y$-axis, and a lower branch $y < -|x|$ intersecting the negative $y$-axis. And each branch intersects the $y$-axis only once, whereas along a single branch $u$ is constant so it carries the value $e^{-C}$ to the entire branch).
+
+    \item \textbf{State the region.} \\
+    Therefore, the solution is uniquely determined in the region where $y^2 - x^2 \ge 0$ (or $y^2 \ge x^2$, which is equivalent to $|y| \ge |x|$, or strictly $y^2 > x^2$, i.e., $|y| > |x|$). This consists of the upper and lower sectors bounded by the lines $y = x$ and $y = -x$.
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\begin{itemize}
+    \item \textbf{(a)} $\boxed{u(x, y) = e^{x^2 - y^2}}$
+    \item \textbf{(b)} $\boxed{\text{The region } y^2 \ge x^2 \text{ (or } |y| \ge |x| \text{; strictly } |y| > |x|\text{)}}$
+\end{itemize}
+
+\hrulefill
+
+\subsection*{Problem 8}
+\textbf{Problem Statement:} Solve $au_x + bu_y + cu = 0$ (where $a, b, c$ are constants with $a, b$ not both zero).
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Apply the Coordinate Method.} \\
+    Introduce the orthogonal change of coordinates from Equation (3) in the text:
+    \[
+    x' = ax + by, \quad y' = bx - ay
+    \]
+    As derived in the text via the chain rule:
+    \[
+    au_x + bu_y = (a^2 + b^2)u_{x'}
+    \]
+
+    \item \textbf{Rewrite the PDE in the new coordinates.} \\
+    Substituting into $au_x + bu_y + cu = 0$ gives:
+    \[
+    (a^2 + b^2)u_{x'} + cu = 0 \implies \frac{\partial u}{\partial x'} + \frac{c}{a^2 + b^2}u = 0
+    \]
+
+    \item \textbf{Solve the resulting first-order linear ODE in $x'$.} \\
+    Treating $y'$ as a constant parameter, this is a separable/linear homogeneous ODE in $x'$ with constant coefficient $\frac{c}{a^2 + b^2}$. Multiplying by the integrating factor $\exp\left(\frac{c}{a^2+b^2}x'\right)$:
+    \[
+    \frac{\partial}{\partial x'}\left[\exp\left(\frac{c}{a^2 + b^2}x'\right)u\right] = 0
+    \]
+    Integrating with respect to $x'$ yields an arbitrary function $f(y')$ of the remaining variable $y'$:
+    \[
+    \exp\left(\frac{c}{a^2 + b^2}x'\right)u(x', y') = f(y') \implies u(x', y') = \exp\left(-\frac{c}{a^2 + b^2}x'\right)f(y')
+    \]
+
+    \item \textbf{Substitute back the original variables $(x, y)$.} \\
+    Replacing $x' = ax + by$ and $y' = bx - ay$:
+    \[
+    u(x, y) = \exp\left(-\frac{c(ax + by)}{a^2 + b^2}\right)f(bx - ay)
+    \]
+    \emph{Alternative Form:} If $a \neq 0$, we can notice that $x = \frac{ax' + by'}{a^2 + b^2}$, so $-\frac{c}{a}x = -\frac{c}{a^2+b^2}x' - \frac{bc}{a(a^2+b^2)}y'$. Absorbing the $\exp(\text{const}\cdot y')$ factor into the arbitrary function $f(y')$ yields the equivalent compact form $u(x, y) = e^{-(c/a)x}g(bx - ay)$ (or $e^{-(c/b)y}h(bx - ay)$ if $b \neq 0$). The coordinate form above is valid universally for all $(a, b) \neq (0, 0)$.
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = e^{-\frac{c(ax + by)}{a^2 + b^2}}f(bx - ay)}
+\]
+(or equivalently $u(x, y) = e^{-(c/a)x}g(bx - ay)$ if $a \neq 0$, where $f, g$ are arbitrary functions of one variable).
+
+\hrulefill
+
+\subsection*{Problem 9}
+\textbf{Problem Statement:} Solve the equation $u_x + u_y = 1$.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Apply the Coordinate Method.} \\
+    Here $a = 1$ and $b = 1$. Define the new coordinates:
+    \[
+    x' = x + y, \quad y' = x - y
+    \]
+    By the chain rule:
+    \[
+    u_x = u_{x'} + u_{y'}, \quad u_y = u_{x'} - u_{y'}
+    \]
+    Adding these together gives:
+    \[
+    u_x + u_y = 2u_{x'}
+    \]
+
+    \item \textbf{Solve the PDE in the $(x', y')$ coordinates.} \\
+    Substituting into $u_x + u_y = 1$:
+    \[
+    2u_{x'} = 1 \implies \frac{\partial u}{\partial x'} = \frac{1}{2}
+    \]
+    Integrating both sides with respect to $x'$ (treating $y'$ as a constant):
+    \[
+    u(x', y') = \frac{1}{2}x' + g(y')
+    \]
+    where $g$ is an arbitrary function of one variable.
+
+    \item \textbf{Return to the original $(x, y)$ coordinates.} \\
+    Substituting $x' = x + y$ and $y' = x - y$:
+    \[
+    u(x, y) = \frac{1}{2}(x + y) + g(x - y)
+    \]
+    \emph{Note:} Since $\frac{1}{2}(x + y) = x - \frac{1}{2}(x - y)$, we can absorb $-\frac{1}{2}(x - y)$ into the arbitrary function of $(x - y)$ to write the equally valid and simpler form:
+    \[
+    u(x, y) = x + f(x - y) \quad \text{or} \quad u(x, y) = y + h(x - y)
+    \]
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = \frac{1}{2}(x + y) + g(x - y) \quad \text{or equivalently} \quad u(x, y) = x + f(x - y)}
+\]
+where $f, g$ are arbitrary functions of one variable.
+
+\hrulefill
+
+\subsection*{Problem 10}
+\textbf{Problem Statement:} Solve $u_x + u_y + u = e^{x+2y}$ with $u(x, 0) = 0$.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Apply the Coordinate Method (or Characteristic Coordinates).} \\
+    Let us use the simple characteristic coordinates:
+    \[
+    \xi = x, \quad \eta = x - y \implies x = \xi, \quad y = \xi - \eta
+    \]
+    By the chain rule, for $U(\xi, \eta) = u(x, y)$:
+    \[
+    u_x = U_\xi \frac{\partial \xi}{\partial x} + U_\eta \frac{\partial \eta}{\partial x} = U_\xi + U_\eta
+    \]
+    \[
+    u_y = U_\xi \frac{\partial \xi}{\partial y} + U_\eta \frac{\partial \eta}{\partial y} = 0 - U_\eta = -U_\eta
+    \]
+    Therefore:
+    \[
+    u_x + u_y = U_\xi
+    \]
+
+    \item \textbf{Transform the PDE into an ODE in $\xi$.} \\
+    Substituting $u_x + u_y = U_\xi$, $x = \xi$, and $y = \xi - \eta$ into $u_x + u_y + u = e^{x+2y}$:
+    \[
+    \frac{\partial U}{\partial \xi} + U = e^{\xi + 2(\xi - \eta)} = e^{3\xi - 2\eta}
+    \]
+
+    \item \textbf{Solve the linear first-order ODE using an integrating factor.} \\
+    Treating $\eta$ as constant, the integrating factor with respect to $\xi$ is $\mu(\xi) = e^{\int 1\,d\xi} = e^\xi$. Multiplying both sides by $e^\xi$:
+    \[
+    e^\xi \frac{\partial U}{\partial \xi} + e^\xi U = e^\xi e^{3\xi - 2\eta} \implies \frac{\partial}{\partial \xi}\left(e^\xi U\right) = e^{4\xi - 2\eta}
+    \]
+    Integrating both sides with respect to $\xi$ (with $\eta$ held fixed):
+    \[
+    e^\xi U(\xi, \eta) = \int e^{4\xi - 2\eta}\,d\xi + f(\eta) = \frac{1}{4}e^{4\xi - 2\eta} + f(\eta)
+    \]
+    Dividing by $e^\xi$:
+    \[
+    U(\xi, \eta) = \frac{1}{4}e^{3\xi - 2\eta} + e^{-\xi}f(\eta)
+    \]
+
+    \item \textbf{Convert back to $(x, y)$ coordinates to get the general solution.} \\
+    Since $\xi = x$, $\eta = x - y$, and $3\xi - 2\eta = 3x - 2(x - y) = x + 2y$:
+    \[
+    u(x, y) = \frac{1}{4}e^{x+2y} + e^{-x}f(x - y)
+    \]
+
+    \item \textbf{Apply the auxiliary condition $u(x, 0) = 0$.} \\
+    Setting $y = 0$ in the general solution:
+    \[
+    u(x, 0) = \frac{1}{4}e^{x + 0} + e^{-x}f(x) = 0
+    \]
+    Solving for $f(x)$:
+    \[
+    e^{-x}f(x) = -\frac{1}{4}e^x \implies f(x) = -\frac{1}{4}e^{2x}
+    \]
+
+    \item \textbf{Substitute $f(x - y) = -\frac{1}{4}e^{2(x - y)}$ into the general solution.} \\
+    \[
+    u(x, y) = \frac{1}{4}e^{x+2y} + e^{-x}\left(-\frac{1}{4}e^{2x - 2y}\right) = \frac{1}{4}e^{x+2y} - \frac{1}{4}e^{x-2y}
+    \]
+
+    \item \textbf{Check the solution.} \\
+    \begin{itemize}
+        \item $u(x, 0) = \frac{1}{4}e^x - \frac{1}{4}e^x = 0$. (Matches initial condition).
+        \item $u_x = \frac{1}{4}e^{x+2y} - \frac{1}{4}e^{x-2y}$
+        \item $u_y = \frac{2}{4}e^{x+2y} + \frac{2}{4}e^{x-2y}$
+        \item $u_x + u_y + u = \left(\frac{1}{4} + \frac{2}{4} + \frac{1}{4}\right)e^{x+2y} + \left(-\frac{1}{4} + \frac{2}{4} - \frac{1}{4}\right)e^{x-2y} = e^{x+2y}$. (Matches PDE).
+    \end{itemize}
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = \frac{1}{4}e^{x+2y} - \frac{1}{4}e^{x-2y}}
+\]
+
+\hrulefill
+
+\subsection*{Problem 11}
+\textbf{Problem Statement:} Solve $au_x + bu_y = f(x, y)$, where $f(x, y)$ is a given function. If $a \neq 0$, write the solution in the form
+\[
+u(x, y) = (a^2 + b^2)^{-1/2} \int_L f\,ds + g(bx - ay),
+\]
+where $g$ is an arbitrary function of one variable, $L$ is the characteristic line segment from the $y$ axis to the point $(x, y)$, and the integral is a line integral. (\emph{Hint:} Use the coordinate method.)
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Apply the Coordinate Method.} \\
+    Let us use the coordinate transformation from Equation (3):
+    \[
+    x' = ax + by, \quad y' = bx - ay
+    \]
+    Inverting this linear system to express $x$ and $y$ in terms of $x'$ and $y'$:
+    \[
+    ax' + by' = a(ax + by) + b(bx - ay) = (a^2 + b^2)x \implies x = \frac{ax' + by'}{a^2 + b^2}
+    \]
+    \[
+    bx' - ay' = b(ax + by) - a(bx - ay) = (a^2 + b^2)y \implies y = \frac{bx' - ay'}{a^2 + b^2}
+    \]
+    As shown in the text, $au_x + bu_y = (a^2 + b^2)u_{x'}$. Thus, the PDE becomes:
+    \[
+    (a^2 + b^2)\frac{\partial u}{\partial x'} = f\left(\frac{ax' + by'}{a^2 + b^2}, \frac{bx' - ay'}{a^2 + b^2}\right)
+    \]
+
+    \item \textbf{Integrate with respect to $x'$ along the characteristic line $y' = \text{constant}$.} \\
+    Dividing by $a^2 + b^2$:
+    \[
+    \frac{\partial u}{\partial x'} = \frac{1}{a^2 + b^2} f\left(\frac{ax' + by'}{a^2 + b^2}, \frac{bx' - ay'}{a^2 + b^2}\right)
+    \]
+    When we integrate with respect to $x'$, $y' = bx - ay$ is held constant. This means we are integrating along the characteristic line $bx - ay = y'$. Since $a \neq 0$, every characteristic line intersects the $y$-axis (where $x = 0$). Let $x'_0$ be the value of $x'$ at the point where this characteristic line intersects the $y$-axis ($x = 0$). From $x = \frac{ax' + by'}{a^2 + b^2} = 0$, we see that $x'_0 = -\frac{b}{a}y'$.
+    
+    Integrating from $x'_0$ to $x'$ with dummy integration variable $\tilde{x}'$:
+    \[
+    u(x', y') = \frac{1}{a^2 + b^2}\int_{x'_0}^{x'} f\left(\frac{a\tilde{x}' + by'}{a^2 + b^2}, \frac{b\tilde{x}' - ay'}{a^2 + b^2}\right)d\tilde{x}' + g(y')
+    \]
+    where $g(y') = u(x'_0, y')$ is an arbitrary function of $y' = bx - ay$.
+
+    \item \textbf{Relate the differential $d\tilde{x}'$ to the arc length differential $ds$ along $L$.} \\
+    Along the characteristic line segment $L$ where $y'$ is constant, a point $(\tilde{x}, \tilde{y})$ is parameterized by $\tilde{x}' \in [x'_0, x']$ via:
+    \[
+    \tilde{x}(\tilde{x}') = \frac{a\tilde{x}' + by'}{a^2 + b^2}, \quad \tilde{y}(\tilde{x}') = \frac{b\tilde{x}' - ay'}{a^2 + b^2}
+    \]
+    Differentiating with respect to $\tilde{x}'$ (keeping $y'$ fixed):
+    \[
+    \frac{d\tilde{x}}{d\tilde{x}'} = \frac{a}{a^2 + b^2}, \quad \frac{d\tilde{y}}{d\tilde{x}'} = \frac{b}{a^2 + b^2}
+    \]
+    The arc length differential $ds$ along the line segment $L$ is given by:
+    \[
+    ds = \sqrt{\left(\frac{d\tilde{x}}{d\tilde{x}'}\right)^2 + \left(\frac{d\tilde{y}}{d\tilde{x}'}\right)^2}\,d\tilde{x}' = \sqrt{\frac{a^2 + b^2}{(a^2 + b^2)^2}}\,d\tilde{x}' = (a^2 + b^2)^{-1/2}\,d\tilde{x}'
+    \]
+    Consequently:
+    \[
+    d\tilde{x}' = (a^2 + b^2)^{1/2}\,ds
+    \]
+
+    \item \textbf{Substitute $d\tilde{x}'$ into the integral to obtain the line integral form.} \\
+    Replacing $d\tilde{x}'$ with $(a^2 + b^2)^{1/2}\,ds$ and $y'$ with $bx - ay$:
+    \[
+    u(x, y) = \frac{1}{a^2 + b^2}\int_L f\,(a^2 + b^2)^{1/2}\,ds + g(bx - ay) = (a^2 + b^2)^{-1/2}\int_L f\,ds + g(bx - ay)
+    \]
+    where $L$ is the oriented characteristic line segment starting at the $y$-axis ($\tilde{x}' = x'_0$) and ending at $(x, y)$ ($\tilde{x}' = x'$).
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = (a^2 + b^2)^{-1/2} \int_L f\,ds + g(bx - ay)}
+\]
+
+\hrulefill
+
+\subsection*{Problem 12}
+\textbf{Problem Statement:} Show that the new coordinate axes defined by (3) are orthogonal. \\
+\emph{Note from text:} Equation (3) is $x' = ax + by$ and $y' = bx - ay$, where $a, b$ are constants not both zero.
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Method 1: Using Normal/Gradient Vectors of the Coordinate Axes.} \\
+    In the $xy$-plane:
+    \begin{itemize}
+        \item The $x'$-axis is defined by the line $y' = 0$, which is $bx - ay = 0$. The normal vector to this line is $\nabla y' = (b, -a)$, and the direction vector along the $x'$-axis is $\mathbf{v}_{x'} = (a, b)$.
+        \item The $y'$-axis is defined by the line $x' = 0$, which is $ax + by = 0$. The normal vector to this line is $\nabla x' = (a, b)$, and the direction vector along the $y'$-axis is $\mathbf{v}_{y'} = (b, -a)$.
+    \end{itemize}
+
+    \item \textbf{Compute the dot product of the direction vectors (or gradients).} \\
+    Two lines (or coordinate axes) in $\mathbb{R}^2$ are orthogonal if and only if the dot product of their direction vectors (or equivalently, their normal vectors $\nabla x'$ and $\nabla y'$) is zero:
+    \[
+    \mathbf{v}_{x'} \cdot \mathbf{v}_{y'} = \nabla x' \cdot \nabla y' = (a, b) \cdot (b, -a) = ab + b(-a) = ab - ab = 0
+    \]
+    Since $a$ and $b$ are not both zero, both vectors are non-zero ($\|\mathbf{v}_{x'}\| = \|\mathbf{v}_{y'}\| = \sqrt{a^2 + b^2} > 0$), and their dot product is $0$.
+
+    \item \textbf{Method 2: Using Slopes (if $a \neq 0$ and $b \neq 0$).} \\
+    The $x'$-axis ($bx - ay = 0$) has slope $m_1 = \frac{b}{a}$. The $y'$-axis ($ax + by = 0$) has slope $m_2 = -\frac{a}{b}$. The product of their slopes is:
+    \[
+    m_1 m_2 = \left(\frac{b}{a}\right)\left(-\frac{a}{b}\right) = -1
+    \]
+    (If $a = 0$, the axes are $y = 0$ and $x = 0$, which are horizontal and vertical; similarly if $b = 0$). Thus, in all cases, the new coordinate axes are perpendicular.
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{\nabla x' \cdot \nabla y' = (a, b) \cdot (b, -a) = ab - ab = 0 \implies \text{The coordinate axes are orthogonal.}}
+\]
+
+\hrulefill
+
+\subsection*{Problem 13}
+\textbf{Problem Statement:} Use the coordinate method to solve the equation
+\[
+u_x + 2u_y + (2x - y)u = 2x^2 + 3xy - 2y^2.
+\]
+
+\textbf{Solution:}
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Set up the orthogonal coordinate transformation.} \\
+    Here $a = 1$ and $b = 2$. Using Equation (3) from the text:
+    \[
+    x' = ax + by = x + 2y, \quad y' = bx - ay = 2x - y
+    \]
+    Since $a^2 + b^2 = 1^2 + 2^2 = 5$, the differential operator transforms as:
+    \[
+    u_x + 2u_y = (1^2 + 2^2)u_{x'} = 5u_{x'}
+    \]
+
+    \item \textbf{Factor and express all $(x, y)$ terms in terms of $(x', y')$.} \\
+    Notice the coefficient of $u$ on the left-hand side is already $2x - y = y'$! \\
+    Now let us factor the quadratic polynomial on the right-hand side:
+    \[
+    2x^2 + 3xy - 2y^2 = (x + 2y)(2x - y)
+    \]
+    Let us verify this factorization by expanding:
+    \[
+    (x + 2y)(2x - y) = 2x^2 - xy + 4xy - 2y^2 = 2x^2 + 3xy - 2y^2
+    \]
+    Remarkably, in terms of our new coordinates $x' = x + 2y$ and $y' = 2x - y$, the right-hand side is simply the product $x'y'$!
+
+    \item \textbf{Rewrite the PDE in the $(x', y')$ coordinates.} \\
+    Substituting $u_x + 2u_y = 5u_{x'}$, $2x - y = y'$, and $2x^2 + 3xy - 2y^2 = x'y'$ into the PDE gives:
+    \[
+    5u_{x'} + y'u = x'y'
+    \]
+    Dividing through by $5$:
+    \[
+    \frac{\partial u}{\partial x'} + \frac{y'}{5}u = \frac{1}{5}x'y'
+    \]
+
+    \item \textbf{Solve the first-order linear ODE in $x'$ (treating $y'$ as a constant parameter).} \\
+    \textbf{Case 1 ($y' \neq 0$):} \\
+    We multiply by the integrating factor $\mu(x') = \exp\left(\int \frac{y'}{5}\,dx'\right) = e^{\frac{x'y'}{5}}$:
+    \[
+    \frac{\partial}{\partial x'}\left(e^{\frac{x'y'}{5}}u\right) = \frac{1}{5}x'y'e^{\frac{x'y'}{5}}
+    \]
+    Integrating both sides with respect to $x'$ using integration by parts (let $w = \frac{x'y'}{5}$, $dw = \frac{y'}{5}\,dx'$, so $x' = \frac{5w}{y'}$):
+    \[
+    \int \frac{1}{5}x'y'e^{\frac{x'y'}{5}}\,dx' = \int \frac{5}{y'}w e^w\,dw = \frac{5}{y'}(w - 1)e^w = \frac{5}{y'}\left(\frac{x'y'}{5} - 1\right)e^{\frac{x'y'}{5}} = \left(x' - \frac{5}{y'}\right)e^{\frac{x'y'}{5}}
+    \]
+    Adding the arbitrary function of integration $f(y')$:
+    \[
+    e^{\frac{x'y'}{5}}u(x', y') = \left(x' - \frac{5}{y'}\right)e^{\frac{x'y'}{5}} + f(y')
+    \]
+    Dividing by $e^{\frac{x'y'}{5}}$:
+    \[
+    u(x', y') = x' - \frac{5}{y'} + f(y')e^{-\frac{x'y'}{5}}
+    \]
+
+    \item \textbf{Substitute back $x' = x + 2y$ and $y' = 2x - y$.} \\
+    \[
+    u(x, y) = x + 2y - \frac{5}{2x - y} + f(2x - y)\exp\left(-\frac{(x + 2y)(2x - y)}{5}\right)
+    \]
+    Or expanding $(x + 2y)(2x - y) = 2x^2 + 3xy - 2y^2$:
+    \[
+    u(x, y) = x + 2y - \frac{5}{2x - y} + f(2x - y)e^{-\frac{1}{5}(2x^2 + 3xy - 2y^2)}
+    \]
+
+    \item \textbf{Check the solution.} \\
+    Let $u_p(x', y') = x' - \frac{5}{y'}$. Then $(u_p)_{x'} = 1$, and:
+    \[
+    5(u_p)_{x'} + y'u_p = 5(1) + y'\left(x' - \frac{5}{y'}\right) = 5 + x'y' - 5 = x'y'
+    \]
+    And for the homogeneous part $u_h = f(y')e^{-x'y'/5}$, $5(u_h)_{x'} + y'u_h = 5\left(-\frac{y'}{5}\right)u_h + y'u_h = 0$. Thus the solution is completely verified.
+\end{enumerate}
+
+\noindent\textbf{Final Answer:}
+\[
+\boxed{u(x, y) = x + 2y - \frac{5}{2x - y} + f(2x - y)e^{-\frac{1}{5}(2x^2 + 3xy - 2y^2)}}
+\]
+where $f$ is an arbitrary function of one variable.
+
+\newpage
+% ============================================================================
+% PART 3: IN-DEPTH ANALYSIS OF PROBLEMS AND TECHNIQUES
+% ============================================================================
+\section{In-Depth Analysis of Problems and Techniques}
+
+\subsection{Problem Types and General Approach}
+The 13 problems in Section 1.2 can be systematically categorized into six distinct archetypes:
+
+\begin{enumerate}
+    \item \textbf{Type 1: Constant-Coefficient Homogeneous Initial/Boundary Value Problems (Problem 1)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Immediately write down the general solution $u(x, y) = f(bx - ay)$ (or $f(bx - at)$). Substitute the auxiliary condition (e.g., $t = 0$ or $x = 0$) to obtain an algebraic equation of the form $f(g(x)) = h(x)$. Invert the inner function by setting $w = g(x)$ to solve for $f(w)$, and replace $w$ with $bx - ay$.
+    \end{itemize}
+
+    \item \textbf{Type 2: Variable-Coefficient Homogeneous Equations \& Domain Analysis (Problems 3, 4, 5, 6, 7)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Formulate the characteristic ODE $\frac{dy}{dx} = \frac{b(x,y)}{a(x,y)}$. Solve the ODE using separation of variables and isolate the integration constant $C = \phi(x, y)$. Write the general solution $u(x, y) = f(\phi(x, y))$. If an auxiliary condition is provided (Problems 6 and 7), apply it and check the range of $\phi(0, y)$ to determine the exact region of the $xy$-plane where the characteristic curves intersect the initial curve (Problem 7b).
+    \end{itemize}
+
+    \item \textbf{Type 3: Reducible Higher-Order PDEs (Problem 2)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Recognize when only derivatives with respect to a specific variable appear (e.g., $u_y$ and $u_{xy} = (u_y)_x$). Substitute $v = u_y$ to reduce the order of the PDE from second-order to first-order. Solve the first-order PDE for $v(x, y)$ (introducing a first arbitrary function $g(y)$), and then integrate partially with respect to $y$ to recover $u(x, y)$ (introducing a second arbitrary function $k(x)$).
+    \end{itemize}
+
+    \item \textbf{Type 4: Constant-Coefficient Equations with Zeroth-Order Dissipation/Growth Terms (Problem 8)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Use the orthogonal coordinate change $x' = ax + by$, $y' = bx - ay$ to transform $au_x + bu_y + cu = 0$ into $(a^2 + b^2)u_{x'} + cu = 0$. Solve this homogeneous first-order ODE in $x'$ via an exponential integrating factor, multiplying the exponential decay/growth factor by an arbitrary function $f(y')$.
+    \end{itemize}
+
+    \item \textbf{Type 5: Inhomogeneous Linear Equations with Specific Forcing Terms (Problems 9, 10, 13)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Apply the coordinate method to reduce the left-hand side to a single partial derivative $u_{x'}$ plus any $u$ term. Express the right-hand side forcing function $f(x, y)$ and any variable coefficient of $u$ entirely in terms of $(x', y')$. Solve the resulting inhomogeneous first-order linear ODE in $x'$ using an integrating factor $\mu(x', y')$, integrate with respect to $x'$ (using integration by parts if necessary), add $f(y')$, and substitute back $(x, y)$.
+    \end{itemize}
+
+    \item \textbf{Type 6: Theoretical/Geometric Coordinate Proofs and Line Integral Representations (Problems 11, 12)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Use vector calculus (dot products of gradients $\nabla x' \cdot \nabla y' = 0$) and arc length parameterization ($ds = \sqrt{(dx/dx')^2 + (dy/dx')^2}\,dx'$) to connect the analytical coordinate transformation to the intrinsic geometry of characteristic lines.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Key Algebraic and Calculus Manipulations}
+\begin{enumerate}
+    \item \textbf{The Function Argument Substitution Trick ($w$-Substitution):}
+    \begin{itemize}
+        \item \emph{Where used:} Example 1 ($f(-4y) = y^3$), Problem 1 ($f(2x) = \sin x$), and Problem 7a ($f(y^2) = e^{-y^2}$).
+        \item \emph{Why it is crucial:} Students often mistakenly write $f(2x) = \sin x \implies f(2x - 3t) = \sin(2x - 3t)$, forgetting to divide the argument by $2$. Explicitly defining $w = 2x \implies x = w/2 \implies f(w) = \sin(w/2)$ prevents this error and also reveals domain restrictions (such as $w = y^2 \ge 0$ in Problem 7).
+    \end{itemize}
+
+    \item \textbf{Partial Integration and Arbitrary Functions of the "Other" Variable:}
+    \begin{itemize}
+        \item \emph{Where used:} Problems 2, 8, 9, 10, 11, and 13.
+        \item \emph{Why it is crucial:} When integrating $\frac{\partial u}{\partial x'} = H(x', y')$ with respect to $x'$, $y'$ is held constant. Therefore, the "constant of integration" is not a number $C$, but an arbitrary function $g(y')$ because $\frac{\partial}{\partial x'}[g(y')] = 0$.
+    \end{itemize}
+
+    \item \textbf{Hidden Quadratic Factorization in Characteristic Coordinates:}
+    \begin{itemize}
+        \item \emph{Where used:} Problem 13 ($2x^2 + 3xy - 2y^2 = (x + 2y)(2x - y) = x'y'$).
+        \item \emph{Why it is crucial:} If one blindly inverted the $2 \times 2$ system $x = \frac{x' + 2y'}{5}$, $y = \frac{2x' - y'}{5}$ and plugged those fractions into $2x^2 + 3xy - 2y^2$, it would require tedious algebraic expansion only to collapse back to $x'y'$. Factoring the quadratic first immediately reveals that it is the product of the two new coordinates!
+    \end{itemize}
+
+    \item \textbf{Integration by Parts with Parameter $y'$:}
+    \begin{itemize}
+        \item \emph{Where used:} Problem 13, when evaluating $\int \frac{1}{5}x'y'e^{x'y'/5}\,dx'$.
+        \item \emph{Why it is crucial:} Because the coefficient of $u$ in $5u_{x'} + y'u = x'y'$ depends on $y'$, the integrating factor $e^{x'y'/5}$ contains both $x'$ and $y'$. Recognizing that $y'$ acts as a constant during $x'$-integration allows a clean $u$-substitution $w = \frac{x'y'}{5}$ followed by $\int w e^w\,dw = (w - 1)e^w$.
+    \end{itemize}
+
+    \item \textbf{Arc Length Re-parameterization along Characteristics:}
+    \begin{itemize}
+        \item \emph{Where used:} Problem 11.
+        \item \emph{Why it is crucial:} In $au_x + bu_y = f(x, y)$, the vector $(a, b)$ does not generally have unit length; its magnitude is $\sqrt{a^2 + b^2}$. Dividing the PDE by $\sqrt{a^2 + b^2}$ turns the left-hand side into the true unit directional derivative $\frac{du}{ds}$ along the characteristic line $L$:
+        \[
+        \frac{a}{\sqrt{a^2+b^2}}u_x + \frac{b}{\sqrt{a^2+b^2}}u_y = \frac{du}{ds} = (a^2 + b^2)^{-1/2}f(x, y)
+        \]
+        Integrating $\frac{du}{ds}$ with respect to arc length $ds$ immediately explains why the factor $(a^2 + b^2)^{-1/2}$ appears in front of $\int_L f\,ds$.
+    \end{itemize}
+\end{enumerate}
+
+\newpage
+% ============================================================================
+% PART 4: "CHEATSHEET" AND TIPS FOR SUCCESS
+% ============================================================================
+\section{``Cheatsheet'' and Tips for Success}
+
+\subsection{Master Formula Summary}
+\begin{center}
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{PDE Form} & \textbf{Characteristic / Coordinate Setup} & \textbf{General Solution} \\ \hline
+$u_x = 0$ & $y = C$ & $u(x, y) = f(y)$ \\ \hline
+$au_x + bu_y = 0$ & $\frac{dy}{dx} = \frac{b}{a} \implies bx - ay = C$ & $u(x, y) = f(bx - ay)$ \\ \hline
+$a(x,y)u_x + b(x,y)u_y = 0$ & $\frac{dy}{dx} = \frac{b(x,y)}{a(x,y)} \implies \phi(x, y) = C$ & $u(x, y) = f(\phi(x, y))$ \\ \hline
+$au_x + bu_y + cu = 0$ & $x' = ax+by, \; y' = bx-ay$ & $u(x,y) = e^{-\frac{c(ax+by)}{a^2+b^2}}f(bx - ay)$ \\ \hline
+$au_x + bu_y = d \text{ (const)}$ & $u_p = \frac{d}{a}x \text{ (if } a \neq 0\text{)}$ & $u(x,y) = \frac{d(ax+by)}{a^2+b^2} + f(bx - ay)$ \\ \hline
+\end{tabular}
+\end{center}
+
+\subsection{Shortcuts, ``Cheats,'' and Tricks}
+\begin{itemize}
+    \item \textbf{Shortcut 1: The Simplified Coordinate Change ($\xi = x$, $\eta = bx - ay$).} \\
+    Unless a problem explicitly requires the orthogonal coordinates $x' = ax + by, y' = bx - ay$ (like Problems 11, 12, 13), it is often \emph{much faster} to use $\xi = x$ and $\eta = bx - ay$ (when $a \neq 0$). Why? Because then $au_x + bu_y = aU_\xi$, and $x = \xi$ requires no fractional inversion!
+    \item \textbf{Shortcut 2: Method of Undetermined Coefficients for Particular Solutions.} \\
+    Because $L[u] = au_x + bu_y + cu = f(x, y)$ is a linear differential operator, its general solution is $u = u_h + u_p$, where $u_h$ solves $L[u_h] = 0$ and $u_p$ is any particular solution!
+    \begin{itemize}
+        \item In \textbf{Problem 9} ($u_x + u_y = 1$): Guess $u_p = x$ (since $u_x = 1, u_y = 0$). Instantly add $u_h = f(x - y)$ to get $u = x + f(x - y)$ in 5 seconds!
+        \item In \textbf{Problem 10} ($u_x + u_y + u = e^{x+2y}$): Guess $u_p = Ae^{x+2y}$. Plugging it in gives $(1 + 2 + 1)Ae^{x+2y} = e^{x+2y} \implies 4A = 1 \implies u_p = \frac{1}{4}e^{x+2y}$. Add $u_h = e^{-x}f(x - y)$ and you have the general solution without doing a single integral!
+    \end{itemize}
+    \item \textbf{Shortcut 3: Instant Verification Rule.} \\
+    Always check your final answer! Differentiating takes 30 seconds and guarantees 100\% accuracy on exams. For $u = f(\phi(x, y))$, $a u_x + b u_y = 0 \iff a\phi_x + b\phi_y = 0$.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps to Watch Out For}
+\begin{enumerate}
+    \item \textbf{Reciprocal Slope Trap:} For $au_x + bu_y = 0$, the tangent vector is $(a, b)$, so the slope is $\frac{dy}{dx} = \frac{b}{a}$ (\textbf{not} $\frac{a}{b}$!). Furthermore, integrating $\frac{dy}{dx} = \frac{b}{a}$ gives $ay = bx + C \implies bx - ay = C$ (\textbf{not} $ax + by = C$). Always double-check that $a(bx - ay)_x + b(bx - ay)_y = ab - ba = 0$.
+    \item \textbf{Forgetting Variable Order in $(t, x)$ Problems:} In Problem 1 ($2u_t + 3u_x = 0$), the variables are $t$ and $x$. Whether you treat $t$ as the horizontal axis or $x$ as the horizontal axis, make sure your characteristic expression $3t - 2x$ (or $2x - 3t$) satisfies $2(2x - 3t)_t + 3(2x - 3t)_x = 2(-3) + 3(2) = 0$.
+    \item \textbf{Adding $+C$ Instead of $+f(y')$:} When integrating a partial derivative $\frac{\partial u}{\partial x'}$ with respect to $x'$, writing $+C$ instead of $+f(y')$ loses the entire family of PDE solutions and makes it impossible to satisfy initial/boundary conditions.
+    \item \textbf{Ignoring Characteristic Domain Restrictions:} As seen in Problem 7b, if the initial condition only determines $f(w)$ for $w \ge 0$, the solution is \emph{not} uniquely determined where the characteristic coordinate $w(x, y) < 0$.
+\end{enumerate}
+
+\subsection{How to Recognize Problem Types at a Glance}
+\begin{itemize}
+    \item \textbf{No $u$ term and right-hand side $= 0$:} Pure transport equation $\implies$ use Geometric Method ($\frac{dy}{dx} = \frac{b}{a}$).
+    \item \textbf{Contains a $+cu$ term or right-hand side $\neq 0$:} Damped/forced transport equation $\implies$ use Coordinate Method ($x' = ax+by, y' = bx-ay$) or Undetermined Coefficients ($u = u_h + u_p$).
+    \item \textbf{Contains mixed partials like $u_{xy}$ and $u_y$ (missing $u_x$):} Reducible order $\implies$ substitute $v = u_y$.
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 5: CONCEPTUAL SYNTHESIS AND THE "BIG PICTURE"
+% ============================================================================
+\section{Conceptual Synthesis and The ``Big Picture''}
+
+\subsection{Thematic Connections}
+The overarching mathematical theme of Section 1.2 is \textbf{dimensional reduction via symmetry and invariant manifolds (curves)}. A partial differential equation involves rates of change in multiple independent directions simultaneously. By aligning our viewpoint with the vector field $\mathbf{V} = (a(x, y), b(x, y))$ generated by the PDE's coefficients, we discover curves in the domain along which the multivariable coupling untangles into a single-variable directional derivative.
+
+This theme echoes across mathematics:
+\begin{itemize}
+    \item \textbf{Linear Algebra (Diagonalization \& Eigenbasis):} Changing coordinates from $(x, y)$ to $(x', y')$ in the Coordinate Method so that $a\partial_x + b\partial_y$ becomes $(a^2+b^2)\partial_{x'}$ is the exact differential-operator analogue of rotating a coordinate system to align with the eigenvectors of a matrix, decoupling a coupled system of equations.
+    \item \textbf{Multivariable Calculus (Level Curves \& Conservative Fields):} In multivariable calculus, a function $u(x, y)$ is constant along its level curves, and its gradient $\nabla u$ is always orthogonal to those level curves. The equation $\mathbf{V} \cdot \nabla u = 0$ simply states that the vector field $\mathbf{V}$ is everywhere tangent to the level curves of $u$. Thus, the characteristic curves of a homogeneous first-order PDE \emph{are} the level curves (contours) of its solutions!
+\end{itemize}
+
+\subsection{Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Links:} This topic directly synthesizes two pillars of earlier coursework: (1) the multivariable chain rule and directional derivatives from Calculus III, and (2) separable and integrating-factor first-order ODEs from Differential Equations. Without first-order ODE techniques, we could neither find the characteristic curves $\frac{dy}{dx} = \frac{b(x,y)}{a(x,y)}$ nor integrate the transformed equation in $x'$.
+    \item \textbf{Forward Links:} First-order linear PDEs are the direct foundation for the rest of Partial Differential Equations:
+    \begin{enumerate}
+        \item \textbf{The 1D Wave Equation ($u_{tt} - c^2 u_{xx} = 0$):} In Chapter 2, we factor the second-order wave operator into two commuting first-order transport operators:
+        \[
+        \left(\frac{\partial}{\partial t} - c\frac{\partial}{\partial x}\right)\left(\frac{\partial}{\partial t} + c\frac{\partial}{\partial x}\right)u = 0
+        \]
+        Applying Section 1.2 twice immediately yields d'Alembert's famous formula $u(x, t) = f(x - ct) + g(x + ct)$!
+        \item \textbf{Quasilinear PDEs and Shock Waves:} When the coefficients depend on $u$ itself (e.g., Burgers' equation $u_t + u u_x = 0$), the characteristic lines have slope dependent on $u$, causing characteristics to collide and form discontinuous shock waves in fluid mechanics and traffic flow.
+        \item \textbf{Well-Posedness and Cauchy Problems:} Problem 7b previews the Cauchy-Kowalevski theorem and the concept of \emph{domains of dependence} and \emph{domains of influence}, demonstrating that boundary data can only determine a solution where characteristics flow from the boundary without becoming tangent to it (the non-characteristic condition).
+    \end{enumerate}
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 6: ABSTRACT REAL-WORLD MODELING (AI, ML, & QUANT FINANCE)
+% ============================================================================
+\section{Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{Concrete Scenarios}
+\begin{enumerate}
+    \item \textbf{Generative AI \& Machine Learning: Continuous Normalizing Flows (CNFs) and Flow Matching (Liouville / Continuity Transport Equation).} \\
+    State-of-the-art generative models (such as Stable Diffusion 3, Flux, and Continuous Normalizing Flows) transform a simple base probability distribution $p_0(\mathbf{x})$ (e.g., standard Gaussian noise) into a complex data distribution $p_1(\mathbf{x})$ (e.g., high-resolution images) by pushing samples along a time-dependent neural velocity field $\mathbf{v}_\theta(t, \mathbf{x})$ governed by the characteristic ODE $\frac{d\mathbf{x}}{dt} = \mathbf{v}_\theta(t, \mathbf{x})$. The log-probability density $\ln p_t(\mathbf{x})$ of the generated samples evolves according to a first-order linear inhomogeneous PDE:
+    \[
+    \frac{\partial \ln p_t(\mathbf{x})}{\partial t} + \mathbf{v}_\theta(t, \mathbf{x}) \cdot \nabla_{\mathbf{x}} \ln p_t(\mathbf{x}) = -\nabla_{\mathbf{x}} \cdot \mathbf{v}_\theta(t, \mathbf{x})
+    \]
+    Training and sampling exact likelihoods in Continuous Normalizing Flows relies directly on solving this first-order PDE along the characteristic curves!
+
+    \item \textbf{Quantitative Finance: Zero-Volatility Limit of Black-Scholes and Deterministic Forward/Bond Pricing.} \\
+    Under the risk-neutral measure $\mathbb{Q}$, the price $V(t, S)$ of a financial derivative on an asset $S_t$ paying continuous dividend yield $q$ with risk-free rate $r$ satisfies the Black-Scholes PDE. In the deterministic (zero-volatility $\sigma \to 0$) limit, or for deterministic-rate credit/bond structures and accrued-average Asian option auxiliary state variables (where $I_t = \int_0^t S_u\,du$ introduces the first-order transport term $S \frac{\partial V}{\partial I}$), the pricing equation reduces to the exact first-order linear PDE studied in Section 1.2:
+    \[
+    \frac{\partial V}{\partial t} + (r - q)S\frac{\partial V}{\partial S} - rV = 0
+    \]
+    Here, the characteristic curves $S(t) = S_0 e^{(r-q)t}$ are the deterministic forward price trajectories, and the $-rV$ term produces the exact exponential discounting factor $e^{-r(T-t)}$ seen in Problem 8.
+
+    \item \textbf{Algorithmic Trading \& Market Microstructure: Limit Order Book (LOB) Advection Models.} \\
+    In high-frequency trading, the density of limit orders $u(t, x)$ at distance $x$ from the mid-price evolves as the mid-price drifts at velocity $v(t)$ while orders are cancelled at rate $\gamma(x)$ and newly submitted at rate $\lambda(t, x)$. This is governed by the inhomogeneous variable-coefficient first-order linear PDE:
+    \[
+    \frac{\partial u}{\partial t} + v(t)\frac{\partial u}{\partial x} + \gamma(x)u = \lambda(t, x)
+    \]
+\end{enumerate}
+
+\subsection{Model Problem Setup: Continuous Normalizing Flows \& Neural Probability Transport}
+Let us formulate a rigorous mathematical framework for \textbf{Exact Likelihood Evaluation in Continuous Normalizing Flows (CNFs)} using the Method of Characteristics from Section 1.2.
+
+\begin{itemize}
+    \item \textbf{State Space and Probability Space:} Let $(\Omega, \mathcal{F}, \mathbb{P})$ be a probability space, and let the state space be $\mathcal{X} = \mathbb{R}^d$ over the compact time horizon $t \in [0, 1]$. Let $\mathbf{X}_0 \sim p_0(\mathbf{x}) = \mathcal{N}(\mathbf{0}, \mathbf{I}_d)$ be a $d$-dimensional latent random vector.
+    \item \textbf{Neural Characteristic Flow (ODE):} Let $\mathbf{v}_\theta : [0, 1] \times \mathbb{R}^d \to \mathbb{R}^d$ be a Lipschitz-continuous velocity vector field parameterized by neural network weights $\theta \in \Theta$. Each particle trajectory $\mathbf{x}(t) = \Phi_t(\mathbf{x}_0)$ is defined as the characteristic curve satisfying the initial value problem:
+    \[
+    \frac{d\mathbf{x}(t)}{dt} = \mathbf{v}_\theta(t, \mathbf{x}(t)), \quad \mathbf{x}(0) = \mathbf{x}_0
+    \]
+    \item \textbf{First-Order Linear PDE for Probability Density (Conservation of Probability Mass):} Let $p(t, \mathbf{x})$ denote the probability density function of $\mathbf{X}_t = \Phi_t(\mathbf{X}_0)$. By conservation of probability mass (the Liouville / Continuity Equation), $p(t, \mathbf{x})$ satisfies:
+    \[
+    \frac{\partial p}{\partial t} + \nabla_{\mathbf{x}} \cdot (p\,\mathbf{v}_\theta) = 0 \implies \frac{\partial p}{\partial t} + \mathbf{v}_\theta(t, \mathbf{x}) \cdot \nabla_{\mathbf{x}} p + \left(\nabla_{\mathbf{x}} \cdot \mathbf{v}_\theta(t, \mathbf{x})\right)p = 0
+    \]
+    Dividing by $p(t, \mathbf{x}) > 0$ and setting $u(t, \mathbf{x}) = \ln p(t, \mathbf{x})$ (the log-likelihood), we obtain the inhomogeneous first-order linear PDE:
+    \[
+    \frac{\partial u}{\partial t} + \sum_{i=1}^d v_{\theta, i}(t, \mathbf{x})\frac{\partial u}{\partial x_i} = -\nabla_{\mathbf{x}} \cdot \mathbf{v}_\theta(t, \mathbf{x}) \quad \text{with initial condition } u(0, \mathbf{x}) = \ln p_0(\mathbf{x})
+    \]
+    \item \textbf{Characteristic Reduction and Optimization Objective:} Along the characteristic curve $\mathbf{x}(t)$ where $\frac{d\mathbf{x}}{dt} = \mathbf{v}_\theta(t, \mathbf{x}(t))$, the total time derivative of $u(t, \mathbf{x}(t))$ is:
+    \[
+    \frac{d}{dt}u(t, \mathbf{x}(t)) = \frac{\partial u}{\partial t} + \mathbf{v}_\theta(t, \mathbf{x}(t)) \cdot \nabla_{\mathbf{x}} u = -\operatorname{Tr}\left(D_{\mathbf{x}}\mathbf{v}_\theta(t, \mathbf{x}(t))\right)
+    \]
+    Integrating along the characteristic curve from $t = 0$ to $t = 1$ (analogous to Problem 11), the exact terminal log-likelihood at $\mathbf{x}_1 = \mathbf{x}(1)$ is:
+    \[
+    \ln p_1(\mathbf{x}_1) = \ln p_0(\Phi_1^{-1}(\mathbf{x}_1)) - \int_0^1 \operatorname{Tr}\left(D_{\mathbf{x}}\mathbf{v}_\theta(t, \mathbf{x}(t))\right)dt
+    \]
+    To train the generative model via Maximum Likelihood Estimation (MLE) on an empirical dataset distribution $p_{\text{data}}(\mathbf{x}_1)$, we solve the optimization problem:
+    \[
+    \min_{\theta \in \Theta} \mathcal{L}(\theta) = \mathbb{E}_{\mathbf{x}_1 \sim p_{\text{data}}}\left[ -\ln p_0(\mathbf{x}(0)) + \int_0^1 \operatorname{Tr}\left(D_{\mathbf{x}}\mathbf{v}_\theta(t, \mathbf{x}(t))\right)dt \right]
+    \]
+    subject to the backward characteristic ODE $\frac{d\mathbf{x}(t)}{dt} = \mathbf{v}_\theta(t, \mathbf{x}(t))$ with terminal condition $\mathbf{x}(1) = \mathbf{x}_1$.
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 7: COMMON VARIATIONS AND UNTESTED CONCEPTS
+% ============================================================================
+\section{Common Variations and Untested Concepts}
+
+While the homework set thoroughly covers homogeneous variable-coefficient equations and inhomogeneous constant-coefficient equations, standard PDE curricula and exams frequently test four important variations that were \emph{not} explicitly included in Exercises 1--13:
+
+\subsection{Variation 1: Initial Data Specified on a General Curve $\Gamma$ (Non-Axis Cauchy Problem)}
+In all the homework problems (Problems 1, 6, 7, 10), the auxiliary condition was specified along a coordinate axis ($t = 0$, $x = 0$, or $y = 0$). In general, initial data can be prescribed along any smooth curve $\Gamma$ parameterized by $(x_0(s), y_0(s))$ as $u(x_0(s), y_0(s)) = h(s)$.
+
+\noindent\textbf{Worked Example:} Solve $2u_x + 3u_y = 0$ subject to $u(x, y) = x^2$ on the line $y = x$.
+\begin{itemize}
+    \item \textbf{Step 1:} The general solution of $2u_x + 3u_y = 0$ is $u(x, y) = f(3x - 2y)$.
+    \item \textbf{Step 2:} Apply the condition along the line $y = x$:
+    \[
+    u(x, x) = f(3x - 2x) = f(x) = x^2
+    \]
+    \item \textbf{Step 3:} Since $f(w) = w^2$, substituting $w = 3x - 2y$ gives the unique solution:
+    \[
+    u(x, y) = (3x - 2y)^2
+    \]
+\end{itemize}
+
+\subsection{Variation 2: The Characteristic Cauchy Problem (Non-Existence vs. Infinitely Many Solutions)}
+What happens if the curve $\Gamma$ along which the auxiliary data is given is \emph{itself} a characteristic curve? Then $\mathbf{V} = (a, b)$ is tangent to $\Gamma$, so information cannot propagate off the curve $\Gamma$ into the rest of the plane!
+\begin{itemize}
+    \item Since $u$ must be constant along every characteristic curve, if the boundary data on $\Gamma$ is \emph{not} constant (or does not match the PDE's growth along $\Gamma$), \textbf{no solution exists}.
+    \item If the boundary data on $\Gamma$ \emph{is} constant, then \textbf{infinitely many solutions exist} because $f(C)$ is only fixed at a single value of $C$.
+\end{itemize}
+
+\noindent\textbf{Worked Example:} Consider $2u_x + 3u_y = 0$ (whose general solution is $u(x, y) = f(3x - 2y)$) with data prescribed on the characteristic line $3x - 2y = 5$:
+\begin{itemize}
+    \item \textbf{Case A:} Suppose $u = x$ on $3x - 2y = 5$. Substituting into the general solution gives $f(5) = x$, which is impossible because $f(5)$ is a constant while $x$ varies along the line. Thus, \textbf{no solution exists}.
+    \item \textbf{Case B:} Suppose $u = 7$ on $3x - 2y = 5$. Then $f(5) = 7$. Any differentiable function $f(w)$ satisfying $f(5) = 7$ (for example, $u = 7$, $u = 7 + (3x - 2y - 5)$, or $u = 7 + (3x - 2y - 5)^2$) is a valid solution! Thus, \textbf{infinitely many solutions exist}.
+\end{itemize}
+
+\subsection{Variation 3: Variable-Coefficient Equations with Zeroth-Order or Inhomogeneous Terms}
+The homework only included $+cu$ or $f(x, y)$ when $a$ and $b$ were constants (Problems 8--13). What if $a(x, y)u_x + b(x, y)u_y + c(x, y)u = f(x, y)$ has variable coefficients? We use the \textbf{Full Method of Characteristics (Lagrange-Charpit System)}: along the characteristic curve $\frac{dy}{dx} = \frac{b(x,y)}{a(x,y)}$, the total derivative of $U(x) = u(x, y(x))$ is:
+\[
+\frac{dU}{dx} = u_x + \frac{b(x, y)}{a(x, y)}u_y = \frac{f(x, y) - c(x, y)U}{a(x, y)}
+\]
+which reduces the PDE to an ODE along the characteristic curves!
+
+\noindent\textbf{Worked Example:} Solve $xu_x + yu_y + 2u = 0$ for $x > 0$.
+\begin{itemize}
+    \item \textbf{Step 1:} Find the characteristic curves: $\frac{dy}{dx} = \frac{y}{x} \implies y = Cx \implies C = \frac{y}{x}$.
+    \item \textbf{Step 2:} Along a characteristic curve $y(x) = Cx$, let $U(x) = u(x, Cx)$. By the chain rule:
+    \[
+    x\frac{dU}{dx} = x(u_x + Cu_y) = xu_x + yu_y = -2U
+    \]
+    \item \textbf{Step 3:} Solve the ODE $x\frac{dU}{dx} = -2U$ (where $C$ is held fixed):
+    \[
+    \frac{dU}{U} = -\frac{2}{x}\,dx \implies \ln|U| = -2\ln x + \tilde{f}(C) \implies U(x) = \frac{1}{x^2}f(C)
+    \]
+    \item \textbf{Step 4:} Substitute $C = \frac{y}{x}$ to get the general solution:
+    \[
+    u(x, y) = \frac{1}{x^2}f\left(\frac{y}{x}\right)
+    \]
+\end{itemize}
+
+\subsection{Variation 4: First-Order Linear PDEs in Three or More Variables}
+For a PDE in three variables $a u_x + b u_y + c u_z = 0$, the characteristic curves in $\mathbb{R}^3$ are intersections of two characteristic surfaces, determined by the symmetric system $\frac{dx}{a} = \frac{dy}{b} = \frac{dz}{c}$. Consequently, the general solution depends on an arbitrary function of \textbf{two} independent characteristic coordinates: $u(x, y, z) = f(C_1, C_2)$.
+
+\noindent\textbf{Worked Example:} Find the general solution of $u_x + 2u_y - 3u_z = 0$.
+\begin{itemize}
+    \item \textbf{Step 1:} Set up the symmetric characteristic equations:
+    \[
+    \frac{dx}{1} = \frac{dy}{2} = \frac{dz}{-3}
+    \]
+    \item \textbf{Step 2:} Solve two independent pairs of equations:
+    \[
+    \frac{dx}{1} = \frac{dy}{2} \implies 2x - y = C_1, \quad \text{and} \quad \frac{dx}{1} = \frac{dz}{-3} \implies 3x + z = C_2
+    \]
+    \item \textbf{Step 3:} Write the general solution as an arbitrary function of two variables:
+    \[
+    u(x, y, z) = f(2x - y, 3x + z)
+    \]
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 8: ADVANCED DIAGNOSTIC TESTING: "FIND THE FLAW"
+% ============================================================================
+\section{Advanced Diagnostic Testing: ``Find the Flaw''}
+
+Below are five problems accompanied by plausible, step-by-step solutions. However, \textbf{each solution contains a single, subtle, yet critical flaw} leading to an incorrect final answer. Your task as the grader is to identify the error, explain why it is wrong in one sentence, and provide the corrected step and final answer. (Solutions to the diagnostic test are provided at the end of this section for self-grading.)
+
+\subsection*{Diagnostic Problem 1}
+\textbf{Problem:} Solve the PDE $5u_x + 2u_y = 0$ with the auxiliary condition $u(0, y) = \cos(y)$.
+
+\noindent\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item The PDE is $5u_x + 2u_y = 0$, which means the directional derivative of $u$ in the direction of $\mathbf{V} = (5, 2)$ is zero.
+    \item The characteristic lines are parallel to $\mathbf{V} = (5, 2)$, so their equation is $5x + 2y = C$.
+    \item Therefore, the general solution is $u(x, y) = f(5x + 2y)$.
+    \item Applying the boundary condition at $x = 0$: $u(0, y) = f(2y) = \cos(y)$.
+    \item Letting $w = 2y$, we get $f(w) = \cos(w/2)$, which yields the final answer $u(x, y) = \cos\left(\frac{5x + 2y}{2}\right)$.
+\end{enumerate}
+
+\subsection*{Diagnostic Problem 2}
+\textbf{Problem:} Solve the PDE $3u_t - 4u_x = 0$ with the initial condition $u(0, x) = e^{2x}$.
+
+\noindent\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item By the constant-coefficient formula, the characteristic lines satisfy $\frac{dx}{dt} = -\frac{4}{3}$, or $4t + 3x = C$.
+    \item The general solution is $u(t, x) = f(4t + 3x)$.
+    \item Setting $t = 0$ gives $u(0, x) = f(3x) = e^{2x}$.
+    \item Since $f(3x) = e^{2x}$, replacing $3x$ with $4t + 3x$ in the exponent gives $f(4t + 3x) = e^{2(4t + 3x)}$.
+    \item Thus, the final answer is $u(t, x) = e^{8t + 6x}$.
+\end{enumerate}
+
+\subsection*{Diagnostic Problem 3}
+\textbf{Problem:} Solve the variable-coefficient PDE $x^2 u_x + y u_y = 0$ for $x > 0, y > 0$.
+
+\noindent\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item The characteristic curves have tangent vectors $(x^2, y)$.
+    \item Setting up the characteristic ODE gives $\frac{dy}{dx} = \frac{x^2}{y}$.
+    \item Separating variables gives $y\,dy = x^2\,dx$.
+    \item Integrating both sides gives $\frac{1}{2}y^2 = \frac{1}{3}x^3 + C_0$, or $3y^2 - 2x^3 = C$.
+    \item Thus, the general solution is $u(x, y) = f(3y^2 - 2x^3)$.
+\end{enumerate}
+
+\subsection*{Diagnostic Problem 4}
+\textbf{Problem:} Find the general solution of $u_x + 3u_y + 2u = 0$.
+
+\noindent\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item We use the orthogonal coordinate transformation $x' = x + 3y$ and $y' = 3x - y$.
+    \item By the chain rule, $u_x + 3u_y = (1^2 + 3^2)u_{x'} = 10u_{x'}$.
+    \item The PDE transforms into $10u_{x'} + 2u = 0$, or $\frac{\partial u}{\partial x'} = -\frac{1}{5}u$.
+    \item Integrating this first-order linear differential equation with respect to $x'$ gives $u(x', y') = C e^{-\frac{1}{5}x'}$, where $C$ is an arbitrary constant.
+    \item Substituting back $x' = x + 3y$ yields the general solution $u(x, y) = C e^{-\frac{1}{5}(x + 3y)}$.
+\end{enumerate}
+
+\subsection*{Diagnostic Problem 5}
+\textbf{Problem:} Solve the PDE $u_x + 2xy u_y = 0$ with $u(0, y) = \sin(y)$ and state the region of the $xy$-plane where the solution is uniquely determined.
+
+\noindent\textbf{Flawed Solution:}
+\begin{enumerate}
+    \item The characteristic ODE is $\frac{dy}{dx} = 2xy$.
+    \item Separating variables gives $\frac{dy}{y} = 2x\,dx \implies \ln|y| = x^2 + C_0 \implies y = Ce^{x^2}$, so $C = ye^{-x^2}$.
+    \item The general solution is $u(x, y) = f(ye^{-x^2})$.
+    \item Applying $u(0, y) = \sin(y)$ gives $f(y) = \sin(y)$, so $u(x, y) = \sin(ye^{-x^2})$.
+    \item However, since $e^{-x^2} > 0$, the solution is only uniquely determined in the upper half-plane $y > 0$.
+\end{enumerate}
+
+\hrulefill
+
+\subsection*{Grader's Answer Key for ``Find the Flaw''}
+
+\begin{enumerate}
+    \item \textbf{Diagnostic Problem 1 Grading:}
+    \begin{itemize}
+        \item \textbf{The Flaw:} Located in \textbf{Step 2}.
+        \item \textbf{One-Sentence Explanation:} A line parallel to $\mathbf{V} = (5, 2)$ has orthogonal normal vector $(2, -5)$, so its equation is $2x - 5y = C$, not $5x + 2y = C$ (which is orthogonal to $\mathbf{V}$).
+        \item \textbf{Correction \& Final Answer:} The general solution is $u(x, y) = f(2x - 5y)$. At $x = 0$, $u(0, y) = f(-5y) = \cos(y) \implies f(w) = \cos(-w/5) = \cos(w/5)$. Thus:
+        \[
+        \boxed{u(x, y) = \cos\left(\frac{2x - 5y}{5}\right)}
+        \]
+    \end{itemize}
+
+    \item \textbf{Diagnostic Problem 2 Grading:}
+    \begin{itemize}
+        \item \textbf{The Flaw:} Located in \textbf{Step 4}.
+        \item \textbf{One-Sentence Explanation:} The solution substituted $4t + 3x$ in place of $x$ instead of in place of $3x$ (failing to solve $w = 3x \implies x = w/3$).
+        \item \textbf{Correction \& Final Answer:} From $f(3x) = e^{2x}$, let $w = 3x \implies x = \frac{w}{3}$, so $f(w) = e^{\frac{2}{3}w}$. Substituting $w = 4t + 3x$ yields:
+        \[
+        \boxed{u(t, x) = e^{\frac{2}{3}(4t + 3x)} = e^{\frac{8}{3}t + 2x}}
+        \]
+    \end{itemize}
+
+    \item \textbf{Diagnostic Problem 3 Grading:}
+    \begin{itemize}
+        \item \textbf{The Flaw:} Located in \textbf{Step 2}.
+        \item \textbf{One-Sentence Explanation:} The slope of a curve with tangent vector $(a(x,y), b(x,y)) = (x^2, y)$ is $\frac{dy}{dx} = \frac{b}{a} = \frac{y}{x^2}$, not $\frac{a}{b} = \frac{x^2}{y}$.
+        \item \textbf{Correction \& Final Answer:} Solving $\frac{dy}{dx} = \frac{y}{x^2}$ by separating variables gives $\frac{dy}{y} = x^{-2}\,dx \implies \ln y = -\frac{1}{x} + C_0 \implies y = Ce^{-1/x} \implies C = ye^{1/x}$. Thus:
+        \[
+        \boxed{u(x, y) = f\left(ye^{1/x}\right)}
+        \]
+    \end{itemize}
+
+    \item \textbf{Diagnostic Problem 4 Grading:}
+    \begin{itemize}
+        \item \textbf{The Flaw:} Located in \textbf{Step 4}.
+        \item \textbf{One-Sentence Explanation:} Because $\frac{\partial u}{\partial x'} = -\frac{1}{5}u$ is a partial differential equation where $y'$ is held fixed, integrating with respect to $x'$ produces an arbitrary function $f(y') = f(3x - y)$, not a scalar constant $C$.
+        \item \textbf{Correction \& Final Answer:} Replacing $C$ with $f(y') = f(3x - y)$ gives:
+        \[
+        \boxed{u(x, y) = f(3x - y)e^{-\frac{1}{5}(x + 3y)}}
+        \]
+    \end{itemize}
+
+    \item \textbf{Diagnostic Problem 5 Grading:}
+    \begin{itemize}
+        \item \textbf{The Flaw:} Located in \textbf{Step 5}.
+        \item \textbf{One-Sentence Explanation:} In $y = Ce^{x^2}$, the constant $C$ can be positive, negative, or zero, so every characteristic curve $y = Ce^{x^2}$ intersects the $y$-axis at $(0, C)$ for all real $y \in (-\infty, \infty)$, meaning the solution is uniquely determined on the \emph{entire} $xy$-plane $\mathbb{R}^2$.
+        \item \textbf{Correction \& Final Answer:} Since $f(y) = \sin(y)$ determines $f(w)$ for all $w \in \mathbb{R}$ and $ye^{-x^2} \in \mathbb{R}$ for all $(x, y) \in \mathbb{R}^2$:
+        \[
+        \boxed{u(x, y) = \sin\left(ye^{-x^2}\right), \quad \text{uniquely determined on the entire } xy\text{-plane } \mathbb{R}^2}
+        \]
+    \end{itemize}
+\end{enumerate}
+
+\end{document}

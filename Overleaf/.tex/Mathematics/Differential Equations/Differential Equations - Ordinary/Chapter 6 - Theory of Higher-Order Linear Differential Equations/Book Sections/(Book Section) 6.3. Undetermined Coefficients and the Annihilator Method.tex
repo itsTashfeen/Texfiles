@@ -1,0 +1,562 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, geometry, xcolor, tcolorbox}
+\geometry{letterpaper, margin=1in}
+
+\title{\textbf{Homework Chapter 6: Undetermined Coefficients and the Annihilator Method}}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The study of linear differential equations often culminates in solving nonhomogeneous equations of the form:
+\[ L[y] = a_n y^{(n)} + a_{n-1} y^{(n-1)} + \dots + a_1 y' + a_0 y = f(x) \]
+where $L$ is a linear differential operator with constant coefficients, and $f(x)$ is a non-zero forcing function. The general solution to this equation is always of the form $y(x) = y_c(x) + y_p(x)$, where $y_c(x)$ is the complementary solution (the general solution to the homogeneous equation $L[y] = 0$) and $y_p(x)$ is any particular solution to the nonhomogeneous equation.
+
+The \textbf{Method of Undetermined Coefficients} is a technique for finding $y_p(x)$ by guessing its form based on the form of $f(x)$. However, guessing can be ad-hoc. The \textbf{Annihilator Method} provides a rigorous, operator-based justification for these guesses. 
+
+An \textbf{annihilator} is a linear differential operator $A$ such that when applied to a function $f(x)$, it yields zero: $A[f](x) = 0$. By applying the annihilator $A$ to both sides of our original differential equation $L[y] = f(x)$, we obtain a new, higher-order \textit{homogeneous} differential equation:
+\[ A[L[y]] = A[f(x)] \implies A[L[y]] = 0 \]
+Because $A$ and $L$ are constant-coefficient operators, they commute. We can solve this new homogeneous equation using standard characteristic equation techniques. The resulting general solution will contain the terms of $y_c(x)$ plus additional terms. These additional terms dictate the exact mathematical form that $y_p(x)$ must take.
+
+\subsection{Intuition and Derivation}
+Why does the annihilator method work? Imagine you have the equation $y'' - y = e^{2x}$. We know the operator $D - 2$ annihilates $e^{2x}$ because the derivative of $e^{2x}$ is $2e^{2x}$. If we apply $(D - 2)$ to both sides, we get $(D - 2)(D^2 - 1)y = 0$. 
+This is a third-order homogeneous equation with roots $r = 1, -1, 2$. The solution is $y = c_1 e^x + c_2 e^{-x} + c_3 e^{2x}$. 
+We already know that $c_1 e^x + c_2 e^{-x}$ is the complementary solution $y_c$ to the original $y'' - y = 0$. Therefore, the remaining piece, $c_3 e^{2x}$, must be the form of our particular solution $y_p$. We then substitute $y_p = A e^{2x}$ back into the original equation to "determine the undetermined coefficient" $A$.
+
+\subsection{Historical Context and Motivation}
+In the 18th and 19th centuries, mathematicians like Leonhard Euler and Augustin-Louis Cauchy were modeling physical systems such as driven harmonic oscillators (e.g., a pendulum subjected to an external periodic force). They needed a systematic way to find particular solutions to these nonhomogeneous equations. Oliver Heaviside later popularized the "operator calculus" (using $D$ for the derivative), which allowed differential equations to be manipulated algebraically. The annihilator method is a direct triumph of this operator perspective, transforming calculus problems into pure polynomial algebra.
+
+\subsection{Key Formulas and Annihilator Tables}
+Let $D = \frac{d}{dx}$. The following operators annihilate specific types of functions:
+\begin{itemize}
+    \item \textbf{Polynomials:} $D^m$ annihilates $1, x, x^2, \dots, x^{m-1}$.
+    \item \textbf{Exponentials:} $(D - \alpha)^m$ annihilates $e^{\alpha x}, x e^{\alpha x}, \dots, x^{m-1} e^{\alpha x}$.
+    \item \textbf{Sines and Cosines:} $(D^2 + \beta^2)^m$ annihilates $\cos(\beta x), \sin(\beta x), x \cos(\beta x), \dots, x^{m-1} \sin(\beta x)$.
+    \item \textbf{Exponential-Trig Products:} $[(D - \alpha)^2 + \beta^2]^m$ annihilates $x^k e^{\alpha x} \cos(\beta x)$ and $x^k e^{\alpha x} \sin(\beta x)$ for $k = 0, 1, \dots, m-1$.
+\end{itemize}
+
+\subsection{Prerequisites}
+To succeed in this topic, you must be proficient in:
+1. Factoring polynomials (including using the Rational Root Theorem and synthetic division).
+2. Solving homogeneous linear differential equations with constant coefficients (finding $y_c$).
+3. Solving systems of linear algebraic equations (to find the undetermined coefficients).
+4. Basic differentiation rules (Product Rule, Chain Rule).
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+\textit{Note: Per the strategic problem selection mandate for comprehensive book sections, the following solutions represent a curated selection that covers at least two of every distinct problem archetype found in the text. This ensures complete conceptual mastery without redundant arithmetic repetition.}
+
+\subsection{Type 1: Determining the Form of a Particular Solution}
+
+\textbf{Problem 1:} Use the method of undetermined coefficients to determine the form of a particular solution for $y''' - 2y'' - 5y' + 6y = e^x + x^2$.
+
+\textbf{Solution:}
+First, we find the complementary solution $y_c$ by solving the homogeneous equation $y''' - 2y'' - 5y' + 6y = 0$.
+The characteristic equation is:
+\[ r^3 - 2r^2 - 5r + 6 = 0 \]
+By inspection, $r = 1$ is a root ($1 - 2 - 5 + 6 = 0$). We factor out $(r - 1)$ using polynomial division:
+\[ r^3 - 2r^2 - 5r + 6 = (r - 1)(r^2 - r - 6) = (r - 1)(r - 3)(r + 2) = 0 \]
+The roots are $r = 1, 3, -2$. Thus, the complementary solution is:
+\[ y_c(x) = c_1 e^x + c_2 e^{3x} + c_3 e^{-2x} \]
+The forcing function is $f(x) = e^x + x^2$. We split this into two parts: $f_1(x) = e^x$ and $f_2(x) = x^2$.
+For $f_1(x) = e^x$, the standard guess is $A e^x$. However, $e^x$ is already a term in $y_c(x)$ (it corresponds to the root $r=1$ of multiplicity 1). Therefore, we must multiply our guess by $x^1$. The corrected guess is $y_{p1} = A x e^x$.
+For $f_2(x) = x^2$, the standard guess is a general second-degree polynomial: $y_{p2} = B x^2 + C x + D$. None of these terms appear in $y_c(x)$, so no modification is needed.
+The final form of the particular solution is the sum of these guesses:
+\[ y_p(x) = A x e^x + B x^2 + C x + D \]
+
+\vspace{0.5cm}
+\textbf{Problem 4:} Determine the form of a particular solution for $y''' + y'' - 2y = x e^x + 1$.
+
+\textbf{Solution:}
+The characteristic equation for the homogeneous part is:
+\[ r^3 + r^2 - 2 = 0 \]
+By inspection, $r = 1$ is a root ($1 + 1 - 2 = 0$). Factoring out $(r - 1)$:
+\[ r^3 + r^2 - 2 = (r - 1)(r^2 + 2r + 2) = 0 \]
+The roots of the quadratic factor are found via the quadratic formula: $r = \frac{-2 \pm \sqrt{4 - 8}}{2} = -1 \pm i$.
+The complementary solution is:
+\[ y_c(x) = c_1 e^x + e^{-x}(c_2 \cos x + c_3 \sin x) \]
+The forcing function is $f(x) = x e^x + 1$. We split this into $f_1(x) = x e^x$ and $f_2(x) = 1$.
+For $f_1(x) = x e^x$, the standard guess is $(A x + B)e^x = A x e^x + B e^x$. Notice that the term $B e^x$ overlaps with $c_1 e^x$ in $y_c(x)$. Because the root $r=1$ has multiplicity 1, we multiply the entire guess by $x$:
+\[ y_{p1} = x(A x + B)e^x = (A x^2 + B x)e^x \]
+For $f_2(x) = 1$ (a polynomial of degree 0), the standard guess is a constant $C$. This does not overlap with any term in $y_c(x)$.
+The final form of the particular solution is:
+\[ y_p(x) = (A x^2 + B x)e^x + C \]
+
+\subsection{Type 2: Finding the General Solution}
+
+\textbf{Problem 5:} Find a general solution to $y''' - 2y'' - 5y' + 6y = e^x + x^2$.
+
+\textbf{Solution:}
+From Problem 1, we know $y_c(x) = c_1 e^x + c_2 e^{3x} + c_3 e^{-2x}$ and the form of the particular solution is:
+\[ y_p(x) = A x e^x + B x^2 + C x + D \]
+We must find the derivatives of $y_p(x)$ and substitute them into the differential equation.
+\[ y_p'(x) = A(x + 1)e^x + 2Bx + C \]
+\[ y_p''(x) = A(x + 2)e^x + 2B \]
+\[ y_p'''(x) = A(x + 3)e^x \]
+Substitute these into $y''' - 2y'' - 5y' + 6y = e^x + x^2$:
+\[ [A(x + 3)e^x] - 2[A(x + 2)e^x + 2B] - 5[A(x + 1)e^x + 2Bx + C] + 6[A x e^x + B x^2 + C x + D] = e^x + x^2 \]
+Group the terms by their function type.
+For the $e^x$ terms:
+\[ A(x + 3) - 2A(x + 2) - 5A(x + 1) + 6Ax = e^x \]
+\[ A(x - 2x - 5x + 6x) + A(3 - 4 - 5) = 1 \implies A(0) - 6A = 1 \implies A = -\frac{1}{6} \]
+For the polynomial terms, group by powers of $x$:
+$x^2$ terms: $6B = 1 \implies B = \frac{1}{6}$
+$x^1$ terms: $-10B + 6C = 0 \implies 6C = 10(\frac{1}{6}) = \frac{5}{3} \implies C = \frac{5}{18}$
+$x^0$ (constant) terms: $-4B - 5C + 6D = 0 \implies 6D = 4(\frac{1}{6}) + 5(\frac{5}{18}) = \frac{12}{18} + \frac{25}{18} = \frac{37}{18} \implies D = \frac{37}{108}$
+Therefore, the particular solution is:
+\[ y_p(x) = -\frac{1}{6} x e^x + \frac{1}{6} x^2 + \frac{5}{18} x + \frac{37}{108} \]
+The general solution is $y(x) = y_c(x) + y_p(x)$:
+\[ y(x) = c_1 e^x + c_2 e^{3x} + c_3 e^{-2x} - \frac{1}{6} x e^x + \frac{1}{6} x^2 + \frac{5}{18} x + \frac{37}{108} \]
+
+\vspace{0.5cm}
+\textbf{Problem 7:} Find a general solution to $y''' + 3y'' - 4y = e^{-2x}$.
+
+\textbf{Solution:}
+First, solve the homogeneous equation $y''' + 3y'' - 4y = 0$.
+Characteristic equation: $r^3 + 3r^2 - 4 = 0$.
+By inspection, $r = 1$ is a root ($1 + 3 - 4 = 0$). Factoring out $(r - 1)$:
+\[ r^3 + 3r^2 - 4 = (r - 1)(r^2 + 4r + 4) = (r - 1)(r + 2)^2 = 0 \]
+The roots are $r = 1, -2, -2$. The complementary solution is:
+\[ y_c(x) = c_1 e^x + c_2 e^{-2x} + c_3 x e^{-2x} \]
+The forcing function is $f(x) = e^{-2x}$. The standard guess is $A e^{-2x}$. However, both $e^{-2x}$ and $x e^{-2x}$ are present in $y_c(x)$ because $r = -2$ is a root of multiplicity 2. Therefore, we must multiply our guess by $x^2$:
+\[ y_p(x) = A x^2 e^{-2x} \]
+Calculate the derivatives:
+\[ y_p'(x) = A(2x - 2x^2)e^{-2x} \]
+\[ y_p''(x) = A(2 - 4x - 4x + 4x^2)e^{-2x} = A(4x^2 - 8x + 2)e^{-2x} \]
+\[ y_p'''(x) = A(8x - 8 - 2(4x^2 - 8x + 2))e^{-2x} = A(-8x^2 + 24x - 12)e^{-2x} \]
+Substitute into $y''' + 3y'' - 4y = e^{-2x}$:
+\[ A e^{-2x} [ (-8x^2 + 24x - 12) + 3(4x^2 - 8x + 2) - 4(x^2) ] = e^{-2x} \]
+Simplify the expression inside the brackets:
+\[ -8x^2 + 24x - 12 + 12x^2 - 24x + 6 - 4x^2 = (-8 + 12 - 4)x^2 + (24 - 24)x + (-12 + 6) = -6 \]
+So we have:
+\[ -6A e^{-2x} = e^{-2x} \implies -6A = 1 \implies A = -\frac{1}{6} \]
+The general solution is:
+\[ y(x) = c_1 e^x + c_2 e^{-2x} + c_3 x e^{-2x} - \frac{1}{6} x^2 e^{-2x} \]
+
+\subsection{Type 3: Finding Differential Annihilators}
+
+\textbf{Problem 11:} Find a differential operator that annihilates $f(x) = x^4 - x^2 + 11$.
+
+\textbf{Solution:}
+The function is a polynomial of degree 4. The $m$-th derivative of a polynomial of degree $m-1$ is zero. Therefore, to annihilate a polynomial of degree 4, we need the 5th derivative operator.
+The annihilator is $D^5$.
+
+\vspace{0.5cm}
+\textbf{Problem 13:} Find a differential operator that annihilates $f(x) = e^{-7x}$.
+
+\textbf{Solution:}
+For an exponential function $e^{\alpha x}$, the annihilator is $(D - \alpha)$. Here, $\alpha = -7$.
+The annihilator is $D - (-7) = D + 7$.
+
+\vspace{0.5cm}
+\textbf{Problem 17:} Find a differential operator that annihilates $f(x) = x^2 e^{-x} \sin(2x)$.
+
+\textbf{Solution:}
+This function is of the form $x^k e^{\alpha x} \sin(\beta x)$, where $k=2$, $\alpha = -1$, and $\beta = 2$.
+The base annihilator for $e^{\alpha x} \sin(\beta x)$ is $(D - \alpha)^2 + \beta^2$.
+Substituting our values: $(D - (-1))^2 + 2^2 = (D + 1)^2 + 4 = D^2 + 2D + 5$.
+Because the function is multiplied by $x^2$, we must raise the base operator to the power of $k+1 = 3$.
+The annihilator is $[(D + 1)^2 + 4]^3$ or $(D^2 + 2D + 5)^3$.
+
+\vspace{0.5cm}
+\textbf{Problem 19:} Find a differential operator that annihilates $f(x) = x e^{-2x} + x e^{-5x} \sin(3x)$.
+
+\textbf{Solution:}
+We find the annihilator for each term separately, and then multiply them together to annihilate the sum.
+Term 1: $x e^{-2x}$. Here $\alpha = -2, k = 1$. The annihilator is $(D + 2)^2$.
+Term 2: $x e^{-5x} \sin(3x)$. Here $\alpha = -5, \beta = 3, k = 1$. The base operator is $(D + 5)^2 + 9$. Raised to the power $k+1 = 2$, the annihilator is $[(D + 5)^2 + 9]^2$.
+The annihilator for the entire function is the composition (product) of the individual annihilators:
+\[ (D + 2)^2 [(D + 5)^2 + 9]^2 \]
+
+\subsection{Type 4: Using the Annihilator Method to Determine the Form of $y_p$}
+
+\textbf{Problem 21:} Use the annihilator method to determine the form of a particular solution for $u'' - 5u' + 6u = \cos(2x) + 1$.
+
+\textbf{Solution:}
+Write the differential equation in operator form: $L[u] = (D^2 - 5D + 6)u = (D - 2)(D - 3)u = \cos(2x) + 1$.
+The forcing function is $f(x) = \cos(2x) + 1$.
+The annihilator for $\cos(2x)$ is $D^2 + 4$. The annihilator for $1$ is $D$.
+The annihilator for $f(x)$ is $A = D(D^2 + 4)$.
+Apply $A$ to both sides of the differential equation:
+\[ D(D^2 + 4)(D - 2)(D - 3)u = 0 \]
+This is a homogeneous equation with roots $r = 0, \pm 2i, 2, 3$.
+The general solution to this new equation is:
+\[ u(x) = c_1 e^{2x} + c_2 e^{3x} + c_3 + c_4 \cos(2x) + c_5 \sin(2x) \]
+The terms $c_1 e^{2x} + c_2 e^{3x}$ constitute the complementary solution $u_c(x)$ of the original equation. The remaining terms represent the form of the particular solution:
+\[ u_p(x) = A + B \cos(2x) + C \sin(2x) \]
+(where we have replaced the arbitrary constants with $A, B, C$ as is standard for undetermined coefficients).
+
+\vspace{0.5cm}
+\textbf{Problem 25:} Use the annihilator method to determine the form of a particular solution for $y'' - 6y' + 9y = \sin(2x) + x$.
+
+\textbf{Solution:}
+Operator form: $L[y] = (D^2 - 6D + 9)y = (D - 3)^2 y = \sin(2x) + x$.
+The forcing function is $f(x) = \sin(2x) + x$.
+The annihilator for $\sin(2x)$ is $D^2 + 4$. The annihilator for $x$ is $D^2$.
+The annihilator for $f(x)$ is $A = D^2(D^2 + 4)$.
+Apply $A$ to both sides:
+\[ D^2(D^2 + 4)(D - 3)^2 y = 0 \]
+The roots of this characteristic equation are $r = 0$ (multiplicity 2), $r = \pm 2i$, and $r = 3$ (multiplicity 2).
+The general solution to the annihilated equation is:
+\[ y(x) = c_1 e^{3x} + c_2 x e^{3x} + c_3 + c_4 x + c_5 \cos(2x) + c_6 \sin(2x) \]
+The terms $c_1 e^{3x} + c_2 x e^{3x}$ form $y_c(x)$. The remaining terms give the form of $y_p(x)$:
+\[ y_p(x) = A + B x + C \cos(2x) + D \sin(2x) \]
+
+\subsection{Type 5: Initial Value Problems}
+
+\textbf{Problem 31:} Solve the initial value problem $y''' + 2y'' - 9y' - 18y = -18x^2 - 18x + 22$; $y(0) = -2, y'(0) = -8, y''(0) = -12$.
+
+\textbf{Solution:}
+\textbf{Step 1: Find $y_c(x)$.}
+Characteristic equation: $r^3 + 2r^2 - 9r - 18 = 0$.
+Factor by grouping: $r^2(r + 2) - 9(r + 2) = (r^2 - 9)(r + 2) = (r - 3)(r + 3)(r + 2) = 0$.
+Roots are $3, -3, -2$.
+\[ y_c(x) = c_1 e^{3x} + c_2 e^{-3x} + c_3 e^{-2x} \]
+
+\textbf{Step 2: Find $y_p(x)$.}
+$f(x) = -18x^2 - 18x + 22$. The guess is $y_p(x) = A x^2 + B x + C$.
+$y_p' = 2Ax + B$, $y_p'' = 2A$, $y_p''' = 0$.
+Substitute into the ODE:
+\[ 0 + 2(2A) - 9(2Ax + B) - 18(A x^2 + B x + C) = -18x^2 - 18x + 22 \]
+\[ -18A x^2 + (-18A - 18B)x + (4A - 9B - 18C) = -18x^2 - 18x + 22 \]
+Equate coefficients:
+$x^2$: $-18A = -18 \implies A = 1$.
+$x^1$: $-18(1) - 18B = -18 \implies -18B = 0 \implies B = 0$.
+$x^0$: $4(1) - 9(0) - 18C = 22 \implies 4 - 18C = 22 \implies -18C = 18 \implies C = -1$.
+\[ y_p(x) = x^2 - 1 \]
+General solution: $y(x) = c_1 e^{3x} + c_2 e^{-3x} + c_3 e^{-2x} + x^2 - 1$.
+
+\textbf{Step 3: Apply Initial Conditions.}
+$y(0) = c_1 + c_2 + c_3 - 1 = -2 \implies c_1 + c_2 + c_3 = -1$
+$y'(x) = 3c_1 e^{3x} - 3c_2 e^{-3x} - 2c_3 e^{-2x} + 2x$
+$y'(0) = 3c_1 - 3c_2 - 2c_3 = -8$
+$y''(x) = 9c_1 e^{3x} + 9c_2 e^{-3x} + 4c_3 e^{-2x} + 2$
+$y''(0) = 9c_1 + 9c_2 + 4c_3 + 2 = -12 \implies 9c_1 + 9c_2 + 4c_3 = -14$
+
+We have a system of 3 equations:
+1) $c_1 + c_2 + c_3 = -1$
+2) $3c_1 - 3c_2 - 2c_3 = -8$
+3) $9c_1 + 9c_2 + 4c_3 = -14$
+
+From (1), $c_3 = -1 - (c_1 + c_2)$. Substitute into (3):
+$9(c_1 + c_2) + 4(-1 - (c_1 + c_2)) = -14 \implies 5(c_1 + c_2) - 4 = -14 \implies 5(c_1 + c_2) = -10 \implies c_1 + c_2 = -2$.
+Since $c_1 + c_2 = -2$, we find $c_3 = -1 - (-2) = 1$.
+Substitute $c_3 = 1$ into (2):
+$3(c_1 - c_2) - 2(1) = -8 \implies 3(c_1 - c_2) = -6 \implies c_1 - c_2 = -2$.
+Now we have:
+$c_1 + c_2 = -2$
+$c_1 - c_2 = -2$
+Adding them gives $2c_1 = -4 \implies c_1 = -2$.
+Subtracting them gives $2c_2 = 0 \implies c_2 = 0$.
+The final solution is:
+\[ y(x) = -2e^{3x} + e^{-2x} + x^2 - 1 \]
+
+\vspace{0.5cm}
+\textbf{Problem 32:} Solve $y''' - 2y'' + 5y' = -24 e^{3x}$; $y(0) = 4, y'(0) = -1, y''(0) = -5$.
+
+\textbf{Solution:}
+\textbf{Step 1: Find $y_c(x)$.}
+$r^3 - 2r^2 + 5r = r(r^2 - 2r + 5) = 0$.
+Roots are $r = 0$ and $r = \frac{2 \pm \sqrt{4 - 20}}{2} = 1 \pm 2i$.
+\[ y_c(x) = c_1 + e^x(c_2 \cos(2x) + c_3 \sin(2x)) \]
+
+\textbf{Step 2: Find $y_p(x)$.}
+$f(x) = -24 e^{3x}$. Guess $y_p = A e^{3x}$.
+$y_p' = 3A e^{3x}$, $y_p'' = 9A e^{3x}$, $y_p''' = 27A e^{3x}$.
+Substitute: $27A e^{3x} - 2(9A e^{3x}) + 5(3A e^{3x}) = -24 e^{3x}$.
+$(27 - 18 + 15)A = -24 \implies 24A = -24 \implies A = -1$.
+\[ y_p(x) = -e^{3x} \]
+General solution: $y(x) = c_1 + e^x(c_2 \cos(2x) + c_3 \sin(2x)) - e^{3x}$.
+
+\textbf{Step 3: Apply Initial Conditions.}
+$y(0) = c_1 + c_2 - 1 = 4 \implies c_1 + c_2 = 5$.
+$y'(x) = e^x(c_2 \cos(2x) + c_3 \sin(2x)) + e^x(-2c_2 \sin(2x) + 2c_3 \cos(2x)) - 3e^{3x}$
+$y'(x) = e^x [ (c_2 + 2c_3)\cos(2x) + (c_3 - 2c_2)\sin(2x) ] - 3e^{3x}$
+$y'(0) = (c_2 + 2c_3) - 3 = -1 \implies c_2 + 2c_3 = 2$.
+$y''(x) = e^x [ (c_2 + 2c_3)\cos(2x) + (c_3 - 2c_2)\sin(2x) ] + e^x [ -2(c_2 + 2c_3)\sin(2x) + 2(c_3 - 2c_2)\cos(2x) ] - 9e^{3x}$
+$y''(0) = (c_2 + 2c_3) + 2(c_3 - 2c_2) - 9 = -5 \implies c_2 + 2c_3 + 2c_3 - 4c_2 = 4 \implies -3c_2 + 4c_3 = 4$.
+
+System for $c_2, c_3$:
+1) $c_2 + 2c_3 = 2 \implies 2c_2 + 4c_3 = 4$
+2) $-3c_2 + 4c_3 = 4$
+Subtract (2) from (1): $5c_2 = 0 \implies c_2 = 0$.
+Substitute into (1): $0 + 2c_3 = 2 \implies c_3 = 1$.
+From $c_1 + c_2 = 5$, we get $c_1 = 5$.
+The final solution is:
+\[ y(x) = 5 + e^x \sin(2x) - e^{3x} \]
+
+\subsection{Type 6: Proofs and Derivations using the Annihilator Method}
+
+\textbf{Problem 34:} Use the annihilator method to show that if $a_0 \neq 0$ in equation (4) and $f(x) = B_m x^m + B_{m-1} x^{m-1} + \dots + B_0$, then equation (4) has a particular solution of the form $y_p(x) = A_m x^m + \dots + A_0$.
+
+\textbf{Solution:}
+Equation (4) is $L[y] = a_n y^{(n)} + \dots + a_1 y' + a_0 y = f(x)$.
+The forcing function $f(x)$ is a polynomial of degree $m$. The annihilator for any polynomial of degree $m$ is $D^{m+1}$.
+Applying $D^{m+1}$ to both sides of the differential equation yields:
+\[ D^{m+1} (a_n D^n + \dots + a_1 D + a_0) y = 0 \]
+The characteristic equation for this new homogeneous differential equation is:
+\[ r^{m+1} (a_n r^n + \dots + a_1 r + a_0) = 0 \]
+The roots of this equation are $r = 0$ (with multiplicity $m+1$) and the roots of the original characteristic polynomial $P(r) = a_n r^n + \dots + a_0 = 0$.
+We are given that $a_0 \neq 0$. This implies that $P(0) = a_0 \neq 0$, meaning $r = 0$ is \textit{not} a root of the original homogeneous equation.
+Therefore, the general solution to the annihilated equation is:
+\[ y(x) = y_c(x) + c_1 + c_2 x + c_3 x^2 + \dots + c_{m+1} x^m \]
+where $y_c(x)$ is the complementary solution corresponding to the roots of $P(r)$.
+The remaining terms represent the form of the particular solution. Relabeling the constants $c_1, \dots, c_{m+1}$ as $A_0, \dots, A_m$, we get:
+\[ y_p(x) = A_m x^m + A_{m-1} x^{m-1} + \dots + A_1 x + A_0 \]
+This completes the proof.
+
+\vspace{0.5cm}
+\textbf{Problem 36:} Use the annihilator method to show that if $f(x) = B e^{\alpha x}$, then equation (4) has a particular solution of the form $y_p(x) = x^s B e^{\alpha x}$, where $s$ is chosen to be the smallest nonnegative integer such that $x^s e^{\alpha x}$ is not a solution to the corresponding homogeneous equation.
+
+\textbf{Solution:}
+The forcing function is $f(x) = B e^{\alpha x}$. The annihilator for this function is $(D - \alpha)$.
+Applying this to the differential equation $L[y] = f(x)$ gives:
+\[ (D - \alpha) L[y] = 0 \]
+The characteristic equation is $(r - \alpha) P(r) = 0$, where $P(r)$ is the characteristic polynomial of $L$.
+Suppose $r = \alpha$ is a root of $P(r)$ with multiplicity $s$ (if it is not a root, $s = 0$).
+Then in the new characteristic equation $(r - \alpha) P(r) = 0$, the root $r = \alpha$ has multiplicity $s + 1$.
+The general solution to the annihilated equation will contain all the terms of $y_c(x)$ (which includes $c_1 e^{\alpha x}, c_2 x e^{\alpha x}, \dots, c_s x^{s-1} e^{\alpha x}$) plus one additional term generated by the increased multiplicity of the root $\alpha$.
+This additional term is $C x^s e^{\alpha x}$.
+Therefore, the form of the particular solution is $y_p(x) = A x^s e^{\alpha x}$. This matches the stated theorem, completing the proof.
+
+\subsection{Type 7: Systems of Differential Equations (Elimination Method)}
+
+\textbf{Problem 38:} Use the elimination method to find a general solution to the system:
+\[ x - \frac{d^2 y}{dt^2} = t + 1 \]
+\[ \frac{dx}{dt} + \frac{dy}{dt} - 2y = e^t \]
+
+\textbf{Solution:}
+Write the system in operator notation ($D = \frac{d}{dt}$):
+1) $x - D^2 y = t + 1 \implies x = D^2 y + t + 1$
+2) $Dx + (D - 2)y = e^t$
+
+Substitute the expression for $x$ from (1) into (2):
+\[ D(D^2 y + t + 1) + (D - 2)y = e^t \]
+\[ D^3 y + 1 + Dy - 2y = e^t \]
+\[ (D^3 + D - 2)y = e^t - 1 \]
+This is a single nonhomogeneous linear ODE for $y$.
+Characteristic equation: $r^3 + r - 2 = 0$.
+By inspection, $r = 1$ is a root. Factoring: $(r - 1)(r^2 + r + 2) = 0$.
+Roots are $r = 1$ and $r = -\frac{1}{2} \pm i\frac{\sqrt{7}}{2}$.
+\[ y_c(t) = c_1 e^t + e^{-t/2} \left( c_2 \cos\left(\frac{\sqrt{7}}{2}t\right) + c_3 \sin\left(\frac{\sqrt{7}}{2}t\right) \right) \]
+For $f(t) = e^t - 1$, the guess is $y_p(t) = A t e^t + B$ (we multiply $A e^t$ by $t$ because $r=1$ is a root).
+Substitute $y_p$ into $(D^3 + D - 2)y = e^t - 1$:
+$D y_p = A(t+1)e^t$, $D^2 y_p = A(t+2)e^t$, $D^3 y_p = A(t+3)e^t$.
+$[A(t+3)e^t] + [A(t+1)e^t] - 2[A t e^t + B] = e^t - 1$
+$A e^t (t + 3 + t + 1 - 2t) - 2B = e^t - 1$
+$4A e^t - 2B = e^t - 1 \implies 4A = 1 \implies A = \frac{1}{4}$, and $-2B = -1 \implies B = \frac{1}{2}$.
+\[ y(t) = c_1 e^t + e^{-t/2} \left( c_2 \cos\left(\frac{\sqrt{7}}{2}t\right) + c_3 \sin\left(\frac{\sqrt{7}}{2}t\right) \right) + \frac{1}{4} t e^t + \frac{1}{2} \]
+Now find $x(t)$ using $x = D^2 y + t + 1$.
+We need $D^2 y$. Since $y_c$ satisfies $(D^3 + D - 2)y_c = 0$, we can compute its derivatives. Let $\omega = \frac{\sqrt{7}}{2}$.
+$D^2(c_1 e^t) = c_1 e^t$.
+For the trig part, let $y_{trig} = e^{-t/2}(c_2 \cos(\omega t) + c_3 \sin(\omega t))$.
+$y_{trig}' = e^{-t/2} \left[ (-\frac{1}{2}c_2 + \omega c_3)\cos(\omega t) + (-\frac{1}{2}c_3 - \omega c_2)\sin(\omega t) \right]$.
+$y_{trig}'' = e^{-t/2} \left[ (-\frac{3}{2}c_2 - \omega c_3)\cos(\omega t) + (\omega c_2 - \frac{3}{2}c_3)\sin(\omega t) \right]$.
+$D^2 y_p = \frac{1}{4}(t+2)e^t$.
+Substitute everything into $x = D^2 y + t + 1$:
+\[ x(t) = c_1 e^t + e^{-t/2} \left[ \left(-\frac{3}{2}c_2 - \frac{\sqrt{7}}{2}c_3\right)\cos\left(\frac{\sqrt{7}}{2}t\right) + \left(\frac{\sqrt{7}}{2}c_2 - \frac{3}{2}c_3\right)\sin\left(\frac{\sqrt{7}}{2}t\right) \right] + \frac{1}{4}(t+2)e^t + t + 1 \]
+
+\vspace{0.5cm}
+\textbf{Problem 39:} Use the elimination method to find a general solution to the system:
+\[ \frac{d^2 x}{dt^2} - x + y = 0 \]
+\[ x + \frac{d^2 y}{dt^2} - y = e^{3t} \]
+
+\textbf{Solution:}
+Operator form:
+1) $(D^2 - 1)x + y = 0 \implies y = (1 - D^2)x$
+2) $x + (D^2 - 1)y = e^{3t}$
+
+Substitute $y$ into (2):
+\[ x + (D^2 - 1)(1 - D^2)x = e^{3t} \]
+\[ x - (D^2 - 1)^2 x = e^{3t} \]
+\[ x - (D^4 - 2D^2 + 1)x = e^{3t} \]
+\[ (-D^4 + 2D^2)x = e^{3t} \implies D^2(D^2 - 2)x = -e^{3t} \]
+Characteristic equation: $r^2(r^2 - 2) = 0$. Roots are $0, 0, \sqrt{2}, -\sqrt{2}$.
+\[ x_c(t) = c_1 + c_2 t + c_3 e^{\sqrt{2}t} + c_4 e^{-\sqrt{2}t} \]
+For $f(t) = -e^{3t}$, guess $x_p(t) = A e^{3t}$.
+$D^2(D^2 - 2) [A e^{3t}] = 9(9 - 2) A e^{3t} = 63 A e^{3t} = -e^{3t} \implies A = -\frac{1}{63}$.
+\[ x(t) = c_1 + c_2 t + c_3 e^{\sqrt{2}t} + c_4 e^{-\sqrt{2}t} - \frac{1}{63} e^{3t} \]
+Now find $y(t)$ using $y = (1 - D^2)x = x - x''$.
+$x''(t) = 0 + 0 + 2c_3 e^{\sqrt{2}t} + 2c_4 e^{-\sqrt{2}t} - \frac{9}{63} e^{3t}$.
+\[ y(t) = \left( c_1 + c_2 t + c_3 e^{\sqrt{2}t} + c_4 e^{-\sqrt{2}t} - \frac{1}{63} e^{3t} \right) - \left( 2c_3 e^{\sqrt{2}t} + 2c_4 e^{-\sqrt{2}t} - \frac{9}{63} e^{3t} \right) \]
+\[ y(t) = c_1 + c_2 t - c_3 e^{\sqrt{2}t} - c_4 e^{-\sqrt{2}t} + \frac{8}{63} e^{3t} \]
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Setup Only (Undetermined Coefficients):} (e.g., Problems 1, 4). The goal is purely algebraic. Strategy: Find the roots of the homogeneous equation to construct $y_c$. Identify the components of $f(x)$. Formulate a base guess for each component. Crucially, compare the base guess to $y_c$. If any term in the guess duplicates a term in $y_c$, multiply the entire guess for that component by $x^s$, where $s$ is the smallest integer that eliminates all duplication.
+    \item \textbf{Full Solution (Undetermined Coefficients):} (e.g., Problems 5, 7). Strategy: Perform the setup as above. Then, differentiate the guess $y_p$ as many times as the order of the ODE. Substitute these derivatives back into the original ODE. Group terms by function type (e.g., all $x^2$ terms, all $e^x$ terms) and equate the coefficients on the left side to the coefficients on the right side to form a system of linear equations. Solve for the constants.
+    \item \textbf{Finding Annihilators:} (e.g., Problems 11, 13, 17, 19). Strategy: Use the annihilator tables. Identify $\alpha$ (the coefficient in the exponential) and $\beta$ (the coefficient inside the trig function). Construct the base operator $(D-\alpha)^2 + \beta^2$. If the function is multiplied by $x^k$, raise the operator to the power $k+1$. If the function is a sum, multiply the individual annihilators together.
+    \item \textbf{Annihilator Method (Operator Approach):} (e.g., Problems 21, 25). Strategy: Write the ODE as $L[y] = f(x)$. Find the annihilator $A$ for $f(x)$. Apply $A$ to get $A[L[y]] = 0$. Solve this new homogeneous equation. The terms that do not belong to the original $y_c$ form the guess for $y_p$. This is the rigorous justification for the "Setup Only" rules.
+    \item \textbf{Initial Value Problems (IVPs):} (e.g., Problems 31, 32). Strategy: Find the general solution $y(x) = y_c(x) + y_p(x)$ first. \textit{Never} apply initial conditions to $y_c(x)$ alone. Once the full general solution is found, take its derivatives and substitute the initial values $x=0$ to create a system of equations to solve for $c_1, c_2, \dots, c_n$.
+    \item \textbf{Systems via Elimination:} (e.g., Problems 38, 39). Strategy: Write the system using operator $D$ notation. Treat the operators as algebraic variables. Use substitution or elimination (multiplying equations by operators) to decouple the system into a single higher-order ODE for one variable. Solve it, then back-substitute to find the other variable.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Rational Root Theorem and Synthetic Division:} Used extensively (e.g., Problems 1, 7, 31) to factor cubic characteristic polynomials. You guess a root (usually $\pm 1, \pm 2, \pm 3$) that divides the constant term, verify it makes the polynomial zero, and then factor it out to leave a quadratic.
+    \item \textbf{Operator Commutativity:} The annihilator method relies on the fact that linear differential operators with constant coefficients commute. $A[L[y]] = L[A[y]]$. This is why applying $A$ to $L[y]$ yields a valid characteristic equation $(r - \text{roots of } A)(r - \text{roots of } L) = 0$.
+    \item \textbf{The "s" Multiplier Trick:} In Problem 7, the forcing function was $e^{-2x}$, but $y_c$ contained $c_2 e^{-2x} + c_3 x e^{-2x}$. The base guess $A e^{-2x}$ overlaps. Multiplying by $x$ gives $A x e^{-2x}$, which still overlaps. Multiplying by $x^2$ gives $A x^2 e^{-2x}$, which is linearly independent. This algebraic trick prevents the guess from being annihilated by the original operator $L$.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Summary of Important Formulas}
+\begin{tcolorbox}[colback=blue!5,colframe=blue!40!black,title=Annihilator Table]
+\begin{itemize}
+    \item $f(x) = x^k \implies \text{Annihilator: } D^{k+1}$
+    \item $f(x) = x^k e^{\alpha x} \implies \text{Annihilator: } (D - \alpha)^{k+1}$
+    \item $f(x) = x^k \cos(\beta x)$ or $x^k \sin(\beta x) \implies \text{Annihilator: } (D^2 + \beta^2)^{k+1}$
+    \item $f(x) = x^k e^{\alpha x} \cos(\beta x)$ or $x^k e^{\alpha x} \sin(\beta x) \implies \text{Annihilator: } [(D - \alpha)^2 + \beta^2]^{k+1}$
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Tricks and Shortcuts}
+\begin{itemize}
+    \item \textbf{The "Zero Check" Shortcut:} When finding roots of a cubic polynomial $ar^3 + br^2 + cr + d = 0$, always check $r=1$ first. If the sum of the coefficients $a+b+c+d = 0$, then $r=1$ is guaranteed to be a root. Check $r=-1$ by seeing if $a-b+c-d = 0$.
+    \item \textbf{Annihilator of a Sum:} The annihilator of $f_1(x) + f_2(x)$ is the product of their individual annihilators $A_1 \cdot A_2$ (assuming they don't share roots). Do \textit{not} add the annihilators!
+    \item \textbf{Derivative Grouping:} When substituting $y_p$ into the ODE, do not expand everything into a massive unreadable line. Instead, immediately group by function type. Write "For $e^x$:" and collect all coefficients. Write "For $x \sin x$:" and collect all coefficients. This drastically reduces sign errors.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The Overlap Trap:} Forgetting to check $y_p$ against $y_c$. If you guess $y_p = A e^{2x}$ but $e^{2x}$ is in $y_c$, substituting it into the ODE will yield $0 = e^{2x}$, which is impossible. Always find $y_c$ first!
+    \item \textbf{The Incomplete Guess Trap:} If $f(x) = x^2$, the guess must be $A x^2 + B x + C$, not just $A x^2$. You must include all lower-degree terms. Similarly, if $f(x) = \sin(3x)$, the guess must be $A \cos(3x) + B \sin(3x)$, even if there is no cosine in $f(x)$.
+    \item \textbf{The Variable Coefficient Trap:} The annihilator method and undetermined coefficients \textit{only} work for linear ODEs with \textbf{constant coefficients}. If you see $x^2 y'' - 2xy = e^x$, you cannot use these methods.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The core theme of this topic is \textbf{transformation and projection}. We take a difficult problem (a nonhomogeneous equation) and transform it into a higher-dimensional space (a higher-order homogeneous equation) where the problem becomes easy to solve. 
+By applying the annihilator $A$, we embed the solution space of $L[y] = f(x)$ into the null space of the composite operator $A \circ L$. Once we find the general solution in this larger space, we "project" it back down by substituting it into the original equation to fix the undetermined constants. This theme of transforming a problem into a space where it equals zero (finding the kernel) is a fundamental concept in Linear Algebra.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Links:} This topic is the logical culmination of finding roots of characteristic equations. It relies heavily on the principle of superposition (from earlier in Chapter 4), which states that the solution to $L[y] = f_1 + f_2$ is the sum of the solutions to $L[y] = f_1$ and $L[y] = f_2$.
+
+\textbf{Forward Links:} The limitations of this method (it only works for specific forcing functions like polynomials, exponentials, and sines/cosines) directly motivate the next section: \textbf{Variation of Parameters} (Section 6.4). Variation of parameters is a more general method that works for any continuous forcing function (like $\tan x$ or $\ln x$) and for equations with variable coefficients. Furthermore, the operator notation $D$ and the concept of transforming differential equations algebraically lay the direct groundwork for the \textbf{Laplace Transform}, which will turn calculus problems entirely into algebraic fraction decompositions.
+
+\newpage
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+\begin{enumerate}
+    \item \textbf{Quantitative Finance (Pairs Trading \& Mean Reversion):} In statistical arbitrage, the spread between two cointegrated assets is often modeled as a mean-reverting stochastic process (like an Ornstein-Uhlenbeck process). However, if the mean itself is deterministic but time-varying (e.g., driven by a macroeconomic cycle modeled as a sine wave), the deterministic part of the spread's dynamics is a nonhomogeneous linear differential equation. Undetermined coefficients are used to find the exact trajectory of the moving mean.
+    \item \textbf{Machine Learning (Gradient Descent with Momentum):} The continuous-time limit of gradient descent with momentum (like Nesterov acceleration) can be modeled as a second-order damped harmonic oscillator: $\ddot{x} + \gamma \dot{x} + \nabla f(x) = 0$. If the loss landscape $f(x)$ is locally quadratic with a moving target (a nonhomogeneous forcing term), the system becomes a nonhomogeneous linear ODE.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup: Stochastic Oscillator in Pairs Trading}
+Let $X_t$ and $Y_t$ be the log-prices of two cointegrated assets. We define the spread as $S_t = X_t - \beta Y_t$. We model the spread using a second-order stochastic differential equation to capture both mean-reversion and momentum (a "stochastic harmonic oscillator"):
+\[ d(\dot{S}_t) = (-\kappa \dot{S}_t - \omega^2 S_t + f(t)) dt + \sigma dW_t \]
+where:
+\begin{itemize}
+    \item $\kappa > 0$ is the friction/damping coefficient (speed of mean reversion).
+    \item $\omega^2 > 0$ is the restoring force constant.
+    \item $W_t$ is a standard Brownian motion under the risk-neutral measure $\mathbb{Q}$.
+    \item $f(t) = A \cos(\nu t)$ is a deterministic macroeconomic forcing function (e.g., a known seasonal cycle).
+\end{itemize}
+To price a derivative dependent on this spread, we must first solve for the expected path of the spread, $\mathbb{E}[S_t]$. Taking the expectation of the SDE eliminates the martingale term $\sigma dW_t$, leaving a deterministic nonhomogeneous ODE:
+\[ \frac{d^2}{dt^2}\mathbb{E}[S_t] + \kappa \frac{d}{dt}\mathbb{E}[S_t] + \omega^2 \mathbb{E}[S_t] = A \cos(\nu t) \]
+This is exactly the type of equation solved using the Method of Undetermined Coefficients. The complementary solution $S_c(t)$ represents the transient decay of the spread to its equilibrium, while the particular solution $S_p(t) = C_1 \cos(\nu t) + C_2 \sin(\nu t)$ represents the steady-state oscillation driven by the macroeconomic factor. A quantitative researcher would solve for $C_1$ and $C_2$ to calibrate the trading algorithm's dynamic entry and exit thresholds.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+Based on standard differential equations curricula, the provided homework focuses heavily on functions that \textit{can} be annihilated. A critical variation that is often tested but missing from this specific problem set is dealing with forcing functions that \textbf{cannot} be annihilated by finite-order constant-coefficient operators.
+
+\textbf{Missing Concept: Forcing Functions outside the Annihilator Table}
+Functions like $f(x) = \sec x$, $f(x) = \tan x$, $f(x) = \ln x$, or $f(x) = \frac{1}{x}$ do not have finite-order constant-coefficient annihilators. If you encounter these, the Method of Undetermined Coefficients completely fails. You must use the \textbf{Method of Variation of Parameters} (introduced in Section 6.4).
+
+\textbf{Example Problem:} Solve $y'' + y = \sec x$.
+\textit{Explanation:} The complementary solution is $y_c(x) = c_1 \cos x + c_2 \sin x$. Because $\sec x$ has no annihilator, we cannot guess $y_p$. Instead, Variation of Parameters assumes $y_p(x) = u_1(x) \cos x + u_2(x) \sin x$, where $u_1, u_2$ are functions, not constants.
+Using the Wronskian $W = \cos x (\cos x) - (-\sin x)(\sin x) = 1$:
+\[ u_1'(x) = \frac{-y_2 f(x)}{W} = \frac{-\sin x \sec x}{1} = -\tan x \implies u_1(x) = \ln|\cos x| \]
+\[ u_2'(x) = \frac{y_1 f(x)}{W} = \frac{\cos x \sec x}{1} = 1 \implies u_2(x) = x \]
+Thus, $y_p(x) = (\ln|\cos x|)\cos x + x \sin x$. This type of solution form could never have been guessed using undetermined coefficients.
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five problems with complete, step-by-step solutions. However, each solution contains a single, subtle, yet critical flaw. Act as the grader: identify the error, explain why it is wrong, and provide the correct final solution.
+
+\vspace{0.5cm}
+\textbf{Problem 1:} Solve $y'' - 4y = e^{2x}$.
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title=Flawed Solution]
+1. Characteristic equation: $r^2 - 4 = 0 \implies r = \pm 2$.
+2. $y_c(x) = c_1 e^{2x} + c_2 e^{-2x}$.
+3. Guess $y_p(x) = A e^{2x}$.
+4. $y_p'(x) = 2A e^{2x}$, $y_p''(x) = 4A e^{2x}$.
+5. Substitute: $4A e^{2x} - 4(A e^{2x}) = e^{2x} \implies 0 = e^{2x}$.
+6. Since $0 \neq e^{2x}$, no particular solution exists.
+\end{tcolorbox}
+\textbf{Grader's Correction:}
+\textit{Flaw:} The student forgot to check for overlap between the guess and $y_c(x)$; since $e^{2x}$ is in $y_c(x)$, the guess must be multiplied by $x$.
+\textit{Correct Step:} Guess $y_p(x) = A x e^{2x}$. Then $y_p'' = A(4x + 4)e^{2x}$. Substituting gives $A(4x + 4)e^{2x} - 4A x e^{2x} = 4A e^{2x} = e^{2x} \implies A = 1/4$.
+\textit{Correct Final Answer:} $y(x) = c_1 e^{2x} + c_2 e^{-2x} + \frac{1}{4} x e^{2x}$.
+
+\vspace{0.5cm}
+\textbf{Problem 2:} Find the annihilator for $f(x) = x \sin x$.
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title=Flawed Solution]
+1. The function is a product of $f_1(x) = x$ and $f_2(x) = \sin x$.
+2. The annihilator for $x$ is $D^2$.
+3. The annihilator for $\sin x$ is $D^2 + 1$.
+4. Therefore, the annihilator for the product is the product of the annihilators: $D^2(D^2 + 1)$.
+\end{tcolorbox}
+\textbf{Grader's Correction:}
+\textit{Flaw:} The annihilator of a product is \textit{not} the product of the annihilators; the product rule applies to sums, not products of functions.
+\textit{Correct Step:} Use the formula for $x^k \sin(\beta x)$ where $k=1, \beta=1$. The base operator is $D^2 + 1$, and it must be raised to the power $k+1 = 2$.
+\textit{Correct Final Answer:} $(D^2 + 1)^2$.
+
+\vspace{0.5cm}
+\textbf{Problem 3:} Solve $y'' + y = x$.
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title=Flawed Solution]
+1. $r^2 + 1 = 0 \implies r = \pm i$. $y_c(x) = c_1 \cos x + c_2 \sin x$.
+2. $f(x) = x$. Since it's a polynomial of degree 1, guess $y_p(x) = A$.
+3. $y_p''(x) = 0$.
+4. Substitute: $0 + A = x \implies A = x$.
+5. $y(x) = c_1 \cos x + c_2 \sin x + x$.
+\end{tcolorbox}
+\textbf{Grader's Correction:}
+\textit{Flaw:} The undetermined coefficients $A, B, C$ must be constants, not variables; the guess for a degree 1 polynomial must be $Ax + B$.
+\textit{Correct Step:} Guess $y_p(x) = Ax + B$. $y_p'' = 0$. Substitute: $0 + Ax + B = x \implies A=1, B=0$.
+\textit{Correct Final Answer:} $y(x) = c_1 \cos x + c_2 \sin x + x$. (The flawed solution accidentally got the right final answer through invalid math).
+
+\vspace{0.5cm}
+\textbf{Problem 4:} Solve $y'' - 3y' + 2y = e^{3x}$ using the annihilator method.
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title=Flawed Solution]
+1. $L = D^2 - 3D + 2 = (D-1)(D-2)$.
+2. Annihilator for $e^{3x}$ is $(D-3)$.
+3. Apply to both sides: $(D-3)(D-1)(D-2)y = 0$.
+4. The roots are $1, 2, 3$.
+5. Therefore, the general solution is $y(x) = c_1 e^x + c_2 e^{2x} + c_3 e^{3x}$, where $c_1, c_2, c_3$ are arbitrary constants.
+\end{tcolorbox}
+\textbf{Grader's Correction:}
+\textit{Flaw:} The constant $c_3$ is not arbitrary; it is the undetermined coefficient for $y_p$ and must be solved for by substituting back into the nonhomogeneous equation.
+\textit{Correct Step:} Let $y_p = c_3 e^{3x}$. Substitute into $y'' - 3y' + 2y = e^{3x}$: $9c_3 e^{3x} - 9c_3 e^{3x} + 2c_3 e^{3x} = e^{3x} \implies 2c_3 = 1 \implies c_3 = 1/2$.
+\textit{Correct Final Answer:} $y(x) = c_1 e^x + c_2 e^{2x} + \frac{1}{2} e^{3x}$.
+
+\vspace{0.5cm}
+\textbf{Problem 5:} Solve $x^2 y'' - 2x y' + 2y = x^3$.
+\begin{tcolorbox}[colback=red!5,colframe=red!40!black,title=Flawed Solution]
+1. The forcing function is $f(x) = x^3$.
+2. The annihilator for $x^3$ is $D^4$.
+3. Apply $D^4$ to both sides: $D^4(x^2 D^2 - 2x D + 2)y = 0$.
+4. Solve this higher-order equation to find the form of $y_p$.
+\end{tcolorbox}
+\textbf{Grader's Correction:}
+\textit{Flaw:} The annihilator method only applies to linear differential equations with constant coefficients, but this is a Cauchy-Euler equation with variable coefficients.
+\textit{Correct Step:} Use Variation of Parameters. First find $y_c$ by guessing $y = x^m \implies m(m-1) - 2m + 2 = 0 \implies m^2 - 3m + 2 = 0 \implies m=1, 2$. $y_c = c_1 x + c_2 x^2$. Put ODE in standard form: $y'' - \frac{2}{x}y' + \frac{2}{x^2}y = x$. Use $f(x) = x$ in Variation of Parameters formulas.
+\textit{Correct Final Answer:} $y(x) = c_1 x + c_2 x^2 + \frac{1}{2} x^3$.
+
+\end{document}

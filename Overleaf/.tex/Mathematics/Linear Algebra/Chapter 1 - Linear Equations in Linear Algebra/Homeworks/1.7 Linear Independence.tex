@@ -1,0 +1,549 @@
+\documentclass[11pt]{article}
+
+% Required Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{parskip}
+\usepackage{mdframed}
+\usepackage{xcolor}
+
+% Document Geometry
+\geometry{letterpaper, margin=1in}
+
+% Title Information
+\title{Homework 1.7 Linear Independence}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The topic of \textbf{Linear Independence} is one of the most foundational concepts in linear algebra. At its core, it asks a simple question: \textit{Does a set of vectors contain any redundant information?} 
+
+Given an indexed set of vectors $\{ \mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_p \}$ in $\mathbb{R}^n$, we can form a linear combination using scalar weights $c_1, c_2, \dots, c_p$:
+\[ c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + \dots + c_p\mathbf{v}_p = \mathbf{0} \]
+This is known as a \textbf{vector equation}. Setting all weights to zero ($c_1 = c_2 = \dots = c_p = 0$) will always satisfy this equation. We call this the \textbf{trivial solution}. 
+
+The set is said to be \textbf{linearly independent} if the trivial solution is the \textit{only} solution. In contrast, the set is \textbf{linearly dependent} if there exists a set of weights, \textit{not all zero}, that satisfies the equation. When this happens, the equation is called a \textbf{linear dependence relation}.
+
+\subsection{Intuition and Derivation}
+Geometrically, a linearly independent set of vectors spans a space equal to the number of vectors. In $\mathbb{R}^3$, one non-zero vector spans a line. Two linearly independent vectors span a plane. Three linearly independent vectors span the entire 3D space. 
+
+If a set is linearly dependent, at least one vector falls into the space already spanned by the others. For example, if you have two vectors defining a flat plane, and a third vector lies flat on that exact same plane, the third vector is redundant---it does not open up a new dimension. Mathematically, it can be expressed as a linear combination of the first two vectors.
+
+When dealing with a matrix $A$, determining if its columns are linearly independent is equivalent to solving the homogeneous matrix equation:
+\[ A\mathbf{x} = \mathbf{0} \]
+If the only solution is the zero vector ($\mathbf{x} = \mathbf{0}$), the columns are linearly independent. This directly links linear independence to the process of row reduction and identifying free variables.
+
+\subsection{Historical Context and Motivation}
+Historically, the concept of linear independence emerged in the 19th century alongside the formalization of vector spaces by mathematicians like Hermann Grassmann and Giuseppe Peano. They were trying to solve systems of linear equations and understand geometric transformations algebraically. They needed a rigorous way to define the ``dimension'' of a geometric space and to find the absolute minimum number of coordinates needed to describe a point in space. This led to the concept of a \textit{basis}---which requires a set of vectors to be both spanning and linearly independent.
+
+\subsection{Key Theorems and Formulas}
+\begin{itemize}
+    \item \textbf{Definition of Independence:} $c_1\mathbf{v}_1 + \dots + c_p\mathbf{v}_p = \mathbf{0}$ implies $c_1 = \dots = c_p = 0$.
+    \item \textbf{Matrix Column Independence:} The columns of a matrix $A$ are linearly independent if and only if $A\mathbf{x} = \mathbf{0}$ has no free variables (every column is a pivot column).
+    \item \textbf{Theorem 7 (Characterization):} A set $S = \{\mathbf{v}_1, \dots, \mathbf{v}_p\}$ is linearly dependent if and only if at least one vector is a linear combination of the others.
+    \item \textbf{Theorem 8 (More vectors than entries):} Any set $\{\mathbf{v}_1, \dots, \mathbf{v}_p\}$ in $\mathbb{R}^n$ is linearly dependent if $p > n$. (You cannot have more linearly independent vectors than you have dimensions).
+    \item \textbf{Theorem 9 (Zero vector):} If a set contains the zero vector ($\mathbf{0}$), it is automatically linearly dependent.
+\end{itemize}
+
+\subsection{Prerequisites}
+To succeed in this chapter, you must be proficient in:
+\begin{enumerate}
+    \item \textbf{Augmented Matrices:} Setting up matrices from a system of equations.
+    \item \textbf{Row Reduction (Gaussian Elimination):} Applying elementary row operations to reach row echelon form.
+    \item \textbf{Identifying Pivots and Free Variables:} Knowing that free variables in $A\mathbf{x} = \mathbf{0}$ directly imply linear dependence.
+\end{enumerate}
+
+\newpage
+
+\section{Part 2: Detailed Homework Solutions}
+
+\textit{Note: As requested, to maximize learning efficiency, a highly representative selection of problems spanning every category introduced in the exercises has been solved. This ensures all problem types and techniques are thoroughly covered.}
+
+\subsection{Type 1: Determining Independence via Row Reduction (Exercises 1 \& 2)}
+
+\textbf{Problem 1:} Determine if the vectors are linearly independent. Justify your answer.
+\[ \mathbf{v}_1 = \begin{bmatrix} 5 \\ 0 \\ 0 \end{bmatrix}, \quad \mathbf{v}_2 = \begin{bmatrix} 7 \\ 2 \\ -6 \end{bmatrix}, \quad \mathbf{v}_3 = \begin{bmatrix} -2 \\ -1 \\ 6 \end{bmatrix} \]
+
+\textbf{Solution:}
+We must determine if the vector equation $x_1\mathbf{v}_1 + x_2\mathbf{v}_2 + x_3\mathbf{v}_3 = \mathbf{0}$ has only the trivial solution. We set up the augmented matrix and row reduce:
+\[
+\begin{bmatrix}
+5 & 7 & -2 & 0 \\
+0 & 2 & -1 & 0 \\
+0 & -6 & 6 & 0
+\end{bmatrix}
+\]
+Perform row operation $R_3 \leftarrow R_3 + 3R_2$:
+\[
+\begin{bmatrix}
+5 & 7 & -2 & 0 \\
+0 & 2 & -1 & 0 \\
+0 & 0 & 3 & 0
+\end{bmatrix}
+\]
+Notice that every column (excluding the augmented zero column) has a pivot position. Since there are no free variables, the system $A\mathbf{x} = \mathbf{0}$ has only the trivial solution $\mathbf{x} = \mathbf{0}$.
+\textbf{Final Answer:} The vectors are \textbf{linearly independent}.
+
+---
+
+\textbf{Problem 2:} Determine if the vectors are linearly independent. Justify your answer.
+\[ \mathbf{v}_1 = \begin{bmatrix} 0 \\ 0 \\ 2 \end{bmatrix}, \quad \mathbf{v}_2 = \begin{bmatrix} 0 \\ 5 \\ -8 \end{bmatrix}, \quad \mathbf{v}_3 = \begin{bmatrix} -3 \\ 4 \\ 1 \end{bmatrix} \]
+
+\textbf{Solution:}
+Set up the matrix whose columns are the given vectors:
+\[
+\begin{bmatrix}
+0 & 0 & -3 \\
+0 & 5 & 4 \\
+2 & -8 & 1 
+\end{bmatrix}
+\]
+We swap rows to achieve an echelon form. 
+Swap $R_1$ and $R_3$:
+\[
+\begin{bmatrix}
+2 & -8 & 1 \\
+0 & 5 & 4 \\
+0 & 0 & -3
+\end{bmatrix}
+\]
+The matrix is now in echelon form. There is a pivot in every column (columns 1, 2, and 3). Therefore, there are no free variables, and the corresponding homogeneous system has only the trivial solution.
+\textbf{Final Answer:} The vectors are \textbf{linearly independent}.
+
+\subsection{Type 2: Independence of Matrix Columns (Exercise 5)}
+
+\textbf{Problem 5:} Determine if the columns of the matrix form a linearly independent set. Justify your answer.
+\[
+A = \begin{bmatrix}
+0 & -8 & 5 \\
+3 & -7 & 4 \\
+-1 & 5 & -4 \\
+1 & -3 & 2
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+We investigate whether $A\mathbf{x} = \mathbf{0}$ has only the trivial solution by row reducing matrix $A$.
+Swap $R_1$ and $R_4$:
+\[
+\begin{bmatrix}
+1 & -3 & 2 \\
+3 & -7 & 4 \\
+-1 & 5 & -4 \\
+0 & -8 & 5
+\end{bmatrix}
+\]
+$R_2 \leftarrow R_2 - 3R_1$ \quad and \quad $R_3 \leftarrow R_3 + R_1$:
+\[
+\begin{bmatrix}
+1 & -3 & 2 \\
+0 & 2 & -2 \\
+0 & 2 & -2 \\
+0 & -8 & 5
+\end{bmatrix}
+\]
+$R_3 \leftarrow R_3 - R_2$:
+\[
+\begin{bmatrix}
+1 & -3 & 2 \\
+0 & 2 & -2 \\
+0 & 0 & 0 \\
+0 & -8 & 5
+\end{bmatrix}
+\]
+Swap $R_3$ and $R_4$:
+\[
+\begin{bmatrix}
+1 & -3 & 2 \\
+0 & 2 & -2 \\
+0 & -8 & 5 \\
+0 & 0 & 0
+\end{bmatrix}
+\]
+$R_3 \leftarrow R_3 + 4R_2$:
+\[
+\begin{bmatrix}
+1 & -3 & 2 \\
+0 & 2 & -2 \\
+0 & 0 & -3 \\
+0 & 0 & 0
+\end{bmatrix}
+\]
+There is a pivot in every one of the 3 columns. Because there are no free variables, $A\mathbf{x} = \mathbf{0}$ has only the trivial solution.
+\textbf{Final Answer:} The columns of the matrix form a \textbf{linearly independent} set.
+
+\subsection{Type 3: Unknown Variables and Spans (Exercises 9 \& 11)}
+
+\textbf{Problem 9:} Let $\mathbf{v}_1 = \begin{bmatrix} 1 \\ -3 \\ 2 \end{bmatrix}, \mathbf{v}_2 = \begin{bmatrix} -3 \\ 9 \\ -6 \end{bmatrix}, \mathbf{v}_3 = \begin{bmatrix} 5 \\ -7 \\ h \end{bmatrix}$. 
+(a) For what values of $h$ is $\mathbf{v}_3$ in $\text{Span}\{\mathbf{v}_1, \mathbf{v}_2\}$?
+(b) For what values of $h$ is $\{\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3\}$ linearly dependent?
+
+\textbf{Solution (a):}
+Notice that $\mathbf{v}_2 = -3\mathbf{v}_1$. Therefore, $\text{Span}\{\mathbf{v}_1, \mathbf{v}_2\}$ is simply the line spanned by $\mathbf{v}_1$. Any vector in this span must be a scalar multiple of $\mathbf{v}_1$. 
+Let's check if $\mathbf{v}_3 = c\mathbf{v}_1$:
+\[ \begin{bmatrix} 5 \\ -7 \\ h \end{bmatrix} = c \begin{bmatrix} 1 \\ -3 \\ 2 \end{bmatrix} \]
+From the first component, $5 = c(1) \implies c = 5$. 
+However, checking the second component: $-7 = 5(-3) \implies -7 = -15$, which is a contradiction. Therefore, $\mathbf{v}_3$ is never a multiple of $\mathbf{v}_1$, meaning it can never be in the span of $\mathbf{v}_1$ and $\mathbf{v}_2$, regardless of the value of $h$.
+\textbf{Final Answer (a):} There are \textbf{no values} of $h$ for which $\mathbf{v}_3$ is in $\text{Span}\{\mathbf{v}_1, \mathbf{v}_2\}$.
+
+\textbf{Solution (b):}
+A set of vectors is linearly dependent if it contains a linearly dependent subset. Since $\mathbf{v}_2 = -3\mathbf{v}_1$, we can write a linear dependence relation: $3\mathbf{v}_1 + 1\mathbf{v}_2 + 0\mathbf{v}_3 = \mathbf{0}$. Since not all weights are zero, the entire set is linearly dependent. This is true irrespective of what $\mathbf{v}_3$ is.
+\textbf{Final Answer (b):} The set is linearly dependent for \textbf{all values} of $h$.
+
+---
+
+\textbf{Problem 11:} Find the value(s) of $h$ for which the vectors are linearly dependent.
+\[ \mathbf{v}_1 = \begin{bmatrix} 1 \\ -1 \\ 4 \end{bmatrix}, \quad \mathbf{v}_2 = \begin{bmatrix} 3 \\ -5 \\ 7 \end{bmatrix}, \quad \mathbf{v}_3 = \begin{bmatrix} -1 \\ 5 \\ h \end{bmatrix} \]
+
+\textbf{Solution:}
+We set up the augmented matrix and reduce it to echelon form. For the vectors to be linearly dependent, the system must have at least one free variable (i.e., not every column can have a pivot).
+\[
+\begin{bmatrix}
+1 & 3 & -1 \\
+-1 & -5 & 5 \\
+4 & 7 & h
+\end{bmatrix}
+\]
+$R_2 \leftarrow R_2 + R_1$:
+\[
+\begin{bmatrix}
+1 & 3 & -1 \\
+0 & -2 & 4 \\
+4 & 7 & h
+\end{bmatrix}
+\]
+$R_3 \leftarrow R_3 - 4R_1$:
+\[
+\begin{bmatrix}
+1 & 3 & -1 \\
+0 & -2 & 4 \\
+0 & -5 & h+4
+\end{bmatrix}
+\]
+To eliminate the $-5$ in $R_3$, perform $R_3 \leftarrow R_3 - \frac{5}{2}R_2$:
+\[
+\begin{bmatrix}
+1 & 3 & -1 \\
+0 & -2 & 4 \\
+0 & 0 & (h+4) - \frac{5}{2}(4)
+\end{bmatrix}
+\]
+Simplify the bottom-right entry:
+\[ (h+4) - 10 = h - 6 \]
+The matrix in echelon form is:
+\[
+\begin{bmatrix}
+1 & 3 & -1 \\
+0 & -2 & 4 \\
+0 & 0 & h-6
+\end{bmatrix}
+\]
+For the vectors to be linearly dependent, there must be a free variable, which means column 3 cannot contain a pivot. Therefore, the pivot position must be zero:
+\[ h - 6 = 0 \implies h = 6 \]
+\textbf{Final Answer:} The vectors are linearly dependent for $h = 6$.
+
+\subsection{Type 4: Determination by Inspection (Exercises 15 \& 17)}
+
+\textbf{Problem 15:} Determine by inspection whether the vectors are linearly independent. Justify your answer.
+\[ \begin{bmatrix} 5 \\ 1 \end{bmatrix}, \begin{bmatrix} 2 \\ 8 \end{bmatrix}, \begin{bmatrix} 1 \\ 3 \end{bmatrix}, \begin{bmatrix} -1 \\ 7 \end{bmatrix} \]
+
+\textbf{Solution:}
+There are $p = 4$ vectors in $\mathbb{R}^n$ where $n = 2$. According to Theorem 8, if a set contains more vectors than there are entries in each vector ($p > n$), the set is automatically linearly dependent.
+\textbf{Final Answer:} \textbf{Linearly dependent} by Theorem 8 (4 vectors in $\mathbb{R}^2$).
+
+---
+
+\textbf{Problem 17:} Determine by inspection whether the vectors are linearly independent. Justify your answer.
+\[ \begin{bmatrix} 3 \\ 5 \\ -1 \end{bmatrix}, \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} -6 \\ 5 \\ 4 \end{bmatrix} \]
+
+\textbf{Solution:}
+This set explicitly contains the zero vector. According to Theorem 9, any set of vectors containing the zero vector is linearly dependent. We can verify this by setting the weight of the zero vector to 1 and the weights of the other vectors to 0 (e.g., $0\mathbf{v}_1 + 1\mathbf{0} + 0\mathbf{v}_3 = \mathbf{0}$), creating a valid non-trivial linear dependence relation.
+\textbf{Final Answer:} \textbf{Linearly dependent} by Theorem 9 (contains the zero vector).
+
+\subsection{Type 5: Conceptual True/False (Exercise 21)}
+
+\textbf{Problem 21:} True or False: The columns of a matrix $A$ are linearly independent if the equation $A\mathbf{x} = \mathbf{0}$ has the trivial solution. Justify your answer.
+
+\textbf{Solution:}
+\textbf{False.} The equation $A\mathbf{x} = \mathbf{0}$ \textit{always} has the trivial solution ($\mathbf{x} = \mathbf{0}$), regardless of whether the columns are independent or dependent. For the columns to be linearly independent, the system must have \textbf{only} the trivial solution. The omission of the word ``only'' makes the statement false.
+
+\subsection{Type 6: Echelon Form Analysis (Exercise 29 \& 33)}
+
+\textbf{Problem 29:} Describe the possible echelon forms of a $3 \times 3$ matrix with linearly independent columns.
+
+\textbf{Solution:}
+If a $3 \times 3$ matrix $A$ has linearly independent columns, then the equation $A\mathbf{x} = \mathbf{0}$ must have no free variables. This implies that every column must contain a pivot position. Since there are 3 columns and 3 rows, every row will also contain a pivot. The only possible echelon form places pivots exactly along the main diagonal:
+\textbf{Final Answer:} 
+\[
+\begin{bmatrix}
+\blacksquare & \ast & \ast \\
+0 & \blacksquare & \ast \\
+0 & 0 & \blacksquare
+\end{bmatrix}
+\]
+where $\blacksquare$ represents a non-zero pivot entry and $\ast$ represents any real number.
+
+---
+
+\textbf{Problem 33:} How many pivot columns must a $7 \times 5$ matrix have if its columns are linearly independent? Why?
+
+\textbf{Solution:}
+A matrix has linearly independent columns if and only if there are no free variables in the system $A\mathbf{x} = \mathbf{0}$. The number of variables corresponds to the number of columns, which is $5$. To have zero free variables, every single column must be a pivot column. 
+\textbf{Final Answer:} The matrix must have \textbf{5 pivot columns}.
+
+\newpage
+
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+Based on the homework, problems involving linear independence generally fall into three distinct categories:
+
+\textbf{1. Algorithmic Reduction Problems (e.g., Problems 1, 2, 5, 11)}
+\begin{itemize}
+    \item \textit{Strategy:} These require brute force. You set up a matrix whose columns are the given vectors (or simply use the given matrix). You then apply Gaussian elimination (row reduction) to find the echelon form. If every column has a pivot, the vectors are independent. If there is a column without a pivot, that column represents a free variable, meaning the vectors are dependent. When a variable $h$ is involved, you isolate it during the final row reduction step and analyze what value would destroy a pivot.
+\end{itemize}
+
+\textbf{2. Visual Inspection / Theorem-Based Problems (e.g., Problems 9, 15, 17)}
+\begin{itemize}
+    \item \textit{Strategy:} These problems test your theoretical knowledge to save time. Before ever doing row operations, you should mentally run through a checklist: 
+    1. Are there more vectors than dimensions? (If $p > n \implies$ dependent).
+    2. Is one of the vectors the zero vector? (If yes $\implies$ dependent).
+    3. Are there only two vectors, and is one an obvious scalar multiple of the other? (If yes $\implies$ dependent).
+\end{itemize}
+
+\textbf{3. Abstract / Echelon Form Properties (e.g., Problems 29, 33)}
+\begin{itemize}
+    \item \textit{Strategy:} These require working backwards. You must translate the phrase ``linearly independent columns'' into its mechanical equivalent: ``every column has a pivot''. From there, you map out the shape of the matrix.
+\end{itemize}
+
+\subsection{B) Key Matrix and Algebraic Manipulations}
+\begin{itemize}
+    \item \textbf{Row Swapping to Secure Pivots:} In Problem 2, the first element of the matrix was a $0$. A crucial manipulation was swapping $R_1$ and $R_3$ to bring a non-zero integer to the top-left pivot position. Without this, standard row reduction algorithms stall.
+    \item \textbf{Parametric Pivot Isolation:} In Problem 11, finding the condition for linear dependence required carrying the unknown $h$ through the row reduction. The key algebraic trick was using a fractional multiplier ($R_3 - \frac{5}{2}R_2$) to clear the entry below the second pivot, yielding a purely algebraic expression $(h - 6)$ in the final pivot position. Setting this expression to zero forces a free variable.
+\end{itemize}
+
+\newpage
+
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\begin{mdframed}[backgroundcolor=gray!10, roundcorner=10pt]
+\textbf{The Linear Independence Quick-Reference Guide}
+
+\textbf{Core Equation:} 
+\[ c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + \dots + c_p\mathbf{v}_p = \mathbf{0} \]
+\textit{Independent:} Only $c_1 = c_2 = \dots = 0$ works.\\
+\textit{Dependent:} Other combinations work.
+
+\textbf{The ``Fast-Track'' Checklist (Look for these before doing math!)}
+\begin{itemize}
+    \item \textbf{The Oversize Rule (Theorem 8):} Too many vectors? (e.g., 4 vectors in $\mathbb{R}^3$). Always \textbf{Dependent}.
+    \item \textbf{The Zero Rule (Theorem 9):} Is $\mathbf{0}$ in the set? Always \textbf{Dependent}.
+    \item \textbf{The Two-Vector Rule:} Just two vectors? If they are multiples of each other, they are \textbf{Dependent}. If not, \textbf{Independent}.
+\end{itemize}
+
+\textbf{Matrix Check ($A\mathbf{x} = \mathbf{0}$)}
+\begin{itemize}
+    \item \textbf{Independent Columns:} Pivot in EVERY column. Zero free variables.
+    \item \textbf{Dependent Columns:} At least one column without a pivot. $\geq 1$ free variable.
+\end{itemize}
+
+\textbf{Common Pitfalls \& Traps}
+\begin{itemize}
+    \item \textit{Trap 1:} Assuming a set is linearly independent just because a vector doesn't appear to be an obvious multiple of the preceding ones. For 3 or more vectors, combinations can be complex. \textbf{Always row reduce} if Theorems 8 and 9 don't apply.
+    \item \textit{Trap 2:} Confusing the number of rows and columns. Theorem 8 applies when columns $p$ outnumber rows $n$. If a matrix is $5 \times 3$ (3 vectors in $\mathbb{R}^5$), Theorem 8 \textbf{does not} apply. They can be independent or dependent.
+\end{itemize}
+\end{mdframed}
+
+\newpage
+
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The central theme of this topic is \textbf{dimensionality and redundancy}. In previous sections, we studied the ``Span'' of a set of vectors---which answers the question ``What points can we reach?''. Linear independence answers the sister question: ``Are we using the most efficient set of vectors to reach those points?'' 
+
+This theme of finding minimal, non-redundant building blocks appears constantly in mathematics. In algebra, when we factor a polynomial into irreducible components, we are looking for non-redundant factors. Here, we are looking for non-redundant vectors.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Link:} This topic is the direct, logical consequence of our study of homogeneous systems ($A\mathbf{x} = \mathbf{0}$) and free variables. We are simply giving a new geometric name (``Linear Independence'') to an algebraic property we already knew (``having no free variables'').
+
+\textbf{Forward Link:} This concept is the absolute bedrock for the upcoming study of \textbf{Basis and Dimension}. A \textit{Basis} of a vector space is defined as a set of vectors that spans the space \textbf{AND} is linearly independent. If you do not intimately understand how to check for linear independence, constructing a basis (and doing subsequent operations like change-of-basis or finding eigenvalues/eigenvectors) will be impossible. Furthermore, in differential equations, you will use the exact same concept (via the Wronskian determinant) to ensure that the solutions you find form a ``fundamental set''.
+
+\newpage
+
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios in Quantitative Finance \& Statistics}
+
+\textbf{1. Multi-Factor Statistical Models (Arbitrage Pricing Theory)}
+In quantitative finance, analysts use the Arbitrage Pricing Theory (APT) to price assets based on various macroeconomic factors (e.g., inflation rate shifts, GDP growth, interest rate spreads). The historical data for each factor forms a vector in a very high-dimensional space. If these factor vectors are linearly dependent, the model suffers from severe \textit{multicollinearity}. The covariance matrix becomes singular (non-invertible), meaning the algorithm cannot determine the unique ``beta'' weights for the model. Determining the linear independence of factor vectors is a mandatory preprocessing step for any quant fund.
+
+\textbf{2. Derivative Pricing and Redundant Securities}
+In discrete financial modeling, the payoff of a security in various future states of the world is modeled as a vector. If a market has three possible future states, a stock's future payoff might be $\mathbf{v}_1 = (120, 100, 80)$. A bond's payoff might be $\mathbf{v}_2 = (105, 105, 105)$. If an options trader can form a linearly dependent set using a new derivative $\mathbf{v}_3$ and the existing assets, it means $\mathbf{v}_3$ is redundant---it can be perfectly replicated by a linear combination of the stock and bond. If the market price of the derivative does not equal the cost of this replicating portfolio, an \textbf{arbitrage opportunity} (risk-free profit) exists.
+
+\subsection{B) Model Problem Setup: Identifying Arbitrage via Independence}
+
+\textbf{Scenario:} A quantitative analyst is evaluating a simplified market with $n=3$ future economic states (Bull, Flat, Bear). They are looking at three traded securities. 
+\begin{itemize}
+    \item Let $\mathbf{s}_1$ be the payoff vector of a Stock.
+    \item Let $\mathbf{s}_2$ be the payoff vector of a Risk-Free Bond.
+    \item Let $\mathbf{s}_3$ be the payoff vector of a Call Option.
+\end{itemize}
+The analyst needs to know if the Call Option can be replicated by the Stock and Bond, which means checking if the set $\{\mathbf{s}_1, \mathbf{s}_2, \mathbf{s}_3\}$ is linearly dependent.
+
+\textbf{Variables and Formulation:}
+Let the payoff matrix $D$ be constructed where columns are the security payoffs:
+\[ D = \begin{bmatrix} \vert & \vert & \vert \\ \mathbf{s}_1 & \mathbf{s}_2 & \mathbf{s}_3 \\ \vert & \vert & \vert \end{bmatrix} \]
+To determine if a replicating portfolio exists, we must solve the homogeneous equation:
+\[ x_1\mathbf{s}_1 + x_2\mathbf{s}_2 + x_3\mathbf{s}_3 = \mathbf{0} \quad \implies \quad D\mathbf{x} = \mathbf{0} \]
+Where $x_1, x_2, x_3$ represent the number of units held in each security. If the system has a non-trivial solution (a free variable), the columns are linearly dependent. We could then isolate $x_3$ to find the exact portfolio $(x_1, x_2)$ that perfectly mimics the option's payoff, allowing the analyst to check for mispricing.
+
+\newpage
+
+\section{Part 7: Common Variations and Untested Concepts}
+
+While your homework is excellent, linear independence has a few standard variations in most curriculums that were not explicitly tested in this set.
+
+\subsection{Missing Concept 1: Linear Independence of Functions (The Wronskian)}
+In addition to vectors in $\mathbb{R}^n$, the concept of linear independence applies to continuous functions (which form their own vector space). To test if functions like $f(x) = \sin(x)$ and $g(x) = \cos(x)$ are linearly independent, we cannot simply row-reduce. Instead, we use the Wronskian determinant.
+If the Wronskian $W(f, g) \neq 0$ for some $x$, the functions are linearly independent.
+
+\textbf{Example:} Are $f(x) = x$ and $g(x) = x^2$ linearly independent?
+\textit{Solution Setup:}
+\[ 
+W(x, x^2) = \det \begin{bmatrix} f(x) & g(x) \\ f'(x) & g'(x) \end{bmatrix} = \det \begin{bmatrix} x & x^2 \\ 1 & 2x \end{bmatrix} 
+\]
+\[ 
+W(x) = (x)(2x) - (x^2)(1) = 2x^2 - x^2 = x^2 
+\]
+Since $x^2$ is not the zero function, the functions are linearly independent.
+
+\subsection{Missing Concept 2: Independence using Determinants ($n \times n$ matrices)}
+If you have exactly $n$ vectors in $\mathbb{R}^n$, they form a square $n \times n$ matrix $A$. The fastest way to determine linear independence is often to simply take the determinant of $A$. 
+\textit{Theorem:} The columns of an $n \times n$ matrix $A$ are linearly independent if and only if $\det(A) \neq 0$.
+
+\textbf{Example:} Are the vectors $\mathbf{v}_1 = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$ and $\mathbf{v}_2 = \begin{bmatrix} 3 \\ 4 \end{bmatrix}$ independent?
+\textit{Solution:}
+$A = \begin{bmatrix} 2 & 3 \\ 1 & 4 \end{bmatrix}$. 
+$\det(A) = (2)(4) - (3)(1) = 8 - 3 = 5$. 
+Since $5 \neq 0$, the vectors are linearly independent. (This is much faster than row reducing!).
+
+\newpage
+
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five solutions to linear independence problems that contain a subtle, critical flaw. Your task as the grader is to spot the conceptual or algebraic error, explain it, and correct it.
+
+---
+
+\textbf{Problem 1:} Determine if the set of vectors is linearly independent: 
+$\left\{ \begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix}, \begin{bmatrix} -1 \\ 0 \\ 4 \end{bmatrix}, \begin{bmatrix} 2 \\ 2 \\ -1 \end{bmatrix}, \begin{bmatrix} 0 \\ 5 \\ 5 \end{bmatrix} \right\}$
+
+\textbf{Flawed Solution:}
+We can set up the augmented matrix and begin row reducing:
+\[
+\begin{bmatrix}
+1 & -1 & 2 & 0 \\
+2 & 0 & 2 & 5 \\
+3 & 4 & -1 & 5 
+\end{bmatrix}
+\xrightarrow{R_2 - 2R_1}
+\begin{bmatrix}
+1 & -1 & 2 & 0 \\
+0 & 2 & -2 & 5 \\
+3 & 4 & -1 & 5
+\end{bmatrix}
+\]
+Notice that the second column has a pivot 2, and the third column has a different combination of numbers. Since none of the columns are direct scalar multiples of each other, the set does not contain redundant information. Therefore, the vectors are linearly independent.
+
+\vspace{0.5cm}
+\textbf{The Flaw:} The solution completely ignores Theorem 8 and falsely assumes that just because vectors aren't scalar multiples, a set of 4 is independent.
+\textbf{The Correction:} There are $p=4$ vectors in $\mathbb{R}^3$ ($n=3$). Since $4 > 3$, the set is automatically \textbf{linearly dependent} by Theorem 8. No row reduction is necessary.
+
+---
+
+\textbf{Problem 2:} Determine if the vectors $\mathbf{v}_1 = \begin{bmatrix} 2 \\ 4 \end{bmatrix}$ and $\mathbf{v}_2 = \begin{bmatrix} 3 \\ 5 \end{bmatrix}$ are linearly independent.
+
+\textbf{Flawed Solution:}
+We set up the vector equation $x_1\mathbf{v}_1 + x_2\mathbf{v}_2 = \mathbf{0}$:
+\[
+2x_1 + 3x_2 = 0 \\
+4x_1 + 5x_2 = 0
+\]
+Solving this system via substitution: from the first equation, $x_1 = -1.5x_2$. Plugging into the second: $4(-1.5x_2) + 5x_2 = 0 \implies -6x_2 + 5x_2 = 0 \implies -x_2 = 0 \implies x_2 = 0$. 
+This means $x_1 = 0$ as well. Since both weights $x_1, x_2$ are zero, the vectors are linearly dependent.
+
+\vspace{0.5cm}
+\textbf{The Flaw:} The definition of linear independence was fundamentally flipped; finding that the weights are exclusively zero means the trivial solution is the \textit{only} solution.
+\textbf{The Correction:} Because the only solution is $x_1=0, x_2=0$ (the trivial solution), the vectors are \textbf{linearly independent}.
+
+---
+
+\textbf{Problem 3:} Determine if the set is linearly independent: 
+$\left\{ \begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix}, \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} 3 \\ 1 \\ 4 \end{bmatrix} \right\}$
+
+\textbf{Flawed Solution:}
+We set up the matrix:
+\[
+\begin{bmatrix}
+1 & 0 & 3 \\
+0 & 0 & 1 \\
+2 & 0 & 4 
+\end{bmatrix}
+\xrightarrow{R_3 - 2R_1}
+\begin{bmatrix}
+1 & 0 & 3 \\
+0 & 0 & 1 \\
+0 & 0 & -2 
+\end{bmatrix}
+\xrightarrow{R_3 + 2R_2}
+\begin{bmatrix}
+1 & 0 & 3 \\
+0 & 0 & 1 \\
+0 & 0 & 0 
+\end{bmatrix}
+\]
+The matrix has two pivots (column 1 and column 3). Because column 2 is entirely zeros, we can just ignore it, as it contributes nothing to the system. The remaining vectors form pivot columns, so the set is linearly independent.
+
+\vspace{0.5cm}
+\textbf{The Flaw:} You cannot "ignore" a vector; a column of zeros represents a free variable ($x_2$ is free), which guarantees a non-trivial solution.
+\textbf{The Correction:} The set contains the zero vector. By Theorem 9, any set containing the zero vector is immediately \textbf{linearly dependent}.
+
+---
+
+\textbf{Problem 4:} Find the value of $h$ such that the vectors $\mathbf{v}_1 = \begin{bmatrix} 1 \\ -2 \end{bmatrix}$ and $\mathbf{v}_2 = \begin{bmatrix} -3 \\ h \end{bmatrix}$ are linearly independent.
+
+\textbf{Flawed Solution:}
+We can use the determinant trick for a $2 \times 2$ matrix. The matrix is $A = \begin{bmatrix} 1 & -3 \\ -2 & h \end{bmatrix}$. 
+For the vectors to be independent, we set the determinant equal to zero to find the critical value of $h$.
+$\det(A) = (1)(h) - (-3)(-2) = h - 6$.
+Setting $h - 6 = 0 \implies h = 6$. 
+Therefore, the vectors are linearly independent when $h = 6$.
+
+\vspace{0.5cm}
+\textbf{The Flaw:} A determinant of zero means the matrix is singular (non-invertible), which corresponds to linearly \textit{dependent} columns.
+\textbf{The Correction:} For the columns to be linearly independent, the determinant must be \textit{non-zero}. Thus, the vectors are independent for all $h \neq 6$.
+
+---
+
+\textbf{Problem 5:} A student is evaluating three vectors $\mathbf{u}, \mathbf{v}, \mathbf{w}$. They find that the equation $c_1\mathbf{u} + c_2\mathbf{v} + c_3\mathbf{w} = \mathbf{0}$ is satisfied when $c_1 = 4, c_2 = -2$, and $c_3 = 0$. 
+Conclusion: Because $c_3 = 0$, the vector $\mathbf{w}$ is not involved, so the set $\{\mathbf{u}, \mathbf{v}, \mathbf{w}\}$ is linearly independent.
+
+\textbf{Flawed Solution:}
+The student's logic is sound. Since the weight for $\mathbf{w}$ is zero, it means $\mathbf{w}$ cannot be written as a linear combination of $\mathbf{u}$ and $\mathbf{v}$, preserving its independence. Therefore, the set is independent.
+
+\vspace{0.5cm}
+\textbf{The Flaw:} The condition for linear dependence is that the weights are "not \textit{all} zero". Since $c_1=4$ and $c_2=-2$, a non-trivial relation exists.
+\textbf{The Correction:} Because there is a non-trivial solution ($4\mathbf{u} - 2\mathbf{v} + 0\mathbf{w} = \mathbf{0}$), the entire set $\{\mathbf{u}, \mathbf{v}, \mathbf{w}\}$ is \textbf{linearly dependent}. The zero simply implies that a subset ($\mathbf{u}$ and $\mathbf{v}$) is already dependent on its own.
+
+\end{document}

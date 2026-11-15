@@ -1,0 +1,463 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, amsthm, geometry, xcolor, enumitem, booktabs}
+\geometry{a4paper, margin=1in}
+
+\title{\textbf{Homework 6.4: Method of Variation of Parameters}}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The \textbf{Method of Variation of Parameters} is a powerful, general technique used to find a particular solution, $y_p(x)$, to a nonhomogeneous linear differential equation. While earlier methods (like Undetermined Coefficients) only work for equations with constant coefficients and specific types of forcing functions (polynomials, exponentials, sines, and cosines), Variation of Parameters works for \textit{any} linear differential equation, even those with variable coefficients, provided the general solution to the corresponding homogeneous equation is known.
+
+For an $n$-th order linear differential equation in \textbf{standard form}:
+\[ y^{(n)} + p_1(x)y^{(n-1)} + \dots + p_n(x)y = g(x) \]
+we assume that we already possess a fundamental solution set $\{y_1(x), y_2(x), \dots, y_n(x)\}$ for the associated homogeneous equation (where $g(x) = 0$). 
+
+The core idea is to replace the arbitrary constants $C_1, C_2, \dots, C_n$ in the homogeneous solution with unknown functions $v_1(x), v_2(x), \dots, v_n(x)$ (the ``parameters'' that are ``varying''). We then seek a particular solution of the form:
+\[ y_p(x) = v_1(x)y_1(x) + v_2(x)y_2(x) + \dots + v_n(x)y_n(x) \]
+
+\subsection{Intuition and Derivation}
+Why do we assume this specific form? The intuition stems from the fact that multiplying the fundamental solutions by functions rather than constants gives the expression enough ``flexibility'' to produce the nonhomogeneous term $g(x)$ when plugged back into the differential operator. 
+
+However, because we have introduced $n$ unknown functions ($v_1, \dots, v_n$), we need $n$ equations to uniquely determine them. If we simply differentiate $y_p(x)$ and plug it into the differential equation, we will end up with a single, highly complex equation involving up to the $n$-th derivatives of our unknown $v_k$ functions. 
+
+To prevent these higher-order derivatives of $v_k$ from appearing, we strategically impose $n-1$ constraints. Specifically, we demand that the sum of the terms involving the derivatives of $v_k$ vanishes at each differentiation step up to the $(n-1)$-th derivative. 
+This yields the following system of $n$ equations:
+\begin{align*}
+v_1' y_1 + v_2' y_2 + \dots + v_n' y_n &= 0 \\
+v_1' y_1' + v_2' y_2' + \dots + v_n' y_n' &= 0 \\
+&\vdots \\
+v_1' y_1^{(n-2)} + v_2' y_2^{(n-2)} + \dots + v_n' y_n^{(n-2)} &= 0 \\
+v_1' y_1^{(n-1)} + v_2' y_2^{(n-1)} + \dots + v_n' y_n^{(n-1)} &= g(x)
+\end{align*}
+Using Cramer's Rule to solve this system for $v_k'$, we obtain the elegant formula involving Wronskians.
+
+\subsection{Historical Context and Motivation}
+The method of variation of parameters was developed by the Italian-French mathematician Joseph-Louis Lagrange in 1774. Lagrange was studying celestial mechanics, specifically the perturbations in the orbits of planets. The planets roughly follow elliptical orbits (the homogeneous solution), but gravitational pulls from other planets cause slight deviations (the nonhomogeneous forcing function). Lagrange realized he could model these perturbed orbits by taking the constants of the elliptical orbit equations and allowing them to vary over time. This physical intuition birthed one of the most robust techniques in differential equations.
+
+\subsection{Key Formulas}
+\begin{itemize}
+    \item \textbf{Standard Form Requirement:} The equation \textit{must} be in the form $y^{(n)} + \dots = g(x)$. If the leading term is $a_n(x)y^{(n)}$, you must divide the entire equation by $a_n(x)$ so that the leading coefficient is $1$.
+    \item \textbf{The Wronskian ($W$):} The determinant of the fundamental matrix:
+    \[ W(x) = W[y_1, \dots, y_n](x) = \begin{vmatrix} y_1 & \dots & y_n \\ y_1' & \dots & y_n' \\ \vdots & \ddots & \vdots \\ y_1^{(n-1)} & \dots & y_n^{(n-1)} \end{vmatrix} \]
+    \item \textbf{The Modified Wronskian ($W_k$):} The determinant obtained by replacing the $k$-th column of $W(x)$ with the column vector $[0, 0, \dots, 0, 1]^T$.
+    \item \textbf{Derivative of Parameters:} 
+    \[ v_k'(x) = \frac{g(x) W_k(x)}{W(x)} \]
+    \item \textbf{Particular Solution:}
+    \[ y_p(x) = \sum_{k=1}^n y_k(x) \int \frac{g(x) W_k(x)}{W(x)} \, dx \]
+\end{itemize}
+
+\subsection{Prerequisites}
+To succeed in this topic, you must be proficient in:
+1. \textbf{Finding Homogeneous Solutions:} Solving characteristic equations for constant coefficient ODEs and Cauchy-Euler equations.
+2. \textbf{Linear Algebra:} Computing $3 \times 3$ and larger determinants (using cofactor expansion or the Rule of Sarrus) and understanding Cramer's Rule.
+3. \textbf{Advanced Integration:} Mastery of integration by parts, trigonometric integrals, and $u$-substitution, as the integrals generated by $v_k'$ are often highly complex.
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+\textit{Note: A strategic selection of problems (1, 4, 5, 7, 9, 12) has been chosen to cover every distinct problem archetype present in the text, ensuring full conceptual coverage without redundant repetition.}
+
+\subsection{Problem 1 (Constant Coefficients)}
+\textbf{Find a particular solution to the given equation:}
+\[ y''' - 3y'' + 4y = e^{2x} \]
+
+\textbf{Step 1: Find the fundamental solution set for the homogeneous equation.}
+The characteristic equation is $r^3 - 3r^2 + 4 = 0$. 
+By inspection, $r = -1$ is a root since $(-1)^3 - 3(-1)^2 + 4 = -1 - 3 + 4 = 0$.
+Using synthetic division to divide by $(r+1)$, we get $r^2 - 4r + 4 = 0$, which factors as $(r-2)^2 = 0$.
+The roots are $r = -1$ and $r = 2$ (multiplicity 2).
+The fundamental solution set is $\{y_1, y_2, y_3\} = \{e^{-x}, e^{2x}, x e^{2x}\}$.
+
+\textbf{Step 2: Compute the Wronskian $W(x)$.}
+\[ W = \begin{vmatrix} e^{-x} & e^{2x} & x e^{2x} \\ -e^{-x} & 2e^{2x} & (2x+1)e^{2x} \\ e^{-x} & 4e^{2x} & (4x+4)e^{2x} \end{vmatrix} \]
+Factor out $e^{-x}$ from column 1, $e^{2x}$ from column 2, and $e^{2x}$ from column 3:
+\[ W = e^{-x} e^{2x} e^{2x} \begin{vmatrix} 1 & 1 & x \\ -1 & 2 & 2x+1 \\ 1 & 4 & 4x+4 \end{vmatrix} = e^{3x} \begin{vmatrix} 1 & 1 & x \\ -1 & 2 & 2x+1 \\ 1 & 4 & 4x+4 \end{vmatrix} \]
+Expanding along the first row:
+\begin{align*}
+W &= e^{3x} \left( 1 \begin{vmatrix} 2 & 2x+1 \\ 4 & 4x+4 \end{vmatrix} - 1 \begin{vmatrix} -1 & 2x+1 \\ 1 & 4x+4 \end{vmatrix} + x \begin{vmatrix} -1 & 2 \\ 1 & 4 \end{vmatrix} \right) \\
+&= e^{3x} \left( [8x+8 - (8x+4)] - [-4x-4 - (2x+1)] + x[-4 - 2] \right) \\
+&= e^{3x} \left( 4 - (-6x-5) - 6x \right) = e^{3x} (4 + 6x + 5 - 6x) = 9e^{3x}
+\end{align*}
+
+\textbf{Step 3: Compute $W_1, W_2, W_3$.}
+\[ W_1 = \begin{vmatrix} 0 & e^{2x} & x e^{2x} \\ 0 & 2e^{2x} & (2x+1)e^{2x} \\ 1 & 4e^{2x} & (4x+4)e^{2x} \end{vmatrix} = 1 \cdot \begin{vmatrix} e^{2x} & x e^{2x} \\ 2e^{2x} & (2x+1)e^{2x} \end{vmatrix} = e^{4x}(2x+1) - 2x e^{4x} = e^{4x} \]
+\[ W_2 = \begin{vmatrix} e^{-x} & 0 & x e^{2x} \\ -e^{-x} & 0 & (2x+1)e^{2x} \\ e^{-x} & 1 & (4x+4)e^{2x} \end{vmatrix} = -1 \cdot \begin{vmatrix} e^{-x} & x e^{2x} \\ -e^{-x} & (2x+1)e^{2x} \end{vmatrix} = -[e^x(2x+1) - (-x e^x)] = -e^x(3x+1) \]
+\[ W_3 = \begin{vmatrix} e^{-x} & e^{2x} & 0 \\ -e^{-x} & 2e^{2x} & 0 \\ e^{-x} & 4e^{2x} & 1 \end{vmatrix} = 1 \cdot \begin{vmatrix} e^{-x} & e^{2x} \\ -e^{-x} & 2e^{2x} \end{vmatrix} = 2e^x - (-e^x) = 3e^x \]
+
+\textbf{Step 4: Integrate to find $v_1, v_2, v_3$.}
+The forcing function is $g(x) = e^{2x}$.
+\begin{align*}
+v_1' &= \frac{g(x)W_1}{W} = \frac{e^{2x} e^{4x}}{9e^{3x}} = \frac{1}{9}e^{3x} \implies v_1 = \int \frac{1}{9}e^{3x} \, dx = \frac{1}{27}e^{3x} \\
+v_2' &= \frac{g(x)W_2}{W} = \frac{e^{2x} (-e^x(3x+1))}{9e^{3x}} = -\frac{1}{9}(3x+1) \implies v_2 = -\frac{1}{9}\left(\frac{3}{2}x^2 + x\right) \\
+v_3' &= \frac{g(x)W_3}{W} = \frac{e^{2x} (3e^x)}{9e^{3x}} = \frac{1}{3} \implies v_3 = \int \frac{1}{3} \, dx = \frac{1}{3}x
+\end{align*}
+
+\textbf{Step 5: Construct $y_p$.}
+\begin{align*}
+y_p &= v_1 y_1 + v_2 y_2 + v_3 y_3 \\
+&= \left(\frac{1}{27}e^{3x}\right)e^{-x} - \frac{1}{9}\left(\frac{3}{2}x^2 + x\right)e^{2x} + \left(\frac{1}{3}x\right)x e^{2x} \\
+&= \frac{1}{27}e^{2x} - \frac{1}{6}x^2 e^{2x} - \frac{1}{9}x e^{2x} + \frac{1}{3}x^2 e^{2x} \\
+&= \frac{1}{6}x^2 e^{2x} - \frac{1}{9}x e^{2x} + \frac{1}{27}e^{2x}
+\end{align*}
+Since $-\frac{1}{9}x e^{2x}$ and $\frac{1}{27}e^{2x}$ are solutions to the homogeneous equation, they can be absorbed into the arbitrary constants of the general solution. Thus, the simplest particular solution is:
+\[ \mathbf{y_p(x) = \frac{1}{6}x^2 e^{2x}} \]
+
+---
+
+\subsection{Problem 4 (Repeated Roots)}
+\textbf{Find a particular solution to the given equation:}
+\[ y''' - 3y'' + 3y' - y = e^x \]
+
+\textbf{Step 1: Fundamental solution set.}
+Characteristic equation: $r^3 - 3r^2 + 3r - 1 = (r-1)^3 = 0$.
+Roots: $r=1$ (multiplicity 3).
+Fundamental set: $\{e^x, x e^x, x^2 e^x\}$.
+
+\textbf{Step 2: Compute the Wronskian $W(x)$.}
+\[ W = \begin{vmatrix} e^x & x e^x & x^2 e^x \\ e^x & (x+1)e^x & (x^2+2x)e^x \\ e^x & (x+2)e^x & (x^2+4x+2)e^x \end{vmatrix} = e^{3x} \begin{vmatrix} 1 & x & x^2 \\ 1 & x+1 & x^2+2x \\ 1 & x+2 & x^2+4x+2 \end{vmatrix} \]
+Subtract row 1 from row 2 and row 3:
+\[ W = e^{3x} \begin{vmatrix} 1 & x & x^2 \\ 0 & 1 & 2x \\ 0 & 2 & 4x+2 \end{vmatrix} = e^{3x} (1(4x+2) - 2(2x)) = e^{3x}(4x+2-4x) = 2e^{3x} \]
+
+\textbf{Step 3: Compute $W_1, W_2, W_3$.}
+\[ W_1 = \begin{vmatrix} 0 & x e^x & x^2 e^x \\ 0 & (x+1)e^x & (x^2+2x)e^x \\ 1 & (x+2)e^x & (x^2+4x+2)e^x \end{vmatrix} = 1 \cdot (x(x^2+2x)e^{2x} - x^2(x+1)e^{2x}) = x^2 e^{2x} \]
+\[ W_2 = \begin{vmatrix} e^x & 0 & x^2 e^x \\ e^x & 0 & (x^2+2x)e^x \\ e^x & 1 & (x^2+4x+2)e^x \end{vmatrix} = -1 \cdot (e^{2x}(x^2+2x) - e^{2x}x^2) = -2x e^{2x} \]
+\[ W_3 = \begin{vmatrix} e^x & x e^x & 0 \\ e^x & (x+1)e^x & 0 \\ e^x & (x+2)e^x & 1 \end{vmatrix} = 1 \cdot (e^{2x}(x+1) - e^{2x}x) = e^{2x} \]
+
+\textbf{Step 4: Integrate to find $v_1, v_2, v_3$.}
+Here $g(x) = e^x$.
+\begin{align*}
+v_1' &= \frac{e^x (x^2 e^{2x})}{2e^{3x}} = \frac{1}{2}x^2 \implies v_1 = \frac{1}{6}x^3 \\
+v_2' &= \frac{e^x (-2x e^{2x})}{2e^{3x}} = -x \implies v_2 = -\frac{1}{2}x^2 \\
+v_3' &= \frac{e^x (e^{2x})}{2e^{3x}} = \frac{1}{2} \implies v_3 = \frac{1}{2}x
+\end{align*}
+
+\textbf{Step 5: Construct $y_p(x)$.}
+\begin{align*}
+y_p(x) &= \left(\frac{1}{6}x^3\right)e^x + \left(-\frac{1}{2}x^2\right)x e^x + \left(\frac{1}{2}x\right)x^2 e^x \\
+&= \frac{1}{6}x^3 e^x - \frac{1}{2}x^3 e^x + \frac{1}{2}x^3 e^x = \frac{1}{6}x^3 e^x
+\end{align*}
+\[ \mathbf{y_p(x) = \frac{1}{6}x^3 e^x} \]
+
+---
+
+\subsection{Problem 5 (Trigonometric Forcing Function)}
+\textbf{Find a particular solution to the given equation:}
+\[ y''' + y' = \tan x, \quad 0 < x < \pi/2 \]
+
+\textbf{Step 1: Fundamental solution set.}
+Characteristic equation: $r^3 + r = r(r^2 + 1) = 0$. Roots: $r=0, r=\pm i$.
+Fundamental set: $\{1, \cos x, \sin x\}$.
+
+\textbf{Step 2: Compute the Wronskian $W(x)$.}
+\[ W = \begin{vmatrix} 1 & \cos x & \sin x \\ 0 & -\sin x & \cos x \\ 0 & -\cos x & -\sin x \end{vmatrix} = 1 \cdot (\sin^2 x + \cos^2 x) = 1 \]
+
+\textbf{Step 3: Compute $W_1, W_2, W_3$.}
+\[ W_1 = \begin{vmatrix} 0 & \cos x & \sin x \\ 0 & -\sin x & \cos x \\ 1 & -\cos x & -\sin x \end{vmatrix} = 1 \cdot (\cos^2 x + \sin^2 x) = 1 \]
+\[ W_2 = \begin{vmatrix} 1 & 0 & \sin x \\ 0 & 0 & \cos x \\ 0 & 1 & -\sin x \end{vmatrix} = -1 \cdot (\cos x) = -\cos x \]
+\[ W_3 = \begin{vmatrix} 1 & \cos x & 0 \\ 0 & -\sin x & 0 \\ 0 & -\cos x & 1 \end{vmatrix} = 1 \cdot (-\sin x) = -\sin x \]
+
+\textbf{Step 4: Integrate to find $v_1, v_2, v_3$.}
+Here $g(x) = \tan x$.
+\begin{align*}
+v_1' &= \frac{\tan x \cdot 1}{1} = \tan x \implies v_1 = \int \tan x \, dx = \ln|\sec x| = -\ln(\cos x) \quad (\text{since } 0 < x < \pi/2) \\
+v_2' &= \frac{\tan x (-\cos x)}{1} = -\sin x \implies v_2 = \int -\sin x \, dx = \cos x \\
+v_3' &= \frac{\tan x (-\sin x)}{1} = -\frac{\sin^2 x}{\cos x} = \frac{\cos^2 x - 1}{\cos x} = \cos x - \sec x \\
+v_3 &= \int (\cos x - \sec x) \, dx = \sin x - \ln|\sec x + \tan x|
+\end{align*}
+
+\textbf{Step 5: Construct $y_p(x)$.}
+\begin{align*}
+y_p(x) &= (-\ln(\cos x))(1) + (\cos x)(\cos x) + (\sin x - \ln(\sec x + \tan x))(\sin x) \\
+&= -\ln(\cos x) + \cos^2 x + \sin^2 x - \sin x \ln(\sec x + \tan x) \\
+&= 1 - \ln(\cos x) - \sin x \ln(\sec x + \tan x)
+\end{align*}
+Since $1$ is a solution to the homogeneous equation, we can absorb it.
+\[ \mathbf{y_p(x) = -\ln(\cos x) - \sin x \ln(\sec x + \tan x)} \]
+
+---
+
+\subsection{Problem 7 (Cauchy-Euler Equation)}
+\textbf{Find a general solution to the Cauchy-Euler equation:}
+\[ x^3 y''' - 3x^2 y'' + 6x y' - 6y = x^{-1}, \quad x > 0 \]
+\textbf{given that $\{x, x^2, x^3\}$ is a fundamental solution set.}
+
+\textbf{Step 1: Convert to Standard Form.}
+Divide the entire equation by $x^3$ to make the leading coefficient $1$:
+\[ y''' - \frac{3}{x} y'' + \frac{6}{x^2} y' - \frac{6}{x^3} y = x^{-4} \]
+Thus, $g(x) = x^{-4}$.
+
+\textbf{Step 2: Compute the Wronskian $W(x)$.}
+\[ W = \begin{vmatrix} x & x^2 & x^3 \\ 1 & 2x & 3x^2 \\ 0 & 2 & 6x \end{vmatrix} = x(12x^2 - 6x^2) - x^2(6x - 0) + x^3(2 - 0) = 6x^3 - 6x^3 + 2x^3 = 2x^3 \]
+
+\textbf{Step 3: Compute $W_1, W_2, W_3$.}
+\[ W_1 = \begin{vmatrix} 0 & x^2 & x^3 \\ 0 & 2x & 3x^2 \\ 1 & 2 & 6x \end{vmatrix} = 1 \cdot (3x^4 - 2x^4) = x^4 \]
+\[ W_2 = \begin{vmatrix} x & 0 & x^3 \\ 1 & 0 & 3x^2 \\ 0 & 1 & 6x \end{vmatrix} = -1 \cdot (3x^3 - x^3) = -2x^3 \]
+\[ W_3 = \begin{vmatrix} x & x^2 & 0 \\ 1 & 2x & 0 \\ 0 & 2 & 1 \end{vmatrix} = 1 \cdot (2x^2 - x^2) = x^2 \]
+
+\textbf{Step 4: Integrate to find $v_1, v_2, v_3$.}
+\begin{align*}
+v_1' &= \frac{x^{-4} \cdot x^4}{2x^3} = \frac{1}{2}x^{-3} \implies v_1 = -\frac{1}{4}x^{-2} \\
+v_2' &= \frac{x^{-4} \cdot (-2x^3)}{2x^3} = -x^{-4} \implies v_2 = \frac{1}{3}x^{-3} \\
+v_3' &= \frac{x^{-4} \cdot x^2}{2x^3} = \frac{1}{2}x^{-5} \implies v_3 = -\frac{1}{8}x^{-4}
+\end{align*}
+
+\textbf{Step 5: Construct $y_p(x)$ and the general solution.}
+\begin{align*}
+y_p(x) &= \left(-\frac{1}{4}x^{-2}\right)(x) + \left(\frac{1}{3}x^{-3}\right)(x^2) + \left(-\frac{1}{8}x^{-4}\right)(x^3) \\
+&= -\frac{1}{4}x^{-1} + \frac{1}{3}x^{-1} - \frac{1}{8}x^{-1} = \left(\frac{-6 + 8 - 3}{24}\right)x^{-1} = -\frac{1}{24}x^{-1}
+\end{align*}
+The general solution is $y(x) = y_c(x) + y_p(x)$:
+\[ \mathbf{y(x) = C_1 x + C_2 x^2 + C_3 x^3 - \frac{1}{24}x^{-1}} \]
+
+---
+
+\subsection{Problem 9 (Abstract Forcing Function)}
+\textbf{Given that $\{e^x, e^{-x}, e^{2x}\}$ is a fundamental solution set for $y''' - 2y'' - y' + 2y = 0$, determine a formula involving integrals for a particular solution to $y''' - 2y'' - y' + 2y = g(x)$.}
+
+\textbf{Step 1: Compute the Wronskian $W(x)$.}
+\[ W = \begin{vmatrix} e^x & e^{-x} & e^{2x} \\ e^x & -e^{-x} & 2e^{2x} \\ e^x & e^{-x} & 4e^{2x} \end{vmatrix} = e^x e^{-x} e^{2x} \begin{vmatrix} 1 & 1 & 1 \\ 1 & -1 & 2 \\ 1 & 1 & 4 \end{vmatrix} = e^{2x} \begin{vmatrix} 1 & 1 & 1 \\ 1 & -1 & 2 \\ 1 & 1 & 4 \end{vmatrix} \]
+Expanding the determinant:
+\[ W = e^{2x} [1(-4 - 2) - 1(4 - 2) + 1(1 - (-1))] = e^{2x}[-6 - 2 + 2] = -6e^{2x} \]
+
+\textbf{Step 2: Compute $W_1, W_2, W_3$.}
+\[ W_1 = \begin{vmatrix} 0 & e^{-x} & e^{2x} \\ 0 & -e^{-x} & 2e^{2x} \\ 1 & e^{-x} & 4e^{2x} \end{vmatrix} = 1 \cdot (2e^x - (-e^x)) = 3e^x \]
+\[ W_2 = \begin{vmatrix} e^x & 0 & e^{2x} \\ e^x & 0 & 2e^{2x} \\ e^x & 1 & 4e^{2x} \end{vmatrix} = -1 \cdot (2e^{3x} - e^{3x}) = -e^{3x} \]
+\[ W_3 = \begin{vmatrix} e^x & e^{-x} & 0 \\ e^x & -e^{-x} & 0 \\ e^x & e^{-x} & 1 \end{vmatrix} = 1 \cdot (-1 - 1) = -2 \]
+
+\textbf{Step 3: Set up the integrals for $y_p(x)$.}
+\begin{align*}
+v_1' &= \frac{g(x) \cdot 3e^x}{-6e^{2x}} = -\frac{1}{2}e^{-x}g(x) \\
+v_2' &= \frac{g(x) \cdot (-e^{3x})}{-6e^{2x}} = \frac{1}{6}e^x g(x) \\
+v_3' &= \frac{g(x) \cdot (-2)}{-6e^{2x}} = \frac{1}{3}e^{-2x}g(x)
+\end{align*}
+\[ \mathbf{y_p(x) = -\frac{1}{2}e^x \int e^{-x}g(x) \, dx + \frac{1}{6}e^{-x} \int e^x g(x) \, dx + \frac{1}{3}e^{2x} \int e^{-2x}g(x) \, dx} \]
+
+---
+
+\subsection{Problem 12 (Theoretical Derivation)}
+\textbf{Derive the system (7) in the special case when $n=3$. [Hint: To determine the last equation, require that $L[y_p] = g$ and use the fact that $y_1, y_2, y_3$ satisfy the corresponding homogeneous equation.]}
+
+\textbf{Proof:}
+Let the 3rd-order linear differential equation be $L[y] = y''' + p_1(x)y'' + p_2(x)y' + p_3(x)y = g(x)$.
+Assume a particular solution of the form $y_p = v_1 y_1 + v_2 y_2 + v_3 y_3$.
+Differentiating $y_p$ yields:
+\[ y_p' = (v_1 y_1' + v_2 y_2' + v_3 y_3') + (v_1' y_1 + v_2' y_2 + v_3' y_3) \]
+To prevent second derivatives of $v_k$ from appearing, we impose our \textbf{first condition}:
+\[ v_1' y_1 + v_2' y_2 + v_3' y_3 = 0 \quad \text{(Condition 1)} \]
+This simplifies the first derivative to $y_p' = v_1 y_1' + v_2 y_2' + v_3 y_3'$.
+Differentiating again:
+\[ y_p'' = (v_1 y_1'' + v_2 y_2'' + v_3 y_3'') + (v_1' y_1' + v_2' y_2' + v_3' y_3') \]
+We impose our \textbf{second condition}:
+\[ v_1' y_1' + v_2' y_2' + v_3' y_3' = 0 \quad \text{(Condition 2)} \]
+This simplifies the second derivative to $y_p'' = v_1 y_1'' + v_2 y_2'' + v_3 y_3''$.
+Differentiating a third time:
+\[ y_p''' = (v_1 y_1''' + v_2 y_2''' + v_3 y_3''') + (v_1' y_1'' + v_2' y_2'' + v_3' y_3'') \]
+Now, substitute $y_p, y_p', y_p'', y_p'''$ into the original differential equation $L[y_p] = g(x)$:
+\begin{align*}
+&[v_1 y_1''' + v_2 y_2''' + v_3 y_3''' + v_1' y_1'' + v_2' y_2'' + v_3' y_3''] \\
+&+ p_1(x)[v_1 y_1'' + v_2 y_2'' + v_3 y_3''] \\
+&+ p_2(x)[v_1 y_1' + v_2 y_2' + v_3 y_3'] \\
+&+ p_3(x)[v_1 y_1 + v_2 y_2 + v_3 y_3] = g(x)
+\end{align*}
+Rearranging by factoring out $v_1, v_2, v_3$:
+\begin{align*}
+&v_1(y_1''' + p_1 y_1'' + p_2 y_1' + p_3 y_1) \\
+&+ v_2(y_2''' + p_1 y_2'' + p_2 y_2' + p_3 y_2) \\
+&+ v_3(y_3''' + p_1 y_3'' + p_2 y_3' + p_3 y_3) \\
+&+ (v_1' y_1'' + v_2' y_2'' + v_3' y_3'') = g(x)
+\end{align*}
+Since $y_1, y_2, y_3$ are solutions to the homogeneous equation $L[y]=0$, the terms in the first three parentheses are exactly zero. This leaves our \textbf{third condition}:
+\[ v_1' y_1'' + v_2' y_2'' + v_3' y_3'' = g(x) \quad \text{(Condition 3)} \]
+Conditions 1, 2, and 3 exactly match system (7) for $n=3$. $\blacksquare$
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Constant Coefficients (Problems 1, 4):} These are the most straightforward. The fundamental set is found using the characteristic equation. The Wronskian is usually an exponential function multiplied by a constant, making the integrals for $v_k$ manageable (often requiring integration by parts or simple power rules).
+    \item \textbf{Trigonometric/Non-Polynomial Forcing Functions (Problem 5):} This archetype highlights the necessity of Variation of Parameters. Undetermined coefficients fails for $g(x) = \tan x$. The Wronskian often simplifies beautifully using Pythagorean identities (e.g., $\sin^2 x + \cos^2 x = 1$), but the resulting integrals for $v_k$ require advanced trigonometric integration techniques.
+    \item \textbf{Variable Coefficients / Cauchy-Euler (Problem 7):} The critical step here is recognizing that the equation is \textit{not} in standard form. You must divide by the leading variable coefficient (e.g., $x^3$) before identifying $g(x)$. The Wronskian will be a polynomial or rational function of $x$.
+    \item \textbf{Abstract Formulation (Problem 9):} These problems test your understanding of the formula itself rather than your integration skills. The goal is to set up the integral representation of $y_p(x)$ cleanly.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Determinant Simplification via Factoring:} In Problem 1, factoring out $e^{-x}$ and $e^{2x}$ from the columns of the Wronskian \textit{before} expanding the determinant drastically reduced the algebraic complexity.
+    \item \textbf{Row Operations in Determinants:} In Problem 4, subtracting Row 1 from Rows 2 and 3 created zeros in the first column, allowing for a trivial cofactor expansion. This is a crucial linear algebra trick to save time.
+    \item \textbf{Absorbing Terms into the Homogeneous Solution:} In Problems 1 and 5, the resulting $y_p(x)$ contained terms that were already part of the fundamental solution set (e.g., $-\frac{1}{9}x e^{2x}$ in Problem 1). Recognizing this allows you to drop those terms, simplifying the final answer.
+    \item \textbf{Trigonometric Rewriting:} In Problem 5, integrating $v_3' = -\frac{\sin^2 x}{\cos x}$ required rewriting it as $\frac{\cos^2 x - 1}{\cos x} = \cos x - \sec x$. This algebraic manipulation is mandatory to make the integral solvable.
+\end{itemize}
+
+\newpage
+\section{Part 4: ``Cheatsheet'' and Tips for Success}
+
+\subsection{Summary of Important Formulas}
+\begin{itemize}
+    \item \textbf{Standard Form:} $y^{(n)} + p_1(x)y^{(n-1)} + \dots = g(x)$
+    \item \textbf{Cramer's Rule Solution:} $v_k' = \frac{g(x)W_k(x)}{W(x)}$
+    \item \textbf{Particular Solution:} $y_p = v_1 y_1 + v_2 y_2 + \dots + v_n y_n$
+\end{itemize}
+
+\subsection{Cheats, Tricks, and Shortcuts}
+\begin{itemize}
+    \item \textbf{The $3 \times 3$ Wronskian Shortcut:} When calculating $W_k$, the column $[0, 0, 1]^T$ means you can immediately use cofactor expansion along that column. $W_k$ is simply $(-1)^{n+k}$ times the minor determinant formed by deleting the last row and $k$-th column.
+    \item \textbf{The ``Drop It'' Rule:} If you finish your massive integration and find that $y_p(x)$ contains a term like $5e^x$, and $e^x$ is in your homogeneous solution $y_c$, \textit{drop the $5e^x$}. It will be absorbed by the arbitrary constant $C_1$.
+    \item \textbf{Exponential Factoring:} If your fundamental solutions are all exponentials (e.g., $e^{ax}, e^{bx}, e^{cx}$), the Wronskian $W(x)$ will \textit{always} be a constant multiple of $e^{(a+b+c)x}$. Use this to check your work!
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The Standard Form Trap:} The \#1 mistake students make on exams is forgetting to divide by the leading coefficient $a_n(x)$. If the equation is $x^2 y'' + \dots = \ln x$, $g(x)$ is \textbf{not} $\ln x$. It is $\frac{\ln x}{x^2}$.
+    \item \textbf{Missing the Negative Sign:} When computing $W_2$ in a $3 \times 3$ system, remember the checkerboard pattern of signs for determinants: the cofactor for the $(3,2)$ position is negative!
+    \item \textbf{Integration Constants:} Do not add $+C$ when integrating $v_k'$. We only need \textit{one} particular solution, so we choose $C=0$ for simplicity.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The ``Big Picture''}
+
+\subsection{A) Thematic Connections}
+The central theme of Variation of Parameters is \textbf{Linear Superposition and Basis Vectors}. In linear algebra, any vector in a space can be represented as a linear combination of basis vectors with constant coefficients. In the space of solutions to differential equations, the fundamental set $\{y_1, \dots, y_n\}$ acts as our basis. 
+
+When the system is perturbed by a forcing function $g(x)$, the ``vector'' (solution) is no longer static. Variation of parameters elegantly suggests that we can still use our original basis vectors, but we must allow the coefficients to become dynamic (functions of $x$) to trace out the new path. This is mathematically identical to changing coordinates in a moving frame of reference.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Links:} This topic is the direct, logical evolution of solving 1st-order linear ODEs using Integrating Factors. In fact, the integrating factor method is just a special case of variation of parameters for $n=1$. It also builds heavily on the Undetermined Coefficients method, serving as the ``universal fallback'' when the forcing function is not a simple polynomial or exponential.
+
+\textbf{Forward Links:} The integrals generated by Variation of Parameters, specifically the form $y_p(x) = \int \sum \frac{y_k(x) W_k(t)}{W(t)} g(t) \, dt$, are the foundational bedrock for \textbf{Green's Functions}. In advanced physics and partial differential equations (PDEs), Green's functions are used to solve boundary value problems by integrating a forcing function against a ``kernel'' (which is exactly what the Wronskian fraction represents). Understanding this chapter is non-negotiable for studying quantum mechanics or electrodynamics.
+
+\newpage
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+\begin{enumerate}
+    \item \textbf{Generative AI (Diffusion Models):} Denoising Diffusion Probabilistic Models (DDPMs) rely on Stochastic Differential Equations (SDEs) to add and remove noise from images. Advanced samplers use Underdamped Langevin Dynamics, which involve 2nd and 3rd-order derivatives (position, velocity, acceleration) to navigate the probability space. Variation of parameters is used to solve the linear drift components of these higher-order SDEs.
+    \item \textbf{Quantitative Finance (Stochastic Volatility):} In pricing exotic path-dependent derivatives (like Asian or Parisian options), applying the Laplace transform to the Black-Scholes PDE often results in a 3rd-order nonhomogeneous linear ODE in the spatial domain. Variation of parameters is required to find the exact pricing formula.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup: Underdamped Langevin Dynamics in AI}
+In Generative AI, suppose we are modeling the latent space trajectory $x(t)$ of an image generation process using a 3rd-order control system to ensure smooth transitions (minimizing ``jerk''). The system is governed by:
+\[ x'''(t) + \alpha x''(t) + \beta x'(t) + \gamma x(t) = u(t) \]
+where $\alpha, \beta, \gamma$ are friction and restoring force constants, and $u(t)$ is the stochastic score-matching neural network output (the forcing function).
+
+To find the exact trajectory $x(t)$ for an arbitrary neural network output $u(t)$, we define the state space fundamental solutions $\{x_1(t), x_2(t), x_3(t)\}$ corresponding to the unforced dynamics ($u(t)=0$). 
+
+Using Variation of Parameters, the exact latent trajectory is given by:
+\[ x(t) = \sum_{i=1}^3 C_i x_i(t) + \sum_{k=1}^3 x_k(t) \int_0^t \frac{u(\tau) W_k(\tau)}{W(\tau)} \, d\tau \]
+where $W(\tau)$ is the Wronskian of the fundamental solutions. This integral formulation allows AI researchers to design discrete-time solvers (like DPM-Solver) by approximating the integral of the neural network $u(\tau)$ against the exact analytical Wronskian kernel, drastically reducing the number of steps required to generate a high-quality image.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Variation: Systems of Linear ODEs}
+While the homework focuses on a single $n$-th order equation, Variation of Parameters is frequently applied to \textbf{first-order systems} of the form $\mathbf{x}' = A\mathbf{x} + \mathbf{f}(t)$. 
+
+Instead of a Wronskian determinant, we use a \textbf{Fundamental Matrix} $\Phi(t)$, whose columns are the linearly independent solution vectors to the homogeneous system $\mathbf{x}' = A\mathbf{x}$.
+
+The particular solution for the system is given by the matrix equation:
+\[ \mathbf{x}_p(t) = \Phi(t) \int \Phi^{-1}(t) \mathbf{f}(t) \, dt \]
+
+\textbf{Example:}
+Solve $\mathbf{x}' = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \mathbf{x} + \begin{pmatrix} 0 \\ \sec t \end{pmatrix}$.
+
+The homogeneous solutions are $\mathbf{x}_1 = \begin{pmatrix} \cos t \\ -\sin t \end{pmatrix}$ and $\mathbf{x}_2 = \begin{pmatrix} \sin t \\ \cos t \end{pmatrix}$.
+The fundamental matrix is $\Phi(t) = \begin{pmatrix} \cos t & \sin t \\ -\sin t & \cos t \end{pmatrix}$.
+The inverse is $\Phi^{-1}(t) = \begin{pmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{pmatrix}$.
+
+We compute $\Phi^{-1}(t) \mathbf{f}(t) = \begin{pmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{pmatrix} \begin{pmatrix} 0 \\ \sec t \end{pmatrix} = \begin{pmatrix} -\tan t \\ 1 \end{pmatrix}$.
+
+Integrating this vector yields $\begin{pmatrix} \ln|\cos t| \\ t \end{pmatrix}$.
+
+Finally, we multiply by $\Phi(t)$:
+\[ \mathbf{x}_p(t) = \Phi(t) \begin{pmatrix} \ln|\cos t| \\ t \end{pmatrix} = \begin{pmatrix} \cos t \ln|\cos t| + t \sin t \\ -\sin t \ln|\cos t| + t \cos t \end{pmatrix} \]
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: ``Find the Flaw''}
+
+Below are 5 problems solved using Variation of Parameters. Each contains a single, subtle, yet critical flaw. Act as the grader: find the error, explain why it is wrong in one sentence, and provide the correct final solution.
+
+\subsection{Problem 1}
+\textbf{Solve:} $x^2 y'' - 2x y' + 2y = x^3 \sin x$
+\textbf{Flawed Solution:}
+The homogeneous solutions are $y_1 = x, y_2 = x^2$.
+The Wronskian is $W = x(2x) - (1)(x^2) = x^2$.
+The forcing function is $g(x) = x^3 \sin x$.
+$v_1 = \int \frac{-x^2 (x^3 \sin x)}{x^2} \, dx = \int -x^3 \sin x \, dx$.
+\textbf{Find the Flaw:}
+\vspace{2cm}
+
+\subsection{Problem 2}
+\textbf{Solve:} $y'' + y = \sec x$
+\textbf{Flawed Solution:}
+$y_1 = \cos x, y_2 = \sin x$. $W = 1$. $g(x) = \sec x$.
+$v_1' = \frac{-\sin x \sec x}{1} = -\tan x \implies v_1 = -\frac{1}{2}\tan^2 x$.
+$v_2' = \frac{\cos x \sec x}{1} = 1 \implies v_2 = x$.
+$y_p = -\frac{1}{2}\tan^2 x \cos x + x \sin x$.
+\textbf{Find the Flaw:}
+\vspace{2cm}
+
+\subsection{Problem 3}
+\textbf{Solve:} $y'' - y = e^x$
+\textbf{Flawed Solution:}
+$y_1 = e^x, y_2 = e^{-x}$.
+$W = y_1 y_2 - y_1' y_2' = (e^x)(e^{-x}) - (e^x)(-e^{-x}) = 1 - (-1) = 2$.
+$v_1 = \int \frac{-e^{-x} e^x}{2} \, dx = -\frac{1}{2}x$.
+$v_2 = \int \frac{e^x e^x}{2} \, dx = \frac{1}{4}e^{2x}$.
+$y_p = -\frac{1}{2}x e^x + \frac{1}{4}e^x$.
+\textbf{Find the Flaw:}
+\vspace{2cm}
+
+\subsection{Problem 4}
+\textbf{Solve:} $y''' - y'' = 1$
+\textbf{Flawed Solution:}
+$y_1 = 1, y_2 = x, y_3 = e^x$. $W = e^x$.
+$W_1 = x e^x - e^x$, $W_2 = e^x$, $W_3 = 1$.
+$v_1' = x - 1 \implies v_1 = \frac{1}{2}x^2 - x$.
+$v_2' = 1 \implies v_2 = x$.
+$v_3' = e^{-x} \implies v_3 = -e^{-x}$.
+$y_p = v_1 + v_2 + v_3 = \frac{1}{2}x^2 - e^{-x}$.
+\textbf{Find the Flaw:}
+\vspace{2cm}
+
+\subsection{Problem 5}
+\textbf{Solve:} $y'' + 4y = \sin(2x)$
+\textbf{Flawed Solution:}
+$y_1 = \cos(2x), y_2 = \sin(2x)$. $W = 2$.
+To find $v_1'$, we replace the first row of the Wronskian with $[0, 1]$:
+$W_1 = \begin{vmatrix} 0 & 1 \\ -2\sin(2x) & 2\cos(2x) \end{vmatrix} = 2\sin(2x)$.
+$v_1' = \frac{\sin(2x)(2\sin(2x))}{2} = \sin^2(2x)$.
+\textbf{Find the Flaw:}
+\vspace{2cm}
+
+\newpage
+\subsection{Answer Key for Diagnostic Testing}
+
+\textbf{Problem 1 Correction:}
+\textit{Error:} The student failed to divide the ODE by $x^2$ to put it in standard form, incorrectly identifying $g(x)$.
+\textit{Correct Step:} $g(x) = \frac{x^3 \sin x}{x^2} = x \sin x$. Then $v_1 = \int \frac{-x^2 (x \sin x)}{x^2} \, dx = \int -x \sin x \, dx = x \cos x - \sin x$.
+
+\textbf{Problem 2 Correction:}
+\textit{Error:} The student integrated $v_1' = -\tan x$ using the power rule as if $\tan x$ were a polynomial, instead of using the logarithmic integral.
+\textit{Correct Step:} $v_1 = \int -\tan x \, dx = \ln|\cos x|$. Thus, $y_p = \cos x \ln|\cos x| + x \sin x$.
+
+\textbf{Problem 3 Correction:}
+\textit{Error:} The student calculated the Wronskian using the incorrect formula $y_1 y_2 - y_1' y_2'$ instead of the determinant $y_1 y_2' - y_1' y_2$.
+\textit{Correct Step:} $W = (e^x)(-e^{-x}) - (e^x)(e^{-x}) = -1 - 1 = -2$. This changes the signs of $v_1$ and $v_2$.
+
+\textbf{Problem 4 Correction:}
+\textit{Error:} The student forgot to multiply the integrated parameters $v_k$ by their respective fundamental solutions $y_k$ when forming $y_p$.
+\textit{Correct Step:} $y_p = v_1 y_1 + v_2 y_2 + v_3 y_3 = (\frac{1}{2}x^2 - x)(1) + (x)(x) + (-e^{-x})(e^x) = \frac{3}{2}x^2 - x - 1$.
+
+\textbf{Problem 5 Correction:}
+\textit{Error:} The student replaced the first \textit{row} of the Wronskian with $[0, 1]$ instead of replacing the first \textit{column} with $[0, 1]^T$.
+\textit{Correct Step:} $W_1 = \begin{vmatrix} 0 & \sin(2x) \\ 1 & 2\cos(2x) \end{vmatrix} = -\sin(2x)$. Then $v_1' = \frac{-\sin^2(2x)}{2}$.
+
+\end{document}

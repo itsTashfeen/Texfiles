@@ -1,0 +1,1428 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+
+\geometry{margin=1in}
+
+\title{Homework 1.1 What is a Partial Differential Equation?}
+\author{Tashfeen Omran}
+\date{October 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================================
+% PART 1: COMPREHENSIVE INTRODUCTION, CONTEXT, AND PREREQUISITES
+% ============================================================================
+\section{Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+A \textbf{Partial Differential Equation (PDE)} is a mathematical identity that relates an unknown function $u$ of \emph{two or more independent variables} (such as spatial coordinates $x, y, z$ and time $t$) to its partial derivatives with respect to those variables. 
+
+\begin{itemize}
+    \item \textbf{Independent vs.\ Dependent Variables:} In an Ordinary Differential Equation (ODE), there is only a single independent variable (typically $x$ or $t$). In a PDE, there are multiple independent variables $x_1, x_2, \dots, x_n$, and a single dependent variable $u = u(x_1, x_2, \dots, x_n)$ that represents the physical quantity of interest (such as temperature, wave displacement, quantum wave function, or option price). Unlike separable ODEs where one sometimes inverts the roles of dependent and independent variables, in PDEs the distinction between the unknown dependent variable $u$ and the independent variables $(x, y, t, \dots)$ is strictly maintained.
+    \item \textbf{Subscript Notation:} To keep equations compact and readable, partial derivatives are denoted using subscripts:
+    \[
+        u_x = \frac{\partial u}{\partial x}, \quad u_y = \frac{\partial u}{\partial y}, \quad u_{xx} = \frac{\partial^2 u}{\partial x^2}, \quad u_{xy} = \frac{\partial^2 u}{\partial y \partial x}, \quad u_{xxt} = \frac{\partial^3 u}{\partial t \partial x^2}.
+    \]
+    Assuming all partial derivatives are continuous on the domain of interest, Clairaut's Theorem guarantees that mixed partial derivatives commute: $u_{xy} = u_{yx}$.
+    \item \textbf{Order of a PDE:} The \emph{order} of a PDE is the order of the highest partial derivative appearing in the equation. For instance, $u_x + u_y = 0$ is of first order, $u_{tt} - u_{xx} = 0$ is of second order, $u_t + u u_x + u_{xxx} = 0$ is of third order, and $u_{tt} + u_{xxxx} = 0$ is of fourth order.
+    \item \textbf{Differential Operators and Linearity:} An \emph{operator} $\mathcal{L}$ is a mapping that takes a differentiable function $u$ and produces a new function $\mathcal{L}u$. For example, if $\mathcal{L} = \frac{\partial}{\partial x} + y\frac{\partial}{\partial y}$, then $\mathcal{L}u = u_x + y u_y$. An operator $\mathcal{L}$ is defined to be a \textbf{linear operator} if and only if it satisfies two fundamental axioms for all functions $u, v$ in its domain and all scalar constants $c$:
+    \begin{enumerate}
+        \item \textbf{Additivity:} $\mathcal{L}(u + v) = \mathcal{L}u + \mathcal{L}v$
+        \item \textbf{Homogeneity (Scalar Multiplication):} $\mathcal{L}(cu) = c\mathcal{L}u$
+    \end{enumerate}
+    Equivalently, $\mathcal{L}(c_1 u + c_2 v) = c_1 \mathcal{L}u + c_2 \mathcal{L}v$ for all functions $u, v$ and constants $c_1, c_2$.
+    \item \textbf{Homogeneous vs.\ Inhomogeneous Linear PDEs:} Once a PDE is written using a linear operator $\mathcal{L}$ acting on all terms containing the unknown $u$ and its derivatives:
+    \begin{itemize}
+        \item If the equation takes the form $\mathcal{L}u = 0$, it is called a \textbf{homogeneous linear PDE}. Note that $u \equiv 0$ (the trivial solution) always satisfies a homogeneous linear PDE.
+        \item If the equation takes the form $\mathcal{L}u = g(x, y, \dots)$, where $g \neq 0$ is a known function depending \emph{only} on the independent variables, it is called an \textbf{inhomogeneous linear PDE}.
+        \item If the terms involving $u$ and its partial derivatives cannot be written in the form $\mathcal{L}u$ for any linear operator $\mathcal{L}$ (for instance, due to products like $u u_x$, powers like $u^3$ or $(u_y)^2$, or transcendental functions like $\sqrt{1+u}$), the PDE is \textbf{nonlinear}.
+    \end{itemize}
+    \item \textbf{The Superposition Principle and Vector Spaces:} Because a linear operator satisfies $\mathcal{L}\left(\sum_{j=1}^n c_j u_j\right) = \sum_{j=1}^n c_j \mathcal{L}u_j$, any linear combination of solutions $u_1, u_2, \dots, u_n$ to a homogeneous linear equation $\mathcal{L}u = 0$ is also a solution:
+    \[
+        \mathcal{L}\left(\sum_{j=1}^n c_j u_j\right) = \sum_{j=1}^n c_j \mathcal{L}(u_j) = \sum_{j=1}^n c_j (0) = 0.
+    \]
+    Consequently, the set of all solutions to a homogeneous linear equation $\mathcal{L}u = 0$ forms a \textbf{vector space} (specifically, the kernel or nullspace of $\mathcal{L}$).
+\end{itemize}
+
+\subsection{Intuition and Derivation}
+\subsubsection{Why PDEs Yield Arbitrary Functions Instead of Arbitrary Constants}
+In an ODE of order $m$, integrating out the derivatives introduces $m$ arbitrary constants $c_1, \dots, c_m$. Why does a PDE introduce \emph{arbitrary functions}?
+
+Consider the simplest first-order PDE in two variables $(x, y)$:
+\[
+    \frac{\partial u}{\partial x}(x, y) = 0.
+\]
+By the definition of a partial derivative, differentiating with respect to $x$ treats the second variable $y$ as a held constant. Geometrically, if we slice the surface $z = u(x, y)$ along a plane $y = y_0$, the PDE states that the slope in the $x$-direction along this slice is zero. Thus, along the line $y = y_0$, $u(x, y_0)$ must be equal to some constant $C$. However, when we move to a different horizontal slice $y = y_1$, the value of $u(x, y_1)$ can be a \emph{completely different} constant $C'$. Because the constant of integration depends on which $y$-slice we are on, the ``constant'' is actually an arbitrary function of $y$, denoted $f(y)$:
+\[
+    u(x, y) = f(y).
+\]
+Similarly, for the second-order PDE $u_{xx} = 0$, integrating once with respect to $x$ (holding $y$ fixed) yields $u_x(x, y) = f(y)$. Integrating a second time with respect to $x$ (holding $y$ fixed) yields:
+\[
+    u(x, y) = \int f(y)\,dx = f(y)x + g(y),
+\]
+where $f(y)$ and $g(y)$ are two arbitrary functions of the single variable $y$.
+
+\subsubsection{Dimensional Complexity and Information Content}
+A function of two variables $u(x, y)$ contains vastly more information than a function of one variable $f(x)$. Geometrically, a curve $u = f(x)$ in $\mathbb{R}^2$ is a one-dimensional manifold, whereas a surface $u = f(x, y)$ in $\mathbb{R}^3$ is two-dimensional. Discretizing an interval into $N = 100$ points requires $100^1 = 100$ values to store a 1D function $f(x)$, $100^2 = 10{,}000$ grid values $u_{ij} = f(x_i, y_j)$ to store a 2D function $f(x, y)$, and $100^3 = 1{,}000{,}000$ values to store a 3D function $f(x, y, z)$. Because an arbitrary function of one variable represents an infinite-dimensional family of parameters (one parameter for each value of $y$), the general solution of a PDE is vastly larger than the finite-dimensional solution space of an ODE.
+
+\subsection{Historical Context and Motivation}
+Partial differential equations emerged in the mid-18th century when mathematicians sought to extend Isaac Newton's laws of motion from discrete point masses to continuous media—such as vibrating strings, flowing fluids, elastic beams, and gravitational fields. In 1746, Jean le Rond d'Alembert derived and solved the one-dimensional wave equation $u_{tt} = c^2 u_{xx}$ to describe the transverse vibrations of a taut musical string. This sparked a famous decades-long debate among d'Alembert, Leonhard Euler, and Daniel Bernoulli over what constituted an ``arbitrary function'' in the general solution $u(x, t) = f(x - ct) + g(x + ct)$, and whether discontinuous shapes (such as a plucked string with a sharp corner) could be represented by trigonometric series.
+
+In the early 19th century, Joseph Fourier revolutionized the field in his 1807 memoir and 1822 treatise \emph{Th\'{e}orie analytique de la chaleur}, where he formulated the heat equation $u_t = k(u_{xx} + u_{yy} + u_{zz})$ and exploited the \emph{superposition principle} of linear operators. Fourier demonstrated that by taking infinite linear combinations of simple product solutions (like those in Exercises 11 and 12), one could construct solutions matching almost any initial temperature distribution. Simultaneously, Pierre-Simon Laplace and Sim\'{e}on Denis Poisson developed potential theory via Laplace's equation $u_{xx} + u_{yy} + u_{zz} = 0$ to study celestial mechanics, electrostatics, and steady-state fluid flow, laying the groundwork for modern functional analysis, quantum mechanics (Schr\"{o}dinger's equation $i\hbar u_t = -\frac{\hbar^2}{2m}u_{xx} + Vu$), and stochastic calculus.
+
+\subsection{Key Formulas}
+\begin{enumerate}
+    \item \textbf{General First-Order PDE in Two Variables:}
+    \[
+        F(x, y, u, u_x, u_y) = 0
+    \]
+    \item \textbf{General Second-Order PDE in Two Variables:}
+    \[
+        F(x, y, u, u_x, u_y, u_{xx}, u_{xy}, u_{yy}) = 0
+    \]
+    \item \textbf{Linearity Criterion for an Operator $\mathcal{L}$:}
+    \[
+        \mathcal{L}(u + v) = \mathcal{L}u + \mathcal{L}v \quad \text{and} \quad \mathcal{L}(cu) = c\mathcal{L}u \quad \forall u, v \text{ and constants } c
+    \]
+    \item \textbf{Homogeneous and Inhomogeneous Linear Equations:}
+    \[
+        \text{Homogeneous: } \mathcal{L}u = 0 \qquad \text{Inhomogeneous: } \mathcal{L}u = g(x, y) \quad (g \neq 0)
+    \]
+    \item \textbf{Principle of Superposition (Homogeneous):} If $\mathcal{L}u_j = 0$ for $j = 1, \dots, n$, then for any constants $c_1, \dots, c_n$:
+    \[
+        \mathcal{L}\left(\sum_{j=1}^n c_j u_j\right) = 0
+    \]
+    \item \textbf{Structure of Inhomogeneous Solutions:} If $u_p$ solves $\mathcal{L}u_p = g$ and $u_h$ solves $\mathcal{L}u_h = 0$, then $u = u_p + u_h$ solves $\mathcal{L}u = g$. Conversely, if $u_1$ and $u_2$ both solve $\mathcal{L}u = g$, then $u_1 - u_2$ solves $\mathcal{L}u = 0$.
+    \item \textbf{Elementary Direct-Integration PDEs:}
+    \begin{align*}
+        u_{xx} = 0 &\implies u(x, y) = f(y)x + g(y) \\
+        u_{xx} + u = 0 &\implies u(x, y) = f(y)\cos x + g(y)\sin x \\
+        u_{xy} = 0 &\implies u(x, y) = F(y) + G(x)
+    \end{align*}
+    \item \textbf{Hyperbolic Trigonometric Definitions and Derivatives:}
+    \[
+        \sinh(ny) = \frac{e^{ny} - e^{-ny}}{2}, \quad \cosh(ny) = \frac{e^{ny} + e^{-ny}}{2}, \quad \frac{d}{dy}\sinh(ny) = n\cosh(ny), \quad \frac{d}{dy}\cosh(ny) = n\sinh(ny)
+    \]
+\end{enumerate}
+
+\subsection{Prerequisites}
+To master Section 1.1 and solve its exercises fluently, you must be proficient in:
+\begin{itemize}
+    \item \textbf{Multivariable Differentiation:} Computing first- and higher-order partial derivatives while holding other independent variables constant, applying the product rule and chain rule, and using Clairaut's Theorem ($u_{xy} = u_{yx}$).
+    \item \textbf{Constant-Coefficient ODEs:} Solving $m$-th order linear homogeneous ODEs $a_m u^{(m)} + \dots + a_0 u = 0$ via the characteristic polynomial $a_m r^m + \dots + a_0 = 0$, including handling distinct real roots ($e^{rx}$) and repeated roots ($e^{rx}, x e^{rx}, \dots$).
+    \item \textbf{Linear Algebra Fundamentals:}
+    \begin{itemize}
+        \item \emph{Subspace Test:} A non-empty subset $V$ of a vector space is a subspace if and only if $\mathbf{0} \in V$, $\mathbf{u} + \mathbf{v} \in V$ for all $\mathbf{u}, \mathbf{v} \in V$, and $c\mathbf{u} \in V$ for all $\mathbf{u} \in V$ and scalars $c$.
+        \item \emph{Linear Independence and Span:} Testing whether $c_1 \mathbf{v}_1 + \dots + c_k \mathbf{v}_k = \mathbf{0}$ implies $c_1 = \dots = c_k = 0$ (for vectors in $\mathbb{R}^n$ via row reduction/determinants, and for functions via identity coefficients or evaluation at test points).
+        \item \emph{Basis and Dimension:} Identifying a maximal linearly independent spanning set and counting its elements.
+    \end{itemize}
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 2: DETAILED HOMEWORK SOLUTIONS
+% ============================================================================
+\section{Detailed Homework Solutions}
+
+\subsection*{Exercise 1}
+\textbf{Problem Statement:} Verify the linearity and nonlinearity of the eight examples of PDEs given in the text, by checking whether or not equations (3) are valid:
+\[
+    \mathcal{L}(u + v) = \mathcal{L}u + \mathcal{L}v \quad \text{and} \quad \mathcal{L}(cu) = c\mathcal{L}u.
+\]
+
+\textbf{Solution:}
+For each of the eight PDEs, we define the operator $\mathcal{L}$ by moving all terms to the left-hand side so the equation reads $\mathcal{L}u = 0$, and then we explicitly test the two linearity conditions in equation (3) for arbitrary differentiable functions $u, v$ and an arbitrary constant $c$.
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+    \item \textbf{Equation 1: $u_x + u_y = 0$ (Transport)}
+    
+    Define the operator $\mathcal{L}u = u_x + u_y$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + (u + v)_y \\
+            &= u_x + v_x + u_y + v_y \\
+            &= (u_x + u_y) + (v_x + v_y) \\
+            &= \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_x + (cu)_y \\
+            &= cu_x + cu_y \\
+            &= c(u_x + u_y) \\
+            &= c\mathcal{L}u.
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 1:} Both conditions hold for all $u, v, c$. Therefore, $u_x + u_y = 0$ is \textbf{linear}.
+
+    \item \textbf{Equation 2: $u_x + y u_y = 0$ (Transport)}
+    
+    Define the operator $\mathcal{L}u = u_x + y u_y$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + y(u + v)_y \\
+            &= u_x + v_x + y(u_y + v_y) \\
+            &= u_x + v_x + y u_y + y v_y \\
+            &= (u_x + y u_y) + (v_x + y v_y) \\
+            &= \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_x + y(cu)_y \\
+            &= cu_x + y(cu_y) \\
+            &= c(u_x + y u_y) \\
+            &= c\mathcal{L}u.
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 2:} Both conditions hold for all $u, v, c$. Therefore, $u_x + y u_y = 0$ is \textbf{linear}.
+
+    \item \textbf{Equation 3: $u_x + u u_y = 0$ (Shock wave)}
+    
+    Define the operator $\mathcal{L}u = u_x + u u_y$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + (u + v)(u + v)_y \\
+            &= u_x + v_x + (u + v)(u_y + v_y) \\
+            &= u_x + v_x + u u_y + u v_y + v u_y + v v_y \\
+            &= (u_x + u u_y) + (v_x + v v_y) + (u v_y + v u_y) \\
+            &= \mathcal{L}u + \mathcal{L}v + u v_y + v u_y.
+        \end{align*}
+        Since $u v_y + v u_y \neq 0$ in general (for example, let $u(x,y) = y$ and $v(x,y) = y$, where $u v_y + v u_y = 2y \neq 0$), $\mathcal{L}(u + v) \neq \mathcal{L}u + \mathcal{L}v$.
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_x + (cu)(cu)_y \\
+            &= c u_x + c^2 u u_y \\
+            &\neq c(u_x + u u_y) = c\mathcal{L}u \quad (\text{for } c \neq 0, 1).
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 3:} Neither condition holds in general. Therefore, $u_x + u u_y = 0$ is \textbf{nonlinear}.
+
+    \item \textbf{Equation 4: $u_{xx} + u_{yy} = 0$ (Laplace's equation)}
+    
+    Define the operator $\mathcal{L}u = u_{xx} + u_{yy}$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_{xx} + (u + v)_{yy} \\
+            &= u_{xx} + v_{xx} + u_{yy} + v_{yy} \\
+            &= (u_{xx} + u_{yy}) + (v_{xx} + v_{yy}) \\
+            &= \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_{xx} + (cu)_{yy} \\
+            &= c u_{xx} + c u_{yy} \\
+            &= c(u_{xx} + u_{yy}) \\
+            &= c\mathcal{L}u.
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 4:} Both conditions hold for all $u, v, c$. Therefore, $u_{xx} + u_{yy} = 0$ is \textbf{linear}.
+
+    \item \textbf{Equation 5: $u_{tt} - u_{xx} + u^3 = 0$ (Wave with interaction)}
+    
+    Define the operator $\mathcal{L}u = u_{tt} - u_{xx} + u^3$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_{tt} - (u + v)_{xx} + (u + v)^3 \\
+            &= u_{tt} + v_{tt} - u_{xx} - v_{xx} + u^3 + 3u^2 v + 3u v^2 + v^3 \\
+            &= (u_{tt} - u_{xx} + u^3) + (v_{tt} - v_{xx} + v^3) + 3u^2 v + 3u v^2 \\
+            &= \mathcal{L}u + \mathcal{L}v + 3u v(u + v).
+        \end{align*}
+        Since $3u v(u + v) \neq 0$ in general, $\mathcal{L}(u + v) \neq \mathcal{L}u + \mathcal{L}v$.
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_{tt} - (cu)_{xx} + (cu)^3 \\
+            &= c u_{tt} - c u_{xx} + c^3 u^3 \\
+            &\neq c(u_{tt} - u_{xx} + u^3) = c\mathcal{L}u \quad (\text{for } c \neq 0, \pm 1).
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 5:} Neither condition holds in general. Therefore, $u_{tt} - u_{xx} + u^3 = 0$ is \textbf{nonlinear}.
+
+    \item \textbf{Equation 6: $u_t + u u_x + u_{xxx} = 0$ (Dispersive wave / Korteweg--de Vries equation)}
+    
+    Define the operator $\mathcal{L}u = u_t + u u_x + u_{xxx}$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_t + (u + v)(u + v)_x + (u + v)_{xxx} \\
+            &= u_t + v_t + u u_x + u v_x + v u_x + v v_x + u_{xxx} + v_{xxx} \\
+            &= (u_t + u u_x + u_{xxx}) + (v_t + v v_x + v_{xxx}) + (u v_x + v u_x) \\
+            &= \mathcal{L}u + \mathcal{L}v + u v_x + v u_x.
+        \end{align*}
+        Because of the cross terms $u v_x + v u_x \neq 0$ in general, $\mathcal{L}(u + v) \neq \mathcal{L}u + \mathcal{L}v$.
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_t + (cu)(cu)_x + (cu)_{xxx} \\
+            &= c u_t + c^2 u u_x + c u_{xxx} \\
+            &\neq c(u_t + u u_x + u_{xxx}) = c\mathcal{L}u \quad (\text{for } c \neq 0, 1).
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 6:} Neither condition holds in general. Therefore, $u_t + u u_x + u_{xxx} = 0$ is \textbf{nonlinear}.
+
+    \item \textbf{Equation 7: $u_{tt} + u_{xxxx} = 0$ (Vibrating bar)}
+    
+    Define the operator $\mathcal{L}u = u_{tt} + u_{xxxx}$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_{tt} + (u + v)_{xxxx} \\
+            &= u_{tt} + v_{tt} + u_{xxxx} + v_{xxxx} \\
+            &= (u_{tt} + u_{xxxx}) + (v_{tt} + v_{xxxx}) \\
+            &= \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_{tt} + (cu)_{xxxx} \\
+            &= c u_{tt} + c u_{xxxx} \\
+            &= c(u_{tt} + u_{xxxx}) \\
+            &= c\mathcal{L}u.
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 7:} Both conditions hold for all $u, v, c$. Therefore, $u_{tt} + u_{xxxx} = 0$ is \textbf{linear}.
+
+    \item \textbf{Equation 8: $u_t - i u_{xx} = 0$ ($i = \sqrt{-1}$) (Quantum mechanics / Schr\"{o}dinger equation)}
+    
+    Define the operator $\mathcal{L}u = u_t - i u_{xx}$.
+    \begin{itemize}
+        \item \emph{Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_t - i(u + v)_{xx} \\
+            &= u_t + v_t - i u_{xx} - i v_{xx} \\
+            &= (u_t - i u_{xx}) + (v_t - i v_{xx}) \\
+            &= \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= (cu)_t - i(cu)_{xx} \\
+            &= c u_t - i c u_{xx} \\
+            &= c(u_t - i u_{xx}) \\
+            &= c\mathcal{L}u.
+        \end{align*}
+    \end{itemize}
+    \textbf{Conclusion 8:} Both conditions hold for all $u, v, c$. Therefore, $u_t - i u_{xx} = 0$ is \textbf{linear}.
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 1:} Equations 1, 2, 4, 7, and 8 are \textbf{linear}; Equations 3, 5, and 6 are \textbf{nonlinear}.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 2}
+\textbf{Problem Statement:} Which of the following operators are linear?
+\begin{enumerate}[label=(\alph*)]
+    \item $\mathcal{L}u = u_x + x u_y$
+    \item $\mathcal{L}u = u_x + u u_y$
+    \item $\mathcal{L}u = u_x + u_y^2$
+    \item $\mathcal{L}u = u_x + u_y + 1$
+    \item $\mathcal{L}u = \sqrt{1 + x^2}(\cos y)u_x + u_{yxy} - [\arctan(x/y)]u$
+\end{enumerate}
+
+\textbf{Solution:}
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Operator:} $\mathcal{L}u = u_x + x u_y$.
+    \begin{itemize}
+        \item \emph{Check Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + x(u + v)_y \\
+            &= u_x + v_x + x u_y + x v_y \\
+            &= (u_x + x u_y) + (v_x + x v_y) = \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Check Homogeneity:}
+        \[
+            \mathcal{L}(cu) = (cu)_x + x(cu)_y = c u_x + c x u_y = c(u_x + x u_y) = c\mathcal{L}u.
+        \]
+    \end{itemize}
+    \textbf{Answer (a):} \textbf{Linear.}
+
+    \item \textbf{Operator:} $\mathcal{L}u = u_x + u u_y$.
+    \begin{itemize}
+        \item \emph{Check Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + (u + v)(u + v)_y \\
+            &= u_x + v_x + u u_y + u v_y + v u_y + v v_y \\
+            &= \mathcal{L}u + \mathcal{L}v + u v_y + v u_y \neq \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Check Homogeneity:}
+        \[
+            \mathcal{L}(cu) = (cu)_x + (cu)(cu)_y = c u_x + c^2 u u_y \neq c\mathcal{L}u.
+        \]
+    \end{itemize}
+    \textbf{Answer (b):} \textbf{Nonlinear} (not linear).
+
+    \item \textbf{Operator:} $\mathcal{L}u = u_x + u_y^2$.
+    \begin{itemize}
+        \item \emph{Check Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + [(u + v)_y]^2 \\
+            &= u_x + v_x + (u_y + v_y)^2 \\
+            &= u_x + v_x + u_y^2 + 2u_y v_y + v_y^2 \\
+            &= (u_x + u_y^2) + (v_x + v_y^2) + 2u_y v_y \\
+            &= \mathcal{L}u + \mathcal{L}v + 2u_y v_y \neq \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Check Homogeneity:}
+        \[
+            \mathcal{L}(cu) = (cu)_x + [(cu)_y]^2 = c u_x + c^2 u_y^2 \neq c(u_x + u_y^2) = c\mathcal{L}u.
+        \]
+    \end{itemize}
+    \textbf{Answer (c):} \textbf{Nonlinear} (not linear).
+
+    \item \textbf{Operator:} $\mathcal{L}u = u_x + u_y + 1$.
+    \begin{itemize}
+        \item \emph{Check Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)_x + (u + v)_y + 1 \\
+            &= u_x + v_x + u_y + v_y + 1,
+        \end{align*}
+        whereas
+        \begin{align*}
+            \mathcal{L}u + \mathcal{L}v &= (u_x + u_y + 1) + (v_x + v_y + 1) \\
+            &= u_x + v_x + u_y + v_y + 2.
+        \end{align*}
+        Since $1 \neq 2$, $\mathcal{L}(u + v) \neq \mathcal{L}u + \mathcal{L}v$.
+        \item \emph{Check Homogeneity:}
+        \[
+            \mathcal{L}(cu) = (cu)_x + (cu)_y + 1 = c u_x + c u_y + 1 \neq c u_x + c u_y + c = c\mathcal{L}u \quad (\text{for } c \neq 1).
+        \]
+    \end{itemize}
+    \textbf{Answer (d):} \textbf{Nonlinear} (not linear; the $+1$ term makes the operator \emph{affine} rather than linear, since $\mathcal{L}(0) = 1 \neq 0$).
+
+    \item \textbf{Operator:} $\mathcal{L}u = \sqrt{1 + x^2}(\cos y)u_x + u_{yxy} - [\arctan(x/y)]u$.
+    \begin{itemize}
+        \item Note that the functions $\sqrt{1 + x^2}\cos y$ and $\arctan(x/y)$ depend \emph{only} on the independent variables $x$ and $y$, and not on $u$.
+        \item \emph{Check Additivity:}
+        \begin{align*}
+            \mathcal{L}(u + v) &= \sqrt{1 + x^2}(\cos y)(u + v)_x + (u + v)_{yxy} - [\arctan(x/y)](u + v) \\
+            &= \sqrt{1 + x^2}(\cos y)(u_x + v_x) + (u_{yxy} + v_{yxy}) - [\arctan(x/y)]u - [\arctan(x/y)]v \\
+            &= \left(\sqrt{1 + x^2}(\cos y)u_x + u_{yxy} - [\arctan(x/y)]u\right) \\
+            &\quad + \left(\sqrt{1 + x^2}(\cos y)v_x + v_{yxy} - [\arctan(x/y)]v\right) \\
+            &= \mathcal{L}u + \mathcal{L}v.
+        \end{align*}
+        \item \emph{Check Homogeneity:}
+        \begin{align*}
+            \mathcal{L}(cu) &= \sqrt{1 + x^2}(\cos y)(cu)_x + (cu)_{yxy} - [\arctan(x/y)](cu) \\
+            &= c\sqrt{1 + x^2}(\cos y)u_x + c u_{yxy} - c[\arctan(x/y)]u \\
+            &= c\left(\sqrt{1 + x^2}(\cos y)u_x + u_{yxy} - [\arctan(x/y)]u\right) \\
+            &= c\mathcal{L}u.
+        \end{align*}
+    \end{itemize}
+    \textbf{Answer (e):} \textbf{Linear.}
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 2:} Operators \textbf{(a)} and \textbf{(e)} are linear; operators \textbf{(b)}, \textbf{(c)}, and \textbf{(d)} are not linear.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 3}
+\textbf{Problem Statement:} For each of the following equations, state the order and whether it is nonlinear, linear inhomogeneous, or linear homogeneous; provide reasons.
+\begin{enumerate}[label=(\alph*)]
+    \item $u_t - u_{xx} + 1 = 0$
+    \item $u_t - u_{xx} + x u = 0$
+    \item $u_t - u_{xxt} + u u_x = 0$
+    \item $u_{tt} - u_{xx} + x^2 = 0$
+    \item $i u_t - u_{xx} + u/x = 0$
+    \item $u_x(1 + u_x^2)^{-1/2} + u_y(1 + u_y^2)^{-1/2} = 0$
+    \item $u_x + e^y u_y = 0$
+    \item $u_t + u_{xxx} + \sqrt{1 + u} = 0$
+\end{enumerate}
+
+\textbf{Solution:}
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Equation:} $u_t - u_{xx} + 1 = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The partial derivatives present are $u_t$ (first order) and $u_{xx}$ (second order). The highest derivative is $u_{xx}$, so the equation has \textbf{order 2}.
+        \item \emph{Classification:} Rewrite the equation by separating the terms involving $u$ from the terms involving only independent variables/constants:
+        \[
+            \mathcal{L}u = u_t - u_{xx} = -1.
+        \]
+        The operator $\mathcal{L}u = u_t - u_{xx}$ is linear because $\mathcal{L}(u+v) = \mathcal{L}u + \mathcal{L}v$ and $\mathcal{L}(cu) = c\mathcal{L}u$. Since the right-hand side is $g(x, t) = -1 \neq 0$, the equation is of the form $\mathcal{L}u = g$ with $g \neq 0$.
+    \end{itemize}
+    \textbf{Answer (a):} \textbf{Order 2, linear inhomogeneous.}
+
+    \item \textbf{Equation:} $u_t - u_{xx} + x u = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The partial derivatives present are $u_t$ (first order) and $u_{xx}$ (second order). The highest derivative is $u_{xx}$, so the equation has \textbf{order 2}.
+        \item \emph{Classification:} Write the equation as $\mathcal{L}u = 0$, where $\mathcal{L}u = u_t - u_{xx} + x u$. The operator $\mathcal{L}$ is linear because $(u+v)_t - (u+v)_{xx} + x(u+v) = \mathcal{L}u + \mathcal{L}v$ and $(cu)_t - (cu)_{xx} + x(cu) = c\mathcal{L}u$ (the coefficient $x$ depends only on the independent variable $x$). Furthermore, the right-hand side is $g = 0$.
+    \end{itemize}
+    \textbf{Answer (b):} \textbf{Order 2, linear homogeneous.}
+
+    \item \textbf{Equation:} $u_t - u_{xxt} + u u_x = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The derivatives appearing are $u_t$ (order 1), $u_x$ (order 1), and $u_{xxt} = \frac{\partial^3 u}{\partial t \partial x^2}$ (order 3). The highest derivative is $u_{xxt}$, so the equation has \textbf{order 3}.
+        \item \emph{Classification:} The term $u u_x$ is a product of the unknown function $u$ and its derivative $u_x$. For $\mathcal{L}u = u_t - u_{xxt} + u u_x$, we have $\mathcal{L}(cu) = c u_t - c u_{xxt} + c^2 u u_x \neq c\mathcal{L}u$ and $\mathcal{L}(u+v) = \mathcal{L}u + \mathcal{L}v + u v_x + v u_x \neq \mathcal{L}u + \mathcal{L}v$. Thus, the equation is nonlinear.
+    \end{itemize}
+    \textbf{Answer (c):} \textbf{Order 3, nonlinear.}
+
+    \item \textbf{Equation:} $u_{tt} - u_{xx} + x^2 = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The highest derivatives are $u_{tt}$ and $u_{xx}$, both of which are second derivatives. Thus, the equation has \textbf{order 2}.
+        \item \emph{Classification:} Rearranging gives
+        \[
+            \mathcal{L}u = u_{tt} - u_{xx} = -x^2.
+        \]
+        Here $\mathcal{L}u = u_{tt} - u_{xx}$ is a linear operator, and the right-hand side $g(x, t) = -x^2 \neq 0$ is a nonzero function of the independent variable $x$ alone.
+    \end{itemize}
+    \textbf{Answer (d):} \textbf{Order 2, linear inhomogeneous.}
+
+    \item \textbf{Equation:} $i u_t - u_{xx} + u/x = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The derivatives are $u_t$ (order 1) and $u_{xx}$ (order 2). The highest derivative is $u_{xx}$, so the equation has \textbf{order 2}.
+        \item \emph{Classification:} Define $\mathcal{L}u = i u_t - u_{xx} + \frac{1}{x}u$. Because $i$ is a constant and $\frac{1}{x}$ depends only on the independent variable $x$, $\mathcal{L}(u+v) = \mathcal{L}u + \mathcal{L}v$ and $\mathcal{L}(cu) = c\mathcal{L}u$. Since the equation is $\mathcal{L}u = 0$, it is linear and homogeneous.
+    \end{itemize}
+    \textbf{Answer (e):} \textbf{Order 2, linear homogeneous.}
+
+    \item \textbf{Equation:} $u_x(1 + u_x^2)^{-1/2} + u_y(1 + u_y^2)^{-1/2} = 0$.
+    \begin{itemize}
+        \item \emph{Order:} Only the first-order partial derivatives $u_x$ and $u_y$ appear in the equation. Thus, the equation has \textbf{order 1}.
+        \item \emph{Classification:} Let $\mathcal{L}u = \frac{u_x}{\sqrt{1 + u_x^2}} + \frac{u_y}{\sqrt{1 + u_y^2}}$. Checking scalar multiplication:
+        \[
+            \mathcal{L}(cu) = \frac{c u_x}{\sqrt{1 + c^2 u_x^2}} + \frac{c u_y}{\sqrt{1 + c^2 u_y^2}} \neq c\mathcal{L}u \quad (\text{for } c \neq 0, 1).
+        \]
+        Because the partial derivatives $u_x$ and $u_y$ are squared inside square roots in the denominators, the operator is nonlinear.
+    \end{itemize}
+    \textbf{Answer (f):} \textbf{Order 1, nonlinear.}
+
+    \item \textbf{Equation:} $u_x + e^y u_y = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The derivatives appearing are $u_x$ and $u_y$, both of first order. Thus, the equation has \textbf{order 1}.
+        \item \emph{Classification:} Let $\mathcal{L}u = u_x + e^y u_y$. The factor $e^y$ is a function of the independent variable $y$ (not $u$), so $\mathcal{L}(u+v) = (u+v)_x + e^y(u+v)_y = \mathcal{L}u + \mathcal{L}v$ and $\mathcal{L}(cu) = c u_x + c e^y u_y = c\mathcal{L}u$. Since the right-hand side is $0$, the equation $\mathcal{L}u = 0$ is linear and homogeneous.
+    \end{itemize}
+    \textbf{Answer (g):} \textbf{Order 1, linear homogeneous.}
+
+    \item \textbf{Equation:} $u_t + u_{xxx} + \sqrt{1 + u} = 0$.
+    \begin{itemize}
+        \item \emph{Order:} The derivatives present are $u_t$ (order 1) and $u_{xxx}$ (order 3). The highest derivative is $u_{xxx}$, so the equation has \textbf{order 3}.
+        \item \emph{Classification:} The term $\sqrt{1 + u}$ is a nonlinear function of the dependent variable $u$, since $\sqrt{1 + (u + v)} \neq \sqrt{1 + u} + \sqrt{1 + v}$ and $\sqrt{1 + cu} \neq c\sqrt{1 + u}$. Thus, the equation is nonlinear.
+    \end{itemize}
+    \textbf{Answer (h):} \textbf{Order 3, nonlinear.}
+\end{enumerate}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 4}
+\textbf{Problem Statement:} Show that the difference of two solutions of an inhomogeneous linear equation $\mathcal{L}u = g$ with the same $g$ is a solution of the homogeneous equation $\mathcal{L}u = 0$.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Let $u_1$ and $u_2$ be any two solutions of the inhomogeneous linear equation $\mathcal{L}u = g$ with the same right-hand side $g$. By definition of a solution, this means:
+    \[
+        \mathcal{L}u_1 = g \quad \text{and} \quad \mathcal{L}u_2 = g.
+    \]
+    \item Consider the difference function $w = u_1 - u_2 = u_1 + (-1)u_2$.
+    \item Because $\mathcal{L}$ is a linear operator, it satisfies both additivity $\mathcal{L}(u + v) = \mathcal{L}u + \mathcal{L}v$ and homogeneity $\mathcal{L}(cu) = c\mathcal{L}u$ for any constant $c$. Applying $\mathcal{L}$ to $w = u_1 - u_2$ with $c = -1$:
+    \begin{align*}
+        \mathcal{L}(u_1 - u_2) &= \mathcal{L}(u_1 + (-1)u_2) \\
+        &= \mathcal{L}u_1 + \mathcal{L}((-1)u_2) \quad \text{(by additivity of } \mathcal{L}\text{)} \\
+        &= \mathcal{L}u_1 + (-1)\mathcal{L}u_2 \quad \text{(by homogeneity of } \mathcal{L}\text{)} \\
+        &= \mathcal{L}u_1 - \mathcal{L}u_2.
+    \end{align*}
+    \item Substituting $\mathcal{L}u_1 = g$ and $\mathcal{L}u_2 = g$ into this expression gives:
+    \[
+        \mathcal{L}(u_1 - u_2) = g - g = 0.
+    \]
+    \item Therefore, $w = u_1 - u_2$ satisfies $\mathcal{L}w = 0$, proving that the difference of two solutions of $\mathcal{L}u = g$ is a solution of the homogeneous equation $\mathcal{L}u = 0$. \qed
+\end{enumerate}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 5}
+\textbf{Problem Statement:} Which of the following collections of 3-vectors $[a, b, c]$ are vector spaces? Provide reasons.
+\begin{enumerate}[label=(\alph*)]
+    \item The vectors with $b = 0$.
+    \item The vectors with $b = 1$.
+    \item The vectors with $ab = 0$.
+    \item All the linear combinations of the two vectors $[1, 1, 0]$ and $[2, 0, 1]$.
+    \item All the vectors such that $c - a = 2b$.
+\end{enumerate}
+
+\textbf{Solution:}
+Recall that a subset $V \subseteq \mathbb{R}^3$ is a vector space (specifically, a vector subspace of $\mathbb{R}^3$) if and only if: (i) the zero vector $[0, 0, 0] \in V$, (ii) $V$ is closed under vector addition ($\mathbf{u}, \mathbf{v} \in V \implies \mathbf{u} + \mathbf{v} \in V$), and (iii) $V$ is closed under scalar multiplication ($\mathbf{u} \in V, k \in \mathbb{R} \implies k\mathbf{u} \in V$).
+
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Collection:} $V_a = \{[a, b, c] \in \mathbb{R}^3 : b = 0\} = \{[a, 0, c] : a, c \in \mathbb{R}\}$.
+    \begin{itemize}
+        \item \emph{Zero Vector:} $[0, 0, 0]$ has $b = 0$, so $[0, 0, 0] \in V_a$.
+        \item \emph{Closure under Addition:} Let $\mathbf{u} = [a_1, 0, c_1] \in V_a$ and $\mathbf{v} = [a_2, 0, c_2] \in V_a$. Then:
+        \[
+            \mathbf{u} + \mathbf{v} = [a_1 + a_2, 0 + 0, c_1 + c_2] = [a_1 + a_2, 0, c_1 + c_2],
+        \]
+        whose second component is $0$, so $\mathbf{u} + \mathbf{v} \in V_a$.
+        \item \emph{Closure under Scalar Multiplication:} Let $\mathbf{u} = [a, 0, c] \in V_a$ and $k \in \mathbb{R}$. Then:
+        \[
+            k\mathbf{u} = [ka, k\cdot 0, kc] = [ka, 0, kc] \in V_a.
+        \]
+    \end{itemize}
+    \textbf{Answer (a):} \textbf{Yes, it is a vector space.}
+
+    \item \textbf{Collection:} $V_b = \{[a, b, c] \in \mathbb{R}^3 : b = 1\} = \{[a, 1, c] : a, c \in \mathbb{R}\}$.
+    \begin{itemize}
+        \item \emph{Zero Vector:} The zero vector $[0, 0, 0]$ has $b = 0 \neq 1$, so $[0, 0, 0] \notin V_b$.
+        \item \emph{Failure of Addition:} If $\mathbf{u} = [a_1, 1, c_1] \in V_b$ and $\mathbf{v} = [a_2, 1, c_2] \in V_b$, then $\mathbf{u} + \mathbf{v} = [a_1 + a_2, 2, c_1 + c_2] \notin V_b$ since $b = 2 \neq 1$.
+        \item \emph{Failure of Scalar Multiplication:} For $k \neq 1$, $k[a, 1, c] = [ka, k, kc] \notin V_b$.
+    \end{itemize}
+    \textbf{Answer (b):} \textbf{No, it is not a vector space.}
+
+    \item \textbf{Collection:} $V_c = \{[a, b, c] \in \mathbb{R}^3 : ab = 0\}$.
+    \begin{itemize}
+        \item \emph{Failure of Closure under Addition:} Consider the vector $\mathbf{u} = [1, 0, 0]$ and the vector $\mathbf{v} = [0, 1, 0]$.
+        \item For $\mathbf{u} = [1, 0, 0]$, we have $a b = (1)(0) = 0$, so $\mathbf{u} \in V_c$.
+        \item For $\mathbf{v} = [0, 1, 0]$, we have $a b = (0)(1) = 0$, so $\mathbf{v} \in V_c$.
+        \item However, their sum is:
+        \[
+            \mathbf{u} + \mathbf{v} = [1, 0, 0] + [0, 1, 0] = [1, 1, 0].
+        \]
+        For $[1, 1, 0]$, the product of the first two components is $a b = (1)(1) = 1 \neq 0$. Thus, $\mathbf{u} + \mathbf{v} \notin V_c$, so the collection is not closed under addition (geometrically, it is the union of the two planes $a = 0$ and $b = 0$).
+    \end{itemize}
+    \textbf{Answer (c):} \textbf{No, it is not a vector space.}
+
+    \item \textbf{Collection:} $V_d = \{\alpha[1, 1, 0] + \beta[2, 0, 1] : \alpha, \beta \in \mathbb{R}\}$.
+    \begin{itemize}
+        \item Let $\mathbf{w}_1 = [1, 1, 0]$ and $\mathbf{w}_2 = [2, 0, 1]$.
+        \item \emph{Zero Vector:} Setting $\alpha = 0, \beta = 0$ gives $0\mathbf{w}_1 + 0\mathbf{w}_2 = [0, 0, 0] \in V_d$.
+        \item \emph{Closure under Addition:} Let $\mathbf{u} = \alpha_1 \mathbf{w}_1 + \beta_1 \mathbf{w}_2 \in V_d$ and $\mathbf{v} = \alpha_2 \mathbf{w}_1 + \beta_2 \mathbf{w}_2 \in V_d$. Then:
+        \[
+            \mathbf{u} + \mathbf{v} = (\alpha_1 + \alpha_2)\mathbf{w}_1 + (\beta_1 + \beta_2)\mathbf{w}_2 \in V_d,
+        \]
+        which is again a linear combination of $\mathbf{w}_1$ and $\mathbf{w}_2$.
+        \item \emph{Closure under Scalar Multiplication:} For any $k \in \mathbb{R}$ and $\mathbf{u} = \alpha \mathbf{w}_1 + \beta \mathbf{w}_2 \in V_d$:
+        \[
+            k\mathbf{u} = (k\alpha)\mathbf{w}_1 + (k\beta)\mathbf{w}_2 \in V_d.
+        \]
+    \end{itemize}
+    \textbf{Answer (d):} \textbf{Yes, it is a vector space} (the span of any set of vectors is always a vector space).
+
+    \item \textbf{Collection:} $V_e = \{[a, b, c] \in \mathbb{R}^3 : c - a = 2b\}$.
+    \begin{itemize}
+        \item \emph{Zero Vector:} For $[0, 0, 0]$, $0 - 0 = 2(0) \implies 0 = 0$, so $[0, 0, 0] \in V_e$.
+        \item \emph{Closure under Addition:} Let $\mathbf{u} = [a_1, b_1, c_1] \in V_e$ and $\mathbf{v} = [a_2, b_2, c_2] \in V_e$, so that $c_1 - a_1 = 2b_1$ and $c_2 - a_2 = 2b_2$. For their sum $\mathbf{u} + \mathbf{v} = [a_1 + a_2, b_1 + b_2, c_1 + c_2]$, we check the condition:
+        \[
+            (c_1 + c_2) - (a_1 + a_2) = (c_1 - a_1) + (c_2 - a_2) = 2b_1 + 2b_2 = 2(b_1 + b_2).
+        \]
+        Thus $\mathbf{u} + \mathbf{v} \in V_e$.
+        \item \emph{Closure under Scalar Multiplication:} Let $\mathbf{u} = [a, b, c] \in V_e$ (so $c - a = 2b$) and $k \in \mathbb{R}$. For $k\mathbf{u} = [ka, kb, kc]$, we have:
+        \[
+            kc - ka = k(c - a) = k(2b) = 2(kb),
+        \]
+        so $k\mathbf{u} \in V_e$.
+    \end{itemize}
+    \textbf{Answer (e):} \textbf{Yes, it is a vector space.}
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 5:} Collections \textbf{(a)}, \textbf{(d)}, and \textbf{(e)} are vector spaces; collections \textbf{(b)} and \textbf{(c)} are not vector spaces.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 6}
+\textbf{Problem Statement:} Are the three vectors $[1, 2, 3]$, $[-2, 0, 1]$, and $[1, 10, 17]$ linearly dependent or independent? Do they span all vectors or not?
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item \textbf{Test for Linear Dependence/Independence:}
+    Consider the vector equation:
+    \[
+        c_1[1, 2, 3] + c_2[-2, 0, 1] + c_3[1, 10, 17] = [0, 0, 0].
+    \]
+    Writing this out component by component yields the homogeneous linear system of three equations in three unknowns $(c_1, c_2, c_3)$:
+    \begin{align}
+        c_1 - 2c_2 + c_3 &= 0 \label{eq:ex6_1} \\
+        2c_1 + 0c_2 + 10c_3 &= 0 \label{eq:ex6_2} \\
+        3c_1 + c_2 + 17c_3 &= 0 \label{eq:ex6_3}
+    \end{align}
+    \item From equation \eqref{eq:ex6_2}, we solve for $c_1$ in terms of $c_3$:
+    \[
+        2c_1 + 10c_3 = 0 \implies c_1 = -5c_3.
+    \]
+    \item Substitute $c_1 = -5c_3$ into equation \eqref{eq:ex6_1}:
+    \[
+        (-5c_3) - 2c_2 + c_3 = 0 \implies -4c_3 - 2c_2 = 0 \implies c_2 = -2c_3.
+    \]
+    \item Now substitute both $c_1 = -5c_3$ and $c_2 = -2c_3$ into the third equation \eqref{eq:ex6_3} to see if $c_3$ is forced to be zero or is a free variable:
+    \[
+        3(-5c_3) + (-2c_3) + 17c_3 = -15c_3 - 2c_3 + 17c_3 = 0.
+    \]
+    Since equation \eqref{eq:ex6_3} is satisfied identically for \emph{any} choice of $c_3 \in \mathbb{R}$, $c_3$ is a free variable!
+    \item Choosing $c_3 = -1$ gives $c_1 = 5$ and $c_2 = 2$, yielding the explicit non-trivial linear relation:
+    \[
+        5[1, 2, 3] + 2[-2, 0, 1] - 1[1, 10, 17] = [5 - 4 - 1, 10 + 0 - 10, 15 + 2 - 17] = [0, 0, 0].
+    \]
+    Equivalently, $[1, 10, 17] = 5[1, 2, 3] + 2[-2, 0, 1]$. Thus, the three vectors are \textbf{linearly dependent}.
+
+    \item \textbf{Test for Spanning $\mathbb{R}^3$:}
+    Because the third vector $[1, 10, 17]$ is a linear combination of the first two vectors $[1, 2, 3]$ and $[-2, 0, 1]$, the span of all three vectors is identical to the span of just the two vectors $\{[1, 2, 3], [-2, 0, 1]\}$, which is a 2-dimensional plane in $\mathbb{R}^3$. Since the dimension of $\mathbb{R}^3$ is $3$ and the span has dimension $2 < 3$, these three vectors \textbf{do not span} all vectors in $\mathbb{R}^3$.
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 6:} The three vectors are \textbf{linearly dependent}, and they \textbf{do not span} all vectors in $\mathbb{R}^3$.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 7}
+\textbf{Problem Statement:} Are the functions $1 + x$, $1 - x$, and $1 + x + x^2$ linearly dependent or independent? Why?
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item To test whether the functions $f_1(x) = 1 + x$, $f_2(x) = 1 - x$, and $f_3(x) = 1 + x + x^2$ are linearly independent, we set a linear combination of them equal to the zero function (which must hold identically for \emph{all} $x \in \mathbb{R}$):
+    \[
+        c_1(1 + x) + c_2(1 - x) + c_3(1 + x + x^2) = 0 \quad \text{for all } x \in \mathbb{R}.
+    \]
+    \item Expand and group the terms by powers of $x$:
+    \[
+        (c_1 + c_2 + c_3) + (c_1 - c_2 + c_3)x + c_3 x^2 = 0 \quad \text{for all } x \in \mathbb{R}.
+    \]
+    \item A polynomial in $x$ is identically zero for all $x \in \mathbb{R}$ if and only if each of its coefficients is zero (which can also be seen by differentiating the identity twice with respect to $x$ and evaluating at $x = 0$). Setting the coefficient of each power of $x$ to zero gives the system:
+    \begin{align}
+        \text{Coefficient of } x^2: \quad & c_3 = 0 \label{eq:ex7_1} \\
+        \text{Coefficient of } x^1: \quad & c_1 - c_2 + c_3 = 0 \label{eq:ex7_2} \\
+        \text{Coefficient of } x^0: \quad & c_1 + c_2 + c_3 = 0 \label{eq:ex7_3}
+    \end{align}
+    \item Substituting $c_3 = 0$ from \eqref{eq:ex7_1} into \eqref{eq:ex7_2} and \eqref{eq:ex7_3} yields:
+    \begin{align*}
+        c_1 - c_2 &= 0 \\
+        c_1 + c_2 &= 0
+    \end{align*}
+    \item Adding these two equations together gives $2c_1 = 0 \implies c_1 = 0$. Substituting $c_1 = 0$ back into $c_1 + c_2 = 0$ gives $c_2 = 0$.
+    \item Thus, the only solution is the trivial solution $c_1 = c_2 = c_3 = 0$.
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 7:} The functions $1 + x$, $1 - x$, and $1 + x + x^2$ are \textbf{linearly independent} because the identity $c_1(1 + x) + c_2(1 - x) + c_3(1 + x + x^2) \equiv 0$ forces $c_1 = c_2 = c_3 = 0$.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 8}
+\textbf{Problem Statement:} Find a vector that, together with the vectors $[1, 1, 1]$ and $[1, 2, 1]$, forms a basis of $\mathbb{R}^3$.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item In $\mathbb{R}^3$ (which has dimension $3$), any set of $3$ linearly independent vectors forms a basis. Notice that for both given vectors $\mathbf{v}_1 = [1, 1, 1]$ and $\mathbf{v}_2 = [1, 2, 1]$, the first component equals the third component ($x = z$). Therefore, any linear combination of $\mathbf{v}_1$ and $\mathbf{v}_2$ has the form:
+    \[
+        c_1[1, 1, 1] + c_2[1, 2, 1] = [c_1 + c_2, c_1 + 2c_2, c_1 + c_2],
+    \]
+    which lies in the plane $x - z = 0$.
+    \item To obtain a third vector $\mathbf{v}_3$ that is not in the span of $\{\mathbf{v}_1, \mathbf{v}_2\}$, we simply choose any vector whose first and third components are not equal. Let us choose:
+    \[
+        \mathbf{v}_3 = [0, 0, 1].
+    \]
+    \item Let us verify rigorously that $\{[1, 1, 1], [1, 2, 1], [0, 0, 1]\}$ is linearly independent:
+    \[
+        c_1[1, 1, 1] + c_2[1, 2, 1] + c_3[0, 0, 1] = [0, 0, 0].
+    \]
+    This gives the system of equations:
+    \begin{align}
+        c_1 + c_2 &= 0 \label{eq:ex8_1} \\
+        c_1 + 2c_2 &= 0 \label{eq:ex8_2} \\
+        c_1 + c_2 + c_3 &= 0 \label{eq:ex8_3}
+    \end{align}
+    Subtracting \eqref{eq:ex8_1} from \eqref{eq:ex8_2} gives $c_2 = 0$. Substituting $c_2 = 0$ into \eqref{eq:ex8_1} gives $c_1 = 0$. Substituting $c_1 = 0$ and $c_2 = 0$ into \eqref{eq:ex8_3} gives $c_3 = 0$.
+    \item Alternatively, the determinant of the matrix formed by these three vectors is:
+    \[
+        \det \begin{pmatrix} 1 & 1 & 0 \\ 1 & 2 & 0 \\ 1 & 1 & 1 \end{pmatrix} = 1 \cdot (1 \cdot 2 - 1 \cdot 1) = 1 \neq 0.
+    \]
+    Since the three vectors are linearly independent in $\mathbb{R}^3$, they form a basis of $\mathbb{R}^3$.
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 8:} The vector $\mathbf{[0, 0, 1]}$ (or $[1, 0, 0]$, or any vector $[a, b, c]$ with $a \neq c$) forms a basis of $\mathbb{R}^3$ together with $[1, 1, 1]$ and $[1, 2, 1]$.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 9}
+\textbf{Problem Statement:} Show that the functions $(c_1 + c_2 \sin^2 x + c_3 \cos^2 x)$ form a vector space. Find a basis of it. What is its dimension?
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item \textbf{Proof that the functions form a vector space:}
+    Let $V = \{f(x) = c_1 + c_2 \sin^2 x + c_3 \cos^2 x : c_1, c_2, c_3 \in \mathbb{R}\}$.
+    \begin{itemize}
+        \item \emph{Zero Function:} Choosing $c_1 = c_2 = c_3 = 0$ gives the zero function $f(x) = 0 \in V$.
+        \item \emph{Closure under Addition:} Let $f(x) = c_1 + c_2 \sin^2 x + c_3 \cos^2 x \in V$ and $g(x) = d_1 + d_2 \sin^2 x + d_3 \cos^2 x \in V$. Then their sum is:
+        \[
+            (f + g)(x) = (c_1 + d_1) + (c_2 + d_2)\sin^2 x + (c_3 + d_3)\cos^2 x,
+        \]
+        which is of the same form with constants $c_1 + d_1, c_2 + d_2, c_3 + d_3 \in \mathbb{R}$. Thus $f + g \in V$.
+        \item \emph{Closure under Scalar Multiplication:} For any scalar $k \in \mathbb{R}$ and $f \in V$:
+        \[
+            (kf)(x) = (kc_1) + (kc_2)\sin^2 x + (kc_3)\cos^2 x \in V.
+        \]
+        Therefore, $V$ is a vector space (it is the span of $\{1, \sin^2 x, \cos^2 x\}$).
+    \end{itemize}
+
+    \item \textbf{Finding a Basis:}
+    Notice that the three spanning functions $1, \sin^2 x, \cos^2 x$ are \emph{linearly dependent} because of the Pythagorean trigonometric identity:
+    \[
+        \sin^2 x + \cos^2 x = 1 \implies \cos^2 x = 1 - \sin^2 x.
+    \]
+    Substituting $\cos^2 x = 1 - \sin^2 x$ into the general element of $V$ gives:
+    \begin{align*}
+        c_1 + c_2 \sin^2 x + c_3 \cos^2 x &= c_1 + c_2 \sin^2 x + c_3(1 - \sin^2 x) \\
+        &= (c_1 + c_3)\cdot 1 + (c_2 - c_3)\sin^2 x \\
+        &= k_1 \cdot 1 + k_2 \sin^2 x,
+    \end{align*}
+    where $k_1 = c_1 + c_3$ and $k_2 = c_2 - c_3$ are arbitrary constants. Thus, the set $\{1, \sin^2 x\}$ spans $V$.
+    
+    Now we verify that $\{1, \sin^2 x\}$ is linearly independent. Suppose:
+    \[
+        k_1 \cdot 1 + k_2 \sin^2 x = 0 \quad \text{for all } x \in \mathbb{R}.
+    \]
+    \begin{itemize}
+        \item Evaluating at $x = 0$: $k_1 + k_2 \sin^2(0) = 0 \implies k_1 = 0$.
+        \item Evaluating at $x = \frac{\pi}{2}$: $k_1 + k_2 \sin^2\left(\frac{\pi}{2}\right) = 0 \implies 0 + k_2(1)^2 = 0 \implies k_2 = 0$.
+    \end{itemize}
+    Since $k_1 = k_2 = 0$, the functions $1$ and $\sin^2 x$ are linearly independent and span $V$. Thus, $\{1, \sin^2 x\}$ is a basis of $V$ (note that $\{1, \cos^2 x\}$ or $\{\sin^2 x, \cos^2 x\}$ or $\{1, \cos 2x\}$ are also valid bases).
+
+    \item \textbf{Finding the Dimension:}
+    Since the basis $\{1, \sin^2 x\}$ contains exactly $2$ elements, the dimension of the vector space is $\mathbf{2}$.
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 9:} The functions form a vector space because they are closed under addition and scalar multiplication. A basis is $\mathbf{\{1, \sin^2 x\}}$ (or $\{\sin^2 x, \cos^2 x\}$, or $\{1, \cos^2 x\}$), and its dimension is $\mathbf{2}$.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 10}
+\textbf{Problem Statement:} Show that the solutions of the differential equation $u''' - 3u'' + 4u = 0$ form a vector space. Find a basis of it.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item \textbf{Proof that the solutions form a vector space:}
+    Define the differential operator $\mathcal{L}u = u''' - 3u'' + 4u$.
+    \begin{itemize}
+        \item First, note that $\mathcal{L}$ is a linear operator: for any thrice-differentiable functions $u, v$ and constant $c$,
+        \begin{align*}
+            \mathcal{L}(u + v) &= (u + v)''' - 3(u + v)'' + 4(u + v) \\
+            &= (u''' - 3u'' + 4u) + (v''' - 3v'' + 4v) = \mathcal{L}u + \mathcal{L}v, \\
+            \mathcal{L}(cu) &= (cu)''' - 3(cu)'' + 4(cu) = c(u''' - 3u'' + 4u) = c\mathcal{L}u.
+        \end{align*}
+        \item Let $S = \{u : \mathcal{L}u = 0\}$ be the set of all solutions.
+        \item \emph{Zero Function:} $\mathcal{L}(0) = 0''' - 3(0)'' + 4(0) = 0$, so $0 \in S$.
+        \item \emph{Closure under Addition:} If $u, v \in S$, then $\mathcal{L}u = 0$ and $\mathcal{L}v = 0$. By linearity, $\mathcal{L}(u + v) = \mathcal{L}u + \mathcal{L}v = 0 + 0 = 0$, so $u + v \in S$.
+        \item \emph{Closure under Scalar Multiplication:} If $u \in S$ and $c \in \mathbb{R}$, then $\mathcal{L}(cu) = c\mathcal{L}u = c(0) = 0$, so $cu \in S$.
+        \item Therefore, the solution set $S$ is a vector space.
+    \end{itemize}
+
+    \item \textbf{Finding a Basis of the Solution Space:}
+    The ODE $u''' - 3u'' + 4u = 0$ is a third-order linear homogeneous ODE with constant coefficients. We substitute the trial solution $u(x) = e^{rx}$, which gives:
+    \[
+        (r^3 - 3r^2 + 4)e^{rx} = 0.
+    \]
+    Since $e^{rx} \neq 0$, we obtain the characteristic polynomial equation:
+    \[
+        r^3 - 3r^2 + 4 = 0.
+    \]
+    \item Testing rational roots (divisors of $4$: $\pm 1, \pm 2, \pm 4$), we check $r = -1$:
+    \[
+        (-1)^3 - 3(-1)^2 + 4 = -1 - 3 + 4 = 0.
+    \]
+    Thus, $r = -1$ is a root, so $(r + 1)$ is a factor. Dividing $r^3 - 3r^2 + 4$ by $(r + 1)$ via polynomial division:
+    \[
+        r^3 - 3r^2 + 0r + 4 = (r + 1)(r^2 - 4r + 4) = (r + 1)(r - 2)^2 = 0.
+    \]
+    \item The roots of the characteristic equation are:
+    \begin{itemize}
+        \item $r_1 = -1$ (simple root of multiplicity $1$), which gives the solution $u_1(x) = e^{-x}$.
+        \item $r_2 = 2$ (repeated root of multiplicity $2$), which gives the two linearly independent solutions $u_2(x) = e^{2x}$ and $u_3(x) = x e^{2x}$.
+    \end{itemize}
+    \item Therefore, the general solution of the ODE is:
+    \[
+        u(x) = c_1 e^{-x} + c_2 e^{2x} + c_3 x e^{2x}.
+    \]
+    Since the functions $\{e^{-x}, e^{2x}, x e^{2x}\}$ are linearly independent and span the entire 3-dimensional solution space, they form a basis.
+\end{enumerate}
+
+\textbf{Final Answer for Exercise 10:} A basis for the vector space of solutions is $\mathbf{\{e^{-x}, e^{2x}, x e^{2x}\}}$.
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 11}
+\textbf{Problem Statement:} Verify that $u(x, y) = f(x)g(y)$ is a solution of the PDE $u u_{xy} = u_x u_y$ for all pairs of (differentiable) functions $f$ and $g$ of one variable.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Given $u(x, y) = f(x)g(y)$, we compute the first-order partial derivatives $u_x$ and $u_y$, treating the other variable as a constant in each differentiation:
+    \begin{align*}
+        u_x(x, y) &= \frac{\partial}{\partial x}\big[f(x)g(y)\big] = f'(x)g(y), \\
+        u_y(x, y) &= \frac{\partial}{\partial y}\big[f(x)g(y)\big] = f(x)g'(y).
+    \end{align*}
+    \item Next, we compute the mixed second-order partial derivative $u_{xy}$ by differentiating $u_x(x, y) = f'(x)g(y)$ with respect to $y$ (holding $x$ and hence $f'(x)$ constant):
+    \[
+        u_{xy}(x, y) = \frac{\partial}{\partial y}\big[f'(x)g(y)\big] = f'(x)g'(y).
+    \]
+    \item Now we evaluate the left-hand side (LHS) of the PDE $u u_{xy} = u_x u_y$:
+    \[
+        \text{LHS} = u(x, y) u_{xy}(x, y) = \big[f(x)g(y)\big]\big[f'(x)g'(y)\big] = f(x)f'(x)g(y)g'(y).
+    \]
+    \item Next, we evaluate the right-hand side (RHS) of the PDE $u u_{xy} = u_x u_y$:
+    \[
+        \text{RHS} = u_x(x, y) u_y(x, y) = \big[f'(x)g(y)\big]\big[f(x)g'(y)\big] = f(x)f'(x)g(y)g'(y).
+    \]
+    \item Comparing the two expressions, we see that:
+    \[
+        \text{LHS} = f(x)f'(x)g(y)g'(y) = \text{RHS}
+    \]
+    for all differentiable functions $f(x)$ and $g(y)$ and all $(x, y)$. Thus, $u(x, y) = f(x)g(y)$ is a solution of $u u_{xy} = u_x u_y$. \qed
+\end{enumerate}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Exercise 12}
+\textbf{Problem Statement:} Verify by direct substitution that
+\[
+    u_n(x, y) = \sin nx \sinh ny
+\]
+is a solution of $u_{xx} + u_{yy} = 0$ for every $n > 0$.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Let $u_n(x, y) = \sin(nx)\sinh(ny)$, where $n > 0$ is a constant.
+    \item First, we compute the first and second partial derivatives of $u_n$ with respect to $x$ (holding $y$ and $\sinh(ny)$ constant):
+    \begin{align*}
+        (u_n)_x &= \frac{\partial}{\partial x}\big[\sin(nx)\sinh(ny)\big] = n\cos(nx)\sinh(ny), \\
+        (u_n)_{xx} &= \frac{\partial}{\partial x}\big[n\cos(nx)\sinh(ny)\big] = -n^2\sin(nx)\sinh(ny).
+    \end{align*}
+    \item Second, we compute the first and second partial derivatives of $u_n$ with respect to $y$ (holding $x$ and $\sin(nx)$ constant, and recalling that $\frac{d}{dy}\sinh(ny) = n\cosh(ny)$ and $\frac{d}{dy}\cosh(ny) = n\sinh(ny)$):
+    \begin{align*}
+        (u_n)_y &= \frac{\partial}{\partial y}\big[\sin(nx)\sinh(ny)\big] = n\sin(nx)\cosh(ny), \\
+        (u_n)_{yy} &= \frac{\partial}{\partial y}\big[n\sin(nx)\cosh(ny)\big] = n^2\sin(nx)\sinh(ny).
+    \end{align*}
+    \item Finally, we substitute $(u_n)_{xx}$ and $(u_n)_{yy}$ into Laplace's equation $u_{xx} + u_{yy} = 0$:
+    \begin{align*}
+        (u_n)_{xx} + (u_n)_{yy} &= -n^2\sin(nx)\sinh(ny) + n^2\sin(nx)\sinh(ny) \\
+        &= 0.
+    \end{align*}
+    \item Since $(u_n)_{xx} + (u_n)_{yy} = 0$ identically for all $(x, y) \in \mathbb{R}^2$ and every $n > 0$, $u_n(x, y) = \sin nx \sinh ny$ is verified to be a solution of Laplace's equation. \qed
+\end{enumerate}
+
+\newpage
+% ============================================================================
+% PART 3: IN-DEPTH ANALYSIS OF PROBLEMS AND TECHNIQUES
+% ============================================================================
+\section{In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+The twelve exercises in Section 1.1 fall into six distinct archetypes that establish the algebraic and analytical foundation for studying PDEs:
+
+\begin{enumerate}
+    \item \textbf{Type 1: Operator Linearity Verification (Exercises 1, 2)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Isolate the operator $\mathcal{L}u$ and explicitly test $\mathcal{L}(u+v) = \mathcal{L}u + \mathcal{L}v$ and $\mathcal{L}(cu) = c\mathcal{L}u$. If both hold identically for all $u, v, c$, the operator is linear. If either fails (due to cross terms like $u v_y$, powers like $c^2$, or standalone constants like $+1$), the operator is nonlinear.
+    \end{itemize}
+    \item \textbf{Type 2: PDE Classification by Order, Linearity, and Homogeneity (Exercise 3)}
+    \begin{itemize}
+        \item \emph{General Strategy:} First scan every partial derivative term and count the total number of differentiations in subscripts ($u_{xxt}$ has $2+1=3$ derivatives) to determine the order. Next, move all terms independent of $u$ (such as $+1$ or $+x^2$) to the right-hand side $g(x, t)$ and define $\mathcal{L}u$ as the left-hand side. Check if $\mathcal{L}$ is linear; if so, check whether $g \equiv 0$ (homogeneous) or $g \neq 0$ (inhomogeneous).
+    \end{itemize}
+    \item \textbf{Type 3: Structural Proofs Using Linear Operators (Exercise 4)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Do not rely on specific differential formulas; instead, treat $\mathcal{L}$ abstractly using only its two defining properties $\mathcal{L}(u+v) = \mathcal{L}u + \mathcal{L}v$ and $\mathcal{L}(cu) = c\mathcal{L}u$.
+    \end{itemize}
+    \item \textbf{Type 4: Finite-Dimensional Vector Space and Basis Analysis in $\mathbb{R}^3$ (Exercises 5, 6, 8)}
+    \begin{itemize}
+        \item \emph{General Strategy:} For subspace verification (Exercise 5), check the zero vector $[0,0,0]$ first to rapidly eliminate affine sets (like $b=1$), then check closure under addition to eliminate nonlinear algebraic constraints (like $ab=0$). For linear independence and basis extension in $\mathbb{R}^3$ (Exercises 6 and 8), set up $c_1\mathbf{v}_1 + c_2\mathbf{v}_2 + c_3\mathbf{v}_3 = \mathbf{0}$ and solve via Gaussian elimination or determinants.
+    \end{itemize}
+    \item \textbf{Type 5: Function Space Independence, Dimension Reduction, and ODE Solution Spaces (Exercises 7, 9, 10)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Treat functions as vectors in an infinite-dimensional vector space. Use trigonometric or algebraic identities (such as $\sin^2 x + \cos^2 x = 1$ in Exercise 9) to eliminate redundant spanning functions before counting basis elements. For constant-coefficient ODEs (Exercise 10), reduce the differential equation to an algebraic characteristic polynomial $P(r) = 0$.
+    \end{itemize}
+    \item \textbf{Type 6: Direct Substitution and Solution Verification for PDEs (Exercises 11, 12)}
+    \begin{itemize}
+        \item \emph{General Strategy:} Compute each partial derivative appearing in the PDE systematically, holding the other independent variable strictly fixed, and substitute the results into the left- and right-hand sides to verify an exact algebraic identity.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Product and Binomial Expansion to Expose Cross-Terms (Exercises 1, 2, 3):}
+    In Exercise 1 (Examples 3 and 6) and Exercise 2(b), expanding $(u+v)(u+v)_y = u u_y + v v_y + (u v_y + v u_y)$ was crucial because the cross-term $u v_y + v u_y$ proves that superposition fails for shock waves ($u_x + u u_y = 0$). Similarly, expanding $(u+v)^3 = u^3 + v^3 + 3u^2 v + 3u v^2$ in Example 5 and $(u_y + v_y)^2 = u_y^2 + v_y^2 + 2u_y v_y$ in Exercise 2(c) explicitly isolated the nonlinear interference terms.
+    \item \textbf{Distinguishing Variable Coefficients from Nonlinearities (Exercise 2(e), Exercise 3(b, e, g)):}
+    In Exercise 2(e), the expression $\sqrt{1+x^2}(\cos y)u_x - [\arctan(x/y)]u$ contains square roots, cosines, and inverse tangents. The decisive manipulation was recognizing that because these nonlinear functions act \emph{only} on $x$ and $y$ (and not on $u$), they factor out of $\mathcal{L}(u+v)$ and $\mathcal{L}(cu)$ just like constants.
+    \item \textbf{Isolating Pure Source Terms to Distinguish Affine Operators from Linear Inhomogeneous PDEs (Exercise 2(d) vs.\ Exercise 3(a, d)):}
+    In Exercise 2(d), the operator $\mathcal{L}u = u_x + u_y + 1$ is \emph{not} a linear operator because the $+1$ is inside $\mathcal{L}$, causing $\mathcal{L}(u+v)$ to contain $+1$ while $\mathcal{L}u + \mathcal{L}v$ contains $+2$. Conversely, in Exercise 3(a), moving $+1$ to the right-hand side of $u_t - u_{xx} + 1 = 0$ to write $\mathcal{L}u = u_t - u_{xx} = -1$ allowed us to classify the \emph{equation} as linear inhomogeneous!
+    \item \textbf{Constructing Explicit Counterexamples for Subspace Closure (Exercise 5(c)):}
+    In Exercise 5(c), the condition $ab = 0$ is satisfied by both $[0,0,0]$ and scalar multiples $k[a,b,c]$. The critical algebraic step was choosing one vector on the plane $b=0$ ($\mathbf{u}=[1,0,0]$) and one vector on the plane $a=0$ ($\mathbf{v}=[0,1,0]$) so that their sum $[1,1,0]$ falls off both planes ($ab = 1 \neq 0$).
+    \item \textbf{Pythagorean Identity Reduction in Function Spaces (Exercise 9):}
+    In Exercise 9, a naive glance at $c_1 + c_2\sin^2 x + c_3\cos^2 x$ suggests three parameters and hence dimension 3. Substituting $\cos^2 x = 1 - \sin^2 x$ to rewrite the family as $(c_1 + c_3) + (c_2 - c_3)\sin^2 x$ was essential to collapse the three parameters into two independent constants $k_1, k_2$, revealing that the true dimension is $2$.
+    \item \textbf{Rational Root Theorem and Multiplicity Factoring (Exercise 10):}
+    In Exercise 10, the characteristic polynomial $r^3 - 3r^2 + 4 = 0$ lacks an $r^1$ term, so it cannot be factored by simple grouping. Testing $r = -1$ and performing polynomial division to obtain $(r+1)(r-2)^2 = 0$ was essential both to find the roots and to detect that $r = 2$ has multiplicity $2$, which requires multiplying $e^{2x}$ by $x$ to get the third basis function $x e^{2x}$.
+    \item \textbf{Sign Opposite Cancellation of Trigonometric vs.\ Hyperbolic Functions (Exercise 12):}
+    In Exercise 12, differentiating $\sin(nx)$ twice introduces a minus sign ($-n^2\sin(nx)$), whereas differentiating $\sinh(ny)$ twice preserves the plus sign ($+n^2\sinh(ny)$). This opposite sign behavior is the exact calculus mechanism that allows $u_n(x, y) = \sin(nx)\sinh(ny)$ to satisfy the elliptic Laplace equation $u_{xx} + u_{yy} = 0$.
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 4: "CHEATSHEET" AND TIPS FOR SUCCESS
+% ============================================================================
+\section{``Cheatsheet'' and Tips for Success}
+
+\subsection{Summary of Essential Formulas and Classifications}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Concept} & \textbf{Mathematical Form} & \textbf{Key Test / Property} \\ \midrule
+Order of a PDE & $F(x, y, u, u_x, \dots, \partial^k u) = 0$ & Highest total derivative count $k$ in any term \\
+Linear Operator $\mathcal{L}$ & $\mathcal{L}(c_1 u + c_2 v) = c_1\mathcal{L}u + c_2\mathcal{L}v$ & Must have $\mathcal{L}(0) = 0$ and degree $1$ in $u, \partial u$ \\
+Linear Homogeneous PDE & $\mathcal{L}u = 0$ & $u \equiv 0$ is always a solution; solutions form a vector space \\
+Linear Inhomogeneous PDE & $\mathcal{L}u = g(x, y)$ ($g \neq 0$) & General solution is $u = u_p + u_h$ \\
+Nonlinear PDE & Cannot be written as $\mathcal{L}u = g$ & Contains $u^2, u u_x, (u_y)^2, \sqrt{1+u}$, etc. \\
+Vector Subspace $V$ & $0 \in V$, $c_1\mathbf{u} + c_2\mathbf{v} \in V$ & Must pass through origin and be closed under $+$ and $\cdot$ \\ \bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Cheats, Tricks, and Shortcuts}
+\begin{itemize}
+    \item \textbf{The ``Degree-One'' Instant Linearity Check:} A differential equation is linear if and only if every term (after moving terms without $u$ to the RHS) has \textbf{degree exactly $1$} in $u$ and its partial derivatives combined.
+    \begin{itemize}
+        \item $x^5 e^{\cos y} u_{xxy}$ $\longrightarrow$ Degree $1$ in $u$ (Linear!).
+        \item $u u_x$ $\longrightarrow$ Degree $1 + 1 = 2$ in $u$ (Nonlinear!).
+        \item $(u_y)^2$ $\longrightarrow$ Degree $2$ in $u$ (Nonlinear!).
+    \end{itemize}
+    \item \textbf{The Zero-Test Shortcut for Operators and Vector Spaces:}
+    \begin{itemize}
+        \item For any linear operator $\mathcal{L}$, plugging in $u = 0$ \emph{must} give $\mathcal{L}(0) = 0$. In Exercise 2(d), $\mathcal{L}(0) = 0 + 0 + 1 = 1 \neq 0$, which immediately proves $\mathcal{L}$ is not linear in $2$ seconds!
+        \item For any vector space $V$, the zero vector $\mathbf{0}$ \emph{must} belong to $V$. In Exercise 5(b), $[0, 0, 0]$ has $b = 0 \neq 1$, instantly ruling out $V_b$.
+    \end{itemize}
+    \item \textbf{Strategic Point Evaluation for Function Independence:} To test whether functions $f_1(x), f_2(x), \dots$ are linearly independent in $c_1 f_1(x) + c_2 f_2(x) = 0$, plug in strategic values of $x$ (such as $x = 0, \pi/2, \pi, 1, -1$) where one function vanishes and the other does not (as we did in Exercise 9 with $x=0$ and $x=\pi/2$).
+\end{itemize}
+
+\subsection{Common Pitfalls, Mistakes, and Traps to Watch Out For}
+\begin{enumerate}
+    \item \textbf{Trap 1: Confusing Variable Coefficients with Nonlinearity.} Students frequently misclassify equations like $u_t - u_{xx} + \frac{1}{x}u = 0$ (Exercise 3e) or $\sqrt{1+x^2}(\cos y)u_x = 0$ (Exercise 2e) as ``nonlinear'' because $\frac{1}{x}$, $\sqrt{1+x^2}$, and $\cos y$ are nonlinear functions of $x$ and $y$. \emph{Remember:} Linearity is defined \textbf{solely with respect to the dependent variable $u$ and its derivatives}, never the independent variables!
+    \item \textbf{Trap 2: Confusing an Affine Operator with an Inhomogeneous Equation.} If asked whether the \emph{operator} $\mathcal{L}u = u_x + u_y + 1$ is linear (Exercise 2d), the answer is \textbf{No}. If asked whether the \emph{equation} $u_t - u_{xx} + 1 = 0$ is linear (Exercise 3a), the answer is \textbf{Yes, linear inhomogeneous} (because we rewrite it as $\mathcal{L}u = u_t - u_{xx} = -1$, where $\mathcal{L}$ does not include the $+1$).
+    \item \textbf{Trap 3: Miscounting the Order of Mixed Derivatives.} In $u_t - u_{xxt} + u u_x = 0$ (Exercise 3c), $u_{xxt}$ is a \textbf{third-order} derivative ($\frac{\partial^3 u}{\partial t \partial x^2}$), not second-order. Always count the total number of subscript letters!
+    \item \textbf{Trap 4: Overlooking Hidden Trigonometric Identities in Function Spaces.} Whenever a spanning set contains $\sin^2 x$, $\cos^2 x$, $\cos(2x)$, $\cosh^2 x$, or $\sinh^2 x$ alongside constants (Exercise 9), check whether $\sin^2 x + \cos^2 x = 1$ or $\cosh^2 x - \sinh^2 x = 1$ creates a hidden linear dependence before stating the basis and dimension.
+    \item \textbf{Trap 5: Forgetting the Extra Factor of $x$ for Repeated ODE Roots.} In Exercise 10, the characteristic polynomial $(r+1)(r-2)^2 = 0$ has $r=2$ twice. Writing $\{e^{-x}, e^{2x}, e^{2x}\}$ fails to give a basis; the second solution for $r=2$ must be $x e^{2x}$.
+\end{enumerate}
+
+\newpage
+% ============================================================================
+% PART 5: CONCEPTUAL SYNTHESIS AND THE "BIG PICTURE"
+% ============================================================================
+\section{Conceptual Synthesis and The ``Big Picture''}
+
+\subsection{A) Thematic Connections}
+The unifying theme of Section 1.1 is \textbf{Linearity and the Vector Space Structure of Solution Sets}. Across all of mathematics, whenever a problem can be phrased as finding the kernel (nullspace) of a linear operator $\mathcal{L}u = 0$—or a fiber $\mathcal{L}u = g$—the same universal architecture applies:
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Subject Area} & \textbf{Linear Operator $\mathcal{L}$} & \textbf{Homogeneous $\mathcal{L}u = 0$} & \textbf{Inhomogeneous $\mathcal{L}u = g$} \\ \midrule
+Linear Algebra & Matrix $\mathbf{v} \mapsto A\mathbf{v}$ & Nullspace $\text{Null}(A)$ (dim $\le n$) & $\mathbf{v} = \mathbf{v}_p + \mathbf{v}_h$ \\
+Linear ODEs & $u \mapsto u''' - 3u'' + 4u$ & $\text{Span}\{e^{-x}, e^{2x}, x e^{2x}\}$ (dim $= 3$) & $u(x) = u_p(x) + u_h(x)$ \\
+Linear PDEs & $u \mapsto u_{xx} + u_{yy}$ & Infinite-dimensional function space & $u(x,y) = u_p(x,y) + u_h(x,y)$ \\ \bottomrule
+\end{tabular}
+\end{center}
+In every case, Exercise 4 ($\mathcal{L}(u_1 - u_2) = 0$) proves that once we find \emph{one} particular solution $u_p$ to the inhomogeneous problem $\mathcal{L}u = g$, the set of \emph{all} solutions is simply the affine translation $u_p + \text{Ker}(\mathcal{L})$.
+
+\subsection{B) Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Links (Foundations):} Section 1.1 directly synthesizes multivariable partial differentiation (treating untouched variables as constants) with linear algebra (subspaces, linear independence, bases) and constant-coefficient ODEs.
+    \item \textbf{Forward Links (Where This Leads in the Curriculum):}
+    \begin{enumerate}
+        \item \emph{First-Order Linear PDEs and the Method of Characteristics (Section 1.2):} Equations like $u_x + y u_y = 0$ (Example 2) and $u_x + e^y u_y = 0$ (Exercise 3g) will be solved geometrically in Section 1.2 by finding characteristic curves along which the PDE reduces to an ODE.
+        \item \emph{Boundary and Initial Conditions (Sections 1.3--1.4):} Because the general solution of a PDE contains arbitrary functions (an infinite-dimensional space), a unique physical solution cannot be determined by a few numbers; instead, we must specify entire \emph{functions} along the boundary of the domain (boundary conditions) or at $t = 0$ (initial conditions).
+        \item \emph{Separation of Variables and Fourier Series (Chapters 4--5):} Exercises 11 and 12 are direct previews of the most powerful technique in linear PDEs: \textbf{Separation of Variables}. In Exercise 11, we saw how product functions $u(x,y) = f(x)g(y)$ behave under partial differentiation. In Exercise 12, we verified that the separated product $u_n(x, y) = \sin(nx)\sinh(ny)$ solves Laplace's equation $u_{xx} + u_{yy} = 0$ for every $n > 0$. Because Laplace's operator $\mathcal{L}u = u_{xx} + u_{yy}$ is \textbf{linear}, the superposition principle allows us to form infinite series of these fundamental building blocks:
+        \[
+            u(x, y) = \sum_{n=1}^{\infty} c_n \sin(nx)\sinh(ny),
+        \]
+        and choose the coefficients $c_n$ via Fourier series to match arbitrary boundary data!
+    \end{enumerate}
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 6: ABSTRACT REAL-WORLD MODELING (AI, ML, & QUANT FINANCE)
+% ============================================================================
+\section{Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+\begin{enumerate}
+    \item \textbf{Quantitative Finance (Derivative Pricing and the Black--Scholes--Merton Linear Operator):}
+    In continuous-time mathematical finance, the fair no-arbitrage price $V(S, t)$ of a European or exotic financial derivative written on an underlying asset with spot price $S$ at time $t$ satisfies the \textbf{Black--Scholes--Merton PDE}:
+    \[
+        \mathcal{L}_{\text{BS}} V := \frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} + r S \frac{\partial V}{\partial S} - r V = 0,
+    \]
+    where $r$ is the risk-free interest rate and $\sigma$ is the asset's volatility. Exactly as in Exercise 2(e) and Exercise 3(b, e), although the coefficients $\frac{1}{2}\sigma^2 S^2$ and $rS$ are nonlinear functions of the independent variable $S$, the Black--Scholes operator $\mathcal{L}_{\text{BS}}$ is a \textbf{second-order linear homogeneous differential operator} in $V$. Its linearity is the mathematical foundation of \emph{static portfolio replication}: if a complex structured product has payoff $\Pi(S, T) = c_1 \Phi_1(S) + c_2 \Phi_2(S)$ (for instance, a straddle or butterfly spread built from vanilla calls and puts), the superposition principle $\mathcal{L}_{\text{BS}}(c_1 V_1 + c_2 V_2) = 0$ guarantees that its price at any earlier time $t < T$ is the exact linear combination $c_1 V_1(S, t) + c_2 V_2(S, t)$. Conversely, when credit Valuation Adjustments (CVA) or collateral funding costs depend nonlinearly on the derivative's own value $V$, the PDE acquires a nonlinear term $f(V, V_S)$, breaking superposition and requiring portfolio-level valuation.
+
+    \item \textbf{Generative AI (Score-Based Diffusion Models and the Fokker--Planck PDE):}
+    Modern generative AI architectures (such as Stable Diffusion, DALL-E, and Sora) generate high-dimensional data $\mathbf{x} \in \mathbb{R}^d$ by reversing a continuous-time diffusion process. As noise is progressively injected into a data distribution via a forward Stochastic Differential Equation (SDE), the probability density function $p(\mathbf{x}, t)$ evolves according to the \textbf{Fokker--Planck (Forward Kolmogorov) PDE}:
+    \[
+        \mathcal{L}_{\text{FP}} p := \frac{\partial p}{\partial t} + \sum_{i=1}^d \frac{\partial}{\partial x_i}\big[\mu_i(\mathbf{x}, t) p(\mathbf{x}, t)\big] - \frac{1}{2}\sum_{i,j=1}^d \frac{\partial^2}{\partial x_i \partial x_j}\big[D_{ij}(\mathbf{x}, t) p(\mathbf{x}, t)\big] = 0.
+    \]
+    This is a second-order \textbf{linear homogeneous PDE} in the density $p(\mathbf{x}, t)$. Because $\mathcal{L}_{\text{FP}}$ is linear, a mixture of $K$ data modes $p_0(\mathbf{x}) = \sum_{k=1}^K w_k p_{0,k}(\mathbf{x})$ evolves as the exact superposition $p(\mathbf{x}, t) = \sum_{k=1}^K w_k p_k(\mathbf{x}, t)$, enabling closed-form Gaussian transition kernels during score-matching training.
+
+    \item \textbf{Scientific Machine Learning (Physics-Informed Neural Networks --- PINNs):}
+    When solving high-dimensional PDEs $\mathcal{L}u(\mathbf{x}, t) = g(\mathbf{x}, t)$ where classical grid discretization suffers from the ``curse of dimensionality'' discussed in Section 1.1 ($100^d$ grid points), Physics-Informed Neural Networks parameterize the unknown solution $u(\mathbf{x}, t)$ with a deep neural network $u_\theta(\mathbf{x}, t)$ and use automatic differentiation to compute exact partial derivatives $\partial_t u_\theta, \partial_x u_\theta, \partial_{xx} u_\theta$. The network weights $\theta$ are trained by minimizing the mean-squared PDE residual $\|\mathcal{L}u_\theta - g\|_{L^2}^2$.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup: Quantitative Research Framework for Derivative Pricing with Continuous Dividend Cash Flows}
+We now formulate a rigorous mathematical model connecting stochastic calculus, linear inhomogeneous PDEs, and neural PDE solvers.
+
+\subsubsection*{1. State Space and Probabilistic Setup}
+Let $(\Omega, \mathcal{F}, \{\mathcal{F}_t\}_{t \ge 0}, \mathbb{Q})$ be a filtered probability space satisfying the usual conditions, where $\mathbb{Q}$ denotes the risk-neutral martingale measure and $\{W_t\}_{t \ge 0}$ is a standard one-dimensional $\mathbb{Q}$-Brownian motion. Let the state space for the underlying asset price and time be $\mathcal{D} = (0, \infty) \times [0, T) \subset \mathbb{R}^2$. Under $\mathbb{Q}$, the asset price $S_t$ evolves according to the Geometric Brownian Motion SDE:
+\[
+    dS_t = r S_t\,dt + \sigma S_t\,dW_t, \qquad S_0 > 0,
+\]
+where $r > 0$ is the constant risk-free rate and $\sigma > 0$ is the constant volatility.
+
+\subsubsection*{2. Derivation of the Linear Inhomogeneous PDE via It\^{o}'s Lemma}
+Consider a financial contract that pays a continuous cash-flow stream at rate $q(S_t, t)$ per unit time over $t \in [0, T]$ and a terminal payoff $\Phi(S_T)$ at maturity $T$. Let $u(S, t) \in C^{2,1}(\mathcal{D})$ denote the fair value of the contract at state $(S, t)$. By It\^{o}'s Lemma, the stochastic differential of $u(S_t, t)$ along the trajectory of $S_t$ is:
+\begin{align*}
+    du(S_t, t) &= \frac{\partial u}{\partial t}\,dt + \frac{\partial u}{\partial S}\,dS_t + \frac{1}{2}\frac{\partial^2 u}{\partial S^2}\,(dS_t)^2 \\
+    &= \left(u_t + r S u_S + \frac{1}{2}\sigma^2 S^2 u_{SS}\right)dt + \sigma S u_S\,dW_t,
+\end{align*}
+where we used the quadratic variation identity $(dW_t)^2 = dt$. Under the no-arbitrage martingale pricing condition, the total instantaneous expected return of holding the contract (price appreciation plus cash flow $q(S, t)\,dt$) must equal the risk-free return $r u(S, t)\,dt$:
+\[
+    \mathbb{E}_{\mathbb{Q}}\big[du(S_t, t) + q(S_t, t)\,dt \,\big|\, \mathcal{F}_t\big] = r u(S_t, t)\,dt.
+\]
+Taking the conditional expectation eliminates the martingale diffusion term $\sigma S u_S\,dW_t$, yielding the governing PDE on $\mathcal{D} = (0, \infty) \times [0, T)$:
+\[
+    u_t + \frac{1}{2}\sigma^2 S^2 u_{SS} + r S u_S - r u = -q(S, t), \qquad u(S, T) = \Phi(S).
+\]
+
+\subsubsection*{3. Operator Classification, Decomposition, and Variational PINN Loss}
+Define the Black--Scholes differential operator $\mathcal{L}_{\text{BS}}$ by:
+\[
+    \mathcal{L}_{\text{BS}} u := u_t + \frac{1}{2}\sigma^2 S^2 u_{SS} + r S u_S - r u, \qquad g(S, t) := -q(S, t).
+\]
+\begin{itemize}
+    \item \textbf{Classification:} $\mathcal{L}_{\text{BS}} u = g(S, t)$ is a \textbf{second-order linear inhomogeneous PDE} with variable coefficients.
+    \item \textbf{Structural Decomposition (via Exercise 4):} By the linearity of $\mathcal{L}_{\text{BS}}$, the unique solution decomposes as $u(S, t) = u_p(S, t) + u_h(S, t)$, where $u_p$ is the particular solution pricing the running cash flow ($\mathcal{L}_{\text{BS}} u_p = -q$ with $u_p(S, T) = 0$) and $u_h$ is the homogeneous solution pricing the terminal payoff ($\mathcal{L}_{\text{BS}} u_h = 0$ with $u_h(S, T) = \Phi(S)$).
+    \item \textbf{PINN Optimization Problem:} Approximating $u(S, t)$ by a neural network $u_\theta(S, t)$ with parameters $\theta \in \Theta \subset \mathbb{R}^P$, we formulate the empirical risk minimization problem over interior collocation points $\{(S_i, t_i)\}_{i=1}^{N_{\text{int}}} \subset \mathcal{D}$ and terminal points $\{S_j\}_{j=1}^{N_{\text{term}}} \subset (0, \infty)$:
+    \[
+        \min_{\theta \in \Theta} \mathcal{J}(\theta) = \frac{1}{N_{\text{int}}}\sum_{i=1}^{N_{\text{int}}} \Big|\mathcal{L}_{\text{BS}} u_\theta(S_i, t_i) + q(S_i, t_i)\Big|^2 + \frac{\lambda}{N_{\text{term}}}\sum_{j=1}^{N_{\text{term}}} \Big|u_\theta(S_j, T) - \Phi(S_j)\Big|^2,
+    \]
+    where $\lambda > 0$ is a boundary penalty hyperparameter.
+\end{itemize}
+
+\newpage
+% ============================================================================
+% PART 7: COMMON VARIATIONS AND UNTESTED CONCEPTS
+% ============================================================================
+\section{Common Variations and Untested Concepts}
+
+While the twelve exercises at the end of Section 1.1 thoroughly test linearity, vector spaces, and solution verification, three classic concepts from the Section 1.1 lecture text and standard PDE curricula were not directly tested in the homework problems. Below is a complete treatment of each, accompanied by worked examples.
+
+\subsection{Variation 1: Solving Elementary PDEs by Sequential Partial Integration (With Side Conditions)}
+In the text of Section 1.1 (Examples 1, 2, and 3), PDEs involving derivatives with respect to only one variable at a time (or mixed partials like $u_{xy} = 0$) are solved directly by integrating with respect to one variable while introducing arbitrary functions of the held variable. The homework exercises tested verifying solutions (Exercises 11--12), but did not ask you to \emph{find the general solution} by sequential partial integration.
+
+\subsubsection*{Worked Example 7.1}
+\textbf{Problem:} Find the general solution $u(x, y)$ of the third-order linear inhomogeneous PDE
+\[
+    u_{xxy} = 12xy,
+\]
+and then find the specific solution satisfying the conditions $u_x(0, y) = y^2$, $u(0, y) = \cos y$, and $u(x, 0) = x^3 + 1$.
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Write the PDE as $\frac{\partial}{\partial y}(u_{xx}) = 12xy$. Integrate both sides with respect to $y$, holding $x$ fixed. The ``constant'' of integration must be an arbitrary function of $x$, which we denote $f(x)$:
+    \[
+        u_{xx}(x, y) = \int 12xy\,dy = 6xy^2 + f(x).
+    \]
+    \item Next, integrate both sides with respect to $x$, holding $y$ fixed, and add an arbitrary function $g(y)$:
+    \[
+        u_x(x, y) = \int \big(6xy^2 + f(x)\big)\,dx = 3x^2 y^2 + F(x) + g(y),
+    \]
+    where $F'(x) = f(x)$.
+    \item Integrate once more with respect to $x$, holding $y$ fixed, and add a second arbitrary function $h(y)$:
+    \[
+        u(x, y) = \int \big(3x^2 y^2 + F(x) + g(y)\big)\,dx = x^3 y^2 + G(x) + x g(y) + h(y),
+    \]
+    where $G'(x) = F(x)$ (so $G''(x) = f(x)$). This is the \textbf{general solution}, containing three arbitrary functions $G(x), g(y), h(y)$ corresponding to the third-order derivative $u_{xxy}$.
+    \item Now we apply the three side conditions to determine $G(x), g(y), h(y)$:
+    \begin{itemize}
+        \item Using $u(0, y) = \cos y$ in $u(x, y) = x^3 y^2 + G(x) + x g(y) + h(y)$:
+        \[
+            0 + G(0) + 0 + h(y) = \cos y \implies h(y) = \cos y - G(0).
+        \]
+        \item Using $u_x(0, y) = y^2$ in $u_x(x, y) = 3x^2 y^2 + G'(x) + g(y)$:
+        \[
+            0 + G'(0) + g(y) = y^2 \implies g(y) = y^2 - G'(0).
+        \]
+        \item Substitute $h(y)$ and $g(y)$ back into $u(x, y)$:
+        \[
+            u(x, y) = x^3 y^2 + G(x) + x\big(y^2 - G'(0)\big) + \cos y - G(0).
+        \]
+        \item Finally, apply $u(x, 0) = x^3 + 1$:
+        \[
+            u(x, 0) = 0 + G(x) - x G'(0) + \cos(0) - G(0) = x^3 + 1.
+        \]
+        Since $\cos(0) = 1$, this simplifies to:
+        \[
+            G(x) - x G'(0) - G(0) + 1 = x^3 + 1 \implies G(x) - x G'(0) - G(0) = x^3.
+        \]
+    \end{itemize}
+    \item Substituting $G(x) - x G'(0) - G(0) = x^3$ directly into our expression for $u(x, y)$ gives the unique solution:
+    \[
+        u(x, y) = x^3 y^2 + x^3 + x y^2 + \cos y.
+    \]
+\end{enumerate}
+
+\subsection{Variation 2: Fine-Grained Sub-Classification of Nonlinear PDEs (Semilinear, Quasilinear, and Fully Nonlinear)}
+In standard PDE courses, nonlinear PDEs of order $m$ are further divided into three hierarchy levels according to \emph{where} the nonlinearity occurs:
+\begin{enumerate}
+    \item \textbf{Semilinear PDE:} The coefficients of all highest-order ($m$-th order) derivatives depend \emph{only on the independent variables} $(x, y, t)$, while lower-order terms may depend nonlinearly on $u$ and its lower-order derivatives.
+    \item \textbf{Quasilinear PDE:} The highest-order ($m$-th order) derivatives appear \emph{linearly} (to the first power), but their coefficients may depend on $u$ and its strictly lower-order derivatives (order $\le m - 1$).
+    \item \textbf{Fully Nonlinear PDE:} The equation is nonlinear with respect to at least one of the highest-order ($m$-th order) derivatives themselves (e.g., $(u_x)^2$ in a first-order PDE, or $(u_{xx})^2$ or $u_{xx}u_{yy} - (u_{xy})^2$ in a second-order PDE).
+\end{enumerate}
+
+\subsubsection*{Worked Example 7.2}
+\textbf{Problem:} Classify each of the following nonlinear PDEs from Section 1.1 as \emph{semilinear}, \emph{quasilinear}, or \emph{fully nonlinear}:
+\begin{enumerate}[label=(\alph*)]
+    \item $u_{tt} - u_{xx} + u^3 = 0$ (Example 5)
+    \item $u_x + u u_y = 0$ (Example 3)
+    \item $u_t + u u_x + u_{xxx} = 0$ (Example 6)
+    \item $u_x(1 + u_x^2)^{-1/2} + u_y(1 + u_y^2)^{-1/2} = 0$ (Exercise 3f)
+    \item $(1 + u_y^2)u_{xx} - 2u_x u_y u_{xy} + (1 + u_x^2)u_{yy} = 0$ (Minimal Surface Equation)
+\end{enumerate}
+
+\textbf{Solution:}
+\begin{enumerate}[label=(\alph*)]
+    \item $u_{tt} - u_{xx} + u^3 = 0$: The highest derivatives are $u_{tt}$ and $u_{xx}$ (order 2). Their coefficients are $1$ and $-1$, which depend only on the independent variables (constants), while the nonlinearity $u^3$ is of order $0 < 2$. Thus, it is \textbf{semilinear}.
+    \item $u_x + u u_y = 0$: The highest derivatives are $u_x$ and $u_y$ (order 1). They appear to the first power, but the coefficient of $u_y$ is $u$ (order $0 < 1$). Thus, it is \textbf{quasilinear}.
+    \item $u_t + u u_x + u_{xxx} = 0$: The highest derivative is $u_{xxx}$ (order 3), whose coefficient is $1$. The nonlinear term $u u_x$ involves derivatives of order $1 < 3$. Thus, this third-order PDE is \textbf{semilinear}!
+    \item $u_x(1 + u_x^2)^{-1/2} + u_y(1 + u_y^2)^{-1/2} = 0$: The highest derivatives are $u_x$ and $u_y$ (order 1), and the equation is a nonlinear algebraic function of $u_x$ and $u_y$ themselves. Thus, it is \textbf{fully nonlinear}.
+    \item $(1 + u_y^2)u_{xx} - 2u_x u_y u_{xy} + (1 + u_x^2)u_{yy} = 0$: The highest derivatives are $u_{xx}, u_{xy}, u_{yy}$ (order 2). They appear linearly (degree 1), and their coefficients depend only on the first-order derivatives $u_x, u_y$ (order $1 < 2$). Thus, the Minimal Surface Equation is \textbf{quasilinear}.
+\end{enumerate}
+
+\subsection{Variation 3: PDEs Reducible to Constant-Coefficient ODEs in One Variable with Parameter-Dependent Rates}
+In Section 1.1 Example 2, we solved $u_{xx} + u = 0$ to get $u(x, y) = f(y)\cos x + g(y)\sin x$. A common exam variation replaces the constant coefficient $1$ with a positive function of the held variable $y$, such as $y^2$ or $e^{2y}$, requiring careful integration in $x$ while carrying the $y$-dependence inside the characteristic roots.
+
+\subsubsection*{Worked Example 7.3}
+\textbf{Problem:} Find the general solution $u(x, y)$ of the PDE
+\[
+    u_{xx} - 4y^2 u = 0 \quad \text{for } y > 0.
+\]
+
+\textbf{Solution:}
+\begin{enumerate}
+    \item Because only $x$-derivatives appear in the equation, we treat $y > 0$ as a fixed positive constant parameter and view the PDE as a second-order linear homogeneous ODE in $x$:
+    \[
+        \frac{d^2 u}{dx^2} - (2y)^2 u = 0.
+    \]
+    \item The characteristic equation with respect to $x$ is:
+    \[
+        r^2 - 4y^2 = 0 \implies r = \pm 2y.
+    \]
+    \item For a fixed $y > 0$, the general solution of this ODE in $x$ is a linear combination of $e^{2yx}$ and $e^{-2yx}$. Because the ``constants'' of integration can depend arbitrarily on the held variable $y$, we replace them with arbitrary functions $f(y)$ and $g(y)$:
+    \[
+        u(x, y) = f(y)e^{2xy} + g(y)e^{-2xy},
+    \]
+    or equivalently, in terms of hyperbolic functions, $u(x, y) = A(y)\cosh(2xy) + B(y)\sinh(2xy)$.
+\end{enumerate}
+
+\newpage
+% ============================================================================
+% PART 8: ADVANCED DIAGNOSTIC TESTING: "FIND THE FLAW"
+% ============================================================================
+\section{Advanced Diagnostic Testing: ``Find the Flaw''}
+
+Below are five diagnostic problems designed to test your mastery of Section 1.1. Each problem is followed by a plausible-looking ``Student Solution'' that contains \textbf{one subtle, critical flaw}. Try to spot the flaw yourself before reading the Grader's Analysis!
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Diagnostic Problem 1: Sequential Partial Integration of a Mixed PDE}
+\textbf{Problem:} Find the most general solution $u(x, y)$ of the second-order PDE $u_{xy} = 4xy$.
+
+\subsubsection*{Flawed Student Solution:}
+\begin{enumerate}
+    \item Write the PDE as $\frac{\partial}{\partial y}(u_x) = 4xy$.
+    \item Integrate both sides with respect to $y$, holding $x$ constant, to obtain:
+    \[
+        u_x(x, y) = \int 4xy\,dy = 2xy^2 + f(x),
+    \]
+    where $f(x)$ is an arbitrary function of $x$.
+    \item Now integrate both sides with respect to $x$, holding $y$ constant, to obtain:
+    \[
+        u(x, y) = \int \big(2xy^2 + f(x)\big)\,dx = x^2 y^2 + F(x) + C,
+    \]
+    where $F'(x) = f(x)$ and $C$ is an arbitrary constant of integration.
+    \item \textbf{Student's Final Answer:} $u(x, y) = x^2 y^2 + F(x) + C$.
+\end{enumerate}
+
+\subsubsection*{Grader's Analysis and Correction:}
+\begin{itemize}
+    \item \textbf{Location of the Flaw:} Step 3, where the student added a constant $+C$ instead of an arbitrary function $+g(y)$ when integrating with respect to $x$.
+    \item \textbf{One-Sentence Explanation:} When integrating a multivariable function with respect to $x$ while holding $y$ fixed, the constant of integration can vary arbitrarily with the held variable $y$, so it must be an arbitrary function $g(y)$ rather than a single constant $C$.
+    \item \textbf{Corrected Step and Final Solution:}
+    In Step 3, integrating $u_x(x, y) = 2xy^2 + f(x)$ with respect to $x$ while holding $y$ fixed yields:
+    \[
+        u(x, y) = \int \big(2xy^2 + f(x)\big)\,dx = x^2 y^2 + F(x) + g(y),
+    \]
+    where $F(x)$ and $g(y)$ are arbitrary functions of one variable (with $F$ differentiable).
+\end{itemize}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Diagnostic Problem 2: Classifying a Variable-Coefficient PDE}
+\textbf{Problem:} State the order of the PDE
+\[
+    e^{xy} u_{xxt} + \sin(x^2 + t^2)u_t - \ln(1 + x^2) = 0
+\]
+and determine whether it is nonlinear, linear inhomogeneous, or linear homogeneous.
+
+\subsubsection*{Flawed Student Solution:}
+\begin{enumerate}
+    \item The partial derivatives appearing in the equation are $u_{xxt}$ and $u_t$. Since $u_{xxt} = \frac{\partial^3 u}{\partial t \partial x^2}$ is a third derivative, the PDE has order $3$.
+    \item Rearranging the equation so that the term without $u$ is on the right-hand side gives:
+    \[
+        e^{xy} u_{xxt} + \sin(x^2 + t^2)u_t = \ln(1 + x^2).
+    \]
+    \item Because the coefficients $e^{xy}$ and $\sin(x^2 + t^2)$ contain exponential and trigonometric functions of products and squares ($xy$ and $x^2 + t^2$), the left-hand side is not linear.
+    \item \textbf{Student's Final Answer:} Order 3, nonlinear.
+\end{enumerate}
+
+\subsubsection*{Grader's Analysis and Correction:}
+\begin{itemize}
+    \item \textbf{Location of the Flaw:} Step 3, where the student concluded that the equation is nonlinear because $e^{xy}$ and $\sin(x^2 + t^2)$ are nonlinear functions of $x, y, t$.
+    \item \textbf{One-Sentence Explanation:} The linearity of a differential operator $\mathcal{L}$ depends solely on whether $\mathcal{L}$ is linear in the unknown dependent variable $u$ and its partial derivatives, regardless of how nonlinearly the coefficients depend on the independent variables $x, y, t$.
+    \item \textbf{Corrected Step and Final Solution:}
+    In Step 3, define $\mathcal{L}u = e^{xy}u_{xxt} + \sin(x^2 + t^2)u_t$. For any functions $u, v$ and constant $c$, $\mathcal{L}(u + v) = \mathcal{L}u + \mathcal{L}v$ and $\mathcal{L}(cu) = c\mathcal{L}u$ hold identically because $e^{xy}$ and $\sin(x^2 + t^2)$ do not depend on $u$. Since the right-hand side is $g(x, t) = \ln(1 + x^2) \neq 0$, the correct classification is \textbf{Order 3, linear inhomogeneous}.
+\end{itemize}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Diagnostic Problem 3: Dimension and Basis of a Hyperbolic Function Space}
+\textbf{Problem:} Consider the vector space $V$ of all functions of the form
+\[
+    f(x) = c_1 + c_2 \cosh^2 x + c_3 \sinh^2 x, \qquad c_1, c_2, c_3 \in \mathbb{R}.
+\]
+Find a basis of $V$ and state its dimension.
+
+\subsubsection*{Flawed Student Solution:}
+\begin{enumerate}
+    \item Every function in $V$ is a linear combination of the three functions $f_1(x) = 1$, $f_2(x) = \cosh^2 x$, and $f_3(x) = \sinh^2 x$, so $\{1, \cosh^2 x, \sinh^2 x\}$ spans $V$.
+    \item Since $1$ is constant, $\cosh^2 x \ge 1$ is strictly positive, and $\sinh^2 x$ vanishes at $x = 0$ while growing exponentially, none of the three functions is a scalar multiple of another.
+    \item Therefore, the three functions $\{1, \cosh^2 x, \sinh^2 x\}$ are linearly independent and form a basis of $V$.
+    \item \textbf{Student's Final Answer:} Basis $\{1, \cosh^2 x, \sinh^2 x\}$; Dimension $= 3$.
+\end{enumerate}
+
+\subsubsection*{Grader's Analysis and Correction:}
+\begin{itemize}
+    \item \textbf{Location of the Flaw:} Step 2 and Step 3, where the student claimed that $\{1, \cosh^2 x, \sinh^2 x\}$ are linearly independent because no single function is a scalar multiple of another.
+    \item \textbf{One-Sentence Explanation:} Pairwise non-proportionality does not imply linear independence for three functions, and here the fundamental hyperbolic identity $\cosh^2 x - \sinh^2 x = 1$ makes the three functions linearly dependent ($1 - \cosh^2 x + \sinh^2 x \equiv 0$).
+    \item \textbf{Corrected Step and Final Solution:}
+    Using the identity $\cosh^2 x = 1 + \sinh^2 x$, we rewrite $f(x)$ as:
+    \[
+        f(x) = c_1 + c_2(1 + \sinh^2 x) + c_3 \sinh^2 x = (c_1 + c_2)\cdot 1 + (c_2 + c_3)\sinh^2 x = k_1 + k_2 \sinh^2 x.
+    \]
+    Testing $k_1 + k_2 \sinh^2 x = 0$ at $x = 0$ gives $k_1 = 0$, and at $x = 1$ gives $k_2 \sinh^2(1) = 0 \implies k_2 = 0$. Thus, $\{1, \sinh^2 x\}$ is linearly independent and spans $V$.
+    \textbf{Correct Final Answer:} Basis $\mathbf{\{1, \sinh^2 x\}}$ (or $\{1, \cosh^2 x\}$ or $\{\cosh^2 x, \sinh^2 x\}$); \textbf{Dimension $= 2$}.
+\end{itemize}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Diagnostic Problem 4: Basis of the Solution Space of a Third-Order ODE}
+\textbf{Problem:} Find a basis for the vector space of solutions to the homogeneous linear ODE
+\[
+    u''' - 6u'' + 9u' = 0.
+\]
+
+\subsubsection*{Flawed Student Solution:}
+\begin{enumerate}
+    \item Substitute $u(x) = e^{rx}$ into the ODE $u''' - 6u'' + 9u' = 0$ to obtain the characteristic equation:
+    \[
+        r^3 - 6r^2 + 9r = 0.
+    \]
+    \item Factor out $r$ and then factor the quadratic trinomial:
+    \[
+        r(r^2 - 6r + 9) = r(r - 3)^2 = 0.
+    \]
+    \item The roots of the characteristic polynomial are $r_1 = 0$ and the repeated root $r_2 = 3, r_3 = 3$.
+    \item Corresponding to $r_1 = 0$ is $e^{0x} = 1$, and corresponding to $r_2 = 3$ and $r_3 = 3$ are $e^{3x}$ and $e^{3x}$, or by squaring the exponent, $e^{3x}$ and $e^{9x}$.
+    \item \textbf{Student's Final Answer:} Basis $\{1, e^{3x}, e^{9x}\}$.
+\end{enumerate}
+
+\subsubsection*{Grader's Analysis and Correction:}
+\begin{itemize}
+    \item \textbf{Location of the Flaw:} Step 4, where the student wrote $e^{9x}$ as the second linearly independent solution corresponding to the repeated characteristic root $r = 3$.
+    \item \textbf{One-Sentence Explanation:} When a root $r$ of the characteristic polynomial of a constant-coefficient linear ODE has multiplicity $2$, the second linearly independent solution is obtained by multiplying $e^{rx}$ by the independent variable $x$ (giving $x e^{3x}$), not by squaring the root in the exponent.
+    \item \textbf{Corrected Step and Final Solution:}
+    In Step 4, the simple root $r_1 = 0$ yields $u_1(x) = e^{0x} = 1$, and the double root $r = 3$ of multiplicity $2$ yields $u_2(x) = e^{3x}$ and $u_3(x) = x e^{3x}$.
+    \textbf{Correct Final Answer:} Basis $\mathbf{\{1, e^{3x}, x e^{3x}\}}$.
+\end{itemize}
+
+\bigskip
+\hrule
+\bigskip
+
+\subsection*{Diagnostic Problem 5: Direct Substitution into the Dispersion PDE}
+\textbf{Problem:} Determine the value of the constant $\omega$ (in terms of $k$ and $a$) such that the traveling-wave function
+\[
+    u(x, t) = \cos(kx - \omega t)
+\]
+is a solution of the third-order linear dispersive PDE $u_t + a u_{xxx} = 0$.
+
+\subsubsection*{Flawed Student Solution:}
+\begin{enumerate}
+    \item Compute the first partial derivative of $u(x, t) = \cos(kx - \omega t)$ with respect to $t$:
+    \[
+        u_t(x, t) = -\sin(kx - \omega t)\cdot (-\omega) = \omega \sin(kx - \omega t).
+    \]
+    \item Compute the first, second, and third partial derivatives of $u(x, t)$ with respect to $x$:
+    \begin{align*}
+        u_x(x, t) &= -k\sin(kx - \omega t), \\
+        u_{xx}(x, t) &= -k^2\cos(kx - \omega t), \\
+        u_{xxx}(x, t) &= -k^3\sin(kx - \omega t).
+    \end{align*}
+    \item Substitute $u_t$ and $u_{xxx}$ into the PDE $u_t + a u_{xxx} = 0$:
+    \[
+        \omega \sin(kx - \omega t) + a\big(-k^3\sin(kx - \omega t)\big) = (\omega - a k^3)\sin(kx - \omega t) = 0.
+    \]
+    \item For this to hold for all $(x, t)$, the coefficient must vanish, giving $\omega = a k^3$.
+    \item \textbf{Student's Final Answer:} $\omega = a k^3$.
+\end{enumerate}
+
+\subsubsection*{Grader's Analysis and Correction:}
+\begin{itemize}
+    \item \textbf{Location of the Flaw:} Step 2, in the differentiation of $u_{xx}(x, t) = -k^2\cos(kx - \omega t)$ with respect to $x$ to find $u_{xxx}(x, t)$.
+    \item \textbf{One-Sentence Explanation:} Since the derivative of $\cos(u)$ is $-\sin(u)$, differentiating $-k^2\cos(kx - \omega t)$ with respect to $x$ cancels the negative sign and produces $+k^3\sin(kx - \omega t)$, not $-k^3\sin(kx - \omega t)$.
+    \item \textbf{Corrected Step and Final Solution:}
+    In Step 2, differentiating $u_{xx}(x, t) = -k^2\cos(kx - \omega t)$ with respect to $x$ gives:
+    \[
+        u_{xxx}(x, t) = -k^2\big(-\sin(kx - \omega t)\cdot k\big) = +k^3\sin(kx - \omega t).
+    \]
+    Substituting $u_t = \omega \sin(kx - \omega t)$ and $u_{xxx} = k^3\sin(kx - \omega t)$ into $u_t + a u_{xxx} = 0$ yields:
+    \[
+        (\omega + a k^3)\sin(kx - \omega t) = 0 \implies \mathbf{\omega = -a k^3}.
+    \]
+\end{itemize}
+
+\end{document}

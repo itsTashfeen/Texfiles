@@ -1,0 +1,466 @@
+\documentclass[11pt, a4paper]{article}
+
+% Fonts and Encoding
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Math and Symbols
+\usepackage{amsmath, amssymb, amsthm, amsfonts, mathrsfs, mathtools}
+
+% Layout and Geometry
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+
+% Formatting and Graphics
+\usepackage{graphicx, xcolor, enumitem, booktabs, array, tabularx}
+
+% TikZ for Illustrations
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, backgrounds}
+
+% Clickable Links and TOC
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Continuous Random Variables and Their Probability Distributions},
+}
+
+% Theorem Environments
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{axiom}{Axiom}[section]
+\newtheorem{example}{Example}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+% Custom Commands
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\F}{\mathcal{F}}
+
+\title{\textbf{Mastering Continuous Random Variables and Their Probability Distributions}}
+\author{Tashfeen Omran}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts and Axioms}
+In the rigorous study of probability, we transition from discrete sample spaces to uncountably infinite spaces (such as intervals on the real line, $\R$). A \textbf{Continuous Random Variable} $Y$ is a measurable function from a sample space $\Omega$ to the real numbers $\R$, such that the probability of $Y$ taking any single exact value is zero: $\Prob(Y = y) = 0$ for all $y \in \R$. 
+
+To describe the distribution of $Y$, we rely on two fundamental functions:
+\begin{definition}[Cumulative Distribution Function (CDF)]
+The CDF of a random variable $Y$, denoted $F(y)$, is defined as:
+\[ F(y) = \Prob(Y \le y) \quad \text{for} \quad -\infty < y < \infty \]
+For a continuous random variable, $F(y)$ is a continuous, monotonically non-decreasing function where $\lim_{y \to -\infty} F(y) = 0$ and $\lim_{y \to \infty} F(y) = 1$.
+\end{definition}
+
+\begin{definition}[Probability Density Function (PDF)]
+The PDF, $f(y)$, is the derivative of the CDF, provided the derivative exists:
+\[ f(y) = \frac{dF(y)}{dy} = F'(y) \]
+Consequently, the probability that $Y$ falls in an interval $[a, b]$ is the integral of the PDF:
+\[ \Prob(a \le Y \le b) = \int_{a}^{b} f(y) \, dy \]
+\end{definition}
+
+\subsection{Intuition and Set-Theoretic Foundations}
+From a measure-theoretic perspective, a continuous random variable induces a probability measure on the Borel $\sigma$-algebra of $\R$. The PDF $f(y)$ is not a probability itself; rather, it is a \textit{density} (specifically, the Radon-Nikodym derivative of the probability measure with respect to the Lebesgue measure). To find the "mass" (probability) of a set, we must integrate this density over the set. Visualizing this, $f(y)$ represents the height of a curve, and probability corresponds to the \textit{area} under that curve.
+
+\subsection{Historical Context and Motivation}
+The formalization of continuous probability arose from the need to model physical measurements (like time, distance, and temperature) which are not confined to discrete integers. In the 17th and 18th centuries, mathematicians like Pierre-Simon Laplace and Carl Friedrich Gauss applied the newly invented calculus of Newton and Leibniz to probability. However, it was Andrey Kolmogorov in 1933 who provided the rigorous axiomatic foundation using measure theory, resolving paradoxes that arose when dealing with uncountably infinite sets.
+
+\subsection{Key Theorems and Formulas}
+\begin{theorem}[Properties of a Density Function]
+A function $f(y)$ is a valid PDF if and only if:
+1. $f(y) \ge 0$ for all $y \in \R$.
+2. $\int_{-\infty}^{\infty} f(y) \, dy = 1$.
+\end{theorem}
+
+\begin{theorem}[Expected Value and Variance]
+The expected value (mean) of a continuous random variable $Y$ is:
+\[ \E(Y) = \int_{-\infty}^{\infty} y f(y) \, dy \]
+The variance is given by:
+\[ V(Y) = \E[(Y - \mu)^2] = \E(Y^2) - [\E(Y)]^2 \]
+\end{theorem}
+
+\subsection{Prerequisites}
+Mastery of this topic requires:
+\begin{itemize}
+    \item \textbf{Calculus:} Proficiency in definite and indefinite integration, the Fundamental Theorem of Calculus, integration by parts, and improper integrals.
+    \item \textbf{Set Theory:} Understanding of intervals, unions, and intersections.
+    \item \textbf{Basic Probability:} Familiarity with Kolmogorov's axioms and conditional probability.
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+To ensure comprehensive mastery without redundant repetition, we strategically select problems representing the four distinct archetypes found in the text: (1) PDF Normalization and Probabilities, (2) CDF/PDF Conversions, (3) Moments (Expectation and Variance), and (4) Theoretical Proofs.
+
+\subsection{Archetype 1: PDF Normalization and Probabilities}
+
+\textbf{Problem 4.8:} Suppose that $Y$ has density function $f(y) = k y(1-y)$ for $0 \le y \le 1$, and $0$ elsewhere.
+\begin{enumerate}[label=\alph*)]
+    \item Find the value of $k$ that makes $f(y)$ a probability density function.
+    \item Find $\Prob(.4 \le Y \le 1)$.
+    \item Find $\Prob(.4 \le Y < 1)$.
+    \item Find $\Prob(Y \le .4 \mid Y \le .8)$.
+    \item Find $\Prob(Y < .4 \mid Y < .8)$.
+\end{enumerate}
+
+\begin{proof}[Solution to 4.8]
+\textbf{(a)} By Theorem 4.2, a valid PDF must integrate to 1 over its support.
+\[ \int_{-\infty}^{\infty} f(y) \, dy = \int_{0}^{1} k(y - y^2) \, dy = 1 \]
+\[ k \left[ \frac{y^2}{2} - \frac{y^3}{3} \right]_{0}^{1} = k \left( \frac{1}{2} - \frac{1}{3} \right) = k \left( \frac{1}{6} \right) = 1 \implies k = 6 \]
+
+\textbf{(b)} We integrate the PDF over the interval $[.4, 1]$:
+\[ \Prob(.4 \le Y \le 1) = \int_{.4}^{1} 6(y - y^2) \, dy = \left[ 3y^2 - 2y^3 \right]_{.4}^{1} \]
+\[ = (3(1)^2 - 2(1)^3) - (3(.4)^2 - 2(.4)^3) = (1) - (3(.16) - 2(.064)) = 1 - (0.48 - 0.128) = 1 - 0.352 = 0.648 \]
+
+\textbf{(c)} Because $Y$ is a continuous random variable, the probability of it taking any single exact value is zero. Thus, $\Prob(Y = 1) = 0$.
+\[ \Prob(.4 \le Y < 1) = \Prob(.4 \le Y \le 1) = 0.648 \]
+
+\textbf{(d)} Using the definition of conditional probability: $\Prob(A \mid B) = \frac{\Prob(A \cap B)}{\Prob(B)}$.
+\[ \Prob(Y \le .4 \mid Y \le .8) = \frac{\Prob(Y \le .4 \cap Y \le .8)}{\Prob(Y \le .8)} = \frac{\Prob(Y \le .4)}{\Prob(Y \le .8)} \]
+We previously found $\Prob(Y \le .4) = \int_{0}^{.4} 6(y - y^2) \, dy = 0.352$.
+Now, we find $\Prob(Y \le .8)$:
+\[ \Prob(Y \le .8) = \left[ 3y^2 - 2y^3 \right]_{0}^{.8} = 3(.64) - 2(.512) = 1.92 - 1.024 = 0.896 \]
+\[ \Prob(Y \le .4 \mid Y \le .8) = \frac{0.352}{0.896} = \frac{352}{896} = \frac{11}{28} \approx 0.3929 \]
+
+\textbf{(e)} As established in part (c), strict inequalities do not change the probability for continuous distributions.
+\[ \Prob(Y < .4 \mid Y < .8) = \Prob(Y \le .4 \mid Y \le .8) = \frac{11}{28} \]
+\end{proof}
+
+\textbf{Problem 4.11:} Suppose that $Y$ possesses the density function $f(y) = cy$ for $0 \le y \le 2$, and $0$ elsewhere.
+\begin{enumerate}[label=\alph*)]
+    \item Find the value of $c$ that makes $f(y)$ a probability density function.
+    \item Find $F(y)$.
+    \item Use $F(y)$ to find $\Prob(1 \le Y \le 2)$.
+\end{enumerate}
+
+\begin{proof}[Solution to 4.11]
+\textbf{(a)} We require the integral over the support to equal 1:
+\[ \int_{0}^{2} cy \, dy = c \left[ \frac{y^2}{2} \right]_{0}^{2} = c \left( \frac{4}{2} - 0 \right) = 2c = 1 \implies c = \frac{1}{2} \]
+
+\textbf{(b)} The CDF $F(y)$ is defined as $\int_{-\infty}^{y} f(t) \, dt$.
+For $y < 0$, $F(y) = 0$.
+For $0 \le y \le 2$:
+\[ F(y) = \int_{0}^{y} \frac{t}{2} \, dt = \left[ \frac{t^2}{4} \right]_{0}^{y} = \frac{y^2}{4} \]
+For $y > 2$, $F(y) = 1$.
+
+\textbf{(c)} Using the CDF to find interval probabilities: $\Prob(a \le Y \le b) = F(b) - F(a)$.
+\[ \Prob(1 \le Y \le 2) = F(2) - F(1) = \frac{2^2}{4} - \frac{1^2}{4} = 1 - \frac{1}{4} = \frac{3}{4} \]
+\end{proof}
+
+\subsection{Archetype 2: CDF and PDF Conversions}
+
+\textbf{Problem 4.12:} The length of time to failure (in hundreds of hours) for a transistor is a random variable $Y$ with distribution function $F(y) = 1 - e^{-y^2}$ for $y \ge 0$, and $0$ for $y < 0$.
+\begin{enumerate}[label=\alph*)]
+    \item Show that $F(y)$ has the properties of a distribution function.
+    \item Find the $.30$-quantile, $\phi_{.30}$, of $Y$.
+    \item Find $f(y)$.
+    \item Find the probability that the transistor operates for at least 200 hours.
+    \item Find $\Prob(Y > 100 \mid Y \le 200)$. \textit{(Note: The text implies units of hundreds of hours, so this is $\Prob(Y > 1 \mid Y \le 2)$).}
+\end{enumerate}
+
+\begin{proof}[Solution to 4.12]
+\textbf{(a)} We must verify three properties for $F(y)$:
+1. $\lim_{y \to -\infty} F(y) = 0$. Since $F(y) = 0$ for $y < 0$, this holds.
+2. $\lim_{y \to \infty} F(y) = \lim_{y \to \infty} (1 - e^{-y^2}) = 1 - 0 = 1$. This holds.
+3. $F(y)$ is non-decreasing. We check the derivative: $F'(y) = 2y e^{-y^2}$. For $y \ge 0$, $2y e^{-y^2} \ge 0$, so $F(y)$ is non-decreasing.
+
+\textbf{(b)} The $p$-th quantile $\phi_p$ is the value such that $F(\phi_p) = p$.
+\[ 1 - e^{-\phi_{.30}^2} = 0.30 \implies e^{-\phi_{.30}^2} = 0.70 \implies -\phi_{.30}^2 = \ln(0.70) \]
+\[ \phi_{.30} = \sqrt{-\ln(0.70)} \approx \sqrt{0.3567} \approx 0.597 \text{ (hundreds of hours)} \]
+
+\textbf{(c)} The PDF is the derivative of the CDF:
+\[ f(y) = \frac{d}{dy} \left( 1 - e^{-y^2} \right) = 2y e^{-y^2} \quad \text{for } y \ge 0 \]
+
+\textbf{(d)} 200 hours corresponds to $y = 2$. We want $\Prob(Y \ge 2)$.
+\[ \Prob(Y \ge 2) = 1 - \Prob(Y < 2) = 1 - F(2) = 1 - (1 - e^{-2^2}) = e^{-4} \approx 0.0183 \]
+
+\textbf{(e)} We want $\Prob(Y > 1 \mid Y \le 2)$.
+\[ \Prob(Y > 1 \mid Y \le 2) = \frac{\Prob(1 < Y \le 2)}{\Prob(Y \le 2)} = \frac{F(2) - F(1)}{F(2)} \]
+\[ = \frac{(1 - e^{-4}) - (1 - e^{-1})}{1 - e^{-4}} = \frac{e^{-1} - e^{-4}}{1 - e^{-4}} \approx \frac{0.3679 - 0.0183}{0.9817} \approx 0.356 \]
+\end{proof}
+
+\subsection{Archetype 3: Moments (Expectation and Variance)}
+
+\textbf{Problem 4.21:} $Y$ has density function $f(y) = (3/2)y^2 + y$ for $0 \le y \le 1$, and $0$ elsewhere. Find the mean and variance of $Y$.
+
+\begin{proof}[Solution to 4.21]
+First, we compute the expected value (mean), $\E(Y)$:
+\[ \E(Y) = \int_{-\infty}^{\infty} y f(y) \, dy = \int_{0}^{1} y \left( \frac{3}{2}y^2 + y \right) \, dy = \int_{0}^{1} \left( \frac{3}{2}y^3 + y^2 \right) \, dy \]
+\[ = \left[ \frac{3}{8}y^4 + \frac{1}{3}y^3 \right]_{0}^{1} = \frac{3}{8} + \frac{1}{3} = \frac{9}{24} + \frac{8}{24} = \frac{17}{24} \]
+
+Next, we compute the second moment, $\E(Y^2)$:
+\[ \E(Y^2) = \int_{0}^{1} y^2 \left( \frac{3}{2}y^2 + y \right) \, dy = \int_{0}^{1} \left( \frac{3}{2}y^4 + y^3 \right) \, dy \]
+\[ = \left[ \frac{3}{10}y^5 + \frac{1}{4}y^4 \right]_{0}^{1} = \frac{3}{10} + \frac{1}{4} = \frac{6}{20} + \frac{5}{20} = \frac{11}{20} \]
+
+Finally, we compute the variance using $V(Y) = \E(Y^2) - [\E(Y)]^2$:
+\[ V(Y) = \frac{11}{20} - \left( \frac{17}{24} \right)^2 = \frac{11}{20} - \frac{289}{576} \]
+To subtract, find a common denominator. The LCM of 20 and 576 is 2880.
+\[ V(Y) = \frac{11 \times 144}{2880} - \frac{289 \times 5}{2880} = \frac{1584 - 1445}{2880} = \frac{139}{2880} \approx 0.0483 \]
+\end{proof}
+
+\textbf{Problem 4.30:} The proportion of time $Y$ that an industrial robot is in operation during a 40-hour week is a random variable with PDF $f(y) = 2y$ for $0 \le y \le 1$.
+\begin{enumerate}[label=\alph*)]
+    \item Find $\E(Y)$ and $V(Y)$.
+    \item The profit $X$ for a week is given by $X = 200Y - 60$. Find $\E(X)$ and $V(X)$.
+    \item Find an interval in which the profit should lie for at least 75\% of the weeks.
+\end{enumerate}
+
+\begin{proof}[Solution to 4.30]
+\textbf{(a)} 
+\[ \E(Y) = \int_{0}^{1} y(2y) \, dy = \int_{0}^{1} 2y^2 \, dy = \left[ \frac{2}{3}y^3 \right]_{0}^{1} = \frac{2}{3} \]
+\[ \E(Y^2) = \int_{0}^{1} y^2(2y) \, dy = \int_{0}^{1} 2y^3 \, dy = \left[ \frac{1}{2}y^4 \right]_{0}^{1} = \frac{1}{2} \]
+\[ V(Y) = \E(Y^2) - [\E(Y)]^2 = \frac{1}{2} - \left(\frac{2}{3}\right)^2 = \frac{1}{2} - \frac{4}{9} = \frac{9 - 8}{18} = \frac{1}{18} \]
+
+\textbf{(b)} Using the linearity of expectation and properties of variance:
+\[ \E(X) = \E(200Y - 60) = 200\E(Y) - 60 = 200\left(\frac{2}{3}\right) - 60 = \frac{400}{3} - \frac{180}{3} = \frac{220}{3} \approx 73.33 \]
+\[ V(X) = V(200Y - 60) = 200^2 V(Y) = 40000 \left(\frac{1}{18}\right) = \frac{20000}{9} \approx 2222.22 \]
+
+\textbf{(c)} We use Tchebysheff's (Chebyshev's) Theorem, which states $\Prob(|X - \mu| < k\sigma) \ge 1 - \frac{1}{k^2}$.
+We want the probability to be at least 75\% (0.75):
+\[ 1 - \frac{1}{k^2} = 0.75 \implies \frac{1}{k^2} = 0.25 \implies k^2 = 4 \implies k = 2 \]
+The interval is $\mu_X \pm 2\sigma_X$.
+\[ \sigma_X = \sqrt{\frac{20000}{9}} = \frac{100\sqrt{2}}{3} \approx 47.14 \]
+\[ \text{Interval} = \left[ \frac{220}{3} - 2\left(\frac{100\sqrt{2}}{3}\right), \frac{220}{3} + 2\left(\frac{100\sqrt{2}}{3}\right) \right] \approx [73.33 - 94.28, 73.33 + 94.28] = [-20.95, 167.61] \]
+\end{proof}
+
+\subsection{Archetype 4: Theoretical Proofs}
+
+\textbf{Problem 4.26:} If $Y$ is a continuous random variable with mean $\mu$ and variance $\sigma^2$, and $a$ and $b$ are constants, prove:
+(a) $\E(aY + b) = a\E(Y) + b$
+(b) $V(aY + b) = a^2 V(Y)$
+
+\begin{proof}[Solution to 4.26]
+\textbf{(a)} By Definition 4.5 and Theorem 4.4 (Law of the Unconscious Statistician):
+\[ \E(aY + b) = \int_{-\infty}^{\infty} (ay + b) f(y) \, dy \]
+Using the linearity of the integral:
+\[ = a \int_{-\infty}^{\infty} y f(y) \, dy + b \int_{-\infty}^{\infty} f(y) \, dy \]
+Since $\int_{-\infty}^{\infty} y f(y) \, dy = \E(Y)$ and $\int_{-\infty}^{\infty} f(y) \, dy = 1$ (property of PDF):
+\[ \E(aY + b) = a\E(Y) + b(1) = a\E(Y) + b \]
+
+\textbf{(b)} By the definition of variance:
+\[ V(aY + b) = \E\left[ ((aY + b) - \E(aY + b))^2 \right] \]
+Substitute the result from part (a):
+\[ = \E\left[ ((aY + b) - (a\mu + b))^2 \right] = \E\left[ (aY - a\mu)^2 \right] = \E\left[ a^2(Y - \mu)^2 \right] \]
+Using the linearity of expectation proven in part (a):
+\[ = a^2 \E\left[ (Y - \mu)^2 \right] = a^2 V(Y) \]
+\end{proof}
+
+\textbf{Problem 4.34:} Suppose $Y$ is a continuous random variable with density $f(y)$ that is positive only if $y \ge 0$. Show that $\E(Y) = \int_{0}^{\infty} [1 - F(y)] \, dy$.
+
+\begin{proof}[Solution to 4.34]
+We start with the right-hand side. By definition, $1 - F(y) = \Prob(Y > y) = \int_{y}^{\infty} f(t) \, dt$.
+\[ \int_{0}^{\infty} [1 - F(y)] \, dy = \int_{0}^{\infty} \left( \int_{y}^{\infty} f(t) \, dt \right) \, dy \]
+This is a double integral over the region $0 \le y \le t < \infty$. By Fubini's Theorem (or Tonelli's Theorem, since the integrand $f(t)$ is non-negative), we can reverse the order of integration. The region of integration in the $(y, t)$ plane is a triangle bounded by $y=0$, $y=t$, and extending to infinity.
+Reversing the bounds, $t$ ranges from $0$ to $\infty$, and for a fixed $t$, $y$ ranges from $0$ to $t$:
+\[ = \int_{0}^{\infty} \left( \int_{0}^{t} f(t) \, dy \right) \, dt \]
+Since $f(t)$ is a constant with respect to $y$, we can pull it out of the inner integral:
+\[ = \int_{0}^{\infty} f(t) \left( \int_{0}^{t} 1 \, dy \right) \, dt = \int_{0}^{\infty} f(t) [y]_{0}^{t} \, dt = \int_{0}^{\infty} t f(t) \, dt \]
+By definition, this final integral is exactly $\E(Y)$. Thus, $\E(Y) = \int_{0}^{\infty} [1 - F(y)] \, dy$.
+\end{proof}
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and Logical Strategies}
+\begin{itemize}
+    \item \textbf{Normalization Problems (e.g., 4.8, 4.11):} The overarching strategy is to exploit the axiom that total probability must equal 1. This translates to setting the definite integral of the PDF over its entire support to 1 and solving algebraically for the unknown constant.
+    \item \textbf{CDF/PDF Conversions (e.g., 4.12):} These problems test the Fundamental Theorem of Calculus. The strategy is to differentiate the CDF to find the PDF, or integrate the PDF to find the CDF. A critical step is ensuring the piecewise boundaries (the support) are correctly maintained during the transformation.
+    \item \textbf{Moment Computations (e.g., 4.21, 4.30):} These require evaluating $\int y^k f(y) dy$. The strategy is purely computational, relying heavily on polynomial integration or integration by parts. 
+    \item \textbf{Theoretical Proofs (e.g., 4.26, 4.34):} The strategy here is to fall back on the foundational definitions (e.g., writing Expectation as an integral) and applying theorems from real analysis (like Fubini's Theorem for swapping integral bounds or linearity of integrals).
+\end{itemize}
+
+\subsection{B) Key Analytical and Logical Manipulations}
+\begin{itemize}
+    \item \textbf{Fubini-Tonelli Theorem (Swapping Integrals):} Used in Problem 4.34. This is a profound measure-theoretic manipulation. We converted a 1D integral of a CDF into a 2D integral, swapped the order of integration, and collapsed it back into an expectation. This trick is ubiquitous in advanced probability (e.g., proving properties of moment generating functions).
+    \item \textbf{Law of the Unconscious Statistician (LOTUS):} Used implicitly in 4.26 and 4.30. Instead of finding the complex PDF of $X = g(Y)$ and then integrating $x f_X(x) dx$, LOTUS allows us to compute $\E(g(Y))$ directly via $\int g(y) f_Y(y) dy$. This bypasses the often arduous Jacobian transformation.
+    \item \textbf{Conditional Probability on Continuous Spaces:} In 4.8 and 4.12, we evaluated $\Prob(A \mid B) = \Prob(A \cap B) / \Prob(B)$. A common logical manipulation is recognizing that if $A \subset B$ (e.g., $Y \le .4$ is a subset of $Y \le .8$), then $A \cap B = A$.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet", Visuals, and Tips for Success}
+
+\subsection{Theorems \& Equivalences Summary}
+\begin{center}
+% 1. Increase row padding safely without breaking alignment
+\renewcommand{\arraystretch}{1.5} 
+\begin{tabularx}{\textwidth}{l X}
+\toprule
+\textbf{Concept} & \textbf{Mathematical Formulation} \\
+\midrule
+% 2. \displaystyle ensures integrals render beautifully tall
+PDF Normalization & $\displaystyle \int_{-\infty}^{\infty} f(y) \, dy = 1$ \\ \addlinespace[2pt]
+CDF Definition    & $\displaystyle F(y) = \int_{-\infty}^{y} f(t) \, dt$ \\ \addlinespace[2pt]
+PDF from CDF      & $\displaystyle f(y) = \frac{d}{dy} F(y)$ \\ \addlinespace[2pt]
+Expected Value    & $\displaystyle \mathbb{E}(Y) = \int_{-\infty}^{\infty} y f(y) \, dy$ \\ \addlinespace[2pt]
+Variance          & $\displaystyle V(Y) = \mathbb{E}(Y^2) - [\mathbb{E}(Y)]^2$ \\ \addlinespace[2pt]
+Linearity of Expectation & $\displaystyle \mathbb{E}(aY + b) = a\mathbb{E}(Y) + b$ \\ \addlinespace[2pt]
+Variance Scaling  & $\displaystyle V(aY + b) = a^2 V(Y)$ \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\subsection{Set \& Logic Illustrations: PDF and Probability Area}
+The following TikZ diagram illustrates the relationship between the PDF curve, the sample space (x-axis), and probability (shaded area).
+\begin{center}
+\begin{tikzpicture}[
+    scale=1.5, % Upscales the entire graphic natively for better spacing
+    declare function={
+        normalpdf(\x,\mu,\sigma)= (1/(\sigma*sqrt(2*pi)))*exp(-0.5*((\x-\mu)/\sigma)^2);
+    }
+]
+    % 1. Shaded Area (Soft, modern color palette)
+    \fill[fill=cyan!15] (-1,0) -- plot[domain=-1:1.5, samples=50] (\x, {normalpdf(\x, 0, 1)}) -- (1.5,0) -- cycle;
+
+    % 2. Clean Axes (Slightly extended for breathing room)
+    \draw[->, >=stealth, thick, gray!80!black] (-3.2,0) -- (3.2,0) node[right, black] {$y$};
+    \draw[->, >=stealth, thick, gray!80!black] (0,-0.2) -- (0,1.2) node[above, black] {$f(y)$};
+
+    % 3. Vertical Boundary Lines
+    \draw[dashed, thick, gray!60] (-1,0) -- (-1, {normalpdf(-1, 0, 1)});
+    \draw[dashed, thick, gray!60] (1.5,0) -- (1.5, {normalpdf(1.5, 0, 1)});
+
+    % 4. PDF Curve (Bolder line width for premium contrast)
+    \draw[ultra thick, blue!80!black, domain=-3:3, samples=100] plot (\x, {normalpdf(\x, 0, 1)});
+
+    % 5. X-Axis Ticks & Labels (Clean anchors)
+    \draw[thick] (-1,0) -- (-1,-0.05) node[below=2pt] {$a$};
+    \draw[thick] (1.5,0) -- (1.5,-0.05) node[below=2pt] {$b$};
+
+    % 6. Clean Callout for the Shaded Area Equation (Zero Overlaps)
+    % Pin pointer links the center of the shaded region to the text positioned neatly above it
+    \coordinate (ShadeCenter) at (0.25, 0.2);
+    \node[anchor=west, bg=white, inner sep=2pt] (EqLabel) at (0.8, 0.8) {$\displaystyle \Prob(a \le Y \le b) = \int_{a}^{b} f(y) \, dy$};
+    \draw[->, >=stealth, shorten >=2pt, thick, darkgray] (EqLabel.west) to[out=180, in=60] (ShadeCenter);
+
+\end{tikzpicture}
+\end{center}
+
+\subsection{Heuristics \& "Cheats"}
+\begin{itemize}
+    \item \textbf{The "Integrate to 1" Sanity Check:} Whenever you derive a new PDF, immediately integrate it over its support. If it doesn't equal 1, you made an algebra error.
+    \item \textbf{Indicator Functions:} Write PDFs with indicator functions, e.g., $f(y) = 2y \cdot \mathbf{1}_{[0,1]}(y)$. This prevents the common mistake of integrating from $-\infty$ to $\infty$ and forgetting that the function is zero outside the support.
+\end{itemize}
+
+\subsection{Pitfalls \& Fallacies}
+\begin{itemize}
+    \item \textbf{Density is NOT Probability:} A massive fallacy is assuming $f(y) \le 1$. For continuous variables, $f(y)$ can be greater than 1 (e.g., Uniform distribution on $[0, 0.1]$ has $f(y) = 10$). Only the \textit{integral} of $f(y)$ is bounded by 1.
+    \item \textbf{Strict vs. Non-Strict Inequalities:} For discrete variables, $\Prob(Y < y) \neq \Prob(Y \le y)$. For continuous variables, they are identical because $\Prob(Y = y) = 0$. Forgetting this distinction leads to off-by-one errors in discrete cases and unnecessary panic in continuous cases.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The central theme of this chapter is \textbf{using measure theory and calculus to formalize continuous randomness}. In discrete probability, we used summation ($\Sigma$) over countable sets. Here, we establish an isomorphism of concepts by replacing summation with Lebesgue integration ($\int$). The Probability Mass Function (PMF) maps directly to the Probability Density Function (PDF), but with a profound ontological shift: the PDF represents a rate of probability accumulation, not the probability itself.
+
+\subsection{B) Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Links:} This topic extends the axioms of probability (Kolmogorov) learned in Chapter 2. It relies heavily on the Fundamental Theorem of Calculus, bridging pure analysis with applied statistics.
+    \item \textbf{Forward Links:} Understanding continuous distributions is the absolute bedrock for \textbf{Stochastic Calculus} and \textbf{Measure Theory}. The concept of the CDF $F(y)$ will soon be generalized to joint distributions $F(x,y)$, leading to covariance and the multivariate Gaussian distribution. Furthermore, the expectation integral $\E(Y) = \int y f(y) dy$ is the precursor to the Lebesgue integral $\int Y d\Prob$, which is required to understand Martingales and Brownian Motion.
+\end{itemize}
+
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+1. \textbf{Quantitative Finance (Option Pricing):} In the Black-Scholes framework, the future price of a stock is modeled as a continuous random variable following a Lognormal distribution. The PDF of this continuous variable is integrated against a payoff function to determine the fair, arbitrage-free price of European options.
+2. \textbf{Generative AI (Variational Autoencoders - VAEs):} VAEs map high-dimensional data (like images) into a lower-dimensional continuous latent space. The latent variables are modeled as continuous random variables (typically Gaussian). The loss function relies on the Kullback-Leibler (KL) divergence, which is an expectation over continuous PDFs.
+
+\subsection{B) Model Problem Setup: Quantitative Finance}
+\textbf{Scenario:} Pricing a European Call Option using Continuous Expected Values.
+
+Let the state space $\Omega$ represent all possible states of the market at a future time $T$. We define a continuous random variable $S_T$ representing the stock price at time $T$. Under the risk-neutral probability measure $\mathbb{Q}$, $S_T$ follows Geometric Brownian Motion, governed by the Stochastic Differential Equation (SDE):
+\[ dS_t = r S_t \, dt + \sigma S_t \, dW_t \]
+where $r$ is the risk-free rate, $\sigma$ is volatility, and $W_t$ is a standard Wiener process.
+
+By Ito's Lemma, the solution to this SDE implies that $\ln(S_T)$ is normally distributed. Therefore, $S_T$ has a Lognormal PDF under $\mathbb{Q}$:
+\[ f(s) = \frac{1}{s \sigma \sqrt{2\pi T}} \exp\left( -\frac{(\ln s - (\ln S_0 + (r - \sigma^2/2)T))^2}{2\sigma^2 T} \right) \quad \text{for } s > 0 \]
+
+A European Call Option with strike price $K$ has a payoff function $g(S_T) = \max(S_T - K, 0)$. 
+The Fundamental Theorem of Asset Pricing states that the price of the option today, $C_0$, is the discounted expected value of the payoff under the risk-neutral measure:
+\[ C_0 = e^{-rT} \E^{\mathbb{Q}}[g(S_T)] = e^{-rT} \int_{0}^{\infty} \max(s - K, 0) f(s) \, ds \]
+\[ C_0 = e^{-rT} \int_{K}^{\infty} (s - K) f(s) \, ds \]
+This rigorous setup demonstrates how the abstract concept of $\E[g(Y)] = \int g(y)f(y)dy$ (Theorem 4.4) is directly responsible for the multi-trillion dollar derivatives market.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+A critical concept taught in advanced courses, but missing from the provided homework selection, is the \textbf{Transformation of Continuous Random Variables (The Jacobian Method)}. 
+
+\textbf{Untested Concept:} If $Y$ is a continuous random variable with PDF $f_Y(y)$, and $U = g(Y)$ is a monotonic function, what is the PDF of $U$, $f_U(u)$?
+
+\textbf{Rigorous Example:} Let $Y$ have a standard normal distribution, $f_Y(y) = \frac{1}{\sqrt{2\pi}} e^{-y^2/2}$ for $y \in \R$. Find the PDF of $U = Y^2$. (Note: $g(y) = y^2$ is not monotonic over $\R$, so we must use the CDF method carefully).
+
+\begin{proof}
+First, find the CDF of $U$, $F_U(u) = \Prob(U \le u)$.
+Since $U = Y^2$, $U$ must be non-negative. For $u < 0$, $F_U(u) = 0$.
+For $u \ge 0$:
+\[ F_U(u) = \Prob(Y^2 \le u) = \Prob(-\sqrt{u} \le Y \le \sqrt{u}) = F_Y(\sqrt{u}) - F_Y(-\sqrt{u}) \]
+To find the PDF $f_U(u)$, we differentiate $F_U(u)$ with respect to $u$ using the Chain Rule:
+\[ f_U(u) = \frac{d}{du} \left[ F_Y(\sqrt{u}) - F_Y(-\sqrt{u}) \right] \]
+\[ f_U(u) = f_Y(\sqrt{u}) \cdot \left( \frac{1}{2\sqrt{u}} \right) - f_Y(-\sqrt{u}) \cdot \left( -\frac{1}{2\sqrt{u}} \right) \]
+Since the standard normal PDF is symmetric, $f_Y(\sqrt{u}) = f_Y(-\sqrt{u})$:
+\[ f_U(u) = 2 f_Y(\sqrt{u}) \left( \frac{1}{2\sqrt{u}} \right) = \frac{1}{\sqrt{u}} f_Y(\sqrt{u}) \]
+Substitute the normal PDF:
+\[ f_U(u) = \frac{1}{\sqrt{u}} \frac{1}{\sqrt{2\pi}} e^{-(\sqrt{u})^2/2} = \frac{1}{\sqrt{2\pi u}} e^{-u/2} \quad \text{for } u > 0 \]
+This proves that the square of a Standard Normal variable follows a Chi-Square distribution with 1 degree of freedom.
+\end{proof}
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five proofs/solutions that contain a single, subtle, yet critical mathematical or logical flaw. Act as the grader to find the error.
+
+\textbf{Problem 1:} Let $Y$ be a continuous random variable with PDF $f(y) = \frac{3}{8}y^2$ for $0 \le y \le 2$. We wish to find $\E[1/Y]$.
+\textit{Flawed Solution:} By the properties of expectation, the expectation of an inverse is the inverse of the expectation. First, we find $\E[Y] = \int_{0}^{2} y(\frac{3}{8}y^2) dy = \frac{3}{8} \int_{0}^{2} y^3 dy = \frac{3}{8} [\frac{1}{4}y^4]_0^2 = \frac{3}{8}(4) = 1.5$. Therefore, $\E[1/Y] = 1 / \E[Y] = 1 / 1.5 = 2/3$.
+
+\textbf{Problem 2:} Let $Y$ have PDF $f(y) = e^{-y}$ for $y \ge 0$. Find the probability that $Y$ exactly equals 1.
+\textit{Flawed Solution:} The probability is given by the probability density function evaluated at that point. Therefore, $\Prob(Y = 1) = f(1) = e^{-1} \approx 0.3679$.
+
+\textbf{Problem 3:} Let $X$ and $Y$ be continuous random variables representing the lifespan of two different machine parts. We are given $V(X) = 10$ and $V(Y) = 5$. We want to find the variance of the difference in their lifespans, $V(X - Y)$.
+\textit{Flawed Solution:} Using the linearity of variance, we distribute the variance operator: $V(X - Y) = V(X) - V(Y) = 10 - 5 = 5$.
+
+\textbf{Problem 4:} Let $Y$ have PDF $f(y) = 2y$ for $0 \le y \le 1$. Find $\E[Y^2]$.
+\textit{Flawed Solution:} We use the formula $\E[Y^2] = \int_{-\infty}^{\infty} y^2 f(y) dy$. Substituting the function, we get $\int_{-\infty}^{\infty} y^2 (2y) dy = \int_{-\infty}^{\infty} 2y^3 dy$. Evaluating this integral yields $[\frac{1}{2}y^4]_{-\infty}^{\infty}$, which diverges to infinity. Thus, the second moment does not exist.
+
+\textbf{Problem 5:} Let $F(y)$ be a valid CDF. We want to prove that $\int_{-\infty}^{\infty} F(y) dy = 1$.
+\textit{Flawed Solution:} Since $F(y)$ represents the accumulation of all probabilities, and the sum of all probabilities in a sample space must equal 1 (by Kolmogorov's Axioms), the integral of the cumulative distribution function over the entire real line must equal 1.
+
+\vspace{1cm}
+\hrule
+\vspace{0.5cm}
+\subsection*{Solution Key: Resolutions to the Flaws}
+
+\textbf{Resolution 1:} \textit{Flaw:} Assuming $\E[1/Y] = 1/\E[Y]$. This is a severe violation of Jensen's Inequality. Expectation is a linear operator, but $g(y) = 1/y$ is a non-linear (convex) function. 
+\textit{Correction:} You must use LOTUS: $\E[1/Y] = \int_{0}^{2} (1/y)(\frac{3}{8}y^2) dy = \int_{0}^{2} \frac{3}{8}y dy = \frac{3}{8}[\frac{1}{2}y^2]_0^2 = \frac{3}{4}$.
+
+\textbf{Resolution 2:} \textit{Flaw:} Confusing the PDF with a Probability Mass Function (PMF). For a continuous random variable, the PDF $f(y)$ is a density, not a probability.
+\textit{Correction:} For any continuous random variable, the probability of taking a single exact value is the integral over a point of width zero: $\Prob(Y = 1) = \int_{1}^{1} e^{-y} dy = 0$.
+
+\textbf{Resolution 3:} \textit{Flaw:} Variance is not a linear operator in the way expectation is. Specifically, $V(X - Y) \neq V(X) - V(Y)$. Furthermore, the solution assumes independence without stating it.
+\textit{Correction:} The correct formula is $V(X - Y) = V(X) + V(-Y) + 2\text{Cov}(X, -Y) = V(X) + (-1)^2 V(Y) - 2\text{Cov}(X, Y)$. If independent, $V(X - Y) = V(X) + V(Y) = 10 + 5 = 15$. Variances of independent variables always add, even when the variables are subtracted.
+
+\textbf{Resolution 4:} \textit{Flaw:} Ignoring the support of the PDF. The function $f(y) = 2y$ is only valid for $0 \le y \le 1$. Outside this interval, $f(y) = 0$.
+\textit{Correction:} The integral must be restricted to the support: $\E[Y^2] = \int_{0}^{1} y^2 (2y) dy = \int_{0}^{1} 2y^3 dy = [\frac{1}{2}y^4]_0^1 = 0.5$.
+
+\textbf{Resolution 5:} \textit{Flaw:} Confusing the properties of the PDF with the CDF. The PDF integrates to 1 ($\int f(y) dy = 1$). The CDF $F(y)$ approaches 1 as $y \to \infty$.
+\textit{Correction:} The integral of a CDF over the real line, $\int_{-\infty}^{\infty} F(y) dy$, actually diverges to infinity because $F(y) \to 1$ as $y \to \infty$, meaning you are eventually integrating the constant 1 over an infinite interval.
+
+\end{document}

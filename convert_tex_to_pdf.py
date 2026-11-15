@@ -78,8 +78,10 @@ def convert_tex_to_pdf_smart(tex_root, pdf_root):
 
 
 if __name__ == "__main__":
-    tex_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\.tex"
-    pdf_directory = r"C:\Users\Computer\Documents\GitHub\MathTex\.pdf"
+    # Default to the Overleaf-synced trees. Override by editing these paths if needed.
+    overleaf_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Overleaf")
+    tex_directory = os.path.join(overleaf_directory, ".tex")
+    pdf_directory = os.path.join(overleaf_directory, ".pdf")
 
     if not os.path.isdir(tex_directory):
         print(f"Error: Source directory not found at '{tex_directory}'")

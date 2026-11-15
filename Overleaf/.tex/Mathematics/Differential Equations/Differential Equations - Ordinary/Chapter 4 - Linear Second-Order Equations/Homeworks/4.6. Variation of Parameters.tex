@@ -1,0 +1,407 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Homework 4.6 Variation of Parameters}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The method of \textbf{Variation of Parameters} is a powerful, general technique used to find a particular solution to a nonhomogeneous linear differential equation. While the method of Undetermined Coefficients is limited to nonhomogeneous terms $f(t)$ that are polynomials, exponentials, sines, or cosines, Variation of Parameters can handle \textit{any} continuous function $f(t)$ (such as $\tan(t)$, $\ln(t)$, or $1/t$). 
+
+For a standard second-order linear nonhomogeneous equation:
+\[ a y'' + b y' + c y = f(t) \]
+we first find the general solution to the corresponding homogeneous equation $a y'' + b y' + c y = 0$, which takes the form:
+\[ y_c(t) = c_1 y_1(t) + c_2 y_2(t) \]
+where $c_1$ and $c_2$ are arbitrary constants, and $y_1(t)$ and $y_2(t)$ are linearly independent solutions. The core idea of Variation of Parameters is to replace the \textit{constants} $c_1$ and $c_2$ with unknown \textit{functions} $v_1(t)$ and $v_2(t)$. We then seek a particular solution of the form:
+\[ y_p(t) = v_1(t) y_1(t) + v_2(t) y_2(t) \]
+
+\subsection{Intuition and Derivation}
+Why do we replace constants with functions? The intuition stems from the fact that the homogeneous solutions $y_1$ and $y_2$ form a fundamental basis for the system's natural behavior. By allowing their coefficients to vary over time (hence, ``variation of parameters''), we can force this linear combination to adapt to the external driving force $f(t)$.
+
+To derive the formulas for $v_1$ and $v_2$, we differentiate $y_p$:
+\[ y_p' = (v_1' y_1 + v_2' y_2) + (v_1 y_1' + v_2 y_2') \]
+To prevent second derivatives of our unknown functions $v_1$ and $v_2$ from appearing when we calculate $y_p''$, we impose a clever constraint:
+\[ v_1' y_1 + v_2' y_2 = 0 \]
+This simplifies the first derivative to $y_p' = v_1 y_1' + v_2 y_2'$. Differentiating again yields $y_p''$. Substituting $y_p$, $y_p'$, and $y_p''$ back into the original differential equation $a y'' + b y' + c y = f(t)$ and simplifying (knowing that $y_1$ and $y_2$ solve the homogeneous equation) leaves us with a second constraint:
+\[ a(v_1' y_1' + v_2' y_2') = f(t) \implies v_1' y_1' + v_2' y_2' = \frac{f(t)}{a} \]
+We now have a system of two linear equations with two unknowns ($v_1'$ and $v_2'$):
+\begin{align*}
+v_1' y_1 + v_2' y_2 &= 0 \\
+v_1' y_1' + v_2' y_2' &= \frac{f(t)}{a}
+\end{align*}
+Solving this system using Cramer's Rule yields the standard formulas involving the Wronskian.
+
+\subsection{Historical Context and Motivation}
+The method of Variation of Parameters was developed by the brilliant mathematician Joseph-Louis Lagrange in 1774. Lagrange was studying celestial mechanics, specifically the perturbations of planetary orbits. The planets roughly follow elliptical orbits (the homogeneous solution), but the gravitational pull of other planets acts as a continuous, time-varying external force (the nonhomogeneous term). Lagrange realized that he could model the true orbit by taking the standard elliptical orbit equations and allowing their constant parameters (like the semi-major axis or eccentricity) to vary over time. This physical intuition birthed one of the most robust mathematical techniques in differential equations.
+
+\subsection{Key Formulas}
+\begin{itemize}
+    \item \textbf{The Wronskian:} $W(y_1, y_2) = y_1 y_2' - y_1' y_2$
+    \item \textbf{Derivatives of the Parameters:} 
+    \[ v_1' = \frac{-y_2 f(t)}{a W} \quad \text{and} \quad v_2' = \frac{y_1 f(t)}{a W} \]
+    \textit{Note: It is crucial to divide by $a$, the leading coefficient of $y''$.}
+    \item \textbf{The Parameters:} $v_1 = \int v_1' \, dt$ and $v_2 = \int v_2' \, dt$
+    \item \textbf{The Particular Solution:} $y_p = v_1 y_1 + v_2 y_2$
+\end{itemize}
+
+\subsection{Prerequisites}
+To succeed in this chapter, you must be proficient in:
+1. Finding the roots of characteristic equations to solve homogeneous linear ODEs.
+2. Calculating $2 \times 2$ determinants (for the Wronskian).
+3. Advanced integration techniques, specifically integration by parts, $u$-substitution, and integrating trigonometric functions (like $\sec(t)$ and $\tan(t)$).
+
+\section{Part 2: Detailed Homework Solutions}
+Based on the strategic selection mandate, the following problems have been chosen to represent every distinct problem archetype found in this section, ensuring full conceptual coverage without redundant repetition.
+
+\subsection{Problem 1: Basic Trigonometric Nonhomogeneous Term}
+\textbf{Problem:} Find a general solution to the differential equation $y'' + 4y = \tan(2t)$.
+
+\textbf{Step 1: Solve the homogeneous equation.}
+The characteristic equation is $r^2 + 4 = 0$, which gives roots $r = \pm 2i$.
+The homogeneous solution is:
+\[ y_c(t) = c_1 \cos(2t) + c_2 \sin(2t) \]
+Thus, $y_1 = \cos(2t)$ and $y_2 = \sin(2t)$. Note that $a = 1$ and $f(t) = \tan(2t)$.
+
+\textbf{Step 2: Calculate the Wronskian.}
+\begin{align*}
+W(y_1, y_2) &= y_1 y_2' - y_1' y_2 \\
+&= \cos(2t)(2\cos(2t)) - (-2\sin(2t))\sin(2t) \\
+&= 2\cos^2(2t) + 2\sin^2(2t) = 2
+\end{align*}
+
+\textbf{Step 3: Find $v_1'$ and $v_2'$.}
+\begin{align*}
+v_1' &= \frac{-y_2 f(t)}{a W} = \frac{-\sin(2t) \tan(2t)}{1 \cdot 2} = -\frac{1}{2} \frac{\sin^2(2t)}{\cos(2t)} = -\frac{1}{2} \frac{1 - \cos^2(2t)}{\cos(2t)} = -\frac{1}{2} (\sec(2t) - \cos(2t)) \\
+v_2' &= \frac{y_1 f(t)}{a W} = \frac{\cos(2t) \tan(2t)}{2} = \frac{1}{2} \sin(2t)
+\end{align*}
+
+\textbf{Step 4: Integrate to find $v_1$ and $v_2$.}
+\begin{align*}
+v_1 &= \int -\frac{1}{2} (\sec(2t) - \cos(2t)) \, dt = -\frac{1}{4} \ln\left|\sec(2t) + \tan(2t)\right| + \frac{1}{4} \sin(2t) \\
+v_2 &= \int \frac{1}{2} \sin(2t) \, dt = -\frac{1}{4} \cos(2t)
+\end{align*}
+
+\textbf{Step 5: Construct $y_p$ and the general solution.}
+\begin{align*}
+y_p &= v_1 y_1 + v_2 y_2 \\
+&= \left( -\frac{1}{4} \ln\left|\sec(2t) + \tan(2t)\right| + \frac{1}{4} \sin(2t) \right) \cos(2t) + \left( -\frac{1}{4} \cos(2t) \right) \sin(2t) \\
+&= -\frac{1}{4} \cos(2t) \ln\left|\sec(2t) + \tan(2t)\right| + \frac{1}{4} \sin(2t)\cos(2t) - \frac{1}{4} \sin(2t)\cos(2t) \\
+&= -\frac{1}{4} \cos(2t) \ln\left|\sec(2t) + \tan(2t)\right|
+\end{align*}
+\textbf{Final Answer:}
+\[ y(t) = c_1 \cos(2t) + c_2 \sin(2t) - \frac{1}{4} \cos(2t) \ln\left|\sec(2t) + \tan(2t)\right| \]
+
+\subsection{Problem 3: Repeated Roots and Rational/Exponential Terms}
+\textbf{Problem:} Find a general solution to $y'' - 2y' + y = t^{-1}e^t$.
+
+\textbf{Step 1: Solve the homogeneous equation.}
+The characteristic equation is $r^2 - 2r + 1 = 0 \implies (r-1)^2 = 0$. We have a repeated root $r = 1$.
+\[ y_c(t) = c_1 e^t + c_2 t e^t \]
+Thus, $y_1 = e^t$ and $y_2 = t e^t$. Here, $a = 1$ and $f(t) = t^{-1}e^t$.
+
+\textbf{Step 2: Calculate the Wronskian.}
+\begin{align*}
+W &= e^t(e^t + t e^t) - (e^t)(t e^t) \\
+&= e^{2t} + t e^{2t} - t e^{2t} = e^{2t}
+\end{align*}
+
+\textbf{Step 3: Find $v_1'$ and $v_2'$.}
+\begin{align*}
+v_1' &= \frac{-t e^t (t^{-1}e^t)}{e^{2t}} = \frac{-e^{2t}}{e^{2t}} = -1 \\
+v_2' &= \frac{e^t (t^{-1}e^t)}{e^{2t}} = \frac{t^{-1}e^{2t}}{e^{2t}} = \frac{1}{t}
+\end{align*}
+
+\textbf{Step 4: Integrate to find $v_1$ and $v_2$.}
+\[ v_1 = \int -1 \, dt = -t \quad \text{and} \quad v_2 = \int \frac{1}{t} \, dt = \ln|t| \]
+
+\textbf{Step 5: Construct $y_p$ and the general solution.}
+\[ y_p = (-t)(e^t) + (\ln|t|)(t e^t) = -t e^t + t e^t \ln|t| \]
+Notice that $-t e^t$ is already part of the homogeneous solution $c_2 t e^t$, so it can be absorbed into the constant.
+\textbf{Final Answer:}
+\[ y(t) = c_1 e^t + c_2 t e^t + t e^t \ln|t| \]
+
+\subsection{Problem 9: Method Comparison}
+\textbf{Problem:} Find a particular solution to $y'' - y = 2t + 4$ first by undetermined coefficients, and then by variation of parameters. Which method was quicker?
+
+\textbf{Method 1: Undetermined Coefficients}
+Assume $y_p = At + B$. Then $y_p' = A$ and $y_p'' = 0$.
+Substitute into the ODE:
+\[ 0 - (At + B) = 2t + 4 \implies -At - B = 2t + 4 \]
+Equating coefficients: $-A = 2 \implies A = -2$, and $-B = 4 \implies B = -4$.
+\[ y_p = -2t - 4 \]
+
+\textbf{Method 2: Variation of Parameters}
+Homogeneous roots: $r^2 - 1 = 0 \implies r = \pm 1$. $y_1 = e^t$, $y_2 = e^{-t}$.
+Wronskian: $W = e^t(-e^{-t}) - (e^t)(e^{-t}) = -1 - 1 = -2$.
+\begin{align*}
+v_1' &= \frac{-e^{-t}(2t+4)}{-2} = e^{-t}(t+2) \\
+v_2' &= \frac{e^t(2t+4)}{-2} = -e^t(t+2)
+\end{align*}
+Integrate using integration by parts ($\int u \, dv = uv - \int v \, du$):
+For $v_1$: Let $u = t+2, dv = e^{-t}dt \implies du = dt, v = -e^{-t}$.
+\[ v_1 = -(t+2)e^{-t} - \int -e^{-t} \, dt = -(t+2)e^{-t} - e^{-t} = -(t+3)e^{-t} \]
+For $v_2$: Let $u = t+2, dv = e^tdt \implies du = dt, v = e^t$.
+\[ v_2 = -\left( (t+2)e^t - \int e^t \, dt \right) = -(t+2)e^t + e^t = -(t+1)e^t \]
+Construct $y_p$:
+\begin{align*}
+y_p &= -(t+3)e^{-t}(e^t) - (t+1)e^t(e^{-t}) \\
+&= -(t+3) - (t+1) = -2t - 4
+\end{align*}
+\textbf{Conclusion:} Both yield $y_p = -2t - 4$. Undetermined coefficients was significantly quicker because it avoided integration by parts.
+
+\subsection{Problem 11: Superposition Principle}
+\textbf{Problem:} Find a general solution to $y'' + y = \tan(t) + e^{3t} - 1$.
+
+\textbf{Step 1: Homogeneous Solution.}
+$r^2 + 1 = 0 \implies r = \pm i$. $y_c = c_1 \cos(t) + c_2 \sin(t)$.
+
+\textbf{Step 2: Split the nonhomogeneous term.}
+By the superposition principle, we can find particular solutions for $f_1(t) = \tan(t)$, $f_2(t) = e^{3t}$, and $f_3(t) = -1$ separately.
+
+\textbf{Step 3: Solve for $f_1(t) = \tan(t)$ using Variation of Parameters.}
+$y_1 = \cos(t), y_2 = \sin(t), W = 1$.
+\begin{align*}
+v_1' &= -\sin(t)\tan(t) = -\frac{\sin^2(t)}{\cos(t)} = \cos(t) - \sec(t) \implies v_1 = \sin(t) - \ln\left|\sec(t) + \tan(t)\right| \\
+v_2' &= \cos(t)\tan(t) = \sin(t) \implies v_2 = -\cos(t)
+\end{align*}
+\begin{align*}
+y_{p1} &= \cos(t)(\sin(t) - \ln\left|\sec(t) + \tan(t)\right|) - \sin(t)\cos(t) \\
+&= -\cos(t)\ln\left|\sec(t) + \tan(t)\right|
+\end{align*}
+
+\textbf{Step 4: Solve for $f_2(t) = e^{3t}$ and $f_3(t) = -1$ using Undetermined Coefficients.}
+For $e^{3t}$: Assume $y_{p2} = A e^{3t}$. $y_{p2}'' = 9A e^{3t}$.
+$9A e^{3t} + A e^{3t} = e^{3t} \implies 10A = 1 \implies A = \frac{1}{10}$. $y_{p2} = \frac{1}{10}e^{3t}$.
+For $-1$: Assume $y_{p3} = B$. $y_{p3}'' = 0$.
+$0 + B = -1 \implies B = -1$. $y_{p3} = -1$.
+
+\textbf{Final Answer:}
+\[ y(t) = c_1 \cos(t) + c_2 \sin(t) - \cos(t)\ln\left|\sec(t) + \tan(t)\right| + \frac{1}{10}e^{3t} - 1 \]
+
+\subsection{Problem 19: Initial Value Problem with Definite Integrals}
+\textbf{Problem:} Express the solution to the IVP $y'' - y = \frac{1}{t}$, $y(1) = 0$, $y'(1) = -2$ using definite integrals.
+
+\textbf{Step 1: Homogeneous Solution and Wronskian.}
+$r^2 - 1 = 0 \implies y_1 = e^t, y_2 = e^{-t}$. $W = -2$.
+
+\textbf{Step 2: Variation of Parameters with Definite Integrals.}
+Since $1/t$ does not have an elementary antiderivative, we integrate from the initial time $t_0 = 1$ to $t$:
+\begin{align*}
+v_1'(s) &= \frac{-e^{-s}(1/s)}{-2} = \frac{e^{-s}}{2s} \implies v_1(t) = \int_1^t \frac{e^{-s}}{2s} \, ds \\
+v_2'(s) &= \frac{e^s(1/s)}{-2} = -\frac{e^s}{2s} \implies v_2(t) = -\int_1^t \frac{e^s}{2s} \, ds
+\end{align*}
+The general solution is:
+\[ y(t) = c_1 e^t + c_2 e^{-t} + e^t \int_1^t \frac{e^{-s}}{2s} \, ds - e^{-t} \int_1^t \frac{e^s}{2s} \, ds \]
+
+\textbf{Step 3: Apply Initial Conditions.}
+At $t=1$, the integrals evaluate to $0$:
+\[ y(1) = c_1 e + c_2 e^{-1} = 0 \]
+Differentiate $y(t)$ using the Fundamental Theorem of Calculus and the Product Rule:
+\[ y'(t) = c_1 e^t - c_2 e^{-t} + e^t \int_1^t \frac{e^{-s}}{2s} \, ds + e^t \left(\frac{e^{-t}}{2t}\right) + e^{-t} \int_1^t \frac{e^s}{2s} \, ds - e^{-t} \left(\frac{e^t}{2t}\right) \]
+The non-integral terms from the product rule cancel out ($\frac{1}{2t} - \frac{1}{2t} = 0$).
+\[ y'(1) = c_1 e - c_2 e^{-1} = -2 \]
+We have a system:
+\begin{align*}
+c_1 e + c_2 e^{-1} &= 0 \\
+c_1 e - c_2 e^{-1} &= -2
+\end{align*}
+Adding the equations gives $2c_1 e = -2 \implies c_1 = -e^{-1}$.
+Subtracting gives $2c_2 e^{-1} = 2 \implies c_2 = e$.
+
+\textbf{Step 4: Final Assembly.}
+Substitute $c_1$ and $c_2$ back into $y(t)$:
+\begin{align*}
+y(t) &= -e^{-1}e^t + e e^{-t} + \frac{1}{2} \int_1^t \frac{e^t e^{-s}}{s} \, ds - \frac{1}{2} \int_1^t \frac{e^{-t} e^s}{s} \, ds \\
+&= -e^{t-1} + e^{1-t} + \int_1^t \frac{e^{t-s} - e^{-(t-s)}}{2s} \, ds
+\end{align*}
+\textbf{Final Answer:}
+\[ y(t) = -e^{t-1} + e^{1-t} + \int_1^t \frac{\sinh(t-s)}{s} \, ds \]
+
+\subsection{Problem 20: Abstract Integral Representation}
+\textbf{Problem:} Show that $y(t) = c_1 \cos(t) + c_2 \sin(t) + \int_0^t f(s) \sin(t-s) \, ds$ is a general solution to $y'' + y = f(t)$.
+
+\textbf{Step 1: Setup Variation of Parameters.}
+$y_1 = \cos(t), y_2 = \sin(t), W = 1$.
+\begin{align*}
+v_1'(s) &= -f(s)\sin(s) \implies v_1(t) = -\int_0^t f(s)\sin(s) \, ds \\
+v_2'(s) &= f(s)\cos(s) \implies v_2(t) = \int_0^t f(s)\cos(s) \, ds
+\end{align*}
+
+\textbf{Step 2: Construct $y_p(t)$.}
+\begin{align*}
+y_p(t) &= \cos(t) \left( -\int_0^t f(s)\sin(s) \, ds \right) + \sin(t) \left( \int_0^t f(s)\cos(s) \, ds \right) \\
+&= \int_0^t f(s) \left( \sin(t)\cos(s) - \cos(t)\sin(s) \right) \, ds
+\end{align*}
+Using the trigonometric identity $\sin(A-B) = \sin(A)\cos(B) - \cos(A)\sin(B)$, we get:
+\[ y_p(t) = \int_0^t f(s) \sin(t-s) \, ds \]
+Adding the homogeneous solution $y_c(t) = c_1 \cos(t) + c_2 \sin(t)$ yields the desired result.
+
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Trigonometric Nonhomogeneous Terms (Problems 1, 11):} These involve $f(t)$ like $\tan(t)$ or $\sec(t)$. The strategy is to express everything in terms of sines and cosines to simplify the $v_1'$ and $v_2'$ fractions before integrating.
+    \item \textbf{Rational/Exponential Combinations (Problem 3):} These involve terms like $e^t/t$. The Wronskian usually cancels out the exponential part, leaving a simple rational function to integrate (often resulting in natural logarithms).
+    \item \textbf{Definite Integral / Abstract Functions (Problems 19, 20):} When $f(t)$ has no elementary antiderivative, or is left as an abstract $f(t)$, we use definite integrals from $t_0$ to $t$. The strategy relies heavily on the Fundamental Theorem of Calculus and the Leibniz Integral Rule (or product rule) when applying initial conditions.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Trigonometric Simplification (Problem 1):} The trick $-\frac{\sin^2(2t)}{\cos(2t)} = \frac{\cos^2(2t) - 1}{\cos(2t)} = \cos(2t) - \sec(2t)$ was crucial. It transformed an unintegrable fraction into two standard integral forms.
+    \item \textbf{Integration by Parts (Problem 9):} Used to integrate products of polynomials and exponentials, such as $\int (t+2)e^{-t} \, dt$.
+    \item \textbf{Superposition Principle (Problem 11):} Splitting a complex $f(t)$ into simpler parts and using the most efficient method (Undetermined Coefficients vs. Variation of Parameters) for each specific part saves immense time.
+    \item \textbf{Absorbing Terms into the Homogeneous Solution (Problem 3):} Recognizing that a term generated in $y_p$ (like $-t e^t$) is already part of $y_c$ allows you to drop it, simplifying the final answer.
+\end{itemize}
+
+\section{Part 4: ``Cheatsheet'' and Tips for Success}
+\subsection{Summary of Formulas}
+\begin{itemize}
+    \item $W = y_1 y_2' - y_1' y_2$
+    \item $v_1 = \int \frac{-y_2 f(t)}{a W} \, dt$
+    \item $v_2 = \int \frac{y_1 f(t)}{a W} \, dt$
+    \item $y_p = v_1 y_1 + v_2 y_2$
+\end{itemize}
+
+\subsection{Cheats, Tricks, and Shortcuts}
+\begin{itemize}
+    \item \textbf{The ``$a$'' Check:} Before doing anything, look at the coefficient of $y''$. If it is not $1$, you \textit{must} divide $f(t)$ by $a$ in your formulas.
+    \item \textbf{The Undetermined Coefficients Bypass:} Always check if $f(t)$ is a polynomial, exponential, sine, or cosine. If it is, use Undetermined Coefficients. It is almost always faster and less prone to integration errors (as proven in Problem 9).
+    \item \textbf{The Wronskian Sign Check:} The Wronskian for $e^{rt}$ and $t e^{rt}$ is always $e^{2rt}$. The Wronskian for $\cos(kt)$ and $\sin(kt)$ is always $k$. Memorizing these saves calculation time.
+\end{itemize}
+
+\subsection{Common Pitfalls}
+\begin{itemize}
+    \item \textbf{Forgetting the Negative Sign:} The formula for $v_1'$ has a negative sign ($-y_2 f / aW$). Forgetting this is the \#1 cause of incorrect answers.
+    \item \textbf{Mixing up $y_1$ and $y_2$:} If you define $y_1 = \sin(t)$ and $y_2 = \cos(t)$, your Wronskian will be negative, which is fine, but you must be consistent when plugging into the $v_1'$ and $v_2'$ formulas.
+\end{itemize}
+
+\section{Part 5: Conceptual Synthesis and The ``Big Picture''}
+
+\subsection{A) Thematic Connections}
+The central theme of Variation of Parameters is \textbf{transforming constants into dynamic variables} to adapt to external forces. We saw this exact same philosophy earlier in the course with the \textbf{Integrating Factor} method for first-order linear ODEs. In that method, we assumed the solution was a product of an unknown function and the homogeneous solution, allowing the system to adapt to the nonhomogeneous term $Q(t)$. 
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Link:} This topic is the logical culmination of solving second-order linear equations. We started with homogeneous equations (zero external force), moved to Undetermined Coefficients (simple, predictable external forces), and have now arrived at Variation of Parameters (any continuous external force).
+\textbf{Forward Link:} The integral representation derived in Problem 20 ($y_p = \int f(s)\sin(t-s) \, ds$) is the foundational concept for \textbf{Green's Functions} and \textbf{Convolution Integrals}, which are heavily used in Laplace Transforms and advanced engineering mathematics to model system responses to impulse shocks.
+
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios in Finance and Economics}
+\begin{enumerate}
+    \item \textbf{Macroeconomic Business Cycles:} In dynamic IS-LM models or multiplier-accelerator models, the trajectory of national income (GDP) can be modeled as a second-order linear ODE. If the government introduces a complex, time-varying fiscal stimulus (e.g., a logarithmic phase-in of infrastructure spending), Undetermined Coefficients fails. Variation of Parameters is required to find the economy's exact response trajectory.
+    \item \textbf{Stochastic Volatility and Option Pricing:} In advanced financial mathematics, transforming the Black-Scholes PDE or Riccati equations often yields second-order linear ODEs. If a derivative contract features continuous, time-dependent dividend yields or complex source terms, Variation of Parameters is used to integrate these terms and price the security.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup}
+Let $Y(t)$ represent the deviation of a nation's GDP from its long-term equilibrium trend. The internal dynamics of the economy (friction in capital adjustment and mean-reverting monetary policy) are governed by the homogeneous equation:
+\[ Y''(t) + \alpha Y'(t) + \beta Y(t) = 0 \]
+Suppose a global pandemic occurs, and the government responds with an exogenous fiscal stimulus shock modeled by $S(t) = S_0 \ln(1+t)$. The new system is:
+\[ Y''(t) + \alpha Y'(t) + \beta Y(t) = S_0 \ln(1+t) \]
+To find the GDP trajectory $Y(t)$, an economist would first find the roots of $r^2 + \alpha r + \beta = 0$ to get the natural economic cycles $Y_1(t)$ and $Y_2(t)$. Because $\ln(1+t)$ is not a standard polynomial or exponential, they must use Variation of Parameters, setting up the integrals:
+\[ v_1(t) = \int \frac{-Y_2(t) S_0 \ln(1+t)}{W(t)} \, dt \quad \text{and} \quad v_2(t) = \int \frac{Y_1(t) S_0 \ln(1+t)}{W(t)} \, dt \]
+to find the particular solution $Y_p(t) = v_1(t)Y_1(t) + v_2(t)Y_2(t)$.
+
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Variation of Parameters for Variable Coefficient Equations}
+The homework exclusively featured constant-coefficient equations ($ay''+by'+cy=f$). However, Variation of Parameters works perfectly for \textbf{variable coefficient} equations, provided you know the homogeneous solutions. A classic example is the Cauchy-Euler equation.
+
+\textbf{Example:} Find a particular solution to $t^2 y'' - 2y = 3t^2 - 1$, given that $y_1 = t^2$ and $y_2 = t^{-1}$ are solutions to the homogeneous equation.
+\textbf{Solution:}
+First, we \textit{must} divide by $t^2$ to put the equation in standard form $y'' + P(t)y' + Q(t)y = f(t)$:
+\[ y'' - \frac{2}{t^2} y = 3 - t^{-2} \]
+Here, $f(t) = 3 - t^{-2}$ and $a = 1$.
+Calculate the Wronskian:
+\[ W = (t^2)(-t^{-2}) - (2t)(t^{-1}) = -1 - 2 = -3 \]
+Find $v_1'$ and $v_2'$:
+\begin{align*}
+v_1' &= \frac{-t^{-1}(3 - t^{-2})}{-3} = \frac{1}{3}(3t^{-1} - t^{-3}) = t^{-1} - \frac{1}{3}t^{-3} \implies v_1 = \ln|t| + \frac{1}{6}t^{-2} \\
+v_2' &= \frac{t^2(3 - t^{-2})}{-3} = -t^2 + \frac{1}{3} \implies v_2 = -\frac{1}{3}t^3 + \frac{1}{3}t
+\end{align*}
+Construct $y_p$:
+\begin{align*}
+y_p &= t^2 \left( \ln|t| + \frac{1}{6}t^{-2} \right) + t^{-1} \left( -\frac{1}{3}t^3 + \frac{1}{3}t \right) \\
+&= t^2 \ln|t| + \frac{1}{6} - \frac{1}{3}t^2 + \frac{1}{3} = t^2 \ln|t| - \frac{1}{3}t^2 + \frac{1}{2}
+\end{align*}
+Since $-\frac{1}{3}t^2$ is a multiple of $y_1$, it can be absorbed, leaving $y_p = t^2 \ln|t| + \frac{1}{2}$.
+
+\section{Part 8: Advanced Diagnostic Testing: ``Find the Flaw''}
+
+\subsection{Flawed Problem 1}
+\textbf{Problem:} Find a particular solution to $2y'' + 8y = \sec(2t)$.
+\textbf{Flawed Solution:}
+1. $2r^2 + 8 = 0 \implies r = \pm 2i$. $y_1 = \cos(2t)$, $y_2 = \sin(2t)$.
+2. $W = \cos(2t)(2\cos(2t)) - (-2\sin(2t))\sin(2t) = 2$.
+3. $v_1' = \frac{-\sin(2t) \sec(2t)}{2} = -\frac{1}{2} \tan(2t) \implies v_1 = \frac{1}{4} \ln\left|\cos(2t)\right|$.
+4. $v_2' = \frac{\cos(2t) \sec(2t)}{2} = \frac{1}{2} \implies v_2 = \frac{1}{2} t$.
+5. $y_p = \frac{1}{4} \cos(2t) \ln\left|\cos(2t)\right| + \frac{1}{2} t \sin(2t)$.
+
+\textbf{Grader's Analysis (Your Task):}
+\textit{Error Identification:} The student forgot to divide by $a=2$ in step 3 and 4.
+\textit{Explanation:} The formula requires dividing by $aW$, so the denominator should be $2 \cdot 2 = 4$, not just $W=2$.
+\textit{Corrected Solution:} $v_1' = -\frac{1}{4} \tan(2t)$ and $v_2' = \frac{1}{4}$. Thus, $y_p = \frac{1}{8} \cos(2t) \ln\left|\cos(2t)\right| + \frac{1}{4} t \sin(2t)$.
+
+\subsection{Flawed Problem 2}
+\textbf{Problem:} Find a particular solution to $y'' - 3y' + 2y = e^{3t}$.
+\textbf{Flawed Solution:}
+1. $r^2 - 3r + 2 = 0 \implies r = 1, 2$. $y_1 = e^t$, $y_2 = e^{2t}$.
+2. $W = e^t(2e^{2t}) - e^{2t}(e^t) = e^{3t}$.
+3. $v_1' = \frac{y_2 f(t)}{W} = \frac{e^{2t} e^{3t}}{e^{3t}} = e^{2t} \implies v_1 = \frac{1}{2} e^{2t}$.
+4. $v_2' = \frac{y_1 f(t)}{W} = \frac{e^t e^{3t}}{e^{3t}} = e^t \implies v_2 = e^t$.
+5. $y_p = \frac{1}{2} e^{2t} e^t + e^t e^{2t} = \frac{3}{2} e^{3t}$.
+
+\textbf{Grader's Analysis (Your Task):}
+\textit{Error Identification:} The formula for $v_1'$ is missing a negative sign in step 3.
+\textit{Explanation:} The correct formula is $v_1' = \frac{-y_2 f(t)}{W}$.
+\textit{Corrected Solution:} $v_1' = -e^{2t} \implies v_1 = -\frac{1}{2} e^{2t}$. Then $y_p = -\frac{1}{2} e^{3t} + e^{3t} = \frac{1}{2} e^{3t}$.
+
+\subsection{Flawed Problem 3}
+\textbf{Problem:} Find a particular solution to $y'' + y = \csc(t)$.
+\textbf{Flawed Solution:}
+1. $y_1 = \cos(t)$, $y_2 = \sin(t)$, $W = 1$.
+2. $v_1' = -\sin(t) \csc(t) = -1 \implies v_1 = -t$.
+3. $v_2' = \cos(t) \csc(t) = \cot(t)$.
+4. $v_2 = \int \cot(t) \, dt = -\csc^2(t)$.
+5. $y_p = -t \cos(t) - \csc^2(t) \sin(t) = -t \cos(t) - \csc(t)$.
+
+\textbf{Grader's Analysis (Your Task):}
+\textit{Error Identification:} The student differentiated $\cot(t)$ instead of integrating it in step 4.
+\textit{Explanation:} The integral of $\cot(t)$ is $\ln\left|\sin(t)\right|$, whereas the derivative is $-\csc^2(t)$.
+\textit{Corrected Solution:} $v_2 = \ln\left|\sin(t)\right|$. Thus, $y_p = -t \cos(t) + \sin(t) \ln\left|\sin(t)\right|$.
+
+\subsection{Flawed Problem 4}
+\textbf{Problem:} Find a particular solution to $y'' - 4y' + 4y = \frac{e^{2t}}{t}$.
+\textbf{Flawed Solution:}
+1. $r^2 - 4r + 4 = 0 \implies r = 2$. $y_1 = e^{2t}$, $y_2 = t e^{2t}$.
+2. $W = y_1 y_2' + y_1' y_2 = e^{2t}(e^{2t} + 2t e^{2t}) + 2e^{2t}(t e^{2t}) = e^{4t} + 4t e^{4t}$.
+3. $v_1' = \frac{-t e^{2t} (e^{2t}/t)}{e^{4t} + 4t e^{4t}} = \frac{-e^{4t}}{e^{4t}(1+4t)} = \frac{-1}{1+4t} \implies v_1 = -\frac{1}{4} \ln\left|1+4t\right|$.
+4. $v_2' = \frac{e^{2t} (e^{2t}/t)}{e^{4t} + 4t e^{4t}} = \frac{1}{t(1+4t)} \implies v_2 = \ln|t| - \ln\left|1+4t\right|$.
+5. $y_p = -\frac{1}{4} \ln\left|1+4t\right| e^{2t} + (\ln|t| - \ln\left|1+4t\right|) t e^{2t}$.
+
+\textbf{Grader's Analysis (Your Task):}
+\textit{Error Identification:} The Wronskian formula used in step 2 is incorrect; it uses addition instead of subtraction.
+\textit{Explanation:} The Wronskian is defined as $W = y_1 y_2' - y_1' y_2$, which evaluates to $e^{4t}$, not $e^{4t} + 4t e^{4t}$.
+\textit{Corrected Solution:} $W = e^{4t}$. Then $v_1' = -1 \implies v_1 = -t$, and $v_2' = \frac{1}{t} \implies v_2 = \ln|t|$. Thus, $y_p = -t e^{2t} + t e^{2t} \ln|t|$.
+
+\subsection{Flawed Problem 5}
+\textbf{Problem:} Find a particular solution to $y'' + 9y = \sec^2(3t)$.
+\textbf{Flawed Solution:}
+1. $y_1 = \cos(3t)$, $y_2 = \sin(3t)$, $W = 3$.
+2. $v_1' = \frac{-\sin(3t) \sec^2(3t)}{3} = -\frac{1}{3} \tan(3t) \sec(3t)$.
+3. $v_1 = \int -\frac{1}{3} \tan(3t) \sec(3t) \, dt = -\frac{1}{3} \sec(3t)$.
+4. $v_2' = \frac{\cos(3t) \sec^2(3t)}{3} = \frac{1}{3} \sec(3t)$.
+5. $v_2 = \int \frac{1}{3} \sec(3t) \, dt = \frac{1}{9} \ln\left|\sec(3t) + \tan(3t)\right|$.
+6. $y_p = -\frac{1}{3} \sec(3t) \cos(3t) + \frac{1}{9} \sin(3t) \ln\left|\sec(3t) + \tan(3t)\right| = -\frac{1}{3} + \frac{1}{9} \sin(3t) \ln\left|\sec(3t) + \tan(3t)\right|$.
+
+\textbf{Grader's Analysis (Your Task):}
+\textit{Error Identification:} The student forgot the chain rule factor when integrating $v_1'$ in step 3.
+\textit{Explanation:} Because the argument is $3t$, integrating $\sec(3t)\tan(3t)$ requires dividing by $3$, so the coefficient should be $-\frac{1}{9}$, not $-\frac{1}{3}$.
+\textit{Corrected Solution:} $v_1 = -\frac{1}{9} \sec(3t)$. Thus, $y_p = -\frac{1}{9} + \frac{1}{9} \sin(3t) \ln\left|\sec(3t) + \tan(3t)\right|$.
+
+\end{document}

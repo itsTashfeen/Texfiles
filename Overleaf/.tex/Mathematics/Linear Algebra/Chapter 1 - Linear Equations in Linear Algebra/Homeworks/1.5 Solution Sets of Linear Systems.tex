@@ -1,0 +1,507 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{bm}
+\usepackage{xcolor}
+
+\geometry{a4paper, margin=1in}
+
+\title{Homework 1.5: Solution Sets of Linear Systems}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The study of linear algebra fundamentally revolves around understanding the behavior and solutions of systems of linear equations. In this chapter, we focus on the geometric and algebraic descriptions of these solution sets using matrix and vector notation. 
+
+A system of linear equations is called \textbf{homogeneous} if it can be written in the form $A\mathbf{x} = \mathbf{0}$, where $A$ is an $m \times n$ matrix, $\mathbf{x}$ is a vector in $\mathbb{R}^n$, and $\mathbf{0}$ is the zero vector in $\mathbb{R}^m$. A fascinating property of homogeneous systems is that they always have at least one solution: $\mathbf{x} = \mathbf{0}$. This is known as the \textbf{trivial solution}. The critical question we ask in linear algebra is whether there exists a \textbf{nontrivial solution}—a non-zero vector $\mathbf{x}$ that satisfies $A\mathbf{x} = \mathbf{0}$. 
+
+Conversely, a \textbf{nonhomogeneous} system is of the form $A\mathbf{x} = \mathbf{b}$, where $\mathbf{b} \neq \mathbf{0}$. The solutions to these systems are intimately connected to their homogeneous counterparts. If a nonhomogeneous system is consistent (meaning it has at least one solution, let's call it a particular solution $\mathbf{p}$), its entire solution set can be described by adding $\mathbf{p}$ to the solutions of the corresponding homogeneous system $A\mathbf{x} = \mathbf{0}$.
+
+\subsection{Intuition and Derivation}
+Imagine a matrix $A$ as a mathematical machine that transforms vectors in space. The equation $A\mathbf{x} = \mathbf{0}$ asks: ``Which vectors $\mathbf{x}$ are squished completely to the origin by this transformation?'' This set of vectors forms a flat geometric object (a line, a plane, or a hyper-plane) passing through the origin, known as the null space.
+
+If we want to find all vectors that land on a specific target $\mathbf{b}$ (i.e., $A\mathbf{x} = \mathbf{b}$), we just need to find \textit{one} vector $\mathbf{p}$ that reaches $\mathbf{b}$. Once we have $\mathbf{p}$, any vector that gets squished to zero (any $\mathbf{v}_h$ where $A\mathbf{v}_h = \mathbf{0}$) can be added to $\mathbf{p}$ without changing the final destination! Algebraically, this is derived via the distributive property of matrix multiplication:
+\[ A(\mathbf{p} + \mathbf{v}_h) = A\mathbf{p} + A\mathbf{v}_h = \mathbf{b} + \mathbf{0} = \mathbf{b} \]
+This beautifully illustrates why the solution set of $A\mathbf{x} = \mathbf{b}$ is simply the solution set of $A\mathbf{x} = \mathbf{0}$ translated by the vector $\mathbf{p}$.
+
+\subsection{Historical Context and Motivation}
+The formalized study of systems of linear equations dates back to ancient texts like the Chinese \textit{Nine Chapters on the Mathematical Art} (c. 200 BC), where early forms of Gaussian elimination were used. However, the vector and matrix formalisms we use today were developed in the 19th century by mathematicians like James Joseph Sylvester and Arthur Cayley. They were motivated by the need to streamline complex calculations in analytical geometry, mechanics, and physics. By abstracting systems into matrices, they could analyze the underlying geometric structures of these transformations, leading to the powerful, compact notations that now serve as the language of quantum mechanics, computer graphics, and modern data science.
+
+\subsection{Key Formulas}
+\begin{itemize}
+    \item \textbf{Homogeneous System:} $A\mathbf{x} = \mathbf{0}$
+    \item \textbf{Parametric Vector Form (Line):} $\mathbf{x} = t\mathbf{v}$ (for $t \in \mathbb{R}$)
+    \item \textbf{Parametric Vector Form (Plane):} $\mathbf{x} = s\mathbf{u} + t\mathbf{v}$ (for $s, t \in \mathbb{R}$)
+    \item \textbf{Translation Theorem (Theorem 6):} $\mathbf{w} = \mathbf{p} + \mathbf{v}_h$, where $A\mathbf{p} = \mathbf{b}$ and $A\mathbf{v}_h = \mathbf{0}$.
+\end{itemize}
+
+\subsection{Prerequisites}
+To master this topic, you must be proficient in:
+\item \textbf{Row Reduction Algorithms:} Transforming an augmented matrix into Reduced Row Echelon Form (RREF) to identify pivot columns.
+\item \textbf{Basic Variables vs. Free Variables:} Recognizing that basic variables correspond to columns with pivots, and free variables correspond to columns without pivots.
+\item \textbf{Matrix-Vector Multiplication:} Understanding how to distribute and factor scalars out of vectors.
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+
+\textit{Note: As requested, a carefully curated selection of representative problems has been completely solved to cover every possible problem archetype introduced in this chapter's exercises.}
+
+\subsection*{Problem 1: Nontrivial Solutions of Homogeneous Systems}
+\textbf{Question:} Determine if the system has a nontrivial solution. Try to use as few row operations as possible.
+\begin{align*}
+    2x_1 - 5x_2 + 8x_3 &= 0 \\
+    -2x_1 - 7x_2 + x_3 &= 0 \\
+    4x_1 + 2x_2 + 7x_3 &= 0
+\end{align*}
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Form the coefficient matrix.} Since this is a homogeneous system, the right side is all zeros, so we only need to row reduce the coefficient matrix $A$ to see if there are any free variables.
+    \[
+    A = \begin{bmatrix}
+    2 & -5 & 8 \\
+    -2 & -7 & 1 \\
+    4 & 2 & 7
+    \end{bmatrix}
+    \]
+    \item \textbf{Perform row operations.} Our goal is to find the echelon form.
+    \begin{itemize}
+        \item Replace $R_2$ with $R_2 + R_1$:
+        \[
+        \begin{bmatrix}
+        2 & -5 & 8 \\
+        0 & -12 & 9 \\
+        4 & 2 & 7
+        \end{bmatrix}
+        \]
+        \item Replace $R_3$ with $R_3 - 2R_1$:
+        \[
+        \begin{bmatrix}
+        2 & -5 & 8 \\
+        0 & -12 & 9 \\
+        0 & 12 & -9
+        \end{bmatrix}
+        \]
+        \item Replace $R_3$ with $R_3 + R_2$:
+        \[
+        \begin{bmatrix}
+        2 & -5 & 8 \\
+        0 & -12 & 9 \\
+        0 & 0 & 0
+        \end{bmatrix}
+        \]
+    \end{itemize}
+    \item \textbf{Analyze the pivots.} The matrix has pivot positions in the first two columns ($x_1$ and $x_2$ are basic variables). The third column does not have a pivot, meaning $x_3$ is a free variable.
+    \item \textbf{Conclusion.} Because there is at least one free variable, the system has infinitely many solutions besides the zero vector.
+\end{enumerate}
+\textbf{Final Answer:} Yes, the system has a nontrivial solution because there is a free variable ($x_3$).
+
+\subsection*{Problem 5: Writing Solution Sets in Parametric Vector Form}
+\textbf{Question:} Follow the method of Examples 1 and 2 to write the solution set of the given homogeneous system in parametric vector form.
+\begin{align*}
+    x_1 + 3x_2 + x_3 &= 0 \\
+    -4x_1 - 9x_2 + 2x_3 &= 0 \\
+    -3x_2 - 6x_3 &= 0
+\end{align*}
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Form the augmented matrix.}
+    \[
+    \left[ \begin{array}{ccc|c}
+    1 & 3 & 1 & 0 \\
+    -4 & -9 & 2 & 0 \\
+    0 & -3 & -6 & 0
+    \end{array} \right]
+    \]
+    \item \textbf{Row reduce to RREF.}
+    \begin{itemize}
+        \item Replace $R_2$ with $R_2 + 4R_1$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 3 & 1 & 0 \\
+        0 & 3 & 6 & 0 \\
+        0 & -3 & -6 & 0
+        \end{array} \right]
+        \]
+        \item Replace $R_3$ with $R_3 + R_2$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 3 & 1 & 0 \\
+        0 & 3 & 6 & 0 \\
+        0 & 0 & 0 & 0
+        \end{array} \right]
+        \]
+        \item Multiply $R_2$ by $\frac{1}{3}$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 3 & 1 & 0 \\
+        0 & 1 & 2 & 0 \\
+        0 & 0 & 0 & 0
+        \end{array} \right]
+        \]
+        \item Replace $R_1$ with $R_1 - 3R_2$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 0 & -5 & 0 \\
+        0 & 1 & 2 & 0 \\
+        0 & 0 & 0 & 0
+        \end{array} \right]
+        \]
+    \end{itemize}
+    \item \textbf{Extract the equations.} 
+    \begin{align*}
+        x_1 - 5x_3 &= 0 \implies x_1 = 5x_3 \\
+        x_2 + 2x_3 &= 0 \implies x_2 = -2x_3 \\
+        x_3 &\text{ is free}
+    \end{align*}
+    \item \textbf{Express in parametric vector form.}
+    \[
+    \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} 5x_3 \\ -2x_3 \\ x_3 \end{bmatrix} = x_3 \begin{bmatrix} 5 \\ -2 \\ 1 \end{bmatrix}
+    \]
+\end{enumerate}
+\textbf{Final Answer:} $\mathbf{x} = x_3 \begin{bmatrix} 5 \\ -2 \\ 1 \end{bmatrix}$ (where $x_3$ is any real number).
+
+\subsection*{Problem 11: Solutions from Matrix RREF}
+\textbf{Question:} Describe the solutions of $A\mathbf{x} = \mathbf{0}$ in parametric vector form, where $A$ is row equivalent to the given matrix.
+\[
+\begin{bmatrix}
+1 & -4 & -2 & 0 & 3 & -5 \\
+0 & 0 & 1 & 0 & 0 & -1 \\
+0 & 0 & 0 & 0 & 1 & -4 \\
+0 & 0 & 0 & 0 & 0 & 0
+\end{bmatrix}
+\]
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Analyze the given RREF matrix.} Let's label the variables $x_1$ through $x_6$.
+    The pivot positions are in columns 1, 3, and 5. 
+    Therefore, the basic variables are $x_1, x_3, x_5$.
+    The free variables are $x_2, x_4, x_6$.
+    \item \textbf{Write out the explicit equations from the rows.}
+    \begin{align*}
+        \text{Row 3: } & x_5 - 4x_6 = 0 \implies x_5 = 4x_6 \\
+        \text{Row 2: } & x_3 - x_6 = 0 \implies x_3 = x_6 \\
+        \text{Row 1: } & x_1 - 4x_2 - 2x_3 + 3x_5 - 5x_6 = 0
+    \end{align*}
+    \item \textbf{Express $x_1$ strictly in terms of free variables.} We must substitute $x_3$ and $x_5$ into the first equation:
+    \begin{align*}
+        x_1 &= 4x_2 + 2x_3 - 3x_5 + 5x_6 \\
+        x_1 &= 4x_2 + 2(x_6) - 3(4x_6) + 5x_6 \\
+        x_1 &= 4x_2 + 2x_6 - 12x_6 + 5x_6 \\
+        x_1 &= 4x_2 - 5x_6
+    \end{align*}
+    \item \textbf{Construct the parametric vector equation.}
+    \[
+    \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \\ x_6 \end{bmatrix} = \begin{bmatrix} 4x_2 - 5x_6 \\ x_2 \\ x_6 \\ x_4 \\ 4x_6 \\ x_6 \end{bmatrix}
+    \]
+    Separate the vector into a sum of vectors, one for each free variable:
+    \[
+    \mathbf{x} = x_2 \begin{bmatrix} 4 \\ 1 \\ 0 \\ 0 \\ 0 \\ 0 \end{bmatrix} + x_4 \begin{bmatrix} 0 \\ 0 \\ 0 \\ 1 \\ 0 \\ 0 \end{bmatrix} + x_6 \begin{bmatrix} -5 \\ 0 \\ 1 \\ 0 \\ 4 \\ 1 \end{bmatrix}
+    \]
+\end{enumerate}
+\textbf{Final Answer:} 
+$\mathbf{x} = x_2 \begin{bmatrix} 4 \\ 1 \\ 0 \\ 0 \\ 0 \\ 0 \end{bmatrix} + x_4 \begin{bmatrix} 0 \\ 0 \\ 0 \\ 1 \\ 0 \\ 0 \end{bmatrix} + x_6 \begin{bmatrix} -5 \\ 0 \\ 1 \\ 0 \\ 4 \\ 1 \end{bmatrix}$ (with $x_2, x_4, x_6$ free).
+
+\subsection*{Problem 19: Translating to Nonhomogeneous Solutions}
+\textbf{Question:} Describe the solutions of the following system in parametric vector form. Also, give a geometric description of the solution set and compare it to that in Exercise 5.
+\begin{align*}
+    x_1 + 3x_2 + x_3 &= 1 \\
+    -4x_1 - 9x_2 + 2x_3 &= -1 \\
+    -3x_2 - 6x_3 &= -3
+\end{align*}
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Form the augmented matrix.} Note that the coefficient matrix on the left is identical to the one in Problem 5.
+    \[
+    \left[ \begin{array}{ccc|c}
+    1 & 3 & 1 & 1 \\
+    -4 & -9 & 2 & -1 \\
+    0 & -3 & -6 & -3
+    \end{array} \right]
+    \]
+    \item \textbf{Row reduce to RREF.}
+    \begin{itemize}
+        \item Replace $R_2$ with $R_2 + 4R_1$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 3 & 1 & 1 \\
+        0 & 3 & 6 & 3 \\
+        0 & -3 & -6 & -3
+        \end{array} \right]
+        \]
+        \item Replace $R_3$ with $R_3 + R_2$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 3 & 1 & 1 \\
+        0 & 3 & 6 & 3 \\
+        0 & 0 & 0 & 0
+        \end{array} \right]
+        \]
+        \item Multiply $R_2$ by $\frac{1}{3}$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 3 & 1 & 1 \\
+        0 & 1 & 2 & 1 \\
+        0 & 0 & 0 & 0
+        \end{array} \right]
+        \]
+        \item Replace $R_1$ with $R_1 - 3R_2$:
+        \[
+        \left[ \begin{array}{ccc|c}
+        1 & 0 & -5 & -2 \\
+        0 & 1 & 2 & 1 \\
+        0 & 0 & 0 & 0
+        \end{array} \right]
+        \]
+    \end{itemize}
+    \item \textbf{Extract equations and isolate basic variables.}
+    \begin{align*}
+        x_1 - 5x_3 = -2 &\implies x_1 = -2 + 5x_3 \\
+        x_2 + 2x_3 = 1 &\implies x_2 = 1 - 2x_3 \\
+        x_3 &\text{ is free}
+    \end{align*}
+    \item \textbf{Write in parametric vector form.}
+    \[
+    \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} -2 + 5x_3 \\ 1 - 2x_3 \\ 0 + x_3 \end{bmatrix} = \begin{bmatrix} -2 \\ 1 \\ 0 \end{bmatrix} + x_3 \begin{bmatrix} 5 \\ -2 \\ 1 \end{bmatrix}
+    \]
+    \item \textbf{Geometric description and comparison.} The solution set is a line in $\mathbb{R}^3$. In Problem 5, the solution was the line $\mathbf{x} = x_3[5, -2, 1]^T$, which passes through the origin. The solution to this nonhomogeneous system is the exact same line, but it has been \textit{translated} by the vector $\mathbf{p} = [-2, 1, 0]^T$. It no longer passes through the origin.
+\end{enumerate}
+\textbf{Final Answer:} $\mathbf{x} = \begin{bmatrix} -2 \\ 1 \\ 0 \end{bmatrix} + x_3 \begin{bmatrix} 5 \\ -2 \\ 1 \end{bmatrix}$. Geometrically, it is a line parallel to the solution set of Exercise 5, translated by $\mathbf{p} = [-2, 1, 0]^T$.
+
+\subsection*{Problem 25: Parametric Equation of a Line between Two Vectors}
+\textbf{Question:} Find a parametric equation of the line $M$ through $\mathbf{p}$ and $\mathbf{q}$.
+\[ \mathbf{p} = \begin{bmatrix} 2 \\ -5 \end{bmatrix}, \quad \mathbf{q} = \begin{bmatrix} -3 \\ 1 \end{bmatrix} \]
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Find a direction vector $\mathbf{v}$.} To represent a line passing through two points, we first need a vector that lies along the line. This is given by the difference between the two point-vectors: $\mathbf{v} = \mathbf{q} - \mathbf{p}$.
+    \[
+    \mathbf{v} = \begin{bmatrix} -3 \\ 1 \end{bmatrix} - \begin{bmatrix} 2 \\ -5 \end{bmatrix} = \begin{bmatrix} -3 - 2 \\ 1 - (-5) \end{bmatrix} = \begin{bmatrix} -5 \\ 6 \end{bmatrix}
+    \]
+    \item \textbf{Apply the parametric line formula.} A line through $\mathbf{p}$ with direction $\mathbf{v}$ has the equation $\mathbf{x} = \mathbf{p} + t\mathbf{v}$, where $t$ is any real number.
+    \[
+    \mathbf{x} = \begin{bmatrix} 2 \\ -5 \end{bmatrix} + t \begin{bmatrix} -5 \\ 6 \end{bmatrix}
+    \]
+    \textit{Note: You could also use $\mathbf{q}$ as the base point. The equation $\mathbf{x} = \mathbf{q} + s(\mathbf{p} - \mathbf{q})$ would describe the same line.}
+\end{enumerate}
+\textbf{Final Answer:} $\mathbf{x} = \begin{bmatrix} 2 \\ -5 \end{bmatrix} + t \begin{bmatrix} -5 \\ 6 \end{bmatrix}$.
+
+\subsection*{Problem 27: Conceptual True/False}
+\textbf{Question:} (T/F) A homogeneous equation is always consistent.
+
+\textbf{Solution:}
+By definition, a homogeneous system is of the form $A\mathbf{x} = \mathbf{0}$. If we substitute the zero vector $\mathbf{x} = \mathbf{0}$ into the equation, we get $A\mathbf{0} = \mathbf{0}$, which is always true. A system is defined as "consistent" if it has at least one solution. Because the trivial solution always exists, the system can never be inconsistent.
+\textbf{Final Answer:} True.
+
+\subsection*{Problem 41: Matrix Pivots and System Solutions}
+\textbf{Question:} Let $A$ be a $3 \times 3$ matrix with three pivot positions.
+(a) Does the equation $A\mathbf{x} = \mathbf{0}$ have a nontrivial solution?
+(b) Does the equation $A\mathbf{x} = \mathbf{b}$ have at least one solution for every possible $\mathbf{b}$?
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Analyze Part (a):} For $A\mathbf{x} = \mathbf{0}$ to have a nontrivial solution, there must be at least one free variable. Since $A$ is a $3 \times 3$ matrix and has $3$ pivot positions, every column has a pivot. Therefore, there are $0$ free variables. The only solution is the trivial solution $\mathbf{x} = \mathbf{0}$.
+    \item \textbf{Analyze Part (b):} For $A\mathbf{x} = \mathbf{b}$ to be consistent for every $\mathbf{b} \in \mathbb{R}^3$, the matrix $A$ must have a pivot in every row. Since it is a $3 \times 3$ matrix with $3$ pivots, it indeed has a pivot in every one of its $3$ rows. This guarantees that row-reduction will never produce a row of the form $[0, 0, 0 \mid \text{nonzero}]$, meaning the system is always consistent.
+\end{enumerate}
+\textbf{Final Answer:} (a) No, it only has the trivial solution. (b) Yes, it has a unique solution for every $\mathbf{b}$.
+
+\subsection*{Problem 49: Constructing a Matrix from Geometric Properties}
+\textbf{Question:} Construct a $2 \times 2$ matrix $A$ such that the solution set of the equation $A\mathbf{x} = \mathbf{0}$ is the line in $\mathbb{R}^2$ through $(4, 1)$ and the origin. Then, find a vector $\mathbf{b}$ in $\mathbb{R}^2$ such that the solution set of $A\mathbf{x} = \mathbf{b}$ is not a line in $\mathbb{R}^2$ parallel to the solution set of $A\mathbf{x} = \mathbf{0}$. Why does this not contradict Theorem 6?
+
+\textbf{Step-by-Step Solution:}
+\begin{enumerate}
+    \item \textbf{Construct matrix $A$:} We need $A\mathbf{x} = \mathbf{0}$ to have solutions of the form $\mathbf{x} = t\begin{bmatrix} 4 \\ 1 \end{bmatrix}$. This means the vector $[4, 1]^T$ is in the null space of $A$. 
+    Let $A = \begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix}$. We require:
+    \[
+    \begin{bmatrix} a_{11} & a_{12} \\ a_{21} & a_{22} \end{bmatrix} \begin{bmatrix} 4 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies \begin{cases} 4a_{11} + a_{12} = 0 \implies a_{12} = -4a_{11} \\ 4a_{21} + a_{22} = 0 \implies a_{22} = -4a_{21} \end{cases}
+    \]
+    Choosing $a_{11} = 1$ and $a_{21} = 1$, we get $a_{12} = -4$ and $a_{22} = -4$.
+    So, $A = \begin{bmatrix} 1 & -4 \\ 1 & -4 \end{bmatrix}$.
+    \item \textbf{Find vector $\mathbf{b}$:} We want the solution set of $A\mathbf{x} = \mathbf{b}$ to \textit{not} be a parallel line. The only way it is not a parallel line is if the set is empty (the system is inconsistent). 
+    Notice that any linear combination of the columns of $A$ looks like $x_1 \begin{bmatrix} 1 \\ 1 \end{bmatrix} + x_2 \begin{bmatrix} -4 \\ -4 \end{bmatrix}$. This means the output $A\mathbf{x}$ will always have equal upper and lower components (i.e., a vector $\begin{bmatrix} c \\ c \end{bmatrix}$). 
+    If we pick a $\mathbf{b}$ that does not have equal components, say $\mathbf{b} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$, then $A\mathbf{x} = \mathbf{b}$ will have no solution. The empty set is not a line.
+    \item \textbf{Theorem 6 check:} Theorem 6 states: "\textit{Suppose the equation $A\mathbf{x} = \mathbf{b}$ is consistent} for some given $\mathbf{b}$, and let $\mathbf{p}$ be a solution. Then the solution set... is the translation..." 
+    Because our chosen system $A\mathbf{x} = \mathbf{b}$ is inconsistent, the premise of Theorem 6 is not met. Thus, there is no contradiction.
+\end{enumerate}
+\textbf{Final Answer:} $A = \begin{bmatrix} 1 & -4 \\ 1 & -4 \end{bmatrix}$, $\mathbf{b} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}$. This does not contradict Theorem 6 because Theorem 6 specifically requires the system to be consistent, whereas this system is inconsistent.
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{enumerate}
+    \item \textbf{Existence of Nontrivial Solutions (e.g., Problem 1):}
+    \begin{itemize}
+        \item \textit{Type:} Identifying if a homogeneous system $A\mathbf{x} = \mathbf{0}$ has only $\mathbf{x}=\mathbf{0}$ or infinitely many solutions.
+        \item \textit{Strategy:} Row reduce the coefficient matrix $A$. If every column has a pivot, all variables are basic, and only the trivial solution exists. If at least one column lacks a pivot, a free variable exists, guaranteeing nontrivial solutions.
+    \end{itemize}
+    \item \textbf{Parametric Vector Form Translation (e.g., Problems 5, 11, 19):}
+    \begin{itemize}
+        \item \textit{Type:} Solving systems and describing the infinite set of solutions geometrically using vectors.
+        \item \textit{Strategy:} Bring the augmented matrix to Reduced Row Echelon Form (RREF). Write out the equations explicitly. Isolate the basic variables on the left side, leaving all free variables and constants on the right side. Assemble a column vector for $\mathbf{x}$, then split it into a constant vector $\mathbf{p}$ plus a linear combination of vectors scaled by the free parameters.
+    \end{itemize}
+    \item \textbf{Geometric Constructions (e.g., Problems 25, 49):}
+    \begin{itemize}
+        \item \textit{Type:} Reverse engineering matrices or line equations based on geometric specifications.
+        \item \textit{Strategy:} For lines, use $\mathbf{x} = \mathbf{p} + t(\mathbf{q} - \mathbf{p})$. For matrix construction given a null space, multiply an arbitrary matrix containing unknown variables by the specified basis vector of the null space, set it to zero, and solve the resulting basic algebraic equations to populate the matrix.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Row Operations to RREF (Fundamental Trick):} In Problem 19, getting the matrix to RREF rather than just REF was crucial. Why? RREF zeroes out everything above the pivot as well as below it. This allows us to instantly express a basic variable in terms of \textit{only} free variables, without needing tedious back-substitution.
+    \item \textbf{Vector Decomposition (The Core Skill):} In Problem 11, the trick was splitting a single algebraic column vector into four separate vectors: 
+    \[
+    \begin{bmatrix} 4x_2 - 5x_6 \\ x_2 \\ \vdots \end{bmatrix} \longrightarrow x_2 \begin{bmatrix} 4 \\ 1 \\ \vdots \end{bmatrix} + x_6 \begin{bmatrix} -5 \\ 0 \\ \vdots \end{bmatrix}
+    \]
+    This is essentially factoring out scalars (the free variables), turning an algebraic list into a geometric span. Note how $x_2$ in the second slot generates a $1$ in the $x_2$ vector and a $0$ everywhere else.
+    \item \textbf{Creating Inconsistency via Column Space (Problem 49):} A brilliant algebraic trick to force $A\mathbf{x} = \mathbf{b}$ to have no solution is observing the columns of $A$. If both columns of $A$ are multiples of a specific pattern (e.g., both components are identical), then any vector mapped by $A$ \textit{must} follow that pattern. Picking a $\mathbf{b}$ that breaks this pattern guarantees inconsistency.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection*{Summary of Important Formulas}
+\begin{itemize}
+    \item \textbf{General form of Parametric Solution:} $\mathbf{x} = \mathbf{p} + t_1 \mathbf{v}_1 + t_2 \mathbf{v}_2 + \dots + t_k \mathbf{v}_k$
+    \item \textbf{Translation Identity:} $A(\mathbf{p} + \mathbf{v}_h) = A\mathbf{p} + A\mathbf{v}_h = \mathbf{b} + \mathbf{0} = \mathbf{b}$
+    \item \textbf{Null Space Dimension Rule:} Number of columns in $A$ $-$ Number of Pivot Columns $=$ Number of free variables.
+\end{itemize}
+
+\subsection*{Cheats, Tricks, and Shortcuts}
+\begin{itemize}
+    \item \textbf{The "Wide Matrix" Cheat:} If a matrix represents a homogeneous system and has \textit{more columns than rows} ($n > m$), it is mathematically impossible for every column to have a pivot. Therefore, there \textit{must} be at least one free variable. You can instantly state: "The system has a nontrivial solution."
+    \item \textbf{The Quick Check for Nontrivial Solutions:} You do not need to fully solve a system to answer "does a nontrivial solution exist?". Stop doing row operations the second you are sure a column will not have a pivot (usually in echelon form, before RREF).
+\end{itemize}
+
+\subsection*{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The "Missing p" Trap:} When transitioning from solving homogeneous ($A\mathbf{x} = \mathbf{0}$) to nonhomogeneous ($A\mathbf{x} = \mathbf{b}$) systems, students often forget the constant vector $\mathbf{p}$. Remember: homogeneous solutions pass through the origin; nonhomogeneous solutions are offset by $\mathbf{p}$.
+    \item \textbf{Solving for a Basic Variable in terms of another Basic Variable:} When writing equations from RREF, always express basic variables (pivot columns) strictly in terms of free variables (non-pivot columns). If you have $x_1 = 2x_2 + x_3$ where $x_1, x_2$ are basic, you haven't finished row reducing!
+    \item \textbf{Zero Vector Confusion:} When asked to construct a matrix with "no nontrivial solutions," students sometimes write a matrix of all zeros. A matrix of all zeros means $A\mathbf{x} = \mathbf{0}$ for \textit{any} $\mathbf{x}$, which means it has infinitely many nontrivial solutions! To have \textit{no} nontrivial solutions, you need the identity matrix (or equivalent), so that $\mathbf{x}$ is forced to be exactly $\mathbf{0}$.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The core theme of this topic is \textbf{superposition and linearity}. We are learning how complex structures can be broken down into a specific instance plus a general behavior. 
+This is a theme that echoes heavily in Differential Equations. If you are asked to solve a nonhomogeneous differential equation like $y'' + y = \sin(x)$, the procedure is identical to what we did here: you find the general solution to the homogeneous version $y'' + y = 0$ (which gives $y_h = c_1 \cos(x) + c_2 \sin(x)$), and then you find one single, specific particular solution $\mathbf{p}$ to the nonhomogeneous part. The total solution is $y = p + y_h$. This structural similarity exists because the derivative is a linear operator, just like matrix $A$ is a linear operator!
+
+\subsection{B) Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Links:} This builds directly upon the basic algebra of lines $y = mx + b$. In algebra, $b$ translates the line away from the origin, just as the vector $\mathbf{p}$ translates the subspace spanned by $\mathbf{v}_h$ away from the origin in $\mathbb{R}^n$.
+    \item \textbf{Forward Links:} Understanding parametric vector form is the absolute bedrock for defining \textbf{Vector Spaces, Null Spaces, and Column Spaces} in later chapters. The vectors $\mathbf{v}_1, \dots, \mathbf{v}_k$ attached to your free variables form a \textit{basis} for the null space. In multivariable calculus, understanding parametric equations of lines and planes is mandatory for calculating line integrals and evaluating flux across surfaces. 
+\end{itemize}
+
+\newpage
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios in Quantitative Finance \& Modeling}
+\begin{enumerate}
+    \item \textbf{Arbitrage Pricing Theory (APT) and Factor Models:} In quantitative finance, the return of a portfolio of $n$ assets is modeled against $m$ different risk factors (like inflation, market momentum, interest rates). If a hedge fund wants to construct a portfolio that is completely immune to these macroeconomic factors (a "market-neutral" or "zero-beta" portfolio), they set up a system where the risk exposures matrix $B$ multiplied by the portfolio weights $\mathbf{w}$ equals zero ($B\mathbf{w} = \mathbf{0}$). Finding the parametric vector form of this homogeneous system provides the fund with the exact basis of all possible risk-neutral portfolios.
+    \item \textbf{Cash Flow Matching in Bond Portfolios:} An actuary or fixed-income manager needs to construct a bond portfolio to perfectly match a sequence of future liabilities (e.g., pension payouts). Let matrix $C$ represent the cash flows of different bonds at different times, and $\mathbf{x}$ be the amounts of each bond purchased. To match the exact liabilities $\mathbf{b}$, they must solve the nonhomogeneous system $C\mathbf{x} = \mathbf{b}$. Because there are usually more bond options than time periods ($n > m$), there are infinitely many solutions (free variables). The manager will then use optimization to pick the cheapest $\mathbf{x}$ from the parametric solution set $\mathbf{x} = \mathbf{p} + \mathbf{x}_h$.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup (Arbitrage Factor Model)}
+Let us set up the quantitative finance model. Suppose a hedge fund analyzes $n=4$ different equities. Their returns are driven by $m=2$ macroeconomic factors. We define:
+\begin{itemize}
+    \item $\mathbf{w} = \begin{bmatrix} w_1 & w_2 & w_3 & w_4 \end{bmatrix}^T$: The vector representing the dollar weight invested in each of the 4 assets.
+    \item $B = \begin{bmatrix} \beta_{1,1} & \beta_{1,2} & \beta_{1,3} & \beta_{1,4} \\ \beta_{2,1} & \beta_{2,2} & \beta_{2,3} & \beta_{2,4} \end{bmatrix}$: The sensitivity matrix, where $\beta_{i,j}$ is the sensitivity of asset $j$ to risk factor $i$.
+\end{itemize}
+
+\textbf{The Objective:} The fund wants a portfolio that is completely hedged against all risk factors (so the net factor exposure is $\mathbf{0}$), but they require the total capital allocated to sum exactly to $\$1,000,000$. 
+
+\textbf{The Mathematical Model:}
+This creates a hybrid system. The first two rows handle the homogeneous risk constraint, and the third row handles the nonhomogeneous capital constraint.
+We define an augmented matrix for the system $A\mathbf{w} = \mathbf{c}$:
+\[
+\begin{bmatrix}
+\beta_{1,1} & \beta_{1,2} & \beta_{1,3} & \beta_{1,4} \\
+\beta_{2,1} & \beta_{2,2} & \beta_{2,3} & \beta_{2,4} \\
+1 & 1 & 1 & 1
+\end{bmatrix}
+\begin{bmatrix} w_1 \\ w_2 \\ w_3 \\ w_4 \end{bmatrix}
+=
+\begin{bmatrix} 0 \\ 0 \\ 1,000,000 \end{bmatrix}
+\]
+By solving this system and placing it in parametric vector form $\mathbf{w} = \mathbf{p} + t\mathbf{v}$, the fund identifies the specific baseline allocation $\mathbf{p}$ to achieve the capital requirement, and can use the free variable $t$ (acting on the null space vector $\mathbf{v}$) to tweak the portfolio dynamically for maximum dividend yield without altering the risk neutrality!
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+Based on the standard linear algebra curriculum, here are important conceptual variations related to solution sets that were not explicitly covered in your assigned exercises.
+
+\subsection{Variation 1: The Rank-Nullity Connection}
+While the homework focuses on finding free variables mechanically, it does not explicitly test the fundamental theorem connecting the dimensions of these spaces. 
+\textbf{The Concept:} The number of pivot columns (called the \textbf{Rank} of $A$) plus the number of free variables (called the \textbf{Nullity} of $A$) always perfectly equals the total number of columns $n$.
+\[ \text{Rank}(A) + \text{Nullity}(A) = n \]
+\textbf{Example:} Without solving, how many parameters are needed to describe the solution set of a homogeneous system with a $5 \times 8$ matrix that has 4 pivot rows?
+\textbf{Solution:} Rank is $4$. Number of columns $n = 8$. Therefore, $4 + \text{Nullity} = 8 \implies \text{Nullity} = 4$. You will need exactly $4$ free variables (parameters) to describe the solution.
+
+\subsection{Variation 2: Geometric Intersection of Hyperplanes}
+The homework explores lines in $\mathbb{R}^2$ and planes in $\mathbb{R}^3$, but what happens mathematically when you intersect hyperplanes in higher dimensions?
+\textbf{The Concept:} Each equation in a linear system $A\mathbf{x} = \mathbf{0}$ with $n$ variables represents a hyperplane of dimension $n-1$. When you add equations, you are geometrically intersecting these hyperplanes, which drops the dimension of the solution space. 
+\textbf{Example:} Consider a single equation $x_1 - 2x_2 + 3x_3 - 4x_4 = 0$ in $\mathbb{R}^4$.
+\textbf{Solution:} There is 1 basic variable ($x_1$) and 3 free variables ($x_2, x_3, x_4$). The solution set requires 3 vectors to span. Thus, a single equation in 4D space geometrically represents a 3-dimensional volume (a hyperplane). Every linearly independent row you add to the matrix slices that volume, reducing its dimension by exactly 1.
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+\textit{Below are five flawed solutions. Your task is to act as the grader, identify the subtle mathematical error, explain why it is wrong in one sentence, and provide the correct steps.}
+
+\subsection*{Problem 1 (Flawed)}
+\textbf{Task:} Write the solution to the homogeneous equation $x_1 - 4x_2 = 0$ in parametric vector form.
+\textbf{Flawed Solution:} 
+We isolate $x_1$ to get $x_1 = 4x_2$. 
+Since $x_1$ is defined by $4x_2$, we set up our vector $\mathbf{x}$. 
+\[ \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} x_1 \\ \frac{1}{4}x_1 \end{bmatrix} = x_1 \begin{bmatrix} 1 \\ 1/4 \end{bmatrix} \]
+
+\vspace{2cm}
+
+\subsection*{Problem 2 (Flawed)}
+\textbf{Task:} A system $A\mathbf{x} = \mathbf{b}$ reduces to the equations $x_1 + x_3 = 5$ and $x_2 - 2x_3 = 3$. Write the solution in parametric vector form.
+\textbf{Flawed Solution:}
+We isolate the basic variables: $x_1 = 5 - x_3$ and $x_2 = 3 + 2x_3$. 
+Because $x_3$ is the free variable, we factor it out to create our vector equation:
+\[ \mathbf{x} = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = x_3 \begin{bmatrix} 5 - 1 \\ 3 + 2 \\ 1 \end{bmatrix} = x_3 \begin{bmatrix} 4 \\ 5 \\ 1 \end{bmatrix} \]
+
+\vspace{2cm}
+
+\subsection*{Problem 3 (Flawed)}
+\textbf{Task:} Verify if $\mathbf{v} = \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$ is a solution to the homogeneous system given by $A = \begin{bmatrix} 1 & -2 & 1 \\ -1 & 3 & -2 \\ 0 & 1 & -1 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+We multiply matrix $A$ by vector $\mathbf{v}$:
+\[ 
+A\mathbf{v} = \begin{bmatrix} 1 & -2 & 1 \\ -1 & 3 & -2 \\ 0 & 1 & -1 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1(1) - 2(1) + 1(1) \\ -1(1) + 3(1) - 2(1) \\ 0(1) + 1(1) - 1(1) \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} 
+\]
+Because there are no free variables generated in the final vector, it is indeed a nontrivial solution.
+
+\vspace{2cm}
+
+\subsection*{Problem 4 (Flawed)}
+\textbf{Task:} Describe geometrically the solution set of $\mathbf{x} = \begin{bmatrix} 3 \\ 4 \end{bmatrix} + t \begin{bmatrix} 1 \\ 2 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+Because the solution set is parameterized by a single free variable $t$ attached to a vector, it geometrically represents a line. Because parameter $t$ can be any real number, including zero, the line originates from and passes through the origin in $\mathbb{R}^2$.
+
+\vspace{2cm}
+
+\subsection*{Problem 5 (Flawed)}
+\textbf{Task:} Construct a $2 \times 2$ matrix $A$ such that the system $A\mathbf{x} = \mathbf{0}$ has NO trivial solution.
+\textbf{Flawed Solution:}
+We want the solution set to not include the trivial solution $\mathbf{x} = \mathbf{0}$. We can do this by constructing an inconsistent matrix where the rows contradict each other. Let $A = \begin{bmatrix} 1 & 1 \\ 0 & 0 \end{bmatrix}$. By setting the bottom row to zeros, it forces inconsistency, guaranteeing no trivial solution exists.
+
+\end{document}

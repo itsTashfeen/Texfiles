@@ -1,0 +1,750 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, geometry, graphicx, enumerate}
+\geometry{a4paper, margin=1in}
+
+\title{\textbf{Homework 1.1: Systems of Linear Equations}}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\vspace{1cm}
+\hrule
+\vspace{1cm}
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+The study of linear algebra begins with the most fundamental building block: the linear equation. A linear equation in $n$ variables ($x_1, x_2, \dots, x_n$) is an equation that can be written in the form:
+\[ a_1x_1 + a_2x_2 + \dots + a_nx_n = b \]
+where $b$ and the coefficients $a_1, \dots, a_n$ are real or complex numbers. The key defining feature is that all variables are only raised to the first power and are not multiplied by each other, inside roots, or part of transcendental functions (like sine or exponential functions).
+
+A \textbf{system of linear equations} (or a linear system) is a collection of one or more linear equations involving the same variables. The goal is to find a \textbf{solution}: a list of values $(s_1, s_2, \dots, s_n)$ that makes every equation in the system true simultaneously. 
+
+A system can have:
+\begin{enumerate}
+    \item \textbf{No solution} (The system is called \textit{inconsistent}).
+    \item \textbf{Exactly one solution} (The system is \textit{consistent} and the solution is unique).
+    \item \textbf{Infinitely many solutions} (The system is \textit{consistent} with free variables).
+\end{enumerate}
+
+To solve these systems efficiently, we extract the essential information---the coefficients and the constants---into a rectangular array called a \textbf{matrix}. For a system, we form the \textbf{augmented matrix}, which includes all the coefficients and the constants from the right side of the equals sign.
+
+\subsection{Intuition and Derivation}
+Geometrically, a linear equation in two variables ($ax + by = c$) represents a line in a 2D plane. Finding the solution to a system of two such equations is equivalent to finding the intersection point(s) of the two lines. 
+\begin{itemize}
+    \item If the lines intersect at one point, there is a unique solution.
+    \item If the lines are parallel, they never intersect, resulting in no solution.
+    \item If the lines fall exactly on top of each other, every point on the line is an intersection, yielding infinitely many solutions.
+\end{itemize}
+In three variables, an equation represents a 2D plane in 3D space. The intersection of three planes can be a single point, a line, a plane, or nothing at all. As we scale to $n$ variables, we deal with "hyperplanes" in $n$-dimensional space, but the algebraic logic of finding their intersections remains identical.
+
+\subsection{Historical Context and Motivation}
+The necessity to solve multiple equations simultaneously dates back to antiquity. Ancient Chinese mathematicians in the Han Dynasty (around 200 BCE) outlined array-based methods for solving linear systems in the seminal text \textit{The Nine Chapters on the Mathematical Art}. Later, in the 19th century, Carl Friedrich Gauss formalized these methods while trying to calculate the orbit of the asteroid Ceres from limited astronomical observations. The need to process large sets of linear constraints in physics, astronomy, and surveying birthed the algorithmic matrix approach we use today.
+
+\subsection{Key Formulas and Definitions}
+\textbf{Elementary Row Operations:} To solve a linear system, we apply operations that simplify the matrix without changing its underlying solution set. Two matrices are \textit{row equivalent} if one can be transformed into the other via these operations:
+\begin{enumerate}
+    \item \textbf{Replacement:} Replace one row by the sum of itself and a multiple of another row ($R_i \leftarrow R_i + cR_j$).
+    \item \textbf{Interchange:} Swap two rows ($R_i \leftrightarrow R_j$).
+    \item \textbf{Scaling:} Multiply all entries in a row by a nonzero constant ($R_i \leftarrow cR_i$).
+\end{enumerate}
+
+\subsection{Prerequisites}
+To master this section, you must be comfortable with:
+\begin{itemize}
+    \item Basic algebraic manipulation (distributing, factoring, and combining like terms).
+    \item Graphing linear equations in the Cartesian plane.
+    \item Mental arithmetic with integers and fractions (crucial for executing row operations without making arithmetic errors).
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+
+\subsection*{Problem 1.1.11}
+\textbf{Question:} Solve the following system:
+\begin{align*}
+              x_2 + 3x_3 &= 2 \\
+    x_1 + 2x_2 + 2x_3 &= 7 \\
+    5x_1 + 8x_2 + 6x_3 &= 37
+\end{align*}
+
+\textbf{Solution:}
+First, we write the augmented matrix for the system:
+\[
+\begin{bmatrix}
+0 & 1 & 3 & 2 \\
+1 & 2 & 2 & 7 \\
+5 & 8 & 6 & 37
+\end{bmatrix}
+\]
+Step 1: Interchange Row 1 ($R_1$) and Row 2 ($R_2$) to get a pivot of $1$ in the top left position.
+\[
+\underrightarrow{R_1 \leftrightarrow R_2}
+\begin{bmatrix}
+1 & 2 & 2 & 7 \\
+0 & 1 & 3 & 2 \\
+5 & 8 & 6 & 37
+\end{bmatrix}
+\]
+Step 2: Eliminate the $5$ in the third row by replacing $R_3$ with $R_3 - 5R_1$.
+\[
+\underrightarrow{R_3 \leftarrow R_3 - 5R_1}
+\begin{bmatrix}
+1 & 2 & 2 & 7 \\
+0 & 1 & 3 & 2 \\
+0 & -2 & -4 & 2
+\end{bmatrix}
+\]
+Step 3: Eliminate the $-2$ in the third row by replacing $R_3$ with $R_3 + 2R_2$.
+\[
+\underrightarrow{R_3 \leftarrow R_3 + 2R_2}
+\begin{bmatrix}
+1 & 2 & 2 & 7 \\
+0 & 1 & 3 & 2 \\
+0 & 0 & 2 & 6
+\end{bmatrix}
+\]
+Step 4: Scale $R_3$ by $\frac{1}{2}$ to simplify the final row.
+\[
+\underrightarrow{R_3 \leftarrow \frac{1}{2}R_3}
+\begin{bmatrix}
+1 & 2 & 2 & 7 \\
+0 & 1 & 3 & 2 \\
+0 & 0 & 1 & 3
+\end{bmatrix}
+\]
+Translating this back into equations gives us:
+\begin{align*}
+    x_1 + 2x_2 + 2x_3 &= 7 \\
+    x_2 + 3x_3 &= 2 \\
+    x_3 &= 3
+\end{align*}
+Using back-substitution:
+From equation 3, $x_3 = 3$.
+Substitute $x_3$ into equation 2: $x_2 + 3(3) = 2 \Rightarrow x_2 + 9 = 2 \Rightarrow x_2 = -7$.
+Substitute $x_2$ and $x_3$ into equation 1: $x_1 + 2(-7) + 2(3) = 7 \Rightarrow x_1 - 14 + 6 = 7 \Rightarrow x_1 - 8 = 7 \Rightarrow x_1 = 15$.
+\\
+\textbf{Answer:} A. The unique solution of the system is $(x_1, x_2, x_3) = (15, -7, 3)$.
+
+
+\subsection*{Problem 1.1.3 (Image 2)}
+\textbf{Question:} Find the point $(x_1, x_2)$ that lies on the line $x_1 + 2x_2 = 7$ and on the line $x_1 - x_2 = 1$.
+
+\textbf{Solution:}
+We solve the system of equations:
+\begin{align*}
+    x_1 + 2x_2 &= 7 \\
+    x_1 - x_2 &= 1
+\end{align*}
+Subtract the second equation from the first to eliminate $x_1$:
+\[ (x_1 + 2x_2) - (x_1 - x_2) = 7 - 1 \]
+\[ 3x_2 = 6 \Rightarrow x_2 = 2 \]
+Substitute $x_2 = 2$ back into the second equation:
+\[ x_1 - 2 = 1 \Rightarrow x_1 = 3 \]
+\\
+\textbf{Answer:} The point is $(3, 2)$.
+
+
+\subsection*{Problem 1.1.2}
+\textbf{Question:} Solve the system by using elementary row operations on the equations.
+\begin{align*}
+    7x_1 + 14x_2 &= 21 \\
+    5x_1 + 8x_2 &= 21
+\end{align*}
+
+\textbf{Solution:}
+Write the augmented matrix:
+\[
+\begin{bmatrix}
+7 & 14 & 21 \\
+5 & 8 & 21
+\end{bmatrix}
+\]
+Scale $R_1$ by $\frac{1}{7}$:
+\[
+\underrightarrow{R_1 \leftarrow \frac{1}{7}R_1}
+\begin{bmatrix}
+1 & 2 & 3 \\
+5 & 8 & 21
+\end{bmatrix}
+\]
+Eliminate the $5$ in the second row by replacing $R_2$ with $R_2 - 5R_1$:
+\[
+\underrightarrow{R_2 \leftarrow R_2 - 5R_1}
+\begin{bmatrix}
+1 & 2 & 3 \\
+0 & -2 & 6
+\end{bmatrix}
+\]
+Scale $R_2$ by $-\frac{1}{2}$:
+\[
+\underrightarrow{R_2 \leftarrow -\frac{1}{2}R_2}
+\begin{bmatrix}
+1 & 2 & 3 \\
+0 & 1 & -3
+\end{bmatrix}
+\]
+Eliminate the $2$ in the first row by replacing $R_1$ with $R_1 - 2R_2$:
+\[
+\underrightarrow{R_1 \leftarrow R_1 - 2R_2}
+\begin{bmatrix}
+1 & 0 & 9 \\
+0 & 1 & -3
+\end{bmatrix}
+\]
+This matrix corresponds to $x_1 = 9$ and $x_2 = -3$.
+\\
+\textbf{Answer:} $(x_1, x_2) = (9, -3)$.
+
+
+\subsection*{Problem 1.1.3 (Image 4)}
+\textbf{Question:} Find the point $(x_1, x_2)$ that lies on the line $x_1 + 3x_2 = 6$ and on the line $x_1 - x_2 = 2$.
+
+\textbf{Solution:}
+System of equations:
+\begin{align*}
+    x_1 + 3x_2 &= 6 \\
+    x_1 - x_2 &= 2
+\end{align*}
+Subtract the second equation from the first to eliminate $x_1$:
+\[ (x_1 + 3x_2) - (x_1 - x_2) = 6 - 2 \]
+\[ 4x_2 = 4 \Rightarrow x_2 = 1 \]
+Substitute $x_2 = 1$ back into the second equation:
+\[ x_1 - 1 = 2 \Rightarrow x_1 = 3 \]
+\\
+\textbf{Answer:} The point is $(3, 1)$.
+
+
+\subsection*{Problem 1.1.7}
+\textbf{Question:} The augmented matrix of a linear system has been reduced by row operations to the form shown. Describe the solution set.
+\[
+\begin{bmatrix}
+1 & 5 & 3 & -5 \\
+0 & 0 & 0 & -1 \\
+0 & 0 & 1 & 1 \\
+0 & 1 & -1 & 4
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+Observe the second row of the matrix:
+\[ \begin{bmatrix} 0 & 0 & 0 & -1 \end{bmatrix} \]
+This translates to the equation:
+\[ 0x_1 + 0x_2 + 0x_3 = -1 \]
+\[ 0 = -1 \]
+Since $0$ can never equal $-1$, this equation represents a logical contradiction. Therefore, no matter what values $x_1, x_2,$ or $x_3$ take, the system can never be satisfied.
+\\
+\textbf{Answer:} C. The solution set is empty.
+
+
+\subsection*{Problem 1.1.10}
+\textbf{Question:} The augmented matrix has been reduced. Describe the solution set.
+\[
+\begin{bmatrix}
+1 & -2 & 0 & 0 & -5 \\
+0 & 1 & -3 & 0 & -6 \\
+0 & 0 & 1 & -1 & 4 \\
+0 & 0 & 0 & 1 & 2
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+The matrix is in echelon form and corresponds to a $4 \times 4$ system (with the 5th column being the constants). Let's write the corresponding equations and use back-substitution.
+\begin{align}
+    x_1 - 2x_2 &= -5 \\
+    x_2 - 3x_3 &= -6 \\
+    x_3 - x_4 &= 4 \\
+    x_4 &= 2
+\end{align}
+Substitute $x_4 = 2$ into equation (3):
+\[ x_3 - 2 = 4 \Rightarrow x_3 = 6 \]
+Substitute $x_3 = 6$ into equation (2):
+\[ x_2 - 3(6) = -6 \Rightarrow x_2 - 18 = -6 \Rightarrow x_2 = 12 \]
+Substitute $x_2 = 12$ into equation (1):
+\[ x_1 - 2(12) = -5 \Rightarrow x_1 - 24 = -5 \Rightarrow x_1 = 19 \]
+\\
+\textbf{Answer:} C. The solution set contains one solution: $(19, 12, 6, 2)$.
+
+
+\subsection*{Problem 1.1.13}
+\textbf{Question:} Solve the system.
+\begin{align*}
+    x_1 \phantom{+ 2x_2} - 3x_3 &= 14 \\
+    4x_1 + 2x_2 + x_3 &= 21 \\
+    \phantom{4x_1 +} x_2 + 4x_3 &= -10
+\end{align*}
+
+\textbf{Solution:}
+Set up the augmented matrix:
+\[
+\begin{bmatrix}
+1 & 0 & -3 & 14 \\
+4 & 2 & 1 & 21 \\
+0 & 1 & 4 & -10
+\end{bmatrix}
+\]
+Eliminate the $4$ in the second row:
+\[
+\underrightarrow{R_2 \leftarrow R_2 - 4R_1}
+\begin{bmatrix}
+1 & 0 & -3 & 14 \\
+0 & 2 & 13 & -35 \\
+0 & 1 & 4 & -10
+\end{bmatrix}
+\]
+Swap $R_2$ and $R_3$ to make the pivot easier to work with:
+\[
+\underrightarrow{R_2 \leftrightarrow R_3}
+\begin{bmatrix}
+1 & 0 & -3 & 14 \\
+0 & 1 & 4 & -10 \\
+0 & 2 & 13 & -35
+\end{bmatrix}
+\]
+Eliminate the $2$ in the new third row:
+\[
+\underrightarrow{R_3 \leftarrow R_3 - 2R_2}
+\begin{bmatrix}
+1 & 0 & -3 & 14 \\
+0 & 1 & 4 & -10 \\
+0 & 0 & 5 & -15
+\end{bmatrix}
+\]
+Scale $R_3$ by $\frac{1}{5}$:
+\[
+\underrightarrow{R_3 \leftarrow \frac{1}{5}R_3}
+\begin{bmatrix}
+1 & 0 & -3 & 14 \\
+0 & 1 & 4 & -10 \\
+0 & 0 & 1 & -3
+\end{bmatrix}
+\]
+Back-substitution:
+$x_3 = -3$
+$x_2 + 4(-3) = -10 \Rightarrow x_2 - 12 = -10 \Rightarrow x_2 = 2$
+$x_1 - 3(-3) = 14 \Rightarrow x_1 + 9 = 14 \Rightarrow x_1 = 5$
+\\
+\textbf{Answer:} A. The unique solution of the system is $(x_1, x_2, x_3) = (5, 2, -3)$.
+
+
+\subsection*{Problem 1.1.20}
+\textbf{Question:} Determine if the given system is consistent. Do not completely solve the system.
+\begin{align*}
+    2x_1 \phantom{+ 2x_2 + 2x_3} - 6x_4 &= -24 \\
+    \phantom{2x_1 +} 2x_2 + 2x_3 \phantom{+ 6x_4} &= 0 \\
+    \phantom{2x_1 + 2x_2 +} x_3 + 6x_4 &= 12 \\
+    -5x_1 + 3x_2 + 5x_3 + x_4 &= 6
+\end{align*}
+
+\textbf{Solution:}
+Let's write the augmented matrix and reduce it just enough to check for a row of the form $\begin{bmatrix} 0 & 0 & 0 & 0 & b \end{bmatrix}$ where $b \neq 0$.
+\[
+\begin{bmatrix}
+2 & 0 & 0 & -6 & -24 \\
+0 & 2 & 2 & 0 & 0 \\
+0 & 0 & 1 & 6 & 12 \\
+-5 & 3 & 5 & 1 & 6
+\end{bmatrix}
+\]
+Scale $R_1$ by $\frac{1}{2}$ and $R_2$ by $\frac{1}{2}$:
+\[
+\begin{bmatrix}
+1 & 0 & 0 & -3 & -12 \\
+0 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & 6 & 12 \\
+-5 & 3 & 5 & 1 & 6
+\end{bmatrix}
+\]
+Eliminate the $-5$ in $R_4$:
+\[
+\underrightarrow{R_4 \leftarrow R_4 + 5R_1}
+\begin{bmatrix}
+1 & 0 & 0 & -3 & -12 \\
+0 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & 6 & 12 \\
+0 & 3 & 5 & -14 & -54
+\end{bmatrix}
+\]
+Eliminate the $3$ in $R_4$:
+\[
+\underrightarrow{R_4 \leftarrow R_4 - 3R_2}
+\begin{bmatrix}
+1 & 0 & 0 & -3 & -12 \\
+0 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & 6 & 12 \\
+0 & 0 & 2 & -14 & -54
+\end{bmatrix}
+\]
+Eliminate the $2$ in $R_4$:
+\[
+\underrightarrow{R_4 \leftarrow R_4 - 2R_3}
+\begin{bmatrix}
+1 & 0 & 0 & -3 & -12 \\
+0 & 1 & 1 & 0 & 0 \\
+0 & 0 & 1 & 6 & 12 \\
+0 & 0 & 0 & -26 & -78
+\end{bmatrix}
+\]
+The matrix is now in echelon form. There are no pivot positions in the augmented column (the rightmost column). Specifically, $-26x_4 = -78 \Rightarrow x_4 = 3$. Because we can uniquely solve for a variable without contradiction, the system is consistent.
+\\
+\textbf{Answer:} B. The system is consistent.
+
+
+\subsection*{Problem 1.1.23}
+\textbf{Question:} Determine the value(s) of $h$ such that the matrix is the augmented matrix of a consistent linear system.
+\[
+\begin{bmatrix}
+1 & h & 2 \\
+-4 & 20 & -10
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+We perform row reduction to analyze the consistency.
+Replace $R_2$ with $R_2 + 4R_1$:
+\[
+\underrightarrow{R_2 \leftarrow R_2 + 4R_1}
+\begin{bmatrix}
+1 & h & 2 \\
+0 & 20 + 4h & -2
+\end{bmatrix}
+\]
+For a system to be inconsistent, we need a row of the form $\begin{bmatrix} 0 & 0 & b \end{bmatrix}$ where $b \neq 0$.
+The second row is $\begin{bmatrix} 0 & 20+4h & -2 \end{bmatrix}$. 
+If $20 + 4h = 0$, then the row represents $0 = -2$, which is a contradiction, making the system inconsistent.
+We set up the equation for inconsistency:
+\[ 20 + 4h = 0 \Rightarrow 4h = -20 \Rightarrow h = -5 \]
+Therefore, for the system to be \textit{consistent}, $h$ must NOT equal $-5$.
+\\
+\textbf{Answer:} A. The matrix is the augmented matrix of a consistent linear system if $h \neq -5$.
+
+
+\subsection*{Problem 1.1.25}
+\textbf{Question:} Determine the value(s) of $h$ such that the matrix is the augmented matrix of a consistent linear system.
+\[
+\begin{bmatrix}
+1 & 4 & -2 \\
+5 & h & -10
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+Replace $R_2$ with $R_2 - 5R_1$:
+\[
+\underrightarrow{R_2 \leftarrow R_2 - 5R_1}
+\begin{bmatrix}
+1 & 4 & -2 \\
+0 & h - 20 & 0
+\end{bmatrix}
+\]
+The second row translates to $(h - 20)x_2 = 0$. 
+Notice that the constant on the right side is $0$. No matter what value $h$ takes, we will never get an equation like $0 = (\text{nonzero constant})$. 
+If $h = 20$, the row becomes $0 = 0$, which is valid (implying infinite solutions). 
+If $h \neq 20$, then $x_2 = 0$, which is a valid unique solution.
+In either case, a contradiction is impossible.
+\\
+\textbf{Answer:} C. The matrix is the augmented matrix of a consistent linear system for every value of $h$.
+
+
+\subsection*{Problem 1.1.26}
+\textbf{Question:} Determine the value(s) of $h$ such that the matrix is the augmented matrix of a consistent linear system.
+\[
+\begin{bmatrix}
+12 & 6 & h \\
+-4 & -2 & 5
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+Swap the rows to get the smaller leading coefficient on top (optional but helpful):
+\[
+\begin{bmatrix}
+-4 & -2 & 5 \\
+12 & 6 & h
+\end{bmatrix}
+\]
+Replace $R_2$ with $R_2 + 3R_1$:
+\[
+\underrightarrow{R_2 \leftarrow R_2 + 3R_1}
+\begin{bmatrix}
+-4 & -2 & 5 \\
+0 & 0 & h + 15
+\end{bmatrix}
+\]
+The second row represents the equation $0x_1 + 0x_2 = h + 15$, or $0 = h + 15$.
+For the system to be consistent, this equation must be mathematically true. The only way $0$ can equal $h + 15$ is if:
+\[ h + 15 = 0 \Rightarrow h = -15 \]
+If $h$ is any other number, the system is inconsistent.
+\\
+\textbf{Answer:} B. The matrix is the augmented matrix of a consistent linear system if $h = -15$.
+
+
+\subsection*{Problem 1.1.27}
+\textbf{Question:} Determine whether the statement below is true or false. Justify the answer.
+\textit{Every elementary row operation is reversible.}
+
+\textbf{Solution:}
+This is a foundational theorem of linear algebra. Every row operation can be "undone" by another row operation of the same type.
+\begin{itemize}
+    \item If you swap $R_1 \leftrightarrow R_2$, you can reverse it by swapping them again $R_1 \leftrightarrow R_2$.
+    \item If you scale $R_1$ by $c \neq 0$ ($R_1 \leftarrow cR_1$), you can reverse it by scaling by $\frac{1}{c}$ ($R_1 \leftarrow \frac{1}{c}R_1$).
+    \item If you replace $R_1$ with $R_1 + cR_2$, you reverse it by replacing $R_1$ with $R_1 - cR_2$.
+\end{itemize}
+\\
+\textbf{Answer:} B. The statement is true. Replacement, interchanging, and scaling are all reversible.
+
+
+\subsection*{Problem 1.1.28}
+\textbf{Question:} Determine whether the statement below is true or false. Justify the answer.
+\textit{Elementary row operations on an augmented matrix never change the solution set of the associated linear system.}
+
+\textbf{Solution:}
+This is the core motivation for using row operations. Two linear systems are defined as being \textit{equivalent} if they share exactly the same solution set. Applying an elementary row operation transforms a matrix into a row-equivalent matrix, which corresponds to an equivalent linear system. Therefore, the operations themselves are designed to simplify the algebra without altering the truth of the solution set.
+\\
+\textbf{Answer:} C. The statement is true. Each elementary row operation replaces a system with an equivalent system.
+
+
+\subsection*{Problem 1.1.35}
+\textbf{Question:} Find an equation involving $g, h,$ and $k$ that makes this augmented matrix correspond to a consistent system.
+\[
+\begin{bmatrix}
+1 & -5 & 7 & g \\
+0 & 10 & -14 & h \\
+-3 & 5 & -7 & k
+\end{bmatrix}
+\]
+
+\textbf{Solution:}
+We row reduce the matrix.
+Replace $R_3$ with $R_3 + 3R_1$:
+\[
+\underrightarrow{R_3 \leftarrow R_3 + 3R_1}
+\begin{bmatrix}
+1 & -5 & 7 & g \\
+0 & 10 & -14 & h \\
+0 & -10 & 14 & k + 3g
+\end{bmatrix}
+\]
+Replace $R_3$ with $R_3 + R_2$:
+\[
+\underrightarrow{R_3 \leftarrow R_3 + R_2}
+\begin{bmatrix}
+1 & -5 & 7 & g \\
+0 & 10 & -14 & h \\
+0 & 0 & 0 & (k + 3g) + h
+\end{bmatrix}
+\]
+The third row translates to the equation $0 = k + 3g + h$. 
+For the system to be consistent, this equation must not present a contradiction. Therefore, the constants must sum exactly to zero.
+Rearranging algebraically to match standard choices: $3g + h + k = 0$.
+\\
+\textbf{Answer:} B. $3g + h + k = 0$.
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+The homework problems fall into four distinct categories:
+
+\textbf{1. Direct Solution of Fully Determined Systems (Problems 1.1.2, 1.1.3, 1.1.11, 1.1.13):}
+\begin{itemize}
+    \item \textit{Characteristics:} You are given $n$ equations with $n$ variables, and the system resolves to a single unique point.
+    \item \textit{Approach:} Form the augmented matrix. Use row operations strictly left-to-right, establishing pivot positions (leading 1s or non-zeros) on the main diagonal. Use these pivots to eliminate entries below them (forward phase) and then use back-substitution or eliminate entries above them (backward phase).
+\end{itemize}
+
+\textbf{2. Consistency Parameters Analysis (Problems 1.1.23, 1.1.25, 1.1.26, 1.1.35):}
+\begin{itemize}
+    \item \textit{Characteristics:} The matrix contains unknown variables ($h, g, k$) in the rightmost column or amongst the coefficients.
+    \item \textit{Approach:} Perform row reduction algebraically, treating the unknown variables as constants. Your goal is to force a row of zeros on the left side. Once a row is $[0 \dots 0 \mid \text{Expression}]$, set the Expression $= 0$ to find the conditions for consistency, or $\neq 0$ for inconsistency.
+\end{itemize}
+
+\textbf{3. Interpreting Reduced Matrices (Problems 1.1.7, 1.1.10):}
+\begin{itemize}
+    \item \textit{Characteristics:} The matrix is already in echelon form. You must interpret what it means algebraically.
+    \item \textit{Approach:} Look immediately for contradiction rows ($[0 \dots 0 \mid b]$ where $b \neq 0$). If none exist, write out the algebraic equations from the bottom row up and perform back-substitution.
+\end{itemize}
+
+\textbf{4. Theoretical/Conceptual (Problems 1.1.27, 1.1.28):}
+\begin{itemize}
+    \item \textit{Characteristics:} True/False questions testing the core theorems of row equivalence.
+    \item \textit{Approach:} Memorize definitions. Understand that row operations are simply algebraic manipulations (like adding the same thing to both sides of an equation) that preserve the equality and thus the solution set.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{The Pivot Search (Row Interchanging):} In Problem 1.1.11, the first operation was $R_1 \leftrightarrow R_2$. Because $R_1$ started with a $0$, it could not be used to eliminate entries below it. Swapping rows is a crucial "trick" to get a non-zero number (ideally a $1$) into the pivot position.
+    \item \textbf{Fraction Avoidance:} In Problem 1.1.2, we scaled by $1/7$. However, generally, it is wise to avoid introducing fractions until the very end. In Problem 1.1.13, instead of dividing $R_2$ by $4$ immediately (which would create fractions like $1/2$ and $1/4$), we used $R_2 - 4R_1$ which kept all integers clean.
+    \item \textbf{Proportional Rows Observation:} In Problem 1.1.26, the rows were $[12, 6, h]$ and $[-4, -2, 5]$. Notice that the left side of $R_1$ is exactly $-3$ times the left side of $R_2$ ($12 = -3 \times -4$, and $6 = -3 \times -2$). Whenever you spot proportional rows on the coefficient side, you know immediately that row reduction will yield a row of zeros, making it a prime candidate for a consistency analysis question.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Important Rules}
+\begin{itemize}
+    \item \textbf{The Consistency Rule:} A linear system is consistent \textbf{if and only if} the rightmost column of the augmented matrix is \textit{not} a pivot column. In other words, an echelon form of the augmented matrix has \textbf{no row} of the form $\begin{bmatrix} 0 & \dots & 0 & b \end{bmatrix}$ with $b \neq 0$.
+\end{itemize}
+
+\subsection{Cheats and Shortcuts}
+\begin{itemize}
+    \item \textbf{The "Look Ahead" Swap:} Before blindly reducing, scan the matrix. If a row further down has a leading $1$, swap it to the top. Multiplying and adding by $1$ is vastly less error-prone than dealing with larger integers.
+    \item \textbf{Scaling for Simplicity:} If an entire row is divisible by a common factor (e.g., $\begin{bmatrix} 5 & 10 & 15 & 20 \end{bmatrix}$), scale it immediately by $1/5$ to yield $\begin{bmatrix} 1 & 2 & 3 & 4 \end{bmatrix}$. Smaller numbers mean fewer mental math mistakes.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The Sign Error in Row Replacement:} The most common mistake in Linear Algebra is botching the arithmetic in $R_i \leftarrow R_i - cR_j$, specifically dealing with double negatives. Write the calculation in the margins explicitly. 
+    \item \textbf{Misinterpreting $0 = 0$:} Students often see a row of all zeros ($\begin{bmatrix} 0 & 0 & 0 & 0 \end{bmatrix}$) and mistakenly conclude there is "No Solution." A row of zeros means $0 = 0$, which is universally true. It indicates a dependent equation, usually resulting in infinitely many solutions (if the rest of the system is consistent). It is \textit{only} $[0 \dots 0 \mid b \neq 0]$ that means no solution.
+    \item \textbf{Stopping Too Early:} A matrix must be adequately reduced to accurately judge consistency. If you have $\begin{bmatrix} 1 & 1 & 5 \\ 0 & 2 & 4 \\ 0 & 2 & 8 \end{bmatrix}$, it looks consistent. But one more step ($R_3 - R_2$) yields $\begin{bmatrix} 0 & 0 & 4 \end{bmatrix}$, proving it is inconsistent.
+\end{itemize}
+
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The core theme of Section 1.1 is \textbf{representing and manipulating multi-dimensional constraints}. In basic algebra, you manipulated one constraint ($3x = 9$) to find one unknown. Here, we recognize that variables in the real world don't act in isolation; they are constrained by multiple relationships simultaneously. Matrix mechanics provide a systematized, algorithmic way to resolve these overlapping constraints. This theme of "algorithmic simplification of complex systems" is the foundation for almost all computer programming logic concerning data arrays.
+
+\subsection{B) Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Link:} This topic directly extends Algebra I (solving 2x2 systems via substitution/elimination). We are taking the elimination method, stripping away the cumbersome $x, y, z$ variables, and treating the coefficients algorithmically.
+    \item \textbf{Forward Link:} Understanding how to find pivots and determine consistency is the \textbf{absolute prerequisite} for everything that follows. In Chapter 1.5, we will use these exact skills to define solution sets parametrically. In Chapter 2, row operations dictate how we find the inverse of a matrix. In Chapter 4, the number of pivot columns will define the "dimension" and "rank" of vector spaces.
+\end{itemize}
+
+
+\newpage
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios}
+\begin{enumerate}
+    \item \textbf{Quantitative Finance (Arbitrage Pricing):} In financial mathematics, the fundamental theorem of asset pricing states that an arbitrage-free market exists if and only if there exists a "risk-neutral probability measure." Finding this measure involves setting up a system of linear equations where the equations represent the expected payoffs of different derivative assets across various future states of the world.
+    \item \textbf{Portfolio Construction:} A portfolio manager wants to create a fund that perfectly mimics the sector weighting of the S\&P 500 while maintaining a specific dividend yield and risk profile (Beta). They must solve a massive system of linear equations where the variables are the capital weights assigned to each stock, and the equations represent the constraints (e.g., sum of weights = 1, sum of (weight $\times$ beta) = target beta).
+\end{enumerate}
+
+\subsection{B) Model Problem Setup: Arbitrage Pricing}
+Suppose a quantitative analyst is evaluating a simplified market with three financial assets that can pay off in three different future economic states (Bull, Flat, Bear). The payouts for each asset in each state are known. The analyst wants to find the "state prices" (or risk-neutral probabilities) $p_1, p_2, p_3$ for these three states. 
+Let the current prices of the three assets be $C_1, C_2,$ and $C_3$.
+The payoff of Asset $j$ in state $i$ is denoted by the coefficient $A_{ij}$.
+The model setup requires solving the following linear system:
+\begin{align*}
+    A_{11}p_1 + A_{21}p_2 + A_{31}p_3 &= C_1 \\
+    A_{12}p_1 + A_{22}p_2 + A_{32}p_3 &= C_2 \\
+    A_{13}p_1 + A_{23}p_2 + A_{33}p_3 &= C_3
+\end{align*}
+To find the state prices $p_i$, the analyst would extract the coefficient matrix (the payoff matrix $A$) and the constant vector (current prices $C$) and apply the exact elementary row operations practiced in this chapter. If the system is inconsistent, it mathematically proves that an arbitrage opportunity (risk-free profit) exists in the market.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+A vital concept taught in Section 1.1 that was missing from your homework is dealing with a system that has \textbf{infinitely many solutions} and expressing that solution set parametrically.
+
+\subsection{Variation: Infinitely Many Solutions (Free Variables)}
+When a system is consistent but has fewer pivots than variables, the variables without pivots are "free." You must express the pivot variables in terms of the free variables.
+
+\textbf{Example Problem:} Solve the system corresponding to the following augmented matrix:
+\[
+\begin{bmatrix}
+1 & 2 & -1 & 4 \\
+0 & 0 & 1 & 5 
+\end{bmatrix}
+\]
+\textbf{Explanation & Solution:}
+This matrix is already reduced. Notice that columns 1 and 3 have pivots, but column 2 does not. Therefore, $x_1$ and $x_3$ are \textbf{basic variables}, and $x_2$ is a \textbf{free variable}.
+
+Step 1: Write out the equations.
+\begin{align*}
+    x_1 + 2x_2 - x_3 &= 4 \\
+    x_3 &= 5
+\end{align*}
+
+Step 2: Substitute $x_3$ back into the first equation.
+\[ x_1 + 2x_2 - 5 = 4 \Rightarrow x_1 + 2x_2 = 9 \]
+
+Step 3: Solve for the basic variables in terms of the free variables.
+\[ x_1 = 9 - 2x_2 \]
+
+\textbf{Final Parametric Solution:}
+\begin{align*}
+    x_1 &= 9 - 2x_2 \\
+    x_2 &\text{ is free} \\
+    x_3 &= 5
+\end{align*}
+This means for \textit{any} real number you pick for $x_2$, you can generate a valid solution to the system (e.g., if $x_2 = 0$, a solution is $(9, 0, 5)$. If $x_2 = 1$, a solution is $(7, 1, 5)$).
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are 5 problems with complete, seemingly correct solutions. However, each contains a single fatal flaw. Your job as a student is to review them, spot the error, explain why it's wrong, and provide the correct calculation.
+
+\hrule
+\vspace{0.5cm}
+
+\textbf{Flawed Problem 1:} Solve the system.
+\begin{align*}
+    2x_1 + 4x_2 &= 10 \\
+    -2x_1 - 3x_2 &= -6
+\end{align*}
+\textit{Flawed Solution:} 
+Create the augmented matrix: $\begin{bmatrix} 2 & 4 & 10 \\ -2 & -3 & -6 \end{bmatrix}$. 
+Replace $R_2$ with $R_2 - R_1$: 
+$\begin{bmatrix} 2 & 4 & 10 \\ 0 & -7 & -16 \end{bmatrix}$.
+From $R_2$, $-7x_2 = -16 \Rightarrow x_2 = 16/7$.
+Substitute back: $2x_1 + 4(16/7) = 10 \Rightarrow 2x_1 = 70/7 - 64/7 = 6/7 \Rightarrow x_1 = 3/7$.
+Final Answer: $(3/7, 16/7)$.
+
+\vspace{0.3cm}
+\textbf{Flawed Problem 2:} Determine if the system is consistent.
+\[
+\begin{bmatrix}
+1 & 3 & 5 \\
+0 & 0 & 0
+\end{bmatrix}
+\]
+\textit{Flawed Solution:} 
+Looking at the augmented matrix, the bottom row translates to the equation $0x_1 + 0x_2 = 0$, which simplifies to $0 = 0$. Because the variables have vanished and equated to zero, this means the system cannot be solved for specific values of $x$. Therefore, the system has no solution and is inconsistent.
+
+\vspace{0.3cm}
+\textbf{Flawed Problem 3:} Determine for what values of $h$ the system is consistent.
+\[
+\begin{bmatrix}
+1 & -3 & 2 \\
+-2 & h & -4
+\end{bmatrix}
+\]
+\textit{Flawed Solution:}
+Replace $R_2$ with $R_2 + 2R_1$.
+The new $R_2$ becomes: $-2 + 2(1) = 0$, $h + 2(-3) = h - 6$, and $-4 + 2(2) = 0$.
+The matrix is $\begin{bmatrix} 1 & -3 & 2 \\ 0 & h-6 & 0 \end{bmatrix}$.
+For the system to be inconsistent, we need a contradiction. Therefore, $h - 6 = 0 \Rightarrow h = 6$. So the system is consistent for all $h \neq 6$.
+
+\vspace{0.3cm}
+\textbf{Flawed Problem 4:} Solve the system.
+\begin{align*}
+    x_1 - x_2 &= 4 \\
+    2x_1 - 2x_2 &= 8
+\end{align*}
+\textit{Flawed Solution:}
+Matrix: $\begin{bmatrix} 1 & -1 & 4 \\ 2 & -2 & 8 \end{bmatrix}$.
+Replace $R_2$ with $R_2 - 2R_1$: $\begin{bmatrix} 1 & -1 & 4 \\ 0 & 0 & 0 \end{bmatrix}$.
+The second row is $0 = 0$. Thus, $x_2 = 0$.
+Substitute into $R_1$: $x_1 - 0 = 4 \Rightarrow x_1 = 4$.
+Final Answer: The unique solution is $(4, 0)$.
+
+\vspace{0.3cm}
+\textbf{Flawed Problem 5:} Solve the linear system from the reduced matrix.
+\[
+\begin{bmatrix}
+1 & 0 & -2 \\
+0 & 1 & 5
+\end{bmatrix}
+\]
+\textit{Flawed Solution:}
+The matrix is completely reduced. We can read the equations directly.
+$R_1$ translates to $x_1 - 2 = 0 \Rightarrow x_1 = 2$.
+$R_2$ translates to $x_2 + 5 = 0 \Rightarrow x_2 = -5$.
+Final Answer: $(2, -5)$.
+
+\end{document}

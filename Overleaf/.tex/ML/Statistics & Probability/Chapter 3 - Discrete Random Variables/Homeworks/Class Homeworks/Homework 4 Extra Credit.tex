@@ -1,0 +1,64 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+\begin{center}
+\textbf{\Large Homework 4} \\
+Tashfeen Hatim Said Omran \\
+UCF ID: 5862894 \\
+Class: STA4321 \\
+October 6, 2026
+\end{center}
+
+\textbf{Problem 3.64*} \\
+I want to maximize the probability $P(Y = y_0) = \binom{n}{y_0} p^{y_0} (1-p)^{n-y_0}$ with respect to $p$. I take the natural logarithm of the probability function to make differentiation easier. Let $L(p) = \ln[P(Y = y_0)]$:
+\[ L(p) = \ln\left[\binom{n}{y_0}\right] + y_0 \ln(p) + (n - y_0) \ln(1 - p) \]
+I take the derivative of $L(p)$ with respect to $p$ and set it to zero to find the maximum:
+\[ \frac{d}{dp} L(p) = \frac{y_0}{p} - \frac{n - y_0}{1 - p} = 0 \]
+I solve for $p$:
+\begin{align*}
+\frac{y_0}{p} &= \frac{n - y_0}{1 - p} \\
+y_0(1 - p) &= p(n - y_0) \\
+y_0 - y_0p &= np - y_0p \\
+y_0 &= np \\
+p &= \frac{y_0}{n}
+\end{align*}
+Thus, the probability is maximized when $p = y_0/n$.
+
+\textbf{Problem 3.65*} \\
+I am given the estimator $Y/n$ for $p$, where $Y \sim \text{Binomial}(n, p)$.
+
+a) I derive $E(Y/n)$ using the properties of expected value and knowing $E(Y) = np$:
+\[ E(Y/n) = \frac{1}{n}E(Y) = \frac{1}{n}(np) = p \]
+
+b) I derive $V(Y/n)$ using the properties of variance and knowing $V(Y) = npq$:
+\[ V(Y/n) = \frac{1}{n^2}V(Y) = \frac{1}{n^2}(npq) = \frac{pq}{n} \]
+As $n$ gets large ($n \to \infty$), the variance $V(Y/n)$ approaches 0.
+
+\textbf{Extra Question: Prove $V(Y) = npq$ for $Y \sim B(n,p)$} \\
+I use the variance formula $V(Y) = E(Y^2) - [E(Y)]^2$. I know $E(Y) = np$.
+To find $E(Y^2)$, I first find $E[Y(Y-1)]$:
+\[ E[Y(Y-1)] = \sum_{y=0}^{n} y(y-1) \binom{n}{y} p^y q^{n-y} \]
+The terms for $y=0$ and $y=1$ are zero, so I start the sum at $y=2$:
+\[ E[Y(Y-1)] = \sum_{y=2}^{n} y(y-1) \frac{n!}{y!(n-y)!} p^y q^{n-y} = \sum_{y=2}^{n} \frac{n!}{(y-2)!(n-y)!} p^y q^{n-y} \]
+I factor out $n(n-1)p^2$ to match the form of a binomial expansion:
+\[ E[Y(Y-1)] = n(n-1)p^2 \sum_{y=2}^{n} \frac{(n-2)!}{(y-2)!(n-y)!} p^{y-2} q^{n-y} \]
+I let $k = y-2$, which means $n-y = n-2-k$. The sum becomes:
+\[ E[Y(Y-1)] = n(n-1)p^2 \sum_{k=0}^{n-2} \binom{n-2}{k} p^k q^{(n-2)-k} \]
+By the binomial theorem, the sum equals $(p+q)^{n-2}$. Since $p+q=1$, the sum is $1^{n-2} = 1$.
+\[ E[Y(Y-1)] = n(n-1)p^2 \]
+I know $E[Y(Y-1)] = E(Y^2 - Y) = E(Y^2) - E(Y)$. I solve for $E(Y^2)$:
+\[ E(Y^2) = E[Y(Y-1)] + E(Y) = n(n-1)p^2 + np = n^2p^2 - np^2 + np \]
+Finally, I substitute $E(Y^2)$ and $E(Y)$ into the variance formula:
+\begin{align*}
+V(Y) &= (n^2p^2 - np^2 + np) - (np)^2 \\
+&= n^2p^2 - np^2 + np - n^2p^2 \\
+&= np - np^2 \\
+&= np(1-p) \\
+&= npq
+\end{align*}
+
+\end{document}

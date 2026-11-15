@@ -1,0 +1,328 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, geometry, graphicx, hyperref, enumitem}
+\geometry{a4paper, margin=1in}
+
+\title{Homework 2.1: Matrix Operations}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection*{Core Concepts}
+Matrix algebra represents a leap from reasoning about single scalar values to reasoning about structured grids of numbers simultaneously. The core of this topic, \textbf{Matrix Operations}, introduces the fundamental arithmetic that allows us to manipulate these grids. 
+A matrix is a rectangular array of numbers arranged in rows and columns. If a matrix $A$ has $m$ rows and $n$ columns, it is referred to as an $m \times n$ matrix. The scalar entry in the $i$-th row and $j$-th column is denoted by $a_{ij}$.
+In this topic, we introduce new operators:
+\begin{itemize}
+    \item \textbf{Matrix Addition:} Two matrices of the \textit{exact same dimensions} can be added by adding their corresponding entries.
+    \item \textbf{Scalar Multiplication:} Multiplying an entire matrix by a single real number (a scalar), scaling every entry uniformly.
+    \item \textbf{Matrix Multiplication ($AB$):} A highly specific operation where the rows of the first matrix $A$ are multiplied by the columns of the second matrix $B$ (the dot product of the row and column vectors).
+    \item \textbf{The Transpose ($A^T$):} An operation that flips a matrix over its main diagonal, effectively swapping its rows and columns.
+\end{itemize}
+
+\subsection*{Intuition and Derivation}
+The most counter-intuitive operation for beginners is matrix multiplication. Why do we multiply rows by columns instead of just multiplying corresponding entries? 
+The derivation stems from the concept of \textit{composite functions} or \textit{transformations}. If you have a linear mapping that transforms a vector $x$ into a new vector $y$ via $y = Bx$, and another mapping that transforms $y$ into $z$ via $z = Ay$, we want to find a single matrix that takes $x$ directly to $z$. By substituting the first equation into the second, $z = A(Bx)$. When we algebraically group the coefficients of $x$, the resulting structure exactly matches the row-column definition of matrix multiplication. Hence, $(AB)x = A(Bx)$. Matrix multiplication is derived entirely to represent the \textit{composition of linear transformations}.
+
+\subsection*{Historical Context and Motivation}
+In the mid-19th century, mathematicians like Arthur Cayley and James Joseph Sylvester were heavily studying systems of linear equations and linear transformations. They constantly found themselves writing out cumbersome blocks of algebraic equations to track how variables transformed when changing coordinate systems. Cayley introduced matrix algebra in 1858 to abstract away the variables and operate purely on the coefficients. The motivation was purely pragmatic: they needed an algebraic shorthand to handle multidimensional linear systems, which ultimately birthed linear algebra as an independent mathematical discipline.
+
+\subsection*{Key Formulas}
+\begin{itemize}
+    \item \textbf{Row-Column Rule for Matrix Multiplication:} The entry in the $i$-th row and $j$-th column of $AB$ is given by:
+    \[ (AB)_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \dots + a_{in}b_{nj} = \sum_{k=1}^{n} a_{ik}b_{kj} \]
+    \item \textbf{Transpose of a Product:} The transpose of a matrix product is the product of their transposes in the \textit{reverse} order:
+    \[ (AB)^T = B^T A^T \]
+    \item \textbf{Inner vs. Outer Product:} For column vectors $u$ and $v$ in $\mathbb{R}^n$:
+    \begin{itemize}
+        \item Inner (Dot) Product (Scalar): $u^T v$
+        \item Outer Product (Matrix): $uv^T$
+    \end{itemize}
+\end{itemize}
+
+\subsection*{Prerequisites}
+To master matrix operations, you must have a firm grasp on:
+1. \textbf{Real Number Arithmetic:} Fluidity with signed fractions, distribution, and factoring.
+2. \textbf{Vectors and Linear Combinations:} Understanding what a vector is, and how to scale and add vectors.
+3. \textbf{Dot Products:} The geometric and algebraic intuition behind taking the sum of the products of corresponding entries of two sequences of numbers.
+
+\newpage
+\section*{Part 2: Detailed Homework Solutions}
+
+\textit{Note: As requested, the following represents a strategic selection of problems representing every primary archetype found at the end of Chapter 2, Section 2.1. This covers basic arithmetic, algebraic matrix proofs, abstract construction, and vector products.}
+
+\subsection*{Problem 1 (Arithmetic of Matrices)}
+\textbf{Given:} 
+$A = \begin{bmatrix} 2 & 0 & -1 \\ 4 & -3 & 2 \end{bmatrix}$, 
+$B = \begin{bmatrix} 7 & -5 & 1 \\ 1 & -4 & -3 \end{bmatrix}$, 
+$C = \begin{bmatrix} 1 & 2 \\ -2 & 1 \end{bmatrix}$, 
+$D = \begin{bmatrix} 3 & 5 \\ -1 & 4 \end{bmatrix}$. \\
+\textbf{Task:} Compute $-2A, B - 2A, AC,$ and $CD$ if defined.
+
+\textbf{Solution:}
+\textbf{Step 1: Compute $-2A$}
+To compute a scalar multiple, multiply every entry in $A$ by $-2$:
+\[ -2A = -2 \begin{bmatrix} 2 & 0 & -1 \\ 4 & -3 & 2 \end{bmatrix} = \begin{bmatrix} -2(2) & -2(0) & -2(-1) \\ -2(4) & -2(-3) & -2(2) \end{bmatrix} = \begin{bmatrix} -4 & 0 & 2 \\ -8 & 6 & -4 \end{bmatrix} \]
+
+\textbf{Step 2: Compute $B - 2A$}
+Matrix addition/subtraction requires both matrices to have the exact same dimensions. Both $B$ and $2A$ are $2 \times 3$, so it is defined. We subtract the corresponding entries. Since we already computed $-2A$, we can just add $B$ and $(-2A)$:
+\[ B - 2A = \begin{bmatrix} 7 & -5 & 1 \\ 1 & -4 & -3 \end{bmatrix} + \begin{bmatrix} -4 & 0 & 2 \\ -8 & 6 & -4 \end{bmatrix} = \begin{bmatrix} 7-4 & -5+0 & 1+2 \\ 1-8 & -4+6 & -3-4 \end{bmatrix} = \begin{bmatrix} 3 & -5 & 3 \\ -7 & 2 & -7 \end{bmatrix} \]
+
+\textbf{Step 3: Compute $AC$}
+For a matrix product $AC$ to be defined, the number of columns in $A$ must equal the number of rows in $C$.
+The dimension of $A$ is $2 \times 3$ (3 columns).
+The dimension of $C$ is $2 \times 2$ (2 rows).
+Since $3 \neq 2$, the product \textbf{$AC$ is Undefined}.
+
+\textbf{Step 4: Compute $CD$}
+Both $C$ and $D$ are $2 \times 2$ matrices, so the product is defined and will yield a $2 \times 2$ matrix. We use the row-column rule:
+\[ CD = \begin{bmatrix} 1 & 2 \\ -2 & 1 \end{bmatrix} \begin{bmatrix} 3 & 5 \\ -1 & 4 \end{bmatrix} \]
+\[ = \begin{bmatrix} (1)(3) + (2)(-1) & (1)(5) + (2)(4) \\ (-2)(3) + (1)(-1) & (-2)(5) + (1)(4) \end{bmatrix} \]
+\[ = \begin{bmatrix} 3 - 2 & 5 + 8 \\ -6 - 1 & -10 + 4 \end{bmatrix} = \begin{bmatrix} 1 & 13 \\ -7 & -6 \end{bmatrix} \]
+
+\textbf{Final Answers:} 
+$-2A = \begin{bmatrix} -4 & 0 & 2 \\ -8 & 6 & -4 \end{bmatrix}$, 
+$B-2A = \begin{bmatrix} 3 & -5 & 3 \\ -7 & 2 & -7 \end{bmatrix}$, 
+$AC$ is Undefined, 
+$CD = \begin{bmatrix} 1 & 13 \\ -7 & -6 \end{bmatrix}$.
+
+\vspace{1em}
+\subsection*{Problem 9 (Commutativity via Parameterization)}
+\textbf{Given:} Let $A = \begin{bmatrix} 3 & -6 \\ -1 & 2 \end{bmatrix}$ and $B = \begin{bmatrix} -1 & 1 \\ 3 & 4 \end{bmatrix}$ (Note: Utilizing the structural variation from similar matrix texts to solve a commutativity problem with parameters). Let's use the parameterized version to fulfill the "solve for $k$" problem type referenced in Exercise 9: 
+Let $A = \begin{bmatrix} 3 & 4 \\ -2 & 1 \end{bmatrix}$ and $B = \begin{bmatrix} 5 & -6 \\ 3 & k \end{bmatrix}$. 
+\textbf{Task:} What value(s) of $k$, if any, will make $AB = BA$?
+
+\textbf{Solution:}
+\textbf{Step 1: Compute the product $AB$}
+\[ AB = \begin{bmatrix} 3 & 4 \\ -2 & 1 \end{bmatrix} \begin{bmatrix} 5 & -6 \\ 3 & k \end{bmatrix} = \begin{bmatrix} 3(5)+4(3) & 3(-6)+4(k) \\ -2(5)+1(3) & -2(-6)+1(k) \end{bmatrix} \]
+\[ AB = \begin{bmatrix} 15+12 & -18+4k \\ -10+3 & 12+k \end{bmatrix} = \begin{bmatrix} 27 & 4k-18 \\ -7 & k+12 \end{bmatrix} \]
+
+\textbf{Step 2: Compute the product $BA$}
+\[ BA = \begin{bmatrix} 5 & -6 \\ 3 & k \end{bmatrix} \begin{bmatrix} 3 & 4 \\ -2 & 1 \end{bmatrix} = \begin{bmatrix} 5(3)+(-6)(-2) & 5(4)+(-6)(1) \\ 3(3)+k(-2) & 3(4)+k(1) \end{bmatrix} \]
+\[ BA = \begin{bmatrix} 15+12 & 20-6 \\ 9-2k & 12+k \end{bmatrix} = \begin{bmatrix} 27 & 14 \\ 9-2k & k+12 \end{bmatrix} \]
+
+\textbf{Step 3: Equate $AB$ and $BA$ and solve for $k$}
+For $AB = BA$ to be true, every corresponding entry must be identical:
+1) $27 = 27$ (True)
+2) $4k - 18 = 14$
+3) $-7 = 9 - 2k$
+4) $k + 12 = k + 12$ (True for all $k$)
+
+We solve equation (2):
+\[ 4k - 18 = 14 \implies 4k = 32 \implies k = 8 \]
+We verify with equation (3):
+\[ -7 = 9 - 2k \implies 2k = 16 \implies k = 8 \]
+Since both equations yield the same value of $k$, a solution exists.
+
+\textbf{Final Answer:} $k = 8$.
+
+\vspace{1em}
+\subsection*{Problem 12 (Constructing a Matrix for a Zero Product)}
+\textbf{Given:} $A = \begin{bmatrix} 2 & -8 \\ -1 & 4 \end{bmatrix}$. 
+\textbf{Task:} Construct a $2 \times 2$ matrix $B$ such that $AB$ is the zero matrix. Use two different nonzero columns for $B$.
+
+\textbf{Solution:}
+\textbf{Step 1: Setup the matrix equation}
+Let $B = \begin{bmatrix} b_1 & b_2 \end{bmatrix}$ where $b_1$ and $b_2$ are the column vectors of $B$. By the definition of matrix multiplication, $AB = A\begin{bmatrix} b_1 & b_2 \end{bmatrix} = \begin{bmatrix} Ab_1 & Ab_2 \end{bmatrix}$.
+We require $AB = \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix}$. This means we need to solve the homogeneous system $Ax = 0$ to find valid columns.
+
+\textbf{Step 2: Solve $Ax = 0$}
+\[ \begin{bmatrix} 2 & -8 \\ -1 & 4 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \]
+This yields the system of linear equations:
+1) $2x_1 - 8x_2 = 0 \implies x_1 = 4x_2$
+2) $-x_1 + 4x_2 = 0 \implies x_1 = 4x_2$
+Both rows give the exact same constraint, meaning there are infinitely many solutions. We can choose any nonzero $x_2$ to generate a valid column.
+
+\textbf{Step 3: Choose two different nonzero columns}
+For column 1 ($b_1$), let $x_2 = 1$. Then $x_1 = 4(1) = 4$. So $b_1 = \begin{bmatrix} 4 \\ 1 \end{bmatrix}$.
+For column 2 ($b_2$), let $x_2 = 2$. Then $x_1 = 4(2) = 8$. So $b_2 = \begin{bmatrix} 8 \\ 2 \end{bmatrix}$.
+
+\textbf{Step 4: Construct matrix $B$ and verify}
+$B = \begin{bmatrix} 4 & 8 \\ 1 & 2 \end{bmatrix}$.
+Verification:
+\[ AB = \begin{bmatrix} 2 & -8 \\ -1 & 4 \end{bmatrix} \begin{bmatrix} 4 & 8 \\ 1 & 2 \end{bmatrix} = \begin{bmatrix} 2(4)-8(1) & 2(8)-8(2) \\ -1(4)+4(1) & -1(8)+4(2) \end{bmatrix} = \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix} \]
+
+\textbf{Final Answer:} $B = \begin{bmatrix} 4 & 8 \\ 1 & 2 \end{bmatrix}$ (Note: Other answers are possible as long as the entries of each column follow $b_{1j} = 4b_{2j}$).
+
+\vspace{1em}
+\subsection*{Problem 35 (Inner and Outer Products)}
+\textbf{Given:} $u = \begin{bmatrix} -2 \\ 3 \\ -4 \end{bmatrix}$ and $v = \begin{bmatrix} a \\ b \\ c \end{bmatrix}$.
+\textbf{Task:} Compute $u^T v, v^T u, uv^T$, and $vu^T$.
+
+\textbf{Solution:}
+\textbf{Step 1: Analyze Dimensions}
+$u$ is $3 \times 1$. Therefore, $u^T$ is $1 \times 3$.
+$v$ is $3 \times 1$. Therefore, $v^T$ is $1 \times 3$.
+$u^T v$ is $(1 \times 3) \times (3 \times 1) \rightarrow 1 \times 1$ (a scalar).
+$uv^T$ is $(3 \times 1) \times (1 \times 3) \rightarrow 3 \times 3$ (a matrix).
+
+\textbf{Step 2: Compute $u^T v$ (Inner Product)}
+\[ u^T v = \begin{bmatrix} -2 & 3 & -4 \end{bmatrix} \begin{bmatrix} a \\ b \\ c \end{bmatrix} = (-2)(a) + (3)(b) + (-4)(c) = -2a + 3b - 4c \]
+
+\textbf{Step 3: Compute $v^T u$ (Inner Product)}
+\[ v^T u = \begin{bmatrix} a & b & c \end{bmatrix} \begin{bmatrix} -2 \\ 3 \\ -4 \end{bmatrix} = (a)(-2) + (b)(3) + (c)(-4) = -2a + 3b - 4c \]
+(Note: For any vectors $u$ and $v$ in $\mathbb{R}^n$, the inner product is commutative, $u^T v = v^T u$).
+
+\textbf{Step 4: Compute $uv^T$ (Outer Product)}
+\[ uv^T = \begin{bmatrix} -2 \\ 3 \\ -4 \end{bmatrix} \begin{bmatrix} a & b & c \end{bmatrix} = \begin{bmatrix} (-2)(a) & (-2)(b) & (-2)(c) \\ (3)(a) & (3)(b) & (3)(c) \\ (-4)(a) & (-4)(b) & (-4)(c) \end{bmatrix} = \begin{bmatrix} -2a & -2b & -2c \\ 3a & 3b & 3c \\ -4a & -4b & -4c \end{bmatrix} \]
+
+\textbf{Step 5: Compute $vu^T$ (Outer Product)}
+\[ vu^T = \begin{bmatrix} a \\ b \\ c \end{bmatrix} \begin{bmatrix} -2 & 3 & -4 \end{bmatrix} = \begin{bmatrix} (a)(-2) & (a)(3) & (a)(-4) \\ (b)(-2) & (b)(3) & (b)(-4) \\ (c)(-2) & (c)(3) & (c)(-4) \end{bmatrix} = \begin{bmatrix} -2a & 3a & -4a \\ -2b & 3b & -4b \\ -2c & 3c & -4c \end{bmatrix} \]
+
+\textbf{Final Answers:} 
+$u^T v = -2a + 3b - 4c$, \\
+$v^T u = -2a + 3b - 4c$, \\
+$uv^T = \begin{bmatrix} -2a & -2b & -2c \\ 3a & 3b & 3c \\ -4a & -4b & -4c \end{bmatrix}$, \\
+$vu^T = \begin{bmatrix} -2a & 3a & -4a \\ -2b & 3b & -4b \\ -2c & 3c & -4c \end{bmatrix}$.
+
+\newpage
+\section*{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection*{A) Problem Types and General Approach}
+Based on the homework selection, we can categorize Matrix Operation problems into four main archetypes:
+
+1. \textbf{Mechanical Arithmetic (Problem 1):} 
+   \textit{General Approach:} These are basic computational problems. Always check the dimensions first. If adding/subtracting, dimensions must be identical. If multiplying, the inner dimensions must match (e.g., $(m \times \mathbf{p})$ and $(\mathbf{p} \times n)$). Then, methodically apply the formulas.
+   
+2. \textbf{Parameterized Commutativity (Problem 9):}
+   \textit{General Approach:} Since $AB \neq BA$ generally, these problems force equality to find an unknown variable. The strategy is to completely expand both products symbolically, set them equal to each other, and create a system of equations by equating corresponding entries element-by-element.
+
+3. \textbf{Null Space / Zero Divisor Construction (Problem 12):}
+   \textit{General Approach:} These problems ask you to find $B \neq 0$ such that $AB = 0$. This tests the concept that matrices do not obey the zero-product property of standard real numbers. The strategy is to treat the columns of $B$ as independent vectors $x$ and solve the homogeneous system $Ax = 0$.
+
+4. \textbf{Vector Products / Dimensionality Traps (Problem 35):}
+   \textit{General Approach:} These problems test the extreme ends of matrix multiplication: the inner product (resulting in a $1 \times 1$ scalar) and the outer product (resulting in a full $n \times n$ matrix). The strategy here is strict adherence to dimension tracking before performing any math.
+
+\subsection*{B) Key Algebraic and Calculus Manipulations}
+While linear algebra relies less on classical calculus manipulations (like derivatives), it relies heavily on specific algebraic strategies:
+\begin{itemize}
+    \item \textbf{Element-Wise Equating:} In Problem 9, we used the principle that two matrices are equal if and only if every single corresponding entry is identical. This allows us to break down one matrix equation into $m \times n$ independent scalar equations.
+    \item \textbf{Exploiting Linear Dependence:} In Problem 12, when setting up the system of equations $2x_1 - 8x_2 = 0$ and $-x_1 + 4x_2 = 0$, we recognized that one equation was simply a scalar multiple of the other (dependent). We manipulated this algebraically by assigning an arbitrary value to a "free variable" ($x_2$) to construct concrete nonzero column vectors.
+    \item \textbf{Dimensional Analysis:} Throughout all problems, noting the $m \times n$ sizes is the algebraic equivalent of unit tracking in physics. It dictates whether an operation is legal and what shape the answer will take (crucial in Problem 35 to prevent confusing inner and outer products).
+\end{itemize}
+
+\section*{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection*{High-Value Formulas}
+\begin{itemize}
+    \item \textbf{Associative Law:} $A(BC) = (AB)C$ (You can regroup products).
+    \item \textbf{Distributive Law:} $A(B + C) = AB + AC$ (You can distribute across addition).
+    \item \textbf{Transpose Reversal:} $(AB)^T = B^T A^T$ (Critically important, order swaps!).
+    \item \textbf{Transpose of Transpose:} $(A^T)^T = A$.
+    \item \textbf{Transpose of Sum:} $(A + B)^T = A^T + B^T$.
+\end{itemize}
+
+\subsection*{Cheats and Shortcuts}
+\begin{itemize}
+    \item \textbf{The Size Check Cheat:} Whenever you write a matrix multiplication $AB$, write their sizes underneath: $A_{m \times p}$ and $B_{p \times n}$. Circle the inner numbers. If they match, cross them out; the remaining outer numbers ($m \times n$) give you the size of your final answer matrix. 
+    \item \textbf{Outer Product Rank:} The outer product of two nonzero vectors $uv^T$ will always produce a matrix whose columns are all just scalar multiples of $u$. 
+\end{itemize}
+
+\subsection*{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{Assuming Commutativity:} NEVER assume $AB = BA$. If you are expanding a quadratic matrix expression like $(A+B)^2$, it expands to $A^2 + AB + BA + B^2$. Do NOT simplify the middle terms to $2AB$.
+    \item \textbf{The Cancellation Trap:} In basic algebra, if $ab = ac$ and $a \neq 0$, then $b = c$. \textit{This is false in matrices.} If $AB = AC$, you \textbf{cannot} conclude that $B = C$ unless you know for a fact that matrix $A$ is invertible. 
+    \item \textbf{The Zero-Product Trap:} If $AB = 0$, it does not mean $A = 0$ or $B = 0$. (See Problem 12 for proof).
+\end{itemize}
+
+\section*{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection*{A) Thematic Connections}
+The central theme of this topic is \textbf{structure preservation and transformation}. Just as calculus allows us to aggregate an infinite number of infinitely small pieces (integration), matrix algebra provides a structured framework to aggregate and manipulate highly complex, multi-variable linear transformations simultaneously. When we study vectors in earlier math, we view them as static geometric arrows. Matrix operations introduce a dynamic aspect: matrices act as "verbs," transforming the state or coordinate system of a vector into another.
+
+\subsection*{B) Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Links:} This topic is the formalized, rigorous extension of solving standard systems of equations like $2x + 3y = 5$. We extract the coefficients, strip away the $x$ and $y$, and learn to operate purely on the structural data. 
+    \item \textbf{Forward Links:} Mastery of matrix multiplication is the absolute bedrock for Multivariable Calculus. When you move to multivariable environments, the concept of a "derivative" becomes a matrix (the \textit{Jacobian matrix}), and the Chain Rule in calculus literally becomes matrix multiplication of Jacobians. Furthermore, understanding matrix products is required for Eigenvalues, Markov Chains, and differential equations.
+\end{itemize}
+
+\section*{Part 6: Real-World Application and Modeling}
+
+\subsection*{A) Concrete Scenarios in Financial Modeling}
+1. \textbf{Modern Portfolio Theory (Variance / Risk Calculation):} In finance, the risk of an investment portfolio is measured by its variance. A quantitative analyst will use a weights vector $w$ (percentage of money in each stock) and a covariance matrix $\Sigma$ (how much each asset's returns move with every other asset). The portfolio variance is calculated using the matrix operation $w^T \Sigma w$. Matrix multiplication is strictly required to rapidly calculate risk for thousands of assets.
+2. \textbf{Stochastic Calculus and Derivative Pricing:} When pricing complex exotic options, financial engineers cannot always use simple formulas like Black-Scholes. They must use numerical methods (like the Finite Difference Method) to approximate the partial differential equations (PDEs). This transforms continuous calculus equations into massive, discrete matrix equations $Au = b$, where $A$ is a tridiagonal matrix representing the grid of time and asset prices.
+3. \textbf{Markov Chains for Credit Rating Migration:} Corporate bonds are rated (AAA, AA, B, etc.). These ratings migrate over time stochastically. By placing the transition probabilities into a matrix $P$, analysts can predict the probability of a bond defaulting over $n$ years simply by calculating the matrix power $P^n$.
+
+\subsection*{B) Model Problem Setup (Portfolio Variance)}
+\textbf{The Scenario:} A hedge fund manager wants to calculate the exact variance (risk) of a portfolio consisting of three assets: Apple, Treasury Bonds, and Gold. 
+\textbf{The Setup:}
+\begin{itemize}
+    \item Define $w = \begin{bmatrix} w_1 \\ w_2 \\ w_3 \end{bmatrix}$ as the weight vector, where $w_1$ is the capital allocated to Apple, $w_2$ to Bonds, $w_3$ to Gold (such that $w_1 + w_2 + w_3 = 1$).
+    \item Define $\Sigma$ as the $3 \times 3$ covariance matrix, where the diagonal entry $\sigma_{ii}$ is the variance of asset $i$, and the off-diagonal entry $\sigma_{ij}$ is the covariance between asset $i$ and asset $j$.
+    \item \textbf{The Model Equation:} The manager must solve the matrix equation to find the Portfolio Variance $\sigma_p^2$: 
+    \[ \sigma_p^2 = w^T \Sigma w = \begin{bmatrix} w_1 & w_2 & w_3 \end{bmatrix} \begin{bmatrix} \sigma_{11} & \sigma_{12} & \sigma_{13} \\ \sigma_{21} & \sigma_{22} & \sigma_{23} \\ \sigma_{31} & \sigma_{32} & \sigma_{33} \end{bmatrix} \begin{bmatrix} w_1 \\ w_2 \\ w_3 \end{bmatrix} \]
+    Calculating this product evaluates the total correlated risk of the entire portfolio instantly.
+\end{itemize}
+
+\section*{Part 7: Common Variations and Untested Concepts}
+
+A vital concept in matrix operations often taught alongside the foundational rules, but missing from the specific homework selection provided, is the \textbf{Trace of a Matrix}.
+
+\subsection*{Concept: The Trace Operator}
+The trace of an $n \times n$ square matrix $A$, denoted as $\text{tr}(A)$, is simply the sum of the entries on its main diagonal. 
+\[ \text{tr}(A) = a_{11} + a_{22} + \dots + a_{nn} \]
+A fascinating and highly tested property of the trace operator is that the trace of a product is commutative, even though the matrices themselves are not! That is, $\text{tr}(AB) = \text{tr}(BA)$, regardless of whether $AB = BA$.
+
+\textbf{Worked Example:}
+Let $A = \begin{bmatrix} 1 & 2 \\ 3 & 4 \end{bmatrix}$ and $B = \begin{bmatrix} -1 & 5 \\ 0 & 2 \end{bmatrix}$. Verify that $\text{tr}(AB) = \text{tr}(BA)$.
+\textit{Step 1: Compute $AB$}
+\[ AB = \begin{bmatrix} 1(-1)+2(0) & 1(5)+2(2) \\ 3(-1)+4(0) & 3(5)+4(2) \end{bmatrix} = \begin{bmatrix} -1 & 9 \\ -3 & 23 \end{bmatrix} \]
+\textit{Step 2: Compute $\text{tr}(AB)$}
+\[ \text{tr}(AB) = -1 + 23 = 22 \]
+\textit{Step 3: Compute $BA$}
+\[ BA = \begin{bmatrix} -1(1)+5(3) & -1(2)+5(4) \\ 0(1)+2(3) & 0(2)+2(4) \end{bmatrix} = \begin{bmatrix} 14 & 18 \\ 6 & 8 \end{bmatrix} \]
+\textit{Step 4: Compute $\text{tr}(BA)$}
+\[ \text{tr}(BA) = 14 + 8 = 22 \]
+Since $22 = 22$, the property holds. This is used heavily in advanced proofs in quantum mechanics and statistics.
+
+\newpage
+\section*{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five problems containing subtle errors. Your task is to act as the grader, identify the flaw in reasoning, state why it is incorrect, and provide the proper solution.
+
+\subsection*{Problem 1: Matrix Expansion}
+\textbf{Prompt:} Let $A$ and $B$ be $n \times n$ matrices. Expand the expression $(A-B)(A+B)$. \\
+\textbf{Flawed Solution:} 
+\[ (A-B)(A+B) = A(A) + A(B) - B(A) - B(B) \]
+\[ = A^2 + AB - AB - B^2 \]
+\[ = A^2 - B^2 \]
+\textbf{Find the Flaw:} The flaw is in the second step where $-B(A)$ is treated as $-AB$, leading them to cancel out. In matrix algebra, multiplication is not commutative ($AB \neq BA$), so $AB$ and $BA$ are distinct terms. \\
+\textbf{Correct Solution:}
+\[ (A-B)(A+B) = A(A) + A(B) - B(A) - B(B) = A^2 + AB - BA - B^2 \]
+
+\subsection*{Problem 2: Transpose of a Product}
+\textbf{Prompt:} Let $A$ be a $2 \times 3$ matrix and $B$ be a $3 \times 4$ matrix. State the dimensions of $(AB)^T$ and provide its equivalent expansion. \\
+\textbf{Flawed Solution:} 
+The product $AB$ is a $2 \times 4$ matrix. Therefore, the transpose $(AB)^T$ is a $4 \times 2$ matrix. By the properties of transposes, $(AB)^T = A^T B^T$. \\
+\textbf{Find the Flaw:} The formula for the transpose of a product is incorrect; it was applied without reversing the order of the matrices, which would result in multiplying a $3 \times 2$ by a $4 \times 3$, causing a dimension mismatch. \\
+\textbf{Correct Solution:}
+The correct property is $(AB)^T = B^T A^T$. $B^T$ is $4 \times 3$ and $A^T$ is $3 \times 2$, which legally multiplies to form a $4 \times 2$ matrix.
+
+\subsection*{Problem 3: The Zero Vector Property}
+\textbf{Prompt:} Solve for $X$ in the equation $AX = 0$, where $A = \begin{bmatrix} 1 & -2 \\ -2 & 4 \end{bmatrix}$, and $X = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix}$. \\
+\textbf{Flawed Solution:} 
+Since $AX = 0$, by the zero-product property, either $A = 0$ or $X = 0$. We can clearly see that $A \neq 0$. Therefore, the only unique solution is $X = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$. \\
+\textbf{Find the Flaw:} The zero-product property does not hold for matrices if the matrix $A$ is not invertible; non-zero matrices can multiply to equal the zero matrix. \\
+\textbf{Correct Solution:}
+We must solve the system: $x_1 - 2x_2 = 0 \implies x_1 = 2x_2$. Let $x_2$ be any scalar $c$. Then $X = c \begin{bmatrix} 2 \\ 1 \end{bmatrix}$. There are infinitely many solutions.
+
+\subsection*{Problem 4: Outer Product Output Type}
+\textbf{Prompt:} Let $x = \begin{bmatrix} 1 \\ 4 \end{bmatrix}$. Compute $xx^T$. \\
+\textbf{Flawed Solution:} 
+\[ xx^T = \begin{bmatrix} 1 \\ 4 \end{bmatrix} \begin{bmatrix} 1 & 4 \end{bmatrix} = (1)(1) + (4)(4) = 1 + 16 = 17 \]
+\textbf{Find the Flaw:} The computation performed was the inner product ($x^T x$), which yields a scalar, instead of the outer product ($xx^T$), which must yield an $n \times n$ matrix. \\
+\textbf{Correct Solution:}
+\[ xx^T = \begin{bmatrix} 1 \\ 4 \end{bmatrix} \begin{bmatrix} 1 & 4 \end{bmatrix} = \begin{bmatrix} (1)(1) & (1)(4) \\ (4)(1) & (4)(4) \end{bmatrix} = \begin{bmatrix} 1 & 4 \\ 4 & 16 \end{bmatrix} \]
+
+\subsection*{Problem 5: Associativity and Sizes}
+\textbf{Prompt:} Let $A$ be a $3 \times 5$ matrix and $B$ be a $5 \times 3$ matrix. Are the resulting matrices $AB$ and $BA$ the exact same size? \\
+\textbf{Flawed Solution:} 
+Yes. Matrix multiplication is an associative property. Regardless of the order we evaluate them, $A$ and $B$ have matching dimensions for multiplication in both directions, so the resulting block of data maintains the same overall footprint. \\
+\textbf{Find the Flaw:} The justification confuses the property of associativity with the dimensional output of the row-column rule, failing to check the outer dimensions of the operations. \\
+\textbf{Correct Solution:}
+No. For $AB$, the dimensions are $(3 \times 5) \times (5 \times 3)$, resulting in a $3 \times 3$ matrix. For $BA$, the dimensions are $(5 \times 3) \times (3 \times 5)$, resulting in a much larger $5 \times 5$ matrix.
+
+\end{document}

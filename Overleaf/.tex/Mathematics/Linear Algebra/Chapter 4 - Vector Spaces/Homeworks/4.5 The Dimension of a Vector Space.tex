@@ -1,0 +1,363 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{amsthm}
+\usepackage{bm}
+\geometry{letterpaper, margin=1in}
+
+\title{Homework 4: The Dimension of a Vector Space}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+In linear algebra, a vector space is a collection of objects (vectors) that can be scaled and added together. While a vector space can contain an infinite number of vectors, we can often describe the entire space using a small, finite set of vectors called a \textbf{basis}. 
+
+The \textbf{dimension} of a nonzero vector space $V$, denoted as $\dim V$, is strictly defined as the number of vectors in a basis for $V$. The dimension of the zero vector space $\{\mathbf{0}\}$ is defined to be zero. If a vector space is spanned by a finite set, it is \textbf{finite-dimensional}; otherwise, it is \textbf{infinite-dimensional} (such as the space of all continuous functions or all polynomials).
+
+Three fundamental subspaces are associated with any $m \times n$ matrix $A$:
+\begin{itemize}
+    \item \textbf{Column Space ($\text{Col } A$):} The subspace spanned by the columns of $A$. Its dimension is called the \textbf{rank} of $A$.
+    \item \textbf{Null Space ($\text{Nul } A$):} The set of all solutions to the homogeneous equation $A\mathbf{x} = \mathbf{0}$. Its dimension is called the \textbf{nullity} of $A$.
+    \item \textbf{Row Space ($\text{Row } A$):} The subspace spanned by the rows of $A$. Remarkably, $\dim(\text{Row } A) = \dim(\text{Col } A) = \text{rank } A$.
+\end{itemize}
+
+\subsection{Intuition and Derivation}
+Why is "dimension" a well-defined concept? What if one basis for a vector space has 3 vectors, and another basis has 4? \textbf{Theorem 10} guarantees this is impossible: \textit{If a vector space $V$ has a basis of $n$ vectors, then every basis of $V$ must consist of exactly $n$ vectors.} 
+
+The intuition stems from the concept of "degrees of freedom." The dimension represents the exact minimum number of independent parameters required to uniquely identify any point in that space. If you have fewer vectors than the dimension, you cannot span the space. If you have more, they must be linearly dependent (redundant).
+
+\subsection{Historical Context and Motivation}
+The formalization of vector spaces and dimensions occurred in the late 19th and early 20th centuries, heavily driven by Hermann Grassmann and Giuseppe Peano. Mathematicians were trying to generalize Euclidean geometry ($\mathbb{R}^2$ and $\mathbb{R}^3$) to higher, abstract dimensions ($\mathbb{R}^n$) to solve massive systems of linear equations arising in physics and differential equations. The concept of dimension allowed mathematicians to classify spaces and understand the exact size of solution sets without needing to visualize them geometrically.
+
+\subsection{Key Formulas and Theorems}
+\begin{itemize}
+    \item \textbf{The Rank Theorem:} For any $m \times n$ matrix $A$, 
+    \[ \text{rank } A + \text{nullity } A = n \]
+    (where $n$ is the number of columns).
+    \item \textbf{Basis Theorem:} In a $p$-dimensional vector space, any linearly independent set of exactly $p$ elements is automatically a basis. Similarly, any set of exactly $p$ elements that spans the space is automatically a basis.
+    \item \textbf{Matrix Dimensions:} 
+    \[ \dim(\text{Col } A) = \text{number of pivot columns} \]
+    \[ \dim(\text{Nul } A) = \text{number of free variables} \]
+\end{itemize}
+
+\subsection{Prerequisites}
+To master this chapter, you must be completely fluent in:
+\begin{itemize}
+    \item \textbf{Row Reduction (Gaussian Elimination):} Finding the echelon and reduced echelon forms of a matrix.
+    \item \textbf{Linear Independence and Span:} Knowing how to set up the equation $c_1\mathbf{v}_1 + \dots + c_k\mathbf{v}_k = \mathbf{0}$.
+    \item \textbf{Parametric Vector Form:} Extracting the basis of a null space from a system of equations.
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+\textit{Note: A strategic selection of 10 problems has been chosen to cover every distinct problem archetype in Sections 4.5 and 4.6, ensuring complete conceptual mastery without redundant repetition.}
+
+\subsection{Type 1: Basis and Dimension of a Parametric Subspace}
+
+\textbf{Exercise 1:} Find a basis and state the dimension for the subspace:
+\[ \left\{ \begin{bmatrix} s - 2t \\ s + t \\ 3t \end{bmatrix} : s, t \in \mathbb{R} \right\} \]
+
+\textbf{Solution:}
+First, we decompose the generic vector into a linear combination of vectors with the parameters $s$ and $t$ as weights:
+\[ \begin{bmatrix} s - 2t \\ s + t \\ 3t \end{bmatrix} = \begin{bmatrix} s \\ s \\ 0 \end{bmatrix} + \begin{bmatrix} -2t \\ t \\ 3t \end{bmatrix} = s \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix} + t \begin{bmatrix} -2 \\ 1 \\ 3 \end{bmatrix} \]
+This shows that the subspace is spanned by the set $S = \{ \mathbf{v}_1, \mathbf{v}_2 \}$, where $\mathbf{v}_1 = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}$ and $\mathbf{v}_2 = \begin{bmatrix} -2 \\ 1 \\ 3 \end{bmatrix}$.
+To confirm this set is a basis, we must check for linear independence. Since neither vector is a scalar multiple of the other, they are linearly independent.
+\textbf{Final Answer:} 
+The basis is $\left\{ \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}, \begin{bmatrix} -2 \\ 1 \\ 3 \end{bmatrix} \right\}$. The dimension is $2$.
+
+\vspace{0.5cm}
+\textbf{Exercise 6:} Find a basis and state the dimension for the subspace:
+\[ \left\{ \begin{bmatrix} 3a + 6b - c \\ 6a - 2b - 2c \\ -9a + 5b + 3c \\ -3a + b + c \end{bmatrix} : a, b, c \in \mathbb{R} \right\} \]
+
+\textbf{Solution:}
+Decompose the vector into a linear combination of parameters $a, b, c$:
+\[ a \begin{bmatrix} 3 \\ 6 \\ -9 \\ -3 \end{bmatrix} + b \begin{bmatrix} 6 \\ -2 \\ 5 \\ 1 \end{bmatrix} + c \begin{bmatrix} -1 \\ -2 \\ 3 \\ 1 \end{bmatrix} \]
+Let these vectors be $\mathbf{v}_1, \mathbf{v}_2, \mathbf{v}_3$. We form a matrix $A = [\mathbf{v}_1 \;\; \mathbf{v}_2 \;\; \mathbf{v}_3]$ and row reduce to find the pivot columns, which will identify the linearly independent vectors in the original set.
+\[ A = \begin{bmatrix} 3 & 6 & -1 \\ 6 & -2 & -2 \\ -9 & 5 & 3 \\ -3 & 1 & 1 \end{bmatrix} \]
+Apply row operations: $R_2 \leftarrow R_2 - 2R_1$, $R_3 \leftarrow R_3 + 3R_1$, $R_4 \leftarrow R_4 + R_1$:
+\[ \sim \begin{bmatrix} 3 & 6 & -1 \\ 0 & -14 & 0 \\ 0 & 23 & 0 \\ 0 & 7 & 0 \end{bmatrix} \]
+We can see that columns 1 and 2 have pivots (the second column will have a pivot at $-14$, and the zeros below it can be cleared). Column 3 does not have a pivot. 
+\textit{Shortcut observation:} Notice that $\mathbf{v}_1 = -3\mathbf{v}_3$. Thus, $\mathbf{v}_3$ is redundant and can be discarded. $\mathbf{v}_1$ and $\mathbf{v}_2$ are not multiples of each other.
+\textbf{Final Answer:} 
+The basis is $\left\{ \begin{bmatrix} 3 \\ 6 \\ -9 \\ -3 \end{bmatrix}, \begin{bmatrix} 6 \\ -2 \\ 5 \\ 1 \end{bmatrix} \right\}$. The dimension is $2$.
+
+\subsection{Type 2: Dimension of a Subspace Spanned by Vectors}
+
+\textbf{Exercise 9:} Find the dimension of the subspace spanned by the given vectors:
+\[ \begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix}, \begin{bmatrix} 3 \\ 1 \\ 1 \end{bmatrix}, \begin{bmatrix} 9 \\ 4 \\ -2 \end{bmatrix}, \begin{bmatrix} -7 \\ -3 \\ 1 \end{bmatrix} \]
+
+\textbf{Solution:}
+The dimension of the subspace spanned by these vectors is exactly the rank of the matrix formed by using these vectors as columns.
+\[ A = \begin{bmatrix} 1 & 3 & 9 & -7 \\ 0 & 1 & 4 & -3 \\ 2 & 1 & -2 & 1 \end{bmatrix} \]
+Row reduce to echelon form. $R_3 \leftarrow R_3 - 2R_1$:
+\[ \sim \begin{bmatrix} 1 & 3 & 9 & -7 \\ 0 & 1 & 4 & -3 \\ 0 & -5 & -20 & 15 \end{bmatrix} \]
+$R_3 \leftarrow R_3 + 5R_2$:
+\[ \sim \begin{bmatrix} 1 & 3 & 9 & -7 \\ 0 & 1 & 4 & -3 \\ 0 & 0 & 0 & 0 \end{bmatrix} \]
+There are pivot positions in columns 1 and 2. The number of pivot columns is 2.
+\textbf{Final Answer:} The dimension of the subspace is $2$.
+
+\subsection{Type 3: Dimensions of Matrix Subspaces}
+
+\textbf{Exercise 11:} Determine the dimensions of $\text{Nul } A$, $\text{Col } A$, and $\text{Row } A$ for the matrix:
+\[ A = \begin{bmatrix} 1 & -6 & 9 & 0 & -2 \\ 0 & 1 & 2 & -4 & 5 \\ 0 & 0 & 0 & 5 & 1 \\ 0 & 0 & 0 & 0 & 0 \end{bmatrix} \]
+
+\textbf{Solution:}
+The matrix is already in echelon form. We identify the pivot positions: they are in row 1, column 1; row 2, column 2; and row 3, column 4.
+\begin{itemize}
+    \item Number of pivot columns = 3. Therefore, $\dim(\text{Col } A) = 3$.
+    \item By the Rank Theorem, $\dim(\text{Row } A) = \dim(\text{Col } A) = 3$.
+    \item The matrix has $n = 5$ columns. The number of free variables is $n - \text{rank} = 5 - 3 = 2$. Therefore, $\dim(\text{Nul } A) = 2$.
+\end{itemize}
+\textbf{Final Answer:} $\dim(\text{Nul } A) = 2$, $\dim(\text{Col } A) = 3$, $\dim(\text{Row } A) = 3$.
+
+\vspace{0.5cm}
+\textbf{Exercise 14:} Determine the dimensions of $\text{Nul } A$, $\text{Col } A$, and $\text{Row } A$ for the matrix:
+\[ A = \begin{bmatrix} 3 & 4 \\ -6 & 10 \end{bmatrix} \]
+
+\textbf{Solution:}
+Row reduce $A$ to find the number of pivots. $R_2 \leftarrow R_2 + 2R_1$:
+\[ \sim \begin{bmatrix} 3 & 4 \\ 0 & 18 \end{bmatrix} \]
+There are 2 pivot columns.
+\begin{itemize}
+    \item $\dim(\text{Col } A) = 2$.
+    \item $\dim(\text{Row } A) = 2$.
+    \item The matrix has $n = 2$ columns. $\dim(\text{Nul } A) = 2 - 2 = 0$.
+\end{itemize}
+\textbf{Final Answer:} $\dim(\text{Nul } A) = 0$, $\dim(\text{Col } A) = 2$, $\dim(\text{Row } A) = 2$.
+
+\subsection{Type 4: Applications of the Rank Theorem}
+
+\textbf{Exercise 33:} If a $4 \times 7$ matrix $A$ has rank 4, find $\text{nullity } A$, $\text{rank } A$, and $\text{rank } A^T$.
+
+\textbf{Solution:}
+\begin{itemize}
+    \item We are given $\text{rank } A = 4$.
+    \item The matrix $A$ has $n = 7$ columns. By the Rank Theorem, $\text{rank } A + \text{nullity } A = n$. Thus, $4 + \text{nullity } A = 7 \implies \text{nullity } A = 3$.
+    \item The rank of $A^T$ is the dimension of the column space of $A^T$, which is exactly the dimension of the row space of $A$. Since $\dim(\text{Row } A) = \dim(\text{Col } A) = \text{rank } A$, we have $\text{rank } A^T = 4$.
+\end{itemize}
+\textbf{Final Answer:} $\text{nullity } A = 3$, $\text{rank } A = 4$, $\text{rank } A^T = 4$.
+
+\vspace{0.5cm}
+\textbf{Exercise 37:} If the nullity of a $5 \times 6$ matrix $A$ is 4, what are the dimensions of the column and row spaces of $A$?
+
+\textbf{Solution:}
+The matrix $A$ has $n = 6$ columns.
+Using the Rank Theorem: $\dim(\text{Col } A) + \text{nullity } A = n$.
+\[ \dim(\text{Col } A) + 4 = 6 \implies \dim(\text{Col } A) = 2 \]
+Since the dimension of the row space always equals the dimension of the column space:
+\[ \dim(\text{Row } A) = 2 \]
+\textbf{Final Answer:} The dimension of the column space is $2$, and the dimension of the row space is $2$.
+
+\subsection{Type 5: Polynomial Spaces and Isomorphisms}
+
+\textbf{Exercise 27:} The first four Hermite polynomials are $1, 2t, -2+4t^2$, and $-12t+8t^3$. Show that these polynomials form a basis of $\mathbb{P}_3$.
+
+\textbf{Solution:}
+The standard basis for $\mathbb{P}_3$ (the space of polynomials of degree at most 3) is $\mathcal{E} = \{1, t, t^2, t^3\}$. The dimension of $\mathbb{P}_3$ is 4.
+We map each Hermite polynomial to its coordinate vector in $\mathbb{R}^4$ relative to $\mathcal{E}$:
+\[ \mathbf{p}_1 = 1 \implies [\mathbf{p}_1]_{\mathcal{E}} = \begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}, \quad \mathbf{p}_2 = 2t \implies [\mathbf{p}_2]_{\mathcal{E}} = \begin{bmatrix} 0 \\ 2 \\ 0 \\ 0 \end{bmatrix} \]
+\[ \mathbf{p}_3 = -2+4t^2 \implies [\mathbf{p}_3]_{\mathcal{E}} = \begin{bmatrix} -2 \\ 0 \\ 4 \\ 0 \end{bmatrix}, \quad \mathbf{p}_4 = -12t+8t^3 \implies [\mathbf{p}_4]_{\mathcal{E}} = \begin{bmatrix} 0 \\ -12 \\ 0 \\ 8 \end{bmatrix} \]
+Form a matrix with these coordinate vectors as columns:
+\[ M = \begin{bmatrix} 1 & 0 & -2 & 0 \\ 0 & 2 & 0 & -12 \\ 0 & 0 & 4 & 0 \\ 0 & 0 & 0 & 8 \end{bmatrix} \]
+This matrix is upper triangular, and its main diagonal entries ($1, 2, 4, 8$) are all non-zero. Therefore, it has 4 pivot positions. The columns are linearly independent and span $\mathbb{R}^4$. By the Basis Theorem, since there are exactly 4 linearly independent vectors in a 4-dimensional space, they form a basis. Because $\mathbb{P}_3$ is isomorphic to $\mathbb{R}^4$, the original polynomials form a basis for $\mathbb{P}_3$.
+
+\vspace{0.5cm}
+\textbf{Exercise 29:} Let $\mathcal{B}$ be the basis of $\mathbb{P}_3$ consisting of the Hermite polynomials in Exercise 27, and let $\mathbf{p}(t) = 7 - 12t - 8t^2 + 12t^3$. Find the coordinate vector of $\mathbf{p}$ relative to $\mathcal{B}$.
+
+\textbf{Solution:}
+We need to find scalars $c_1, c_2, c_3, c_4$ such that:
+\[ c_1(1) + c_2(2t) + c_3(-2+4t^2) + c_4(-12t+8t^3) = 7 - 12t - 8t^2 + 12t^3 \]
+Equating the coefficients of corresponding powers of $t$:
+\begin{align*}
+    t^3: \quad & 8c_4 = 12 \implies c_4 = \frac{12}{8} = \frac{3}{2} \\
+    t^2: \quad & 4c_3 = -8 \implies c_3 = -2 \\
+    t^1: \quad & 2c_2 - 12c_4 = -12 \implies 2c_2 - 12\left(\frac{3}{2}\right) = -12 \implies 2c_2 - 18 = -12 \implies 2c_2 = 6 \implies c_2 = 3 \\
+    t^0: \quad & c_1 - 2c_3 = 7 \implies c_1 - 2(-2) = 7 \implies c_1 + 4 = 7 \implies c_1 = 3
+\end{align*}
+\textbf{Final Answer:} The coordinate vector is $[\mathbf{p}]_{\mathcal{B}} = \begin{bmatrix} 3 \\ 3 \\ -2 \\ 3/2 \end{bmatrix}$.
+
+\subsection{Type 6: Conceptual True/False}
+
+\textbf{Exercise 19:} (T/F) A plane in $\mathbb{R}^3$ is a two-dimensional subspace of $\mathbb{R}^3$.
+
+\textbf{Solution:}
+\textbf{False.} A plane in $\mathbb{R}^3$ is a subspace \textit{if and only if} it passes through the origin (the zero vector). If it does not pass through the origin, it is not a vector space at all, and thus the term "subspace" does not apply.
+
+\vspace{0.5cm}
+\textbf{Exercise 24:} (T/F) The nullity of $A$ is the number of columns of $A$ that are not pivot columns.
+
+\textbf{Solution:}
+\textbf{True.} The columns of $A$ that are not pivot columns correspond exactly to the free variables in the equation $A\mathbf{x} = \mathbf{0}$. The number of free variables dictates the number of basis vectors for the null space, which is the definition of nullity.
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Parametric Subspace Problems (Ex 1, 6):} 
+    \textit{Strategy:} Factor out the parameters (like $s, t$ or $a, b, c$) to express the generic vector as a linear combination of specific numerical vectors. These numerical vectors span the subspace. To find the dimension, place them as columns in a matrix, row reduce, and count the pivots.
+    \item \textbf{Span Dimension Problems (Ex 9):} 
+    \textit{Strategy:} The dimension of $\text{Span}\{\mathbf{v}_1, \dots, \mathbf{v}_k\}$ is the rank of the matrix $A = [\mathbf{v}_1 \dots \mathbf{v}_k]$. Row reduce $A$ and count the pivot columns.
+    \item \textbf{Matrix Subspace Problems (Ex 11, 14):} 
+    \textit{Strategy:} Row reduce the matrix. $\dim(\text{Col } A) = \dim(\text{Row } A) = \text{number of pivots}$. $\dim(\text{Nul } A) = \text{number of non-pivot columns}$.
+    \item \textbf{Rank Theorem Problems (Ex 33, 37):} 
+    \textit{Strategy:} Use the algebraic relation $\text{rank } A + \text{nullity } A = n$. You will be given two of the three variables (or enough info to find them) and must solve for the third. Remember that $n$ is the number of \textit{columns}, not rows.
+    \item \textbf{Isomorphism / Polynomial Problems (Ex 27, 29):} 
+    \textit{Strategy:} Translate abstract vector spaces (like polynomials) into $\mathbb{R}^n$ using coordinate vectors relative to a standard basis. Solve the problem in $\mathbb{R}^n$ using standard matrix techniques, then translate the result back.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Row Reduction to Echelon Form:} The absolute workhorse of this chapter. You do not always need \textit{Reduced} Row Echelon Form (RREF); standard Echelon Form is sufficient to identify pivot locations (as seen in Ex 9 and 14).
+    \item \textbf{Equating Coefficients:} Used in Ex 29. When dealing with polynomials, two polynomials are equal if and only if their corresponding coefficients are equal. This transforms a single polynomial equation into a system of linear equations.
+    \item \textbf{The "Multiple" Shortcut:} In Ex 6, noticing that $\mathbf{v}_1 = -3\mathbf{v}_3$ immediately proved linear dependence, saving the time of a full row reduction. Always scan your vectors for obvious scalar multiples before doing heavy arithmetic.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Essential Formulas}
+\begin{itemize}
+    \item \textbf{Rank Theorem:} $\text{rank}(A) + \text{nullity}(A) = n$ (where $n$ is the number of columns).
+    \item \textbf{Row Space Equality:} $\dim(\text{Row } A) = \dim(\text{Col } A) = \text{rank}(A)$.
+    \item \textbf{Dimension of $\mathbb{R}^n$:} $n$.
+    \item \textbf{Dimension of $\mathbb{P}_n$:} $n + 1$ (because the basis is $\{1, t, t^2, \dots, t^n\}$).
+\end{itemize}
+
+\subsection{Cheats and Shortcuts}
+\begin{itemize}
+    \item \textbf{The Triangular Matrix Cheat:} If you form a matrix from vectors and it is upper or lower triangular with no zeros on the main diagonal (like in Ex 27), the vectors are automatically linearly independent. No row reduction needed!
+    \item \textbf{The Basis Theorem Shortcut:} If you know the dimension of a space is $p$, and you are given exactly $p$ vectors, you only need to check \textit{either} linear independence \textit{or} spanning. If one is true, the other is automatically true.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The RREF Column Trap:} When finding a basis for $\text{Col } A$, you \textit{must} use the pivot columns from the \textbf{original} matrix $A$, not the columns from the row-reduced matrix. Row operations change the column space!
+    \item \textbf{Confusing Rows and Columns in the Rank Theorem:} The Rank Theorem uses $n$ (the number of columns), not $m$ (the number of rows). Nullity is about the domain ($\mathbb{R}^n$), not the codomain.
+    \item \textbf{Assuming all planes/lines are subspaces:} A line or plane is only a subspace if it passes through the origin (contains the zero vector).
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The central theme of this topic is \textbf{information compression and degrees of freedom}. In mathematics, we often deal with massive datasets or infinite spaces. The concept of a "basis" and "dimension" tells us that we don't need infinite information to understand the space; we only need a precise, minimal set of building blocks. 
+
+This theme appears in calculus when we use Taylor Series: we approximate infinitely complex functions using a basis of simple polynomials $\{1, x, x^2, \dots\}$. It appears in differential equations when we find the "fundamental set of solutions"—which is exactly a basis for the null space of a differential operator!
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Links:} This chapter perfectly synthesizes everything learned in the first three chapters. It takes the mechanical processes of row reduction and solving $A\mathbf{x} = \mathbf{0}$ and gives them profound geometric meaning. A free variable is no longer just a parameter in an algebraic solution; it represents a geometric dimension of the null space.
+
+\textbf{Forward Links:} Understanding dimension is the absolute bedrock for the rest of linear algebra. 
+\begin{itemize}
+    \item \textbf{Eigenvalues and Eigenvectors:} You will soon find "eigenspaces." The dimension of an eigenspace tells you if a matrix can be diagonalized.
+    \item \textbf{Singular Value Decomposition (SVD):} The ultimate factorization of a matrix relies entirely on the dimensions of the four fundamental subspaces (Col A, Nul A, Row A, Nul $A^T$).
+    \item \textbf{Multivariable Calculus:} The dimension of a manifold dictates how we set up multiple integrals and calculate Jacobians.
+\end{itemize}
+
+\newpage
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+\begin{itemize}
+    \item \textbf{Machine Learning (Dimensionality Reduction):} In Generative AI and image processing, a single high-resolution image might have 1 million pixels (a vector in $\mathbb{R}^{1,000,000}$). However, the space of "human faces" does not occupy this entire million-dimensional space. It lies on a much lower-dimensional subspace. Techniques like Principal Component Analysis (PCA) find the basis for this lower-dimensional subspace, allowing AI to compress and generate images efficiently.
+    \item \textbf{Quantitative Finance (Arbitrage Pricing Theory):} In a market with 5,000 stocks, the daily returns form a vector in $\mathbb{R}^{5000}$. Quants use factor models to show that these 5,000 returns are actually driven by a small number of underlying macroeconomic factors (e.g., interest rates, inflation, market momentum). The dimension of the column space of the returns matrix reveals the true number of independent risk factors driving the market.
+\end{itemize}
+
+\subsection{B) Model Problem Setup: PCA and Low-Rank Approximation}
+Let us rigorously formulate the dimensionality reduction problem used in Statistical Learning Theory.
+
+Let $\mathbf{X} \in \mathbb{R}^{m \times n}$ be a centered data matrix, where $m$ is the number of features (e.g., pixels) and $n$ is the number of observations. The columns of $\mathbf{X}$ span a subspace in $\mathbb{R}^m$, and $\text{rank}(\mathbf{X}) = r \le \min(m, n)$.
+
+In reality, $r$ is very large, but the data is noisy. We hypothesize that the true signal lies in a subspace of dimension $k \ll r$. We seek a matrix $\mathbf{X}_k$ of rank $k$ that minimizes the Frobenius norm of the reconstruction error:
+\[ \min_{\text{rank}(\mathbf{X}_k) = k} \|\mathbf{X} - \mathbf{X}_k\|_F \]
+
+By the Eckart-Young-Mirsky Theorem, the solution is found via the Singular Value Decomposition (SVD). We decompose $\mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T$, where $\mathbf{U} \in \mathbb{R}^{m \times m}$ and $\mathbf{V} \in \mathbb{R}^{n \times n}$ are orthogonal matrices, and $\mathbf{\Sigma}$ contains the singular values $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r > 0$.
+
+The optimal rank-$k$ approximation is constructed by taking the first $k$ columns of $\mathbf{U}$ (which form an orthonormal basis for the $k$-dimensional subspace), the top $k \times k$ submatrix of $\mathbf{\Sigma}$, and the first $k$ rows of $\mathbf{V}^T$:
+\[ \mathbf{X}_k = \sum_{i=1}^k \sigma_i \mathbf{u}_i \mathbf{v}_i^T \]
+Here, the concept of "dimension" (rank $k$) directly controls the trade-off between information retention and computational complexity in training Machine Learning models.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{The Dimension of the Sum of Two Subspaces (Grassmann's Formula)}
+A critical concept often tested in advanced linear algebra, but missing from this specific homework set, is finding the dimension of the sum of two subspaces. 
+
+If $U$ and $W$ are subspaces of a finite-dimensional vector space $V$, their sum $U + W$ is also a subspace. The dimension is given by \textbf{Grassmann's Formula}:
+\[ \dim(U + W) = \dim(U) + \dim(W) - \dim(U \cap W) \]
+This is the linear algebra equivalent of the Principle of Inclusion-Exclusion in set theory ($|A \cup B| = |A| + |B| - |A \cap B|$).
+
+\textbf{Example Problem:} Let $U$ and $W$ be two distinct 2-dimensional planes in $\mathbb{R}^3$ that both pass through the origin. What is the dimension of their intersection, $U \cap W$?
+
+\textbf{Solution:}
+Since $U$ and $W$ are distinct planes, their sum $U + W$ must be larger than 2-dimensional. Since they are in $\mathbb{R}^3$, the maximum dimension of $U + W$ is 3. Thus, $\dim(U + W) = 3$.
+Using Grassmann's Formula:
+\[ 3 = 2 + 2 - \dim(U \cap W) \]
+\[ 3 = 4 - \dim(U \cap W) \implies \dim(U \cap W) = 1 \]
+This mathematically proves that two distinct planes in $\mathbb{R}^3$ passing through the origin must intersect in exactly a 1-dimensional line!
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+\textit{Below are 5 problems with complete solutions. Each solution contains a single, subtle, yet critical conceptual or algebraic flaw. Your task as the grader is to find the error, explain why it is wrong, and provide the correct solution.}
+
+\vspace{0.5cm}
+\textbf{Problem 1:} Find a basis for the column space of $A = \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix}$.
+\newline
+\textit{Flawed Solution:} We row reduce $A$. $R_2 \leftarrow R_2 - 2R_1$ gives the RREF matrix $\begin{bmatrix} 1 & 3 \\ 0 & 0 \end{bmatrix}$. The first column has a pivot. Therefore, the basis for $\text{Col } A$ is the first column of the RREF matrix: $\left\{ \begin{bmatrix} 1 \\ 0 \end{bmatrix} \right\}$.
+
+\vspace{0.5cm}
+\textbf{Problem 2:} A $4 \times 6$ matrix $A$ has a column space of dimension 3. Find the nullity of $A$.
+\newline
+\textit{Flawed Solution:} By the Rank Theorem, $\text{rank } A + \text{nullity } A = \text{number of rows}$. We are given $\text{rank } A = 3$ and the number of rows is 4. Therefore, $3 + \text{nullity } A = 4$, which means $\text{nullity } A = 1$.
+
+\vspace{0.5cm}
+\textbf{Problem 3:} Let $H = \text{Span}\left\{ \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}, \begin{bmatrix} 2 \\ 4 \\ 2 \end{bmatrix}, \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix} \right\}$. Find $\dim H$.
+\newline
+\textit{Flawed Solution:} The subspace $H$ is spanned by 3 vectors in $\mathbb{R}^3$. Since there are 3 vectors, they form a basis for $H$. Therefore, the dimension of $H$ is 3.
+
+\vspace{0.5cm}
+\textbf{Problem 4:} What is the dimension of $\mathbb{P}_4$, the vector space of all polynomials of degree at most 4?
+\newline
+\textit{Flawed Solution:} The space $\mathbb{P}_4$ consists of polynomials up to degree 4. The highest power of $t$ is 4, so the dimension of the space is 4.
+
+\vspace{0.5cm}
+\textbf{Problem 5:} Find the dimension of the null space of $A = \begin{bmatrix} 1 & 0 & 2 \\ 0 & 1 & 3 \\ 0 & 0 & 0 \end{bmatrix}$.
+\newline
+\textit{Flawed Solution:} The matrix is in RREF. The null space is determined by the rows of zeros. There is exactly 1 row of zeros in the matrix. Therefore, $\dim(\text{Nul } A) = 1$.
+
+\hrulefill
+
+\vspace{0.5cm}
+\textbf{Grader's Key (Correcting the Flaws):}
+
+\textbf{Correction 1:} 
+\textit{Error:} The student used the column from the RREF matrix instead of the original matrix. Row operations change the column space.
+\textit{Correct Solution:} The pivot is in the first column. We must take the first column of the \textit{original} matrix $A$. The correct basis is $\left\{ \begin{bmatrix} 1 \\ 2 \end{bmatrix} \right\}$.
+
+\textbf{Correction 2:} 
+\textit{Error:} The student used the number of rows ($m=4$) in the Rank Theorem instead of the number of columns ($n=6$).
+\textit{Correct Solution:} The Rank Theorem states $\text{rank } A + \text{nullity } A = n$. Thus, $3 + \text{nullity } A = 6 \implies \text{nullity } A = 3$.
+
+\textbf{Correction 3:} 
+\textit{Error:} The student assumed the vectors were linearly independent without checking. The second vector is exactly twice the first vector.
+\textit{Correct Solution:} Because $\mathbf{v}_2 = 2\mathbf{v}_1$, the set is linearly dependent. Discarding $\mathbf{v}_2$ leaves two linearly independent vectors. The correct dimension is 2.
+
+\textbf{Correction 4:} 
+\textit{Error:} The student forgot that polynomials include a constant term (degree 0).
+\textit{Correct Solution:} The standard basis for $\mathbb{P}_4$ is $\{1, t, t^2, t^3, t^4\}$. Counting these basis elements, there are 5. The correct dimension is 5.
+
+\textbf{Correction 5:} 
+\textit{Error:} The student confused the null space with the left null space or simply misapplied a rule. The dimension of the null space is the number of \textit{free variables} (non-pivot columns), not the number of zero rows.
+\textit{Correct Solution:} The matrix has 3 columns and 2 pivots. The number of free variables is $3 - 2 = 1$. While the numerical answer (1) happened to be the same by coincidence, the reasoning was entirely flawed. The dimension is 1 because there is 1 free variable (column 3).
+
+\end{document}

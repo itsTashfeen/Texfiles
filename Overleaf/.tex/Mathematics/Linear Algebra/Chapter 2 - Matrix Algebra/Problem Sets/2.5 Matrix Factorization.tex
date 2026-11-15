@@ -1,0 +1,469 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{Matrix Factorizations (LU Factorization) \\ \Large Comprehensive Problem Sets \& Solutions}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Concept Checklist \& Question Mapping}
+Based on the provided text, the following core concepts, problem types, and common pitfalls have been identified. The 30 problems in this document are mapped to these concepts to ensure comprehensive coverage.
+
+\begin{itemize}
+    \item \textbf{Concept 1: Solving $Ax = b$ via LU Factorization ($2 \times 2$)} 
+    \begin{itemize}
+        \item \textit{Description:} Using forward substitution ($Ly = b$) and backward substitution ($Ux = y$) for $2 \times 2$ matrices.
+        \item \textit{Relevant Questions:} 1, 2, 3
+    \end{itemize}
+    
+    \item \textbf{Concept 2: Solving $Ax = b$ via LU Factorization ($3 \times 3$)} 
+    \begin{itemize}
+        \item \textit{Description:} Using forward and backward substitution for $3 \times 3$ matrices.
+        \item \textit{Relevant Questions:} 4, 5, 6, 7
+    \end{itemize}
+    
+    \item \textbf{Concept 3: Constructing the LU Factorization ($2 \times 2$)} 
+    \begin{itemize}
+        \item \textit{Description:} Reducing $A$ to $U$ using row replacements and extracting multipliers into $L$.
+        \item \textit{Relevant Questions:} 8, 9, 10, 11
+    \end{itemize}
+    
+    \item \textbf{Concept 4: Constructing the LU Factorization ($3 \times 3$)} 
+    \begin{itemize}
+        \item \textit{Description:} Systematically eliminating entries below pivots column by column to build $L$ and $U$.
+        \item \textit{Relevant Questions:} 12, 13, 14, 15, 16
+    \end{itemize}
+    
+    \item \textbf{Concept 5: Theoretical Properties of Triangular Matrices} 
+    \begin{itemize}
+        \item \textit{Description:} Proofs involving determinants, inverses, and uniqueness of triangular matrices.
+        \item \textit{Relevant Questions:} 17, 18, 19, 20
+    \end{itemize}
+    
+    \item \textbf{Concept 6: $PA = LU$ Factorization (Partial Pivoting)} 
+    \begin{itemize}
+        \item \textit{Description:} Handling zero pivots by swapping rows using a permutation matrix $P$.
+        \item \textit{Relevant Questions:} 21, 22, 23
+    \end{itemize}
+    
+    \item \textbf{Concept 7: $LDU$ Factorization} 
+    \begin{itemize}
+        \item \textit{Description:} Factoring out the diagonal of $U$ into a diagonal matrix $D$.
+        \item \textit{Relevant Questions:} 24, 25, 26
+    \end{itemize}
+    
+    \item \textbf{Concept 8: Advanced Diagnostic Testing ("Find the Flaw")} 
+    \begin{itemize}
+        \item \textit{Description:} Identifying errors in order of operations, multiplier signs, scaling rows, and matrix multiplication commutativity.
+        \item \textit{Relevant Questions:} 27, 28, 29, 30
+    \end{itemize}
+\end{itemize}
+
+\newpage
+
+\section{Problem Sets}
+
+\subsection*{Concept 1: Solving $Ax = b$ via LU Factorization ($2 \times 2$)}
+\textbf{1.} Solve the system $Ax = b$ given $L = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 3 & -1 \\ 0 & 2 \end{bmatrix}$, and $b = \begin{bmatrix} 5 \\ 14 \end{bmatrix}$. \\
+\textbf{2.} Solve the system $Ax = b$ given $L = \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 4 \\ 0 & -1 \end{bmatrix}$, and $b = \begin{bmatrix} 2 \\ -5 \end{bmatrix}$. \\
+\textbf{3.} Solve the system $Ax = b$ given $L = \begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}$, $U = \begin{bmatrix} -1 & 3 \\ 0 & 5 \end{bmatrix}$, and $b = \begin{bmatrix} -2 \\ 7 \end{bmatrix}$.
+
+\subsection*{Concept 2: Solving $Ax = b$ via LU Factorization ($3 \times 3$)}
+\textbf{4.} Solve $Ax = b$ given $L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ -1 & 3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & -1 & 1 \\ 0 & 3 & -2 \\ 0 & 0 & 1 \end{bmatrix}$, and $b = \begin{bmatrix} 1 \\ 5 \\ 2 \end{bmatrix}$. \\
+\textbf{5.} Solve $Ax = b$ given $L = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 3 & -2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 4 & 2 & 0 \\ 0 & -1 & 3 \\ 0 & 0 & 2 \end{bmatrix}$, and $b = \begin{bmatrix} 8 \\ -5 \\ 21 \end{bmatrix}$. \\
+\textbf{6.} Solve $Ax = b$ given $L = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 4 & 1 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 1 & 1 & 1 \\ 0 & 2 & 2 \\ 0 & 0 & 3 \end{bmatrix}$, and $b = \begin{bmatrix} 3 \\ 4 \\ 19 \end{bmatrix}$. \\
+\textbf{7.} Solve $Ax = b$ given $L = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 5 & 0 & 0 \\ 0 & 4 & 0 \\ 0 & 0 & 3 \end{bmatrix}$, and $b = \begin{bmatrix} 10 \\ 18 \\ 24 \end{bmatrix}$.
+
+\subsection*{Concept 3: Constructing the LU Factorization ($2 \times 2$)}
+\textbf{8.} Find the LU factorization of $A = \begin{bmatrix} 4 & -2 \\ 12 & 1 \end{bmatrix}$. \\
+\textbf{9.} Find the LU factorization of $A = \begin{bmatrix} -3 & 6 \\ 6 & -10 \end{bmatrix}$. \\
+\textbf{10.} Find the LU factorization of $A = \begin{bmatrix} 2 & 5 \\ 3 & 8 \end{bmatrix}$. \\
+\textbf{11.} Find the LU factorization of $A = \begin{bmatrix} 5 & 10 \\ -10 & -15 \end{bmatrix}$.
+
+\subsection*{Concept 4: Constructing the LU Factorization ($3 \times 3$)}
+\textbf{12.} Find the LU factorization of $A = \begin{bmatrix} 2 & -1 & 3 \\ 4 & 1 & 5 \\ -2 & 4 & -6 \end{bmatrix}$. \\
+\textbf{13.} Find the LU factorization of $A = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 8 & 14 \\ 2 & 6 & 13 \end{bmatrix}$. \\
+\textbf{14.} Find the LU factorization of $A = \begin{bmatrix} -3 & 1 & 2 \\ 6 & -1 & -5 \\ -9 & 5 & 2 \end{bmatrix}$. \\
+\textbf{15.} Find the LU factorization of $A = \begin{bmatrix} 4 & -2 & 2 \\ -2 & 4 & -4 \\ 2 & -4 & 7 \end{bmatrix}$. \\
+\textbf{16.} Find the LU factorization of $A = \begin{bmatrix} 1 & 3 & -1 \\ 2 & 5 & 1 \\ 3 & 8 & 2 \end{bmatrix}$.
+
+\subsection*{Concept 5: Theoretical Properties of Triangular Matrices}
+\textbf{17.} Prove that if an $n \times n$ matrix $A$ has an LU factorization, then the determinant of $A$ is equal to the product of the diagonal entries of $U$. \\
+\textbf{18.} Let $U$ be an invertible upper triangular matrix. Prove that its inverse $U^{-1}$ must also be upper triangular. \\
+\textbf{19.} Suppose $A = LU$ and $A$ is an invertible matrix. Prove that the diagonal entries of $U$ must all be non-zero. \\
+\textbf{20.} (Uniqueness of LU) If $A$ is invertible and can be factored as $A = L_1 U_1 = L_2 U_2$ (where $L_1, L_2$ are unit lower triangular and $U_1, U_2$ are upper triangular), prove that $L_1 = L_2$ and $U_1 = U_2$.
+
+\subsection*{Concept 6: $PA = LU$ Factorization (Partial Pivoting)}
+\textbf{21.} Find a permutation matrix $P$, a unit lower triangular matrix $L$, and an upper triangular matrix $U$ such that $PA = LU$ for $A = \begin{bmatrix} 0 & 3 \\ 2 & 4 \end{bmatrix}$. \\
+\textbf{22.} Find the $PA = LU$ factorization for $A = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 1 \\ -1 & 1 & 2 \end{bmatrix}$. \\
+\textbf{23.} Find the $PA = LU$ factorization for $A = \begin{bmatrix} 0 & 1 & 2 \\ 1 & -2 & 3 \\ 2 & -4 & 1 \end{bmatrix}$.
+
+\subsection*{Concept 7: $LDU$ Factorization}
+\textbf{24.} Find the $LDU$ factorization of $A = \begin{bmatrix} 3 & -6 \\ -6 & 14 \end{bmatrix}$. \\
+\textbf{25.} Find the $LDU$ factorization of $A = \begin{bmatrix} 2 & 4 & 2 \\ 4 & 11 & 7 \\ -2 & -1 & 5 \end{bmatrix}$. \\
+\textbf{26.} Find the $LDU$ factorization of $A = \begin{bmatrix} -1 & 2 \\ 3 & -4 \end{bmatrix}$.
+
+\subsection*{Concept 8: Advanced Diagnostic Testing ("Find the Flaw")}
+\textbf{27.} \textbf{Task:} Solve $Ax = b$ given $L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 1 \\ 0 & 4 \end{bmatrix}$, and $b = \begin{bmatrix} 5 \\ 19 \end{bmatrix}$. \\
+\textbf{Flawed Solution:} Step 1: Solve $Ux = b$. $4x_2 = 19 \implies x_2 = 19/4$. $2x_1 + 19/4 = 5 \implies x_1 = 1/8$. Step 2: Solve $Ly = x$. $y_1 = 1/8$. $3(1/8) + y_2 = 19/4 \implies y_2 = 35/8$. Final Answer: $y = \begin{bmatrix} 1/8 \\ 35/8 \end{bmatrix}$. \\
+\textit{Find the error, explain why it is wrong, and provide the correct solution.}
+
+\textbf{28.} \textbf{Task:} Find the LU factorization of $A = \begin{bmatrix} 2 & 3 \\ -8 & 5 \end{bmatrix}$. \\
+\textbf{Flawed Solution:} To eliminate $-8$, we use the operation $R_2 \leftarrow R_2 + 4R_1$. $U = \begin{bmatrix} 2 & 3 \\ 0 & 17 \end{bmatrix}$. The multiplier used is $4$, so we place it in $L$. $L = \begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}$. \\
+\textit{Find the error, explain why it is wrong, and provide the correct solution.}
+
+\textbf{29.} \textbf{Task:} Find the LU factorization of $A = \begin{bmatrix} 2 & 4 \\ 6 & 15 \end{bmatrix}$. \\
+\textbf{Flawed Solution:} First, scale Row 1 to make the pivot 1: $R_1 \leftarrow \frac{1}{2}R_1$. Matrix becomes $\begin{bmatrix} 1 & 2 \\ 6 & 15 \end{bmatrix}$. Next, $R_2 \leftarrow R_2 - 6R_1$. $U = \begin{bmatrix} 1 & 2 \\ 0 & 3 \end{bmatrix}$. The multiplier is $6$, so $L = \begin{bmatrix} 1 & 0 \\ 6 & 1 \end{bmatrix}$. \\
+\textit{Find the error, explain why it is wrong, and provide the correct solution.}
+
+\textbf{30.} \textbf{Task:} Verify if $L = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix}$ and $U = \begin{bmatrix} 4 & 1 \\ 0 & 3 \end{bmatrix}$ is the correct factorization for $A = \begin{bmatrix} 4 & 1 \\ -8 & 1 \end{bmatrix}$. \\
+\textbf{Flawed Solution:} We multiply $U$ and $L$ together. $UL = \begin{bmatrix} 4 & 1 \\ 0 & 3 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 1 \\ -6 & 3 \end{bmatrix}$. Since $UL \neq A$, this is not the correct factorization. \\
+\textit{Find the error, explain why it is wrong, and provide the correct solution.}
+
+\newpage
+
+\section{Detailed Solutions}
+
+\subsection*{Concept 1: Solving $Ax = b$ via LU Factorization ($2 \times 2$)}
+
+\textbf{Solution 1:}
+Step 1: Solve $Ly = b$ for $y$.
+$$ \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} = \begin{bmatrix} 5 \\ 14 \end{bmatrix} $$
+Row 1: $y_1 = 5$. \\
+Row 2: $2y_1 + y_2 = 14 \implies 2(5) + y_2 = 14 \implies 10 + y_2 = 14 \implies y_2 = 4$. \\
+Thus, $y = \begin{bmatrix} 5 \\ 4 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$ for $x$.
+$$ \begin{bmatrix} 3 & -1 \\ 0 & 2 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 5 \\ 4 \end{bmatrix} $$
+Row 2: $2x_2 = 4 \implies x_2 = 2$. \\
+Row 1: $3x_1 - x_2 = 5 \implies 3x_1 - 2 = 5 \implies 3x_1 = 7 \implies x_1 = 7/3$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 7/3 \\ 2 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 2:}
+Step 1: Solve $Ly = b$ for $y$.
+$$ \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} = \begin{bmatrix} 2 \\ -5 \end{bmatrix} $$
+Row 1: $y_1 = 2$. \\
+Row 2: $-3y_1 + y_2 = -5 \implies -3(2) + y_2 = -5 \implies -6 + y_2 = -5 \implies y_2 = 1$. \\
+Thus, $y = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$ for $x$.
+$$ \begin{bmatrix} 2 & 4 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
+Row 2: $-x_2 = 1 \implies x_2 = -1$. \\
+Row 1: $2x_1 + 4x_2 = 2 \implies 2x_1 + 4(-1) = 2 \implies 2x_1 - 4 = 2 \implies 2x_1 = 6 \implies x_1 = 3$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 3 \\ -1 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 3:}
+Step 1: Solve $Ly = b$ for $y$.
+$$ \begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} = \begin{bmatrix} -2 \\ 7 \end{bmatrix} $$
+Row 1: $y_1 = -2$. \\
+Row 2: $4y_1 + y_2 = 7 \implies 4(-2) + y_2 = 7 \implies -8 + y_2 = 7 \implies y_2 = 15$. \\
+Thus, $y = \begin{bmatrix} -2 \\ 15 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$ for $x$.
+$$ \begin{bmatrix} -1 & 3 \\ 0 & 5 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} -2 \\ 15 \end{bmatrix} $$
+Row 2: $5x_2 = 15 \implies x_2 = 3$. \\
+Row 1: $-x_1 + 3x_2 = -2 \implies -x_1 + 3(3) = -2 \implies -x_1 + 9 = -2 \implies -x_1 = -11 \implies x_1 = 11$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 11 \\ 3 \end{bmatrix}$.
+
+\subsection*{Concept 2: Solving $Ax = b$ via LU Factorization ($3 \times 3$)}
+
+\textbf{Solution 4:}
+Step 1: Solve $Ly = b$.
+$$ \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ -1 & 3 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix} = \begin{bmatrix} 1 \\ 5 \\ 2 \end{bmatrix} $$
+Row 1: $y_1 = 1$. \\
+Row 2: $2y_1 + y_2 = 5 \implies 2(1) + y_2 = 5 \implies y_2 = 3$. \\
+Row 3: $-y_1 + 3y_2 + y_3 = 2 \implies -1(1) + 3(3) + y_3 = 2 \implies -1 + 9 + y_3 = 2 \implies 8 + y_3 = 2 \implies y_3 = -6$. \\
+$y = \begin{bmatrix} 1 \\ 3 \\ -6 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$.
+$$ \begin{bmatrix} 2 & -1 & 1 \\ 0 & 3 & -2 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} 1 \\ 3 \\ -6 \end{bmatrix} $$
+Row 3: $x_3 = -6$. \\
+Row 2: $3x_2 - 2x_3 = 3 \implies 3x_2 - 2(-6) = 3 \implies 3x_2 + 12 = 3 \implies 3x_2 = -9 \implies x_2 = -3$. \\
+Row 1: $2x_1 - x_2 + x_3 = 1 \implies 2x_1 - (-3) + (-6) = 1 \implies 2x_1 + 3 - 6 = 1 \implies 2x_1 - 3 = 1 \implies 2x_1 = 4 \implies x_1 = 2$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 2 \\ -3 \\ -6 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 5:}
+Step 1: Solve $Ly = b$.
+$$ \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 3 & -2 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix} = \begin{bmatrix} 8 \\ -5 \\ 21 \end{bmatrix} $$
+Row 1: $y_1 = 8$. \\
+Row 2: $-y_1 + y_2 = -5 \implies -8 + y_2 = -5 \implies y_2 = 3$. \\
+Row 3: $3y_1 - 2y_2 + y_3 = 21 \implies 3(8) - 2(3) + y_3 = 21 \implies 24 - 6 + y_3 = 21 \implies 18 + y_3 = 21 \implies y_3 = 3$. \\
+$y = \begin{bmatrix} 8 \\ 3 \\ 3 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$.
+$$ \begin{bmatrix} 4 & 2 & 0 \\ 0 & -1 & 3 \\ 0 & 0 & 2 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} 8 \\ 3 \\ 3 \end{bmatrix} $$
+Row 3: $2x_3 = 3 \implies x_3 = 3/2$. \\
+Row 2: $-x_2 + 3x_3 = 3 \implies -x_2 + 3(3/2) = 3 \implies -x_2 + 9/2 = 6/2 \implies -x_2 = -3/2 \implies x_2 = 3/2$. \\
+Row 1: $4x_1 + 2x_2 = 8 \implies 4x_1 + 2(3/2) = 8 \implies 4x_1 + 3 = 8 \implies 4x_1 = 5 \implies x_1 = 5/4$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 5/4 \\ 3/2 \\ 3/2 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 6:}
+Step 1: Solve $Ly = b$.
+$$ \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 4 & 1 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix} = \begin{bmatrix} 3 \\ 4 \\ 19 \end{bmatrix} $$
+Row 1: $y_1 = 3$. \\
+Row 2: $y_2 = 4$. \\
+Row 3: $4y_1 + y_2 + y_3 = 19 \implies 4(3) + 4 + y_3 = 19 \implies 12 + 4 + y_3 = 19 \implies 16 + y_3 = 19 \implies y_3 = 3$. \\
+$y = \begin{bmatrix} 3 \\ 4 \\ 3 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$.
+$$ \begin{bmatrix} 1 & 1 & 1 \\ 0 & 2 & 2 \\ 0 & 0 & 3 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} 3 \\ 4 \\ 3 \end{bmatrix} $$
+Row 3: $3x_3 = 3 \implies x_3 = 1$. \\
+Row 2: $2x_2 + 2x_3 = 4 \implies 2x_2 + 2(1) = 4 \implies 2x_2 = 2 \implies x_2 = 1$. \\
+Row 1: $x_1 + x_2 + x_3 = 3 \implies x_1 + 1 + 1 = 3 \implies x_1 + 2 = 3 \implies x_1 = 1$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 7:}
+Step 1: Solve $Ly = b$.
+$$ \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix} = \begin{bmatrix} 10 \\ 18 \\ 24 \end{bmatrix} $$
+Row 1: $y_1 = 10$. \\
+Row 2: $y_1 + y_2 = 18 \implies 10 + y_2 = 18 \implies y_2 = 8$. \\
+Row 3: $y_1 + y_2 + y_3 = 24 \implies 10 + 8 + y_3 = 24 \implies 18 + y_3 = 24 \implies y_3 = 6$. \\
+$y = \begin{bmatrix} 10 \\ 8 \\ 6 \end{bmatrix}$. \\
+Step 2: Solve $Ux = y$.
+$$ \begin{bmatrix} 5 & 0 & 0 \\ 0 & 4 & 0 \\ 0 & 0 & 3 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} 10 \\ 8 \\ 6 \end{bmatrix} $$
+Row 3: $3x_3 = 6 \implies x_3 = 2$. \\
+Row 2: $4x_2 = 8 \implies x_2 = 2$. \\
+Row 1: $5x_1 = 10 \implies x_1 = 2$. \\
+\textbf{Final Answer:} $x = \begin{bmatrix} 2 \\ 2 \\ 2 \end{bmatrix}$.
+
+\subsection*{Concept 3: Constructing the LU Factorization ($2 \times 2$)}
+
+\textbf{Solution 8:}
+Initialize $L = \begin{bmatrix} 1 & 0 \\ l_{21} & 1 \end{bmatrix}$.
+To eliminate $12$ in $A = \begin{bmatrix} 4 & -2 \\ 12 & 1 \end{bmatrix}$, use $R_2 \leftarrow R_2 - 3R_1$.
+$U = \begin{bmatrix} 4 & -2 \\ 12 - 3(4) & 1 - 3(-2) \end{bmatrix} = \begin{bmatrix} 4 & -2 \\ 0 & 7 \end{bmatrix}$.
+The multiplier subtracted is $3$, so $l_{21} = 3$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 4 & -2 \\ 0 & 7 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 9:}
+Initialize $L = \begin{bmatrix} 1 & 0 \\ l_{21} & 1 \end{bmatrix}$.
+To eliminate $6$ in $A = \begin{bmatrix} -3 & 6 \\ 6 & -10 \end{bmatrix}$, use $R_2 \leftarrow R_2 - (-2)R_1$.
+$U = \begin{bmatrix} -3 & 6 \\ 6 - (-2)(-3) & -10 - (-2)(6) \end{bmatrix} = \begin{bmatrix} -3 & 6 \\ 0 & 2 \end{bmatrix}$.
+The multiplier subtracted is $-2$, so $l_{21} = -2$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} -3 & 6 \\ 0 & 2 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 10:}
+Initialize $L = \begin{bmatrix} 1 & 0 \\ l_{21} & 1 \end{bmatrix}$.
+To eliminate $3$ in $A = \begin{bmatrix} 2 & 5 \\ 3 & 8 \end{bmatrix}$, use $R_2 \leftarrow R_2 - \frac{3}{2}R_1$.
+$U = \begin{bmatrix} 2 & 5 \\ 3 - \frac{3}{2}(2) & 8 - \frac{3}{2}(5) \end{bmatrix} = \begin{bmatrix} 2 & 5 \\ 0 & 8 - 7.5 \end{bmatrix} = \begin{bmatrix} 2 & 5 \\ 0 & 1/2 \end{bmatrix}$.
+The multiplier subtracted is $3/2$, so $l_{21} = 3/2$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ 3/2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 5 \\ 0 & 1/2 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 11:}
+Initialize $L = \begin{bmatrix} 1 & 0 \\ l_{21} & 1 \end{bmatrix}$.
+To eliminate $-10$ in $A = \begin{bmatrix} 5 & 10 \\ -10 & -15 \end{bmatrix}$, use $R_2 \leftarrow R_2 - (-2)R_1$.
+$U = \begin{bmatrix} 5 & 10 \\ -10 - (-2)(5) & -15 - (-2)(10) \end{bmatrix} = \begin{bmatrix} 5 & 10 \\ 0 & 5 \end{bmatrix}$.
+The multiplier subtracted is $-2$, so $l_{21} = -2$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 5 & 10 \\ 0 & 5 \end{bmatrix}$.
+
+\subsection*{Concept 4: Constructing the LU Factorization ($3 \times 3$)}
+
+\textbf{Solution 12:}
+$A = \begin{bmatrix} 2 & -1 & 3 \\ 4 & 1 & 5 \\ -2 & 4 & -6 \end{bmatrix}$.
+Step 1: Eliminate entries below pivot in Col 1.
+$R_2 \leftarrow R_2 - 2R_1 \implies l_{21} = 2$.
+$R_3 \leftarrow R_3 - (-1)R_1 \implies l_{31} = -1$.
+Matrix becomes: $\begin{bmatrix} 2 & -1 & 3 \\ 0 & 3 & -1 \\ 0 & 3 & -3 \end{bmatrix}$.
+Step 2: Eliminate entries below pivot in Col 2.
+$R_3 \leftarrow R_3 - 1R_2 \implies l_{32} = 1$.
+$U = \begin{bmatrix} 2 & -1 & 3 \\ 0 & 3 & -1 \\ 0 & 0 & -2 \end{bmatrix}$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ -1 & 1 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & -1 & 3 \\ 0 & 3 & -1 \\ 0 & 0 & -2 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 13:}
+$A = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 8 & 14 \\ 2 & 6 & 13 \end{bmatrix}$.
+Step 1: Col 1.
+$R_2 \leftarrow R_2 - 3R_1 \implies l_{21} = 3$.
+$R_3 \leftarrow R_3 - 2R_1 \implies l_{31} = 2$.
+Matrix becomes: $\begin{bmatrix} 1 & 2 & 4 \\ 0 & 2 & 2 \\ 0 & 2 & 5 \end{bmatrix}$.
+Step 2: Col 2.
+$R_3 \leftarrow R_3 - 1R_2 \implies l_{32} = 1$.
+$U = \begin{bmatrix} 1 & 2 & 4 \\ 0 & 2 & 2 \\ 0 & 0 & 3 \end{bmatrix}$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 2 & 1 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 1 & 2 & 4 \\ 0 & 2 & 2 \\ 0 & 0 & 3 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 14:}
+$A = \begin{bmatrix} -3 & 1 & 2 \\ 6 & -1 & -5 \\ -9 & 5 & 2 \end{bmatrix}$.
+Step 1: Col 1.
+$R_2 \leftarrow R_2 - (-2)R_1 \implies l_{21} = -2$.
+$R_3 \leftarrow R_3 - 3R_1 \implies l_{31} = 3$.
+Matrix becomes: $\begin{bmatrix} -3 & 1 & 2 \\ 0 & 1 & -1 \\ 0 & 2 & -4 \end{bmatrix}$.
+Step 2: Col 2.
+$R_3 \leftarrow R_3 - 2R_2 \implies l_{32} = 2$.
+$U = \begin{bmatrix} -3 & 1 & 2 \\ 0 & 1 & -1 \\ 0 & 0 & -2 \end{bmatrix}$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 3 & 2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} -3 & 1 & 2 \\ 0 & 1 & -1 \\ 0 & 0 & -2 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 15:}
+$A = \begin{bmatrix} 4 & -2 & 2 \\ -2 & 4 & -4 \\ 2 & -4 & 7 \end{bmatrix}$.
+Step 1: Col 1.
+$R_2 \leftarrow R_2 - (-1/2)R_1 \implies l_{21} = -1/2$.
+$R_3 \leftarrow R_3 - (1/2)R_1 \implies l_{31} = 1/2$.
+Matrix becomes: $\begin{bmatrix} 4 & -2 & 2 \\ 0 & 3 & -3 \\ 0 & -3 & 6 \end{bmatrix}$.
+Step 2: Col 2.
+$R_3 \leftarrow R_3 - (-1)R_2 \implies l_{32} = -1$.
+$U = \begin{bmatrix} 4 & -2 & 2 \\ 0 & 3 & -3 \\ 0 & 0 & 3 \end{bmatrix}$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 & 0 \\ -1/2 & 1 & 0 \\ 1/2 & -1 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 4 & -2 & 2 \\ 0 & 3 & -3 \\ 0 & 0 & 3 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 16:}
+$A = \begin{bmatrix} 1 & 3 & -1 \\ 2 & 5 & 1 \\ 3 & 8 & 2 \end{bmatrix}$.
+Step 1: Col 1.
+$R_2 \leftarrow R_2 - 2R_1 \implies l_{21} = 2$.
+$R_3 \leftarrow R_3 - 3R_1 \implies l_{31} = 3$.
+Matrix becomes: $\begin{bmatrix} 1 & 3 & -1 \\ 0 & -1 & 3 \\ 0 & -1 & 5 \end{bmatrix}$.
+Step 2: Col 2.
+$R_3 \leftarrow R_3 - 1R_2 \implies l_{32} = 1$.
+$U = \begin{bmatrix} 1 & 3 & -1 \\ 0 & -1 & 3 \\ 0 & 0 & 2 \end{bmatrix}$. \\
+\textbf{Final Answer:} $L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 3 & 1 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 1 & 3 & -1 \\ 0 & -1 & 3 \\ 0 & 0 & 2 \end{bmatrix}$.
+
+\subsection*{Concept 5: Theoretical Properties of Triangular Matrices}
+
+\textbf{Solution 17:}
+By the multiplicative property of determinants, $\det(A) = \det(LU) = \det(L)\det(U)$.
+Because $L$ is a unit lower triangular matrix, its determinant is the product of its diagonal entries, which are all $1$. Thus, $\det(L) = 1$.
+Because $U$ is an upper triangular matrix, its determinant is the product of its diagonal entries, $u_{11} \cdot u_{22} \cdots u_{nn}$.
+Therefore, $\det(A) = 1 \cdot (u_{11} \cdot u_{22} \cdots u_{nn}) = u_{11} \cdot u_{22} \cdots u_{nn}$.
+
+\vspace{0.5cm}
+\textbf{Solution 18:}
+To find the inverse of $U$, we form the augmented matrix $[U \mid I]$ and apply row operations to reduce it to $[I \mid U^{-1}]$.
+Because $U$ is upper triangular, all entries below the main diagonal are already zero. To reduce $U$ to the identity matrix $I$, we only need to perform two types of row operations:
+1. Scaling: Multiply each row $i$ by $1/u_{ii}$ to make the diagonal entries 1.
+2. Row Replacement: Add multiples of a row to rows \textit{above} it to eliminate the non-zero entries above the diagonal.
+Crucially, we never need to add a multiple of a row to a row \textit{below} it. Every row operation of these two types corresponds to multiplying by an elementary matrix $E_k$ that is itself upper triangular.
+Thus, the reduction process can be written as $E_p \dots E_2 E_1 U = I$, which implies $U^{-1} = E_p \dots E_2 E_1$.
+Since the product of upper triangular matrices is always upper triangular, it follows necessarily that $U^{-1}$ is upper triangular.
+
+\vspace{0.5cm}
+\textbf{Solution 19:}
+We know that $\det(A) = \det(L)\det(U)$. Since $L$ is unit lower triangular, $\det(L) = 1$. Thus, $\det(A) = \det(U)$.
+The determinant of the upper triangular matrix $U$ is the product of its diagonal entries: $\det(U) = u_{11} \cdot u_{22} \cdots u_{nn}$.
+If $A$ is invertible, by the Invertible Matrix Theorem, $\det(A) \neq 0$.
+Therefore, $u_{11} \cdot u_{22} \cdots u_{nn} \neq 0$.
+For a product of numbers to be non-zero, none of the individual numbers can be zero. Thus, every diagonal entry $u_{ii}$ must be non-zero.
+
+\vspace{0.5cm}
+\textbf{Solution 20:}
+Given $L_1 U_1 = L_2 U_2$. Since $A$ is invertible, $L_1, L_2, U_1, U_2$ are all invertible.
+Multiply both sides on the left by $L_2^{-1}$ and on the right by $U_1^{-1}$:
+$L_2^{-1} L_1 = U_2 U_1^{-1}$.
+The inverse of a unit lower triangular matrix is unit lower triangular, and the product of unit lower triangular matrices is unit lower triangular. Thus, the left side ($L_2^{-1} L_1$) is a unit lower triangular matrix.
+Similarly, the inverse of an upper triangular matrix is upper triangular, and the product of upper triangular matrices is upper triangular. Thus, the right side ($U_2 U_1^{-1}$) is an upper triangular matrix.
+The only matrix that is simultaneously unit lower triangular (1s on the diagonal, 0s above) and upper triangular (0s below the diagonal) is the identity matrix $I$.
+Therefore, $L_2^{-1} L_1 = I \implies L_1 = L_2$, and $U_2 U_1^{-1} = I \implies U_1 = U_2$.
+
+\subsection*{Concept 6: $PA = LU$ Factorization (Partial Pivoting)}
+
+\textbf{Solution 21:}
+$A = \begin{bmatrix} 0 & 3 \\ 2 & 4 \end{bmatrix}$. The pivot at (1,1) is 0. We must swap Row 1 and Row 2.
+The permutation matrix for this swap is $P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+$PA = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix} \begin{bmatrix} 0 & 3 \\ 2 & 4 \end{bmatrix} = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix}$.
+Now, $PA$ is already upper triangular. No row operations are needed.
+\textbf{Final Answer:} $P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$, $L = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 22:}
+$A = \begin{bmatrix} 1 & 2 & 3 \\ 2 & 4 & 1 \\ -1 & 1 & 2 \end{bmatrix}$.
+If we try standard LU: $R_2 \leftarrow R_2 - 2R_1 \implies \begin{bmatrix} 1 & 2 & 3 \\ 0 & 0 & -5 \\ -1 & 1 & 2 \end{bmatrix}$. The pivot at (2,2) becomes 0.
+To avoid this, we swap Row 2 and Row 3 of the original matrix $A$ (this is the standard approach to find $P$ first).
+$P = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 1 & 0 \end{bmatrix}$.
+$PA = \begin{bmatrix} 1 & 2 & 3 \\ -1 & 1 & 2 \\ 2 & 4 & 1 \end{bmatrix}$.
+Now find LU for $PA$:
+$R_2 \leftarrow R_2 - (-1)R_1 \implies l_{21} = -1$. Matrix: $\begin{bmatrix} 1 & 2 & 3 \\ 0 & 3 & 5 \\ 2 & 4 & 1 \end{bmatrix}$.
+$R_3 \leftarrow R_3 - 2R_1 \implies l_{31} = 2$. Matrix: $\begin{bmatrix} 1 & 2 & 3 \\ 0 & 3 & 5 \\ 0 & 0 & -5 \end{bmatrix}$.
+$U$ is now upper triangular.
+\textbf{Final Answer:} $P = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 0 & 1 \\ 0 & 1 & 0 \end{bmatrix}$, $L = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 1 & 2 & 3 \\ 0 & 3 & 5 \\ 0 & 0 & -5 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 23:}
+$A = \begin{bmatrix} 0 & 1 & 2 \\ 1 & -2 & 3 \\ 2 & -4 & 1 \end{bmatrix}$. Pivot at (1,1) is 0. Swap Row 1 and Row 2.
+$P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}$.
+$PA = \begin{bmatrix} 1 & -2 & 3 \\ 0 & 1 & 2 \\ 2 & -4 & 1 \end{bmatrix}$.
+Now find LU for $PA$:
+$R_2$ already has a 0 in Col 1, so $l_{21} = 0$.
+$R_3 \leftarrow R_3 - 2R_1 \implies l_{31} = 2$. Matrix: $\begin{bmatrix} 1 & -2 & 3 \\ 0 & 1 & 2 \\ 0 & 0 & -5 \end{bmatrix}$.
+$U$ is now upper triangular.
+\textbf{Final Answer:} $P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}$, $L = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 1 & -2 & 3 \\ 0 & 1 & 2 \\ 0 & 0 & -5 \end{bmatrix}$.
+
+\subsection*{Concept 7: $LDU$ Factorization}
+
+\textbf{Solution 24:}
+First, find the standard LU factorization of $A = \begin{bmatrix} 3 & -6 \\ -6 & 14 \end{bmatrix}$.
+$R_2 \leftarrow R_2 - (-2)R_1 \implies U = \begin{bmatrix} 3 & -6 \\ 0 & 2 \end{bmatrix}$. $L = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix}$.
+Factor out the diagonal entries of $U$ (3 and 2) into a diagonal matrix $D$:
+$D = \begin{bmatrix} 3 & 0 \\ 0 & 2 \end{bmatrix}$.
+Divide each row of $U$ by its pivot to get $U'$:
+$U' = \begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}$.
+\textbf{Final Answer:} $A = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix} \begin{bmatrix} 3 & 0 \\ 0 & 2 \end{bmatrix} \begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 25:}
+Find LU for $A = \begin{bmatrix} 2 & 4 & 2 \\ 4 & 11 & 7 \\ -2 & -1 & 5 \end{bmatrix}$.
+$R_2 \leftarrow R_2 - 2R_1 \implies l_{21} = 2$. Matrix: $\begin{bmatrix} 2 & 4 & 2 \\ 0 & 3 & 3 \\ -2 & -1 & 5 \end{bmatrix}$.
+$R_3 \leftarrow R_3 - (-1)R_1 \implies l_{31} = -1$. Matrix: $\begin{bmatrix} 2 & 4 & 2 \\ 0 & 3 & 3 \\ 0 & 3 & 7 \end{bmatrix}$.
+$R_3 \leftarrow R_3 - 1R_2 \implies l_{32} = 1$. $U = \begin{bmatrix} 2 & 4 & 2 \\ 0 & 3 & 3 \\ 0 & 0 & 4 \end{bmatrix}$.
+$L = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ -1 & 1 & 1 \end{bmatrix}$.
+Factor out the diagonal of $U$ into $D = \begin{bmatrix} 2 & 0 & 0 \\ 0 & 3 & 0 \\ 0 & 0 & 4 \end{bmatrix}$.
+Divide rows of $U$ by pivots: $U' = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}$.
+\textbf{Final Answer:} $A = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ -1 & 1 & 1 \end{bmatrix} \begin{bmatrix} 2 & 0 & 0 \\ 0 & 3 & 0 \\ 0 & 0 & 4 \end{bmatrix} \begin{bmatrix} 1 & 2 & 1 \\ 0 & 1 & 1 \\ 0 & 0 & 1 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 26:}
+Find LU for $A = \begin{bmatrix} -1 & 2 \\ 3 & -4 \end{bmatrix}$.
+$R_2 \leftarrow R_2 - (-3)R_1 \implies U = \begin{bmatrix} -1 & 2 \\ 0 & 2 \end{bmatrix}$. $L = \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix}$.
+Factor out the diagonal of $U$ into $D = \begin{bmatrix} -1 & 0 \\ 0 & 2 \end{bmatrix}$.
+Divide rows of $U$ by pivots: $U' = \begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}$.
+\textbf{Final Answer:} $A = \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix} \begin{bmatrix} -1 & 0 \\ 0 & 2 \end{bmatrix} \begin{bmatrix} 1 & -2 \\ 0 & 1 \end{bmatrix}$.
+
+\subsection*{Concept 8: Advanced Diagnostic Testing ("Find the Flaw")}
+
+\textbf{Solution 27:}
+\textbf{Error:} The student solved the systems in the wrong order. They solved $Ux = b$ and then $Ly = x$. The correct theoretical setup is $A = LU \implies (LU)x = b \implies L(Ux) = b$. Therefore, we must solve $Ly = b$ first, and then $Ux = y$.
+\textbf{Correct Step:}
+Step 1: Solve $Ly = b$.
+$\begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} = \begin{bmatrix} 5 \\ 19 \end{bmatrix}$.
+$y_1 = 5$. $3(5) + y_2 = 19 \implies 15 + y_2 = 19 \implies y_2 = 4$. $y = \begin{bmatrix} 5 \\ 4 \end{bmatrix}$.
+Step 2: Solve $Ux = y$.
+$\begin{bmatrix} 2 & 1 \\ 0 & 4 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 5 \\ 4 \end{bmatrix}$.
+$4x_2 = 4 \implies x_2 = 1$. $2x_1 + 1 = 5 \implies 2x_1 = 4 \implies x_1 = 2$.
+\textbf{Correct Final Answer:} $x = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 28:}
+\textbf{Error:} The student placed the positive multiplier into $L$ based on an addition operation. The standard algorithm states that if the operation is $R_2 \leftarrow R_2 - cR_1$, the value $c$ goes into $L$. Because the operation was $R_2 + 4R_1$, it should be viewed as $R_2 - (-4)R_1$. The multiplier $c$ is $-4$, not $4$.
+\textbf{Correct Step:} The multiplier is $-4$. Therefore, $l_{21} = -4$.
+\textbf{Correct Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ -4 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 3 \\ 0 & 17 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 29:}
+\textbf{Error:} The student scaled Row 1. Scaling rows ruins the standard algorithm for building $L$ because it changes the determinant and violates the rule that $L$ must be a unit lower triangular matrix derived purely from row replacements. Only row replacements ($R_i \leftarrow R_i - cR_j$) are allowed when finding $U$ for an LU factorization.
+\textbf{Correct Step:} Do not scale Row 1. Use the pivot $2$ directly.
+$R_2 \leftarrow R_2 - 3R_1$.
+$U = \begin{bmatrix} 2 & 4 \\ 6 - 3(2) & 15 - 3(4) \end{bmatrix} = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix}$.
+The multiplier is $3$, so $l_{21} = 3$.
+\textbf{Correct Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix}$.
+
+\vspace{0.5cm}
+\textbf{Solution 30:}
+\textbf{Error:} Matrix multiplication is not commutative. The student multiplied $U \times L$ instead of $L \times U$. The factorization is $A = LU$, so the order of multiplication matters strictly.
+\textbf{Correct Step:} Multiply $L$ and $U$ in the correct order:
+$LU = \begin{bmatrix} 1 & 0 \\ -2 & 1 \end{bmatrix} \begin{bmatrix} 4 & 1 \\ 0 & 3 \end{bmatrix}$.
+Row 1, Col 1: $1(4) + 0(0) = 4$.
+Row 1, Col 2: $1(1) + 0(3) = 1$.
+Row 2, Col 1: $-2(4) + 1(0) = -8$.
+Row 2, Col 2: $-2(1) + 1(3) = -2 + 3 = 1$.
+$LU = \begin{bmatrix} 4 & 1 \\ -8 & 1 \end{bmatrix}$.
+\textbf{Correct Final Answer:} Since $LU = A$, this is indeed the correct factorization.
+
+\end{document}

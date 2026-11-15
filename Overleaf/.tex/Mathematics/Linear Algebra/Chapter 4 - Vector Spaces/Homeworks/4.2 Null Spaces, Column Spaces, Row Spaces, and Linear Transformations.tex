@@ -1,0 +1,488 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\geometry{letterpaper, margin=1in}
+
+\title{Homework 4.2: Null Spaces, Column Spaces, Row Spaces, and Linear Transformations}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+In linear algebra, understanding the structure of a matrix $A$ goes far beyond simply performing row operations. We seek to understand the fundamental "spaces" associated with $A$. This chapter introduces three primary vector spaces tied to any $m \times n$ matrix $A$, as well as their equivalents in the language of linear transformations.
+
+\begin{itemize}
+    \item \textbf{The Null Space ($\operatorname{Nul} A$):} The null space of an $m \times n$ matrix $A$ is the set of all solutions to the homogeneous equation $Ax = 0$. In set notation, $\operatorname{Nul} A = \{x \in \mathbb{R}^n : Ax = 0\}$. It represents all the vectors in the domain that are "crushed" to the zero vector by the matrix transformation.
+    \item \textbf{The Column Space ($\operatorname{Col} A$):} The column space of an $m \times n$ matrix $A$ is the set of all linear combinations of the columns of $A$. If $A = [a_1 \dots a_n]$, then $\operatorname{Col} A = \operatorname{Span}\{a_1, \dots, a_n\}$. Equivalently, it is the set of all vectors $b$ for which the system $Ax = b$ is consistent.
+    \item \textbf{The Row Space ($\operatorname{Row} A$):} The row space is the set of all linear combinations of the row vectors of $A$. It is equivalent to the column space of the transpose of $A$, denoted $\operatorname{Col} A^T$.
+    \item \textbf{Kernel and Range:} When viewing a matrix as a linear transformation $T(x) = Ax$, the \textit{kernel} of $T$ is exactly the null space of $A$, and the \textit{range} of $T$ is exactly the column space of $A$. These terms are also used for abstract linear transformations between general vector spaces (like spaces of polynomials or matrices).
+\end{itemize}
+
+\subsection{Intuition and Derivation}
+Why do we care about these spaces? 
+The \textbf{Null Space} measures the "loss of information" during a transformation. If $\operatorname{Nul} A$ contains more than just the zero vector, it means multiple inputs map to the same output, and the transformation is not reversible (not one-to-one). We find it by solving $Ax = 0$ and expressing the solution in parametric vector form; the vectors attached to the free variables form a basis for the null space.
+
+The \textbf{Column Space} measures the "reach" of the transformation. It tells us every possible output vector we can generate by multiplying $A$ by some vector $x$. If $\operatorname{Col} A = \mathbb{R}^m$, the transformation can reach every point in the target space (it is onto).
+
+\subsection{Historical Context and Motivation}
+The formalization of vector spaces and matrices occurred in the 19th century through the work of mathematicians like Arthur Cayley and James Joseph Sylvester. Originally, mathematicians were solely focused on finding a single solution to a system of equations. However, as systems became larger and more abstract, it became clear that the \textit{set} of all solutions possessed its own geometric structure. The concepts of null space and column space were developed to classify these structures, allowing mathematicians to determine whether a system has solutions, how many solutions it has, and the geometric dimension of the solution set without having to solve the system from scratch every time.
+
+\subsection{Key Formulas and Theorems}
+\begin{itemize}
+    \item \textbf{Definition of Null Space:} $\operatorname{Nul} A = \{ x \in \mathbb{R}^n \mid Ax = 0 \}$
+    \item \textbf{Definition of Column Space:} $\operatorname{Col} A = \{ b \in \mathbb{R}^m \mid Ax = b \text{ for some } x \in \mathbb{R}^n \}$
+    \item \textbf{Theorem 2:} The null space of an $m \times n$ matrix $A$ is a subspace of $\mathbb{R}^n$.
+    \item \textbf{Theorem 3:} The column space of an $m \times n$ matrix $A$ is a subspace of $\mathbb{R}^m$.
+\end{itemize}
+
+\subsection{Prerequisites}
+To master this section, you must be completely fluent in:
+1. \textbf{Row Reduction (Gaussian Elimination):} Reducing an augmented matrix to Reduced Row Echelon Form (RREF).
+2. \textbf{Parametric Vector Form:} Writing the general solution to a system of equations by separating free variables.
+3. \textbf{Matrix-Vector Multiplication:} Computing $Ax$ efficiently.
+4. \textbf{Subspace Definitions:} Knowing the three rules for a subspace (contains the zero vector, closed under addition, closed under scalar multiplication).
+
+\newpage
+
+\section{Part 2: Detailed Homework Solutions}
+\textit{Note: To maximize learning efficiency as requested, I have strategically selected 14 problems from the provided text that cover at least two of every distinct problem archetype found in the exercises.}
+
+\subsection{Type 1: Checking Membership in the Null Space}
+
+\textbf{Exercise 1:} Determine if $w = \begin{bmatrix} 1 \\ 3 \\ -4 \end{bmatrix}$ is in $\operatorname{Nul} A$, where $A = \begin{bmatrix} 3 & -5 & -3 \\ 6 & -2 & 0 \\ -8 & 4 & 1 \end{bmatrix}$.
+
+\textbf{Solution:}
+To determine if $w \in \operatorname{Nul} A$, we must check if $Aw = 0$.
+\[
+Aw = \begin{bmatrix} 3 & -5 & -3 \\ 6 & -2 & 0 \\ -8 & 4 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 3 \\ -4 \end{bmatrix}
+\]
+Compute the matrix-vector product row by row:
+\begin{align*}
+\text{Row 1: } & 3(1) + (-5)(3) + (-3)(-4) = 3 - 15 + 12 = 0 \\
+\text{Row 2: } & 6(1) + (-2)(3) + 0(-4) = 6 - 6 + 0 = 0 \\
+\text{Row 3: } & -8(1) + 4(3) + 1(-4) = -8 + 12 - 4 = 0
+\end{align*}
+Since $Aw = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}$, the vector $w$ is indeed in $\operatorname{Nul} A$.
+
+\vspace{0.5cm}
+
+\textbf{Exercise 2:} Determine if $w = \begin{bmatrix} 5 \\ -3 \\ 2 \end{bmatrix}$ is in $\operatorname{Nul} A$, where $A = \begin{bmatrix} 5 & 21 & 19 \\ 13 & 23 & 2 \\ 8 & 14 & 1 \end{bmatrix}$.
+
+\textbf{Solution:}
+We check if $Aw = 0$.
+\[
+Aw = \begin{bmatrix} 5 & 21 & 19 \\ 13 & 23 & 2 \\ 8 & 14 & 1 \end{bmatrix} \begin{bmatrix} 5 \\ -3 \\ 2 \end{bmatrix}
+\]
+Compute the product:
+\begin{align*}
+\text{Row 1: } & 5(5) + 21(-3) + 19(2) = 25 - 63 + 38 = 0 \\
+\text{Row 2: } & 13(5) + 23(-3) + 2(2) = 65 - 69 + 4 = 0 \\
+\text{Row 3: } & 8(5) + 14(-3) + 1(2) = 40 - 42 + 2 = 0
+\end{align*}
+Since $Aw = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}$, the vector $w$ is in $\operatorname{Nul} A$.
+
+\subsection{Type 2: Finding an Explicit Description of the Null Space}
+
+\textbf{Exercise 3:} Find an explicit description of $\operatorname{Nul} A$ by listing vectors that span the null space, where $A = \begin{bmatrix} 1 & 3 & 5 & 0 \\ 0 & 1 & 4 & -2 \end{bmatrix}$.
+
+\textbf{Solution:}
+We need to solve the homogeneous system $Ax = 0$. The augmented matrix is:
+\[
+\begin{bmatrix} 1 & 3 & 5 & 0 & \big| & 0 \\ 0 & 1 & 4 & -2 & \big| & 0 \end{bmatrix}
+\]
+We row reduce this to Reduced Row Echelon Form (RREF). Replace Row 1 with Row 1 - 3(Row 2):
+\[
+\begin{bmatrix} 1 & 0 & -7 & 6 & \big| & 0 \\ 0 & 1 & 4 & -2 & \big| & 0 \end{bmatrix}
+\]
+This corresponds to the system of equations:
+\begin{align*}
+x_1 - 7x_3 + 6x_4 &= 0 \implies x_1 = 7x_3 - 6x_4 \\
+x_2 + 4x_3 - 2x_4 &= 0 \implies x_2 = -4x_3 + 2x_4
+\end{align*}
+The variables $x_3$ and $x_4$ are free. We write the general solution in parametric vector form:
+\[
+x = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \end{bmatrix} = \begin{bmatrix} 7x_3 - 6x_4 \\ -4x_3 + 2x_4 \\ x_3 \\ x_4 \end{bmatrix} = x_3 \begin{bmatrix} 7 \\ -4 \\ 1 \\ 0 \end{bmatrix} + x_4 \begin{bmatrix} -6 \\ 2 \\ 0 \\ 1 \end{bmatrix}
+\]
+Thus, $\operatorname{Nul} A = \operatorname{Span} \left\{ \begin{bmatrix} 7 \\ -4 \\ 1 \\ 0 \end{bmatrix}, \begin{bmatrix} -6 \\ 2 \\ 0 \\ 1 \end{bmatrix} \right\}$.
+
+\vspace{0.5cm}
+
+\textbf{Exercise 5:} Find an explicit description of $\operatorname{Nul} A$ for $A = \begin{bmatrix} 1 & -2 & 0 & 4 & 0 \\ 0 & 0 & 1 & -9 & 0 \\ 0 & 0 & 0 & 0 & 1 \end{bmatrix}$.
+
+\textbf{Solution:}
+The matrix is already in RREF. We write out the equations for $Ax = 0$:
+\begin{align*}
+x_1 - 2x_2 + 4x_4 &= 0 \implies x_1 = 2x_2 - 4x_4 \\
+x_3 - 9x_4 &= 0 \implies x_3 = 9x_4 \\
+x_5 &= 0
+\end{align*}
+The pivot columns are 1, 3, and 5. The free variables are $x_2$ and $x_4$. Writing the solution in parametric vector form:
+\[
+x = \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \\ x_5 \end{bmatrix} = \begin{bmatrix} 2x_2 - 4x_4 \\ x_2 \\ 9x_4 \\ x_4 \\ 0 \end{bmatrix} = x_2 \begin{bmatrix} 2 \\ 1 \\ 0 \\ 0 \\ 0 \end{bmatrix} + x_4 \begin{bmatrix} -4 \\ 0 \\ 9 \\ 1 \\ 0 \end{bmatrix}
+\]
+Thus, $\operatorname{Nul} A = \operatorname{Span} \left\{ \begin{bmatrix} 2 \\ 1 \\ 0 \\ 0 \\ 0 \end{bmatrix}, \begin{bmatrix} -4 \\ 0 \\ 9 \\ 1 \\ 0 \end{bmatrix} \right\}$.
+
+\subsection{Type 3: Proving a Set is a Vector Space}
+
+\textbf{Exercise 7:} Either use an appropriate theorem to show that the given set $W$ is a vector space, or find a specific example to the contrary. $W = \left\{ \begin{bmatrix} a \\ b \\ c \end{bmatrix} : a+b+c=2 \right\}$.
+
+\textbf{Solution:}
+For a set to be a vector space (specifically, a subspace of $\mathbb{R}^3$), it must contain the zero vector. 
+Let's check if the zero vector $\begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}$ is in $W$. 
+For the zero vector, $a=0$, $b=0$, and $c=0$. 
+Substituting these into the condition for $W$:
+\[
+0 + 0 + 0 = 0 \neq 2
+\]
+Since the zero vector does not satisfy the condition, it is not in $W$. Therefore, $W$ is \textbf{not} a vector space.
+
+\vspace{0.5cm}
+
+\textbf{Exercise 11:} Determine if $W = \left\{ \begin{bmatrix} b-2d \\ 5+d \\ b+3d \\ d \end{bmatrix} : b, d \text{ real} \right\}$ is a vector space.
+
+\textbf{Solution:}
+Let's check if the zero vector is in $W$. We need to find real numbers $b$ and $d$ such that:
+\begin{align*}
+b - 2d &= 0 \\
+5 + d &= 0 \implies d = -5 \\
+b + 3d &= 0 \\
+d &= 0
+\end{align*}
+From the second equation, $d = -5$. But from the fourth equation, $d = 0$. This is a contradiction. There are no real numbers $b$ and $d$ that can make all components zero simultaneously. Since the zero vector is not in $W$, $W$ is \textbf{not} a vector space.
+
+\subsection{Type 4: Finding a Matrix $A$ such that a Set is $\operatorname{Col} A$}
+
+\textbf{Exercise 15:} Find a matrix $A$ such that the given set is $\operatorname{Col} A$. 
+$W = \left\{ \begin{bmatrix} 2s+3t \\ r+s-2t \\ 4r+s \\ 3r-s-t \end{bmatrix} : r, s, t \text{ real} \right\}$.
+
+\textbf{Solution:}
+We can decompose the generic vector in $W$ into a linear combination of vectors using the parameters $r, s,$ and $t$ as weights:
+\[
+\begin{bmatrix} 2s+3t \\ r+s-2t \\ 4r+s \\ 3r-s-t \end{bmatrix} = r \begin{bmatrix} 0 \\ 1 \\ 4 \\ 3 \end{bmatrix} + s \begin{bmatrix} 2 \\ 1 \\ 1 \\ -1 \end{bmatrix} + t \begin{bmatrix} 3 \\ -2 \\ 0 \\ -1 \end{bmatrix}
+\]
+By definition, the column space of a matrix is the set of all linear combinations of its columns. Therefore, if we construct a matrix $A$ using these three vectors as its columns, $W$ will be exactly $\operatorname{Col} A$.
+\[
+A = \begin{bmatrix} 0 & 2 & 3 \\ 1 & 1 & -2 \\ 4 & 1 & 0 \\ 3 & -1 & -1 \end{bmatrix}
+\]
+
+\vspace{0.5cm}
+
+\textbf{Exercise 16:} Find a matrix $A$ such that the given set is $\operatorname{Col} A$.
+$W = \left\{ \begin{bmatrix} b-c \\ 2b+c+d \\ 5c-4d \\ d \end{bmatrix} : b, c, d \text{ real} \right\}$.
+
+\textbf{Solution:}
+Decompose the vector into a linear combination of vectors with weights $b, c,$ and $d$:
+\[
+\begin{bmatrix} b-c \\ 2b+c+d \\ 5c-4d \\ d \end{bmatrix} = b \begin{bmatrix} 1 \\ 2 \\ 0 \\ 0 \end{bmatrix} + c \begin{bmatrix} -1 \\ 1 \\ 5 \\ 0 \end{bmatrix} + d \begin{bmatrix} 0 \\ 1 \\ -4 \\ 1 \end{bmatrix}
+\]
+Construct the matrix $A$ using these vectors as columns:
+\[
+A = \begin{bmatrix} 1 & -1 & 0 \\ 2 & 1 & 1 \\ 0 & 5 & -4 \\ 0 & 0 & 1 \end{bmatrix}
+\]
+
+\subsection{Type 5: Determining Subspace Dimensions ($k$)}
+
+\textbf{Exercise 17:} For $A = \begin{bmatrix} 2 & -8 \\ -1 & 4 \\ 1 & -4 \end{bmatrix}$, find $k$ such that $\operatorname{Nul} A$ is a subspace of $\mathbb{R}^k$, and find $k$ such that $\operatorname{Col} A$ is a subspace of $\mathbb{R}^k$.
+
+\textbf{Solution:}
+The matrix $A$ has dimensions $3 \times 2$ (3 rows, 2 columns).
+\begin{itemize}
+    \item $\operatorname{Nul} A$ consists of vectors $x$ such that $Ax = 0$. For the multiplication $Ax$ to be defined, $x$ must have the same number of entries as $A$ has columns. Thus, $x \in \mathbb{R}^2$. Therefore, $\operatorname{Nul} A$ is a subspace of $\mathbb{R}^2$ ($k=2$).
+    \item $\operatorname{Col} A$ consists of vectors $b$ such that $Ax = b$. The output vector $b$ will have the same number of entries as $A$ has rows. Thus, $b \in \mathbb{R}^3$. Therefore, $\operatorname{Col} A$ is a subspace of $\mathbb{R}^3$ ($k=3$).
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Exercise 19:} For $A = \begin{bmatrix} 4 & 5 & -2 & 6 & 0 \\ 1 & 1 & 0 & 1 & 0 \end{bmatrix}$, find $k$ for $\operatorname{Nul} A$ and $\operatorname{Col} A$.
+
+\textbf{Solution:}
+The matrix $A$ has dimensions $2 \times 5$ (2 rows, 5 columns).
+\begin{itemize}
+    \item $\operatorname{Nul} A$ requires inputs $x$ with 5 entries. Thus, $\operatorname{Nul} A$ is a subspace of $\mathbb{R}^5$ ($k=5$).
+    \item $\operatorname{Col} A$ produces outputs $b$ with 2 entries. Thus, $\operatorname{Col} A$ is a subspace of $\mathbb{R}^2$ ($k=2$).
+\end{itemize}
+
+\subsection{Type 6: Contrasting Null Space and Column Space Membership}
+
+\textbf{Exercise 23:} Let $A = \begin{bmatrix} -6 & 12 \\ -3 & 6 \end{bmatrix}$ and $w = \begin{bmatrix} 2 \\ 1 \end{bmatrix}$. Determine if $w$ is in $\operatorname{Col} A$. Is $w$ in $\operatorname{Nul} A$?
+
+\textbf{Solution:}
+\textbf{Part 1: Is $w \in \operatorname{Col} A$?}
+We must determine if the system $Ax = w$ is consistent. We set up the augmented matrix:
+\[
+\begin{bmatrix} -6 & 12 & \big| & 2 \\ -3 & 6 & \big| & 1 \end{bmatrix}
+\]
+Row reduce by replacing Row 1 with Row 1 - 2(Row 2):
+\[
+\begin{bmatrix} 0 & 0 & \big| & 0 \\ -3 & 6 & \big| & 1 \end{bmatrix} \sim \begin{bmatrix} -3 & 6 & \big| & 1 \\ 0 & 0 & \big| & 0 \end{bmatrix}
+\]
+Since there is no pivot in the rightmost column, the system is consistent. Therefore, $w \in \operatorname{Col} A$.
+
+\textbf{Part 2: Is $w \in \operatorname{Nul} A$?}
+We must check if $Aw = 0$.
+\[
+Aw = \begin{bmatrix} -6 & 12 \\ -3 & 6 \end{bmatrix} \begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} -6(2) + 12(1) \\ -3(2) + 6(1) \end{bmatrix} = \begin{bmatrix} -12 + 12 \\ -6 + 6 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+\]
+Since $Aw = 0$, $w \in \operatorname{Nul} A$.
+\textit{(Note: It is rare for a vector to be in both spaces, but it happens here because $A$ is a square matrix and the spaces overlap at this specific vector.)}
+
+\vspace{0.5cm}
+
+\textbf{Exercise 24:} Let $A = \begin{bmatrix} -8 & -2 & -9 \\ 6 & 4 & 8 \\ 4 & 0 & 4 \end{bmatrix}$ and $w = \begin{bmatrix} 2 \\ 1 \\ -2 \end{bmatrix}$. Determine if $w$ is in $\operatorname{Col} A$. Is $w$ in $\operatorname{Nul} A$?
+
+\textbf{Solution:}
+\textbf{Part 1: Is $w \in \operatorname{Col} A$?}
+Check if $Ax = w$ is consistent.
+\[
+\begin{bmatrix} -8 & -2 & -9 & \big| & 2 \\ 6 & 4 & 8 & \big| & 1 \\ 4 & 0 & 4 & \big| & -2 \end{bmatrix}
+\]
+Divide Row 3 by 4 and swap with Row 1:
+\[
+\begin{bmatrix} 1 & 0 & 1 & \big| & -0.5 \\ 6 & 4 & 8 & \big| & 1 \\ -8 & -2 & -9 & \big| & 2 \end{bmatrix}
+\]
+$R_2 \leftarrow R_2 - 6R_1$ and $R_3 \leftarrow R_3 + 8R_1$:
+\[
+\begin{bmatrix} 1 & 0 & 1 & \big| & -0.5 \\ 0 & 4 & 2 & \big| & 4 \\ 0 & -2 & -1 & \big| & -2 \end{bmatrix}
+\]
+Notice that Row 2 is exactly $-2$ times Row 3. $R_3 \leftarrow R_3 + 0.5R_2$:
+\[
+\begin{bmatrix} 1 & 0 & 1 & \big| & -0.5 \\ 0 & 4 & 2 & \big| & 4 \\ 0 & 0 & 0 & \big| & 0 \end{bmatrix}
+\]
+The system is consistent (no $0 = c$ row where $c \neq 0$). Thus, $w \in \operatorname{Col} A$.
+
+\textbf{Part 2: Is $w \in \operatorname{Nul} A$?}
+Check if $Aw = 0$.
+\[
+Aw = \begin{bmatrix} -8 & -2 & -9 \\ 6 & 4 & 8 \\ 4 & 0 & 4 \end{bmatrix} \begin{bmatrix} 2 \\ 1 \\ -2 \end{bmatrix} = \begin{bmatrix} -16 - 2 + 18 \\ 12 + 4 - 16 \\ 8 + 0 - 8 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix}
+\]
+Yes, $w \in \operatorname{Nul} A$.
+
+\subsection{Type 7: Abstract Linear Transformations (Kernel and Range)}
+
+\textbf{Exercise 43:} Define $T: \mathbb{P}_2 \to \mathbb{R}^2$ by $T(p) = \begin{bmatrix} p(0) \\ p(1) \end{bmatrix}$.
+a. Show that $T$ is a linear transformation.
+b. Find a polynomial $p$ in $\mathbb{P}_2$ that spans the kernel of $T$, and describe the range of $T$.
+
+\textbf{Solution:}
+\textbf{Part a:} To show $T$ is linear, we must show $T(p+q) = T(p) + T(q)$ and $T(cp) = cT(p)$.
+1. Addition: $T(p+q) = \begin{bmatrix} (p+q)(0) \\ (p+q)(1) \end{bmatrix} = \begin{bmatrix} p(0) + q(0) \\ p(1) + q(1) \end{bmatrix} = \begin{bmatrix} p(0) \\ p(1) \end{bmatrix} + \begin{bmatrix} q(0) \\ q(1) \end{bmatrix} = T(p) + T(q)$.
+2. Scalar Multiplication: $T(cp) = \begin{bmatrix} (cp)(0) \\ (cp)(1) \end{bmatrix} = \begin{bmatrix} c \cdot p(0) \\ c \cdot p(1) \end{bmatrix} = c \begin{bmatrix} p(0) \\ p(1) \end{bmatrix} = cT(p)$.
+Thus, $T$ is a linear transformation.
+
+\textbf{Part b:} The kernel of $T$ is the set of all polynomials $p \in \mathbb{P}_2$ such that $T(p) = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$.
+This means $p(0) = 0$ and $p(1) = 0$.
+A polynomial in $\mathbb{P}_2$ has the form $p(t) = at^2 + bt + c$.
+$p(0) = c = 0$.
+$p(1) = a(1)^2 + b(1) + 0 = a + b = 0 \implies b = -a$.
+So, $p(t) = at^2 - at = a(t^2 - t)$.
+A polynomial that spans the kernel is $p(t) = t^2 - t$.
+
+The range of $T$ is all of $\mathbb{R}^2$. For any vector $\begin{bmatrix} x \\ y \end{bmatrix} \in \mathbb{R}^2$, we can find a polynomial $p(t) = (y-x)t + x$ such that $p(0) = x$ and $p(1) = y-x+x = y$.
+
+\vspace{0.5cm}
+
+\textbf{Exercise 45:} Let $M_{2 \times 2}$ be the vector space of all $2 \times 2$ matrices, and define $T: M_{2 \times 2} \to M_{2 \times 2}$ by $T(A) = A + A^T$.
+a. Show $T$ is linear.
+b. Let $B$ be any element such that $B^T = B$. Find an $A$ such that $T(A) = B$.
+c. Show the range of $T$ is the set of $B$ with $B^T = B$.
+d. Describe the kernel of $T$.
+
+\textbf{Solution:}
+\textbf{Part a:} 
+$T(A+C) = (A+C) + (A+C)^T = A + C + A^T + C^T = (A+A^T) + (C+C^T) = T(A) + T(C)$.
+$T(cA) = cA + (cA)^T = cA + cA^T = c(A+A^T) = cT(A)$. $T$ is linear.
+
+\textbf{Part b:} We are given $B^T = B$ (so $B$ is symmetric). We want $T(A) = B$, which means $A + A^T = B$.
+Let $A = \frac{1}{2}B$. Then $T(A) = \frac{1}{2}B + (\frac{1}{2}B)^T = \frac{1}{2}B + \frac{1}{2}B^T$. Since $B^T = B$, this is $\frac{1}{2}B + \frac{1}{2}B = B$. Thus, $A = \frac{1}{2}B$ works.
+
+\textbf{Part c:} The range of $T$ consists of all outputs $T(A)$. Notice that $(T(A))^T = (A + A^T)^T = A^T + (A^T)^T = A^T + A = T(A)$. This proves that every output of $T$ is a symmetric matrix. Combined with Part b (which showed every symmetric matrix can be reached), the range of $T$ is exactly the set of all symmetric $2 \times 2$ matrices.
+
+\textbf{Part d:} The kernel of $T$ is the set of matrices $A$ such that $T(A) = 0$.
+$A + A^T = 0 \implies A^T = -A$.
+This is the definition of a \textit{skew-symmetric} matrix. Thus, the kernel of $T$ is the set of all skew-symmetric $2 \times 2$ matrices (matrices with zeros on the diagonal and $a_{12} = -a_{21}$).
+
+\newpage
+
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Membership Testing ($\operatorname{Nul} A$ vs $\operatorname{Col} A$):} 
+    \begin{itemize}
+        \item \textit{Strategy for $\operatorname{Nul} A$:} Simply multiply the matrix $A$ by the vector $w$. If the result is the zero vector, $w \in \operatorname{Nul} A$. This is a direct computation.
+        \item \textit{Strategy for $\operatorname{Col} A$:} Set up an augmented matrix $[A \mid w]$ and row reduce. If the system is consistent (no row of the form $[0 \dots 0 \mid c]$ where $c \neq 0$), then $w \in \operatorname{Col} A$.
+    \end{itemize}
+    \item \textbf{Finding Explicit Descriptions (Spanning Sets):}
+    \begin{itemize}
+        \item \textit{Strategy:} To find a spanning set for $\operatorname{Nul} A$, solve $Ax = 0$ by row reducing $A$ to RREF. Identify the pivot and free variables. Express the pivot variables in terms of the free variables, and write the general solution vector $x$ as a linear combination of constant vectors weighted by the free variables. These constant vectors form the spanning set.
+    \end{itemize}
+    \item \textbf{Abstract Vector Spaces and Transformations:}
+    \begin{itemize}
+        \item \textit{Strategy:} Rely strictly on definitions. To find the kernel of a transformation $T(p)$, set $T(p) = 0$ and solve for the constraints on $p$. To prove linearity, algebraically verify $T(u+v) = T(u) + T(v)$ and $T(cu) = cT(u)$.
+    \end{itemize}
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Parametric Vector Decomposition:} Used heavily in Exercises 3, 5, 15, and 16. This is the algebraic trick of separating a vector containing multiple variables into a sum of vectors, each multiplied by a single scalar variable. For example, turning $\begin{bmatrix} 2s+3t \\ s \end{bmatrix}$ into $s\begin{bmatrix} 2 \\ 1 \end{bmatrix} + t\begin{bmatrix} 3 \\ 0 \end{bmatrix}$. This is the fundamental bridge between algebraic equations and geometric spans.
+    \item \textbf{Matrix Transpose Properties:} Used in Exercise 45. The property $(A+B)^T = A^T + B^T$ and $(A^T)^T = A$ were crucial for proving that the range of $T(A) = A + A^T$ consists entirely of symmetric matrices.
+\end{itemize}
+
+\newpage
+
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Summary of Important Formulas}
+\begin{itemize}
+    \item $\operatorname{Nul} A = \{ x : Ax = 0 \}$
+    \item $\operatorname{Col} A = \{ b : Ax = b \text{ is consistent} \} = \operatorname{Span}\{\text{columns of } A\}$
+    \item If $A$ is an $m \times n$ matrix:
+    \begin{itemize}
+        \item $\operatorname{Nul} A$ is a subspace of $\mathbb{R}^n$ (the domain).
+        \item $\operatorname{Col} A$ is a subspace of $\mathbb{R}^m$ (the codomain).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Tricks and Shortcuts}
+\begin{itemize}
+    \item \textbf{The "Zero Vector" Quick Check:} If a problem asks if a set defined by equations is a vector space, immediately check if the zero vector satisfies the equations. If there are constants floating around (like $a+b=2$), it will fail the zero vector test and you can immediately conclude it is not a vector space, saving you from checking closure under addition and scalar multiplication.
+    \item \textbf{Extracting $\operatorname{Col} A$ from a Set:} If you are given a set defined by a parametric vector (like Ex 15), the matrix $A$ whose column space is that set is simply the matrix formed by pulling out the coefficients of the parameters into columns.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{Confusing the Dimensions:} The most common mistake is forgetting which space $\operatorname{Nul} A$ and $\operatorname{Col} A$ live in. Remember: you multiply $A$ by $x$, so $x$ must match the columns of $A$ ($n$). Thus $\operatorname{Nul} A \subseteq \mathbb{R}^n$. The output $Ax$ matches the rows of $A$ ($m$). Thus $\operatorname{Col} A \subseteq \mathbb{R}^m$.
+    \item \textbf{Using RREF for Column Space:} When finding a basis for $\operatorname{Col} A$, you must use the pivot columns of the \textbf{original} matrix $A$, not the columns of the reduced matrix. Row operations change the column space!
+    \item \textbf{Solving $Ax=v$ to check Null Space:} Students often set up an augmented matrix to check if $v \in \operatorname{Nul} A$. This is wrong. You just multiply $A$ and $v$. You only set up an augmented matrix to check if $v \in \operatorname{Col} A$.
+\end{itemize}
+
+\newpage
+
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The central theme of this topic is \textbf{understanding the anatomy of a linear transformation}. Up until now, matrices were just grids of numbers used to solve systems of equations. Now, we view a matrix as an active machine (a function) that maps vectors from one space to another. 
+The Null Space and Column Space are the two most important diagnostic tools for this machine. The Null Space tells us about the machine's "blind spots" (what it destroys), while the Column Space tells us about the machine's "reach" (what it can create). This mirrors the concepts of the \textit{kernel} and \textit{image} in abstract algebra and group theory.
+
+\subsection{B) Forward and Backward Links}
+\begin{itemize}
+    \item \textbf{Backward Links:} This chapter heavily relies on the concepts of \textit{span} and \textit{linear independence} from Chapter 1. The explicit description of $\operatorname{Nul} A$ is just a formalization of writing solutions in parametric vector form.
+    \item \textbf{Forward Links:} These concepts are the absolute bedrock for the \textbf{Rank-Nullity Theorem} (Dimension Theorem), which states that the dimension of the null space plus the dimension of the column space equals the total number of columns ($n$). Furthermore, understanding $\operatorname{Nul}(A - \lambda I)$ is the entire basis for finding \textbf{eigenvectors} in later chapters.
+\end{itemize}
+
+\newpage
+
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+1. \textbf{Machine Learning (Dimensionality Reduction / PCA):} In data science, a dataset is often represented as a massive matrix $X$. If the columns of $X$ are highly correlated, the matrix has a large null space. The null space represents the directions in the feature space where there is zero variance (redundant information or pure noise). Algorithms like Principal Component Analysis (PCA) essentially project data onto the column space of the most significant features, discarding the null space to compress the data.
+2. \textbf{Quantitative Finance (Arbitrage Pricing Theory):} In financial mathematics, we can model the future payoffs of various assets across different states of the world using a payoff matrix. The null space of this matrix represents portfolios that have exactly zero payoff in every possible future state. If such a portfolio has a negative current cost, it represents a pure arbitrage opportunity.
+
+\subsection{B) Model Problem Setup: Arbitrage Pricing Framework}
+Let us formalize the Quantitative Finance scenario. 
+Define a state space $\Omega = \{\omega_1, \omega_2, \dots, \omega_m\}$ representing $m$ possible future states of the economy.
+Let there be $n$ tradable financial assets. We define an $m \times n$ payoff matrix $P$, where the entry $P_{ij}$ is the payoff of asset $j$ in state $\omega_i$.
+Let $p \in \mathbb{R}^n$ be the vector of current prices for the $n$ assets.
+A portfolio is a vector $x \in \mathbb{R}^n$, where $x_j$ is the number of shares held in asset $j$.
+
+The future payoff of the portfolio in all states is given by the vector $y = Px$. Thus, the set of all possible future payoff profiles is exactly the \textbf{Column Space} of $P$, $\operatorname{Col} P$.
+
+The \textbf{Null Space} of $P$, $\operatorname{Nul} P$, consists of all portfolios $x$ such that $Px = 0$. These are "risk-free" zero-payoff portfolios. 
+
+\textbf{The Optimization / Arbitrage Problem:}
+An arbitrage exists if there is a portfolio $x$ such that $Px \ge 0$ (non-negative payoff in all states) and $p^T x < 0$ (you get paid to enter the portfolio today).
+Specifically, consider the null space. If there exists a portfolio $x \in \operatorname{Nul} P$ such that $p^T x \neq 0$, the market is not arbitrage-free. 
+Why? If $p^T x < 0$, you buy portfolio $x$, receive money today, and owe nothing in the future (since $Px = 0$). If $p^T x > 0$, you short the portfolio (buy $-x$), receive money today, and owe nothing in the future.
+Therefore, a fundamental theorem of asset pricing states that for a market to be free of arbitrage, the price vector $p$ must be orthogonal to the null space of $P$. This implies $p$ must lie in the row space of $P$.
+
+\newpage
+
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Missing Concept: Finding a Basis for the Row Space}
+While the homework thoroughly covers Null Space and Column Space, it only briefly mentions the \textbf{Row Space} ($\operatorname{Row} A$). A common exam question is to find a basis for the row space of a matrix.
+
+\textbf{Concept:} The row space of $A$ is the span of its rows. Crucially, \textit{row operations do not change the row space}. Therefore, to find a basis for $\operatorname{Row} A$, you simply row reduce $A$ to echelon form. The non-zero rows of the echelon form matrix form a basis for $\operatorname{Row} A$.
+
+\textbf{Example Problem:} Find a basis for the row space of $A = \begin{bmatrix} 1 & 2 & -1 \\ 2 & 4 & -2 \\ 3 & 6 & 1 \end{bmatrix}$.
+
+\textbf{Solution:}
+Row reduce $A$:
+\[
+\begin{bmatrix} 1 & 2 & -1 \\ 2 & 4 & -2 \\ 3 & 6 & 1 \end{bmatrix} \sim \begin{bmatrix} 1 & 2 & -1 \\ 0 & 0 & 0 \\ 0 & 0 & 4 \end{bmatrix} \sim \begin{bmatrix} 1 & 2 & -1 \\ 0 & 0 & 4 \\ 0 & 0 & 0 \end{bmatrix}
+\]
+The non-zero rows of the echelon form are $\begin{bmatrix} 1 & 2 & -1 \end{bmatrix}$ and $\begin{bmatrix} 0 & 0 & 4 \end{bmatrix}$.
+Therefore, a basis for $\operatorname{Row} A$ is $\left\{ \begin{bmatrix} 1 \\ 2 \\ -1 \end{bmatrix}, \begin{bmatrix} 0 \\ 0 \\ 4 \end{bmatrix} \right\}$. (Note: It is standard to write row vectors as column vectors when listing a basis).
+
+\newpage
+
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five problems with complete, step-by-step solutions. However, each solution contains a single, critical conceptual or algebraic flaw. Your task is to act as the grader: find the error, explain why it is wrong in one sentence, and provide the correct solution.
+
+\vspace{0.5cm}
+\textbf{Problem 1:} Let $A = \begin{bmatrix} 1 & -1 \\ 2 & -2 \end{bmatrix}$. Determine if $v = \begin{bmatrix} 1 \\ 1 \end{bmatrix}$ is in $\operatorname{Nul} A$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:} To check if $v \in \operatorname{Nul} A$, we must see if the system $Ax = v$ is consistent. We set up the augmented matrix $\begin{bmatrix} 1 & -1 & \big| & 1 \\ 2 & -2 & \big| & 1 \end{bmatrix}$. Row reducing gives $\begin{bmatrix} 1 & -1 & \big| & 1 \\ 0 & 0 & \big| & -1 \end{bmatrix}$. Since the last row is $0 = -1$, the system is inconsistent. Therefore, $v$ is not in $\operatorname{Nul} A$.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Problem 2:} Find a basis for $\operatorname{Col} A$ where $A = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:} First, we row reduce the matrix $A$. $R_2 \leftarrow R_2 - 2R_1$ yields the matrix $U = \begin{bmatrix} 1 & 2 \\ 0 & 0 \end{bmatrix}$. The pivot is in the first column. Therefore, the basis for the column space is the first column of the reduced matrix, which is $\begin{bmatrix} 1 \\ 0 \end{bmatrix}$.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Problem 3:} Find an explicit description of $\operatorname{Nul} A$ for the $1 \times 3$ matrix $A = \begin{bmatrix} 1 & -3 & 0 \end{bmatrix}$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:} We solve $Ax = 0$, which gives the single equation $x_1 - 3x_2 = 0$. Solving for the pivot variable gives $x_1 = 3x_2$. Writing this in parametric vector form, we get $x = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 3x_2 \\ x_2 \end{bmatrix} = x_2 \begin{bmatrix} 3 \\ 1 \end{bmatrix}$. The null space is spanned by $\begin{bmatrix} 3 \\ 1 \end{bmatrix}$.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Problem 4:} Let $A$ be a $4 \times 7$ matrix. Determine the dimensions of the spaces that contain $\operatorname{Nul} A$ and $\operatorname{Col} A$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:} The matrix $A$ has 4 rows and 7 columns. The null space is determined by the rows, so $\operatorname{Nul} A$ is a subspace of $\mathbb{R}^4$. The column space is determined by the columns, so $\operatorname{Col} A$ is a subspace of $\mathbb{R}^7$.
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Problem 5:} Find the kernel of the linear transformation $T: \mathbb{P}_2 \to \mathbb{R}$ defined by $T(p) = p(2)$.
+\begin{itemize}
+    \item \textbf{Flawed Solution:} The kernel of a transformation is the set of inputs that map to the value inside the function. So we need polynomials where $p(2) = 2$. An example of a polynomial in the kernel is $p(t) = t$, because $p(2) = 2$. Another is $p(t) = \frac{1}{2}t^2$, because $p(2) = \frac{1}{2}(4) = 2$.
+\end{itemize}
+
+\hrulefill
+
+\subsubsection*{Answers to Diagnostic Test}
+
+\textbf{Correction 1:} 
+\textit{Error:} The solution tests if $v \in \operatorname{Col} A$ instead of $\operatorname{Nul} A$. 
+\textit{Correct Solution:} To check if $v \in \operatorname{Nul} A$, compute $Av$. $Av = \begin{bmatrix} 1 & -1 \\ 2 & -2 \end{bmatrix} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1-1 \\ 2-2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}$. Since $Av = 0$, $v$ \textbf{is} in $\operatorname{Nul} A$.
+
+\textbf{Correction 2:} 
+\textit{Error:} The solution uses the column of the reduced matrix $U$ instead of the original matrix $A$. 
+\textit{Correct Solution:} Row operations change the column space. You must use the pivot columns of the original matrix. The pivot is in column 1, so the correct basis is the first column of $A$, which is $\begin{bmatrix} 1 \\ 2 \end{bmatrix}$.
+
+\textbf{Correction 3:} 
+\textit{Error:} The solution completely ignores the free variable $x_3$, resulting in vectors of the wrong dimension ($\mathbb{R}^2$ instead of $\mathbb{R}^3$). 
+\textit{Correct Solution:} The matrix has 3 columns, so vectors must have 3 entries. The equations are $x_1 = 3x_2$ and $x_3$ is free. The correct parametric form is $x = \begin{bmatrix} 3x_2 \\ x_2 \\ x_3 \end{bmatrix} = x_2 \begin{bmatrix} 3 \\ 1 \\ 0 \end{bmatrix} + x_3 \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$. The spanning set is $\left\{ \begin{bmatrix} 3 \\ 1 \\ 0 \end{bmatrix}, \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} \right\}$.
+
+\textbf{Correction 4:} 
+\textit{Error:} The dimensions are reversed; $\operatorname{Nul} A$ lives in the domain and $\operatorname{Col} A$ lives in the codomain. 
+\textit{Correct Solution:} For $Ax$ to be defined, $x$ must have 7 entries, so $\operatorname{Nul} A$ is a subspace of $\mathbb{R}^7$. The output $Ax$ will have 4 entries, so $\operatorname{Col} A$ is a subspace of $\mathbb{R}^4$.
+
+\textbf{Correction 5:} 
+\textit{Error:} The solution incorrectly assumes the kernel is where $T(p) = 2$, rather than where $T(p) = 0$. 
+\textit{Correct Solution:} The kernel is the set of all $p$ such that $T(p) = 0$, which means $p(2) = 0$. A correct polynomial in the kernel would be $p(t) = t - 2$, or $p(t) = t^2 - 4$.
+
+\end{document}

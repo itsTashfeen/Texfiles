@@ -1,0 +1,321 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, geometry}
+\geometry{a4paper, margin=1in}
+
+\title{Homework 2.2: The Inverse of a Matrix}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+In the realm of real numbers, every non-zero number $a$ has a multiplicative inverse, or reciprocal, $a^{-1}$, such that $a \cdot a^{-1} = 1$. When dealing with matrices, division is not a defined operation. Instead, we introduce the concept of a \textbf{matrix inverse}. 
+
+An $n \times n$ square matrix $A$ is said to be \textbf{invertible} (or \textbf{nonsingular}) if there exists an $n \times n$ matrix $C$ such that:
+\[ AC = I \quad \text{and} \quad CA = I \]
+where $I$ is the $n \times n$ identity matrix. If such a matrix $C$ exists, it is uniquely determined by $A$ and is denoted as $A^{-1}$. Therefore, $AA^{-1} = I$ and $A^{-1}A = I$. A matrix that does not have an inverse is called a \textbf{singular matrix}.
+
+\subsection{Intuition and Derivation}
+Conceptually, if a matrix $A$ represents a linear transformation (a mapping from one space to another), then multiplying by $A^{-1}$ represents the reverse transformation that maps everything exactly back to where it started. The identity matrix $I$ represents "no change." Thus, applying a transformation $A$ and then its inverse $A^{-1}$ results in a net effect of $I$ (no change).
+
+For a $2 \times 2$ matrix, the inverse can be derived algebraically by setting up a system of linear equations to solve for the four unknown entries of $C$ in $AC=I$. The resulting general formula relies on the quantity $ad-bc$, which must be non-zero to avoid division by zero. This quantity is so fundamentally important that it is given a special name: the \textbf{determinant}.
+
+\subsection{Historical Context and Motivation}
+The formal study of matrix algebra was largely developed in the mid-19th century by Arthur Cayley. Mathematicians were looking for ways to express and manipulate large systems of linear equations more compactly. They realized that if a system of equations could be written as $Ax = b$, finding a "matrix reciprocal" would allow them to solve for the vector $x$ simply by multiplying both sides by that reciprocal, yielding $x = A^{-1}b$. This drastically simplified the theoretical understanding of linear systems and paved the way for modern computational linear algebra.
+
+\subsection{Key Formulas}
+\begin{itemize}
+    \item \textbf{Inverse of a $2 \times 2$ Matrix}: Let $A = \begin{bmatrix} a & b \\ c & d \end{bmatrix}$. If $ad - bc \neq 0$, then $A$ is invertible and:
+    \[ A^{-1} = \frac{1}{ad - bc} \begin{bmatrix} d & -b \\ -c & a \end{bmatrix} \]
+    \item \textbf{Determinant of a $2 \times 2$ Matrix}: $\det(A) = ad - bc$.
+    \item \textbf{Solving Linear Systems}: If $A$ is an invertible $n \times n$ matrix, then for each $b$ in $\mathbb{R}^n$, the unique solution to $Ax = b$ is $x = A^{-1}b$.
+    \item \textbf{Reverse Order Law for Inverses}: $(AB)^{-1} = B^{-1}A^{-1}$.
+    \item \textbf{Inverse of a Transpose}: $(A^T)^{-1} = (A^{-1})^T$.
+\end{itemize}
+
+\subsection{Prerequisites}
+To master this topic, you must be proficient in:
+\begin{itemize}
+    \item \textbf{Matrix Multiplication}: Understanding dot products of rows and columns, and knowing that matrix multiplication is generally not commutative ($AB \neq BA$).
+    \item \textbf{Row Reduction (Gaussian Elimination)}: The algorithm for reducing an augmented matrix $[A \mid b]$ to Reduced Row Echelon Form (RREF).
+    \item \textbf{The Identity Matrix}: Knowing the structure and behavior of $I_n$ (ones on the main diagonal, zeros elsewhere).
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+\textit{Note: As requested, a representative sample covering every distinct problem type from the end of the chapter has been selected to ensure full conceptual coverage without redundant repetition.}
+
+\subsection{Problem 1 (Calculating a $2 \times 2$ Inverse)}
+\textbf{Question:} Find the inverse of the matrix $A = \begin{bmatrix} 8 & 3 \\ 5 & 2 \end{bmatrix}$.
+
+\textbf{Solution:}
+First, calculate the determinant of $A$:
+\[ \det(A) = (8)(2) - (3)(5) = 16 - 15 = 1 \]
+Since $\det(A) = 1 \neq 0$, the matrix is invertible.
+We apply Theorem 4, the $2 \times 2$ inverse formula:
+\[ A^{-1} = \frac{1}{\det(A)} \begin{bmatrix} 2 & -3 \\ -5 & 8 \end{bmatrix} \]
+\[ A^{-1} = \frac{1}{1} \begin{bmatrix} 2 & -3 \\ -5 & 8 \end{bmatrix} = \begin{bmatrix} 2 & -3 \\ -5 & 8 \end{bmatrix} \]
+\textbf{Final Answer:} $A^{-1} = \begin{bmatrix} 2 & -3 \\ -5 & 8 \end{bmatrix}$.
+
+\subsection{Problem 7 (Solving a System Using Inverses)}
+\textbf{Question:} Use the inverse found in Exercise 1 to solve the system:
+\begin{align*}
+8x_1 + 3x_2 &= 2 \\
+5x_1 + 2x_2 &= -1
+\end{align*}
+
+\textbf{Solution:}
+We can write this system in matrix form $Ax = b$:
+\[ \begin{bmatrix} 8 & 3 \\ 5 & 2 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 2 \\ -1 \end{bmatrix} \]
+From Theorem 5, the solution is $x = A^{-1}b$. We use the inverse from Problem 1:
+\[ x = \begin{bmatrix} 2 & -3 \\ -5 & 8 \end{bmatrix} \begin{bmatrix} 2 \\ -1 \end{bmatrix} \]
+Perform the matrix multiplication:
+\[ x = \begin{bmatrix} (2)(2) + (-3)(-1) \\ (-5)(2) + (8)(-1) \end{bmatrix} = \begin{bmatrix} 4 + 3 \\ -10 - 8 \end{bmatrix} = \begin{bmatrix} 7 \\ -18 \end{bmatrix} \]
+\textbf{Final Answer:} $x_1 = 7$, $x_2 = -1$.
+
+\subsection{Problem 10 (Algebraic Matrix Proof)}
+\textbf{Question:} Use matrix algebra to show that if $A$ is invertible and $D$ satisfies $AD = I$, then $D = A^{-1}$.
+
+\textbf{Solution:}
+We are given that $A$ is an invertible matrix and $AD = I$. Because $A$ is invertible, its unique inverse $A^{-1}$ exists.
+Multiply both sides of the equation on the left by $A^{-1}$:
+\[ A^{-1}(AD) = A^{-1}I \]
+Use the associative property of matrix multiplication:
+\[ (A^{-1}A)D = A^{-1}I \]
+By the definition of an inverse, $A^{-1}A = I$. Thus:
+\[ I \cdot D = A^{-1} \]
+Multiplying any matrix by the identity matrix leaves it unchanged, so $I \cdot D = D$:
+\[ D = A^{-1} \]
+\textbf{Final Answer:} The proof is complete. By left-multiplying by $A^{-1}$ and using associativity, we deduce $D = A^{-1}$.
+
+\subsection{Problem 11 (True/False Concepts)}
+\textbf{Question:} (T/F) In order for a matrix $B$ to be the inverse of $A$, both equations $AB = I$ and $BA = I$ must be true.
+
+\textbf{Solution:}
+\textbf{Final Answer: True.} According to the strict definition introduced in Section 2.2, a matrix $A$ is invertible if there is a matrix $C$ such that $CA = I$ and $AC = I$. While later theorems (like the Invertible Matrix Theorem) prove that for \textit{square} matrices one equation implies the other, the foundational definition requires both to be true.
+
+\subsection{Problem 41 (Finding a $3 \times 3$ Inverse Using the Algorithm)}
+\textbf{Question:} Find the inverse of $A = \begin{bmatrix} 1 & 0 & -2 \\ -3 & 1 & 4 \\ 2 & -3 & 4 \end{bmatrix}$, if it exists.
+
+\textbf{Solution:}
+We set up the augmented matrix $[A \mid I]$ and row reduce it to $[I \mid A^{-1}]$.
+\[ \begin{bmatrix} 1 & 0 & -2 & \mid & 1 & 0 & 0 \\ -3 & 1 & 4 & \mid & 0 & 1 & 0 \\ 2 & -3 & 4 & \mid & 0 & 0 & 1 \end{bmatrix} \]
+Step 1: Eliminate entries below the pivot in column 1.
+$R_2 \to R_2 + 3R_1$ and $R_3 \to R_3 - 2R_1$:
+\[ \begin{bmatrix} 1 & 0 & -2 & \mid & 1 & 0 & 0 \\ 0 & 1 & -2 & \mid & 3 & 1 & 0 \\ 0 & -3 & 8 & \mid & -2 & 0 & 1 \end{bmatrix} \]
+Step 2: Eliminate entry below the pivot in column 2.
+$R_3 \to R_3 + 3R_2$:
+\[ \begin{bmatrix} 1 & 0 & -2 & \mid & 1 & 0 & 0 \\ 0 & 1 & -2 & \mid & 3 & 1 & 0 \\ 0 & 0 & 2 & \mid & 7 & 3 & 1 \end{bmatrix} \]
+Step 3: Make the pivot in column 3 a $1$.
+$R_3 \to \frac{1}{2}R_3$:
+\[ \begin{bmatrix} 1 & 0 & -2 & \mid & 1 & 0 & 0 \\ 0 & 1 & -2 & \mid & 3 & 1 & 0 \\ 0 & 0 & 1 & \mid & \frac{7}{2} & \frac{3}{2} & \frac{1}{2} \end{bmatrix} \]
+Step 4: Eliminate entries above the pivot in column 3.
+$R_1 \to R_1 + 2R_3$ and $R_2 \to R_2 + 2R_3$:
+\[ \begin{bmatrix} 1 & 0 & 0 & \mid & 1+7 & 0+3 & 0+1 \\ 0 & 1 & 0 & \mid & 3+7 & 1+3 & 0+1 \\ 0 & 0 & 1 & \mid & \frac{7}{2} & \frac{3}{2} & \frac{1}{2} \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 & \mid & 8 & 3 & 1 \\ 0 & 1 & 0 & \mid & 10 & 4 & 1 \\ 0 & 0 & 1 & \mid & \frac{7}{2} & \frac{3}{2} & \frac{1}{2} \end{bmatrix} \]
+\textbf{Final Answer:} $A^{-1} = \begin{bmatrix} 8 & 3 & 1 \\ 10 & 4 & 1 \\ 3.5 & 1.5 & 0.5 \end{bmatrix}$.
+
+\subsection{Problem 45 (Finding a Specific Column of the Inverse)}
+\textbf{Question:} Let $A = \begin{bmatrix} -2 & -7 & -9 \\ 2 & 5 & 6 \\ 1 & 3 & 4 \end{bmatrix}$. Find the third column of $A^{-1}$ without computing the other columns.
+
+\textbf{Solution:}
+Let $x$ be the third column of $A^{-1}$. By the definition of matrix multiplication, $A$ multiplied by the $i$-th column of $A^{-1}$ equals the $i$-th column of the identity matrix $I$. Thus, $Ax = e_3$, where $e_3 = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$.
+We augment $A$ with $e_3$ and solve for $x$:
+\[ [A \mid e_3] = \begin{bmatrix} -2 & -7 & -9 & \mid & 0 \\ 2 & 5 & 6 & \mid & 0 \\ 1 & 3 & 4 & \mid & 1 \end{bmatrix} \]
+Swap $R_1$ and $R_3$:
+\[ \begin{bmatrix} 1 & 3 & 4 & \mid & 1 \\ 2 & 5 & 6 & \mid & 0 \\ -2 & -7 & -9 & \mid & 0 \end{bmatrix} \]
+$R_2 \to R_2 - 2R_1$ and $R_3 \to R_3 + 2R_1$:
+\[ \begin{bmatrix} 1 & 3 & 4 & \mid & 1 \\ 0 & -1 & -2 & \mid & -2 \\ 0 & -1 & -1 & \mid & 2 \end{bmatrix} \]
+$R_3 \to R_3 - R_2$:
+\[ \begin{bmatrix} 1 & 3 & 4 & \mid & 1 \\ 0 & -1 & -2 & \mid & -2 \\ 0 & 0 & 1 & \mid & 4 \end{bmatrix} \]
+$R_2 \to -R_2$:
+\[ \begin{bmatrix} 1 & 3 & 4 & \mid & 1 \\ 0 & 1 & 2 & \mid & 2 \\ 0 & 0 & 1 & \mid & 4 \end{bmatrix} \]
+$R_2 \to R_2 - 2R_3$:
+\[ \begin{bmatrix} 1 & 3 & 4 & \mid & 1 \\ 0 & 1 & 0 & \mid & -6 \\ 0 & 0 & 1 & \mid & 4 \end{bmatrix} \]
+$R_1 \to R_1 - 4R_3$:
+\[ \begin{bmatrix} 1 & 3 & 0 & \mid & -15 \\ 0 & 1 & 0 & \mid & -6 \\ 0 & 0 & 1 & \mid & 4 \end{bmatrix} \]
+$R_1 \to R_1 - 3R_2$:
+\[ \begin{bmatrix} 1 & 0 & 0 & \mid & -15 - 3(-6) \\ 0 & 1 & 0 & \mid & -6 \\ 0 & 0 & 1 & \mid & 4 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 & \mid & 3 \\ 0 & 1 & 0 & \mid & -6 \\ 0 & 0 & 1 & \mid & 4 \end{bmatrix} \]
+\textbf{Final Answer:} The third column of $A^{-1}$ is $\begin{bmatrix} 3 \\ -6 \\ 4 \end{bmatrix}$.
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{enumerate}
+    \item \textbf{$2 \times 2$ Formula Problems (e.g., Problem 1):} 
+    \textit{Strategy:} Directly apply Theorem 4. First, check if $ad-bc = 0$. If it is not, swap the main diagonal entries, negate the off-diagonal entries, and multiply by the scalar $\frac{1}{\det(A)}$.
+    \item \textbf{Solving Systems via Inverses (e.g., Problem 7):} 
+    \textit{Strategy:} Recognize that $Ax=b$ can be algebraically manipulated to $x = A^{-1}b$. Simply multiply the pre-calculated inverse by the constant vector $b$.
+    \item \textbf{Algebraic Proofs (e.g., Problem 10):}
+    \textit{Strategy:} Use matrix multiplication properties (associativity, distributive law) and fundamental definitions ($A A^{-1} = I$) to isolate the target variable. Left/right multiplication order is critical.
+    \item \textbf{Algorithm for Inverting $n \times n$ Matrices (e.g., Problem 41):}
+    \textit{Strategy:} Set up the augmented matrix $[A \mid I]$. Perform standard Gaussian elimination to reduce the left side to $I$. The right side automatically becomes $A^{-1}$.
+    \item \textbf{Targeted Inverse Columns (e.g., Problem 45):}
+    \textit{Strategy:} Instead of augmenting with a full identity matrix, augment with only the standard basis vector $e_j$ corresponding to the desired column $j$. Solve $[A \mid e_j]$ to get the $j$-th column.
+\end{enumerate}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Directional Multiplication:} In matrix algebra, $AB$ is generally not equal to $BA$. In Problem 10, to cancel $A$ from $AD = I$, we \textit{left-multiply} both sides by $A^{-1}$. Doing a right-multiplication (i.e., $ADA^{-1} = IA^{-1}$) is a valid mathematical step but does not help isolate $D$.
+    \item \textbf{Simultaneous Equation Solving (The Augmented Identity Trick):} The algorithm $[A \mid I] \sim [I \mid A^{-1}]$ is a brilliant shortcut. It simultaneously solves $n$ systems of equations ($Ax = e_1, Ax = e_2, \dots, Ax = e_n$). This saves us from doing $n$ separate row reductions.
+    \item \textbf{Determinant Check as a Gatekeeper:} Before engaging in heavy computations, always check $\det(A) = ad-bc$ (for $2 \times 2$). This acts as a gatekeeper trick; if it equals zero, you can immediately write "Not invertible" and skip all other algebraic steps.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Essential Formulas}
+\begin{itemize}
+    \item $A^{-1} = \frac{1}{ad-bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}$
+    \item $Ax = b \implies x = A^{-1}b$ (Order matters! Not $b A^{-1}$)
+    \item $(AB)^{-1} = B^{-1}A^{-1}$ (The "Shoes and Socks" rule: to undo putting on socks then shoes, you must take off shoes, then take off socks).
+    \item $(A^T)^{-1} = (A^{-1})^T$
+    \item $(cA)^{-1} = \frac{1}{c}A^{-1}$ for any non-zero scalar $c$.
+\end{itemize}
+
+\subsection{Tricks and Shortcuts}
+\begin{itemize}
+    \item \textbf{The Scalar Pull-Out Trick:} When using the $2 \times 2$ formula, leave the scalar $\frac{1}{\det(A)}$ on the outside of the matrix as long as possible. Distributing a fraction like $\frac{1}{17}$ into the matrix early makes subsequent row operations and arithmetic much harder.
+    \item \textbf{Verify with Trace/Determinant (Advanced Check):} A quick way to verify a $2 \times 2$ inverse is correct is to quickly compute its determinant; $\det(A^{-1})$ must exactly equal $\frac{1}{\det(A)}$.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{The Sum Trap:} Assuming $(A+B)^{-1} = A^{-1} + B^{-1}$. This is \textbf{NEVER} true in general matrix algebra! 
+    \item \textbf{Commutativity Trap:} Solving $xA = b$ and concluding $x = A^{-1}b$. It should actually be $x = b A^{-1}$. Matrix order must be strictly preserved.
+    \item \textbf{Row Operations on only half the matrix:} Forgetting to apply a row operation to the augmented right-hand side (the identity side) during the $[A \mid I]$ algorithm.
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The core theme of this topic is \textbf{"Reversibility."} In calculus, we study reversibility through inverse functions (e.g., $e^x$ and $\ln(x)$) and through the Fundamental Theorem of Calculus (integration undoing differentiation). In linear algebra, transformations are represented by matrices. Finding an inverse matrix is geometrically equivalent to finding a transformation that precisely "undoes" a stretching, rotating, or shearing of space, returning every vector back to its original coordinate.
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Link:} This chapter extends the concept of solving systems via augmented matrices (Chapter 1) by codifying the process into a single algebraic object (the inverse matrix). It relies heavily on a mastery of row operations.
+
+\textbf{Forward Link:} The matrix inverse is the foundational pillar for the \textbf{Invertible Matrix Theorem} (IMT), which we will see in the very next section (2.3). The IMT will connect the inverse to linearly independent columns, spans, null spaces, and determinants. Furthermore, in subsequent topics involving diagonalization and eigenvectors (Chapter 5), computing $A = PDP^{-1}$ relies entirely on the ability to rapidly and accurately compute matrix inverses.
+
+\newpage
+\section{Part 6: Real-World Application and Modeling}
+
+\subsection{A) Concrete Scenarios in Quantitative Fields}
+\begin{enumerate}
+    \item \textbf{Econometrics \& Statistics (Ordinary Least Squares):} In quantitative finance and economics, researchers frequently use multiple linear regression to model an asset's returns based on several factors (like inflation, interest rates, and market indices). The optimal weights (coefficients) for this model are found using the Ordinary Least Squares (OLS) estimator, which explicitly requires inverting a matrix of data variances and covariances.
+    \item \textbf{Quantitative Finance (Portfolio Optimization):} Modern Portfolio Theory (Markowitz formulation) requires identifying the optimal allocation of capital across various assets to minimize risk for a given return. The objective function involves a covariance matrix of asset returns. Solving for the optimal asset weights requires finding the inverse of this covariance matrix.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup: Ordinary Least Squares (OLS)}
+\textbf{Scenario:} A financial data scientist wants to predict a stock's daily return ($y$) using two factors: the overall market return ($x_1$) and the daily change in interest rates ($x_2$). They collect $n$ days of historical data.
+
+\textbf{Model Setup:}
+We formulate a system of linear equations in matrix form, $y = X\beta + \epsilon$, where:
+\begin{itemize}
+    \item $y$ is an $n \times 1$ column vector of historical stock returns.
+    \item $X$ is an $n \times 3$ matrix. The first column is all 1s (for the $y$-intercept), the second column contains the market returns ($x_1$), and the third column contains interest rate changes ($x_2$).
+    \item $\beta = \begin{bmatrix} \beta_0 \\ \beta_1 \\ \beta_2 \end{bmatrix}$ is the unknown $3 \times 1$ vector of model coefficients we want to find.
+\end{itemize}
+To find the line of best fit that minimizes the sum of squared errors, the scientist takes the derivative of the error function and sets it to zero. This yields the "Normal Equations":
+\[ (X^T X)\beta = X^T y \]
+Here, $X^T X$ results in a $3 \times 3$ square matrix. To isolate and solve for the optimal weights $\beta$, the scientist must compute the matrix inverse:
+\[ \beta = (X^T X)^{-1} X^T y \]
+The algorithm learned in this chapter (augmenting with $I$ and row reducing) is exactly what the computer's backend executes to calculate $(X^T X)^{-1}$ and spit out the financial model parameters.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Block Matrix Inversion}
+While your homework focused on standard numerical matrices, advanced topics often ask you to compute the inverse of a matrix partitioned into smaller "blocks." This is extremely common in theoretical statistics and differential equations.
+
+\textbf{Concept:} Suppose a matrix $M$ is partitioned into a $2 \times 2$ block diagonal structure:
+\[ M = \begin{bmatrix} A & 0 \\ 0 & B \end{bmatrix} \]
+where $A$ and $B$ are smaller square, invertible matrices, and $0$ represents matrices of all zeros.
+The inverse of this block diagonal matrix is wonderfully simple—you just invert the blocks along the diagonal:
+\[ M^{-1} = \begin{bmatrix} A^{-1} & 0 \\ 0 & B^{-1} \end{bmatrix} \]
+
+\textbf{Example:} Find the inverse of the $4 \times 4$ matrix $M$:
+\[ M = \begin{bmatrix} 2 & 5 & 0 & 0 \\ 1 & 3 & 0 & 0 \\ 0 & 0 & 4 & 0 \\ 0 & 0 & 0 & 2 \end{bmatrix} \]
+\textbf{Solution:} Notice $M$ can be partitioned into $A = \begin{bmatrix} 2 & 5 \\ 1 & 3 \end{bmatrix}$ and $B = \begin{bmatrix} 4 & 0 \\ 0 & 2 \end{bmatrix}$.
+First, $A^{-1} = \frac{1}{6-5} \begin{bmatrix} 3 & -5 \\ -1 & 2 \end{bmatrix} = \begin{bmatrix} 3 & -5 \\ -1 & 2 \end{bmatrix}$.
+Second, $B$ is a diagonal matrix. The inverse of a diagonal matrix is just the reciprocal of its entries: $B^{-1} = \begin{bmatrix} 1/4 & 0 \\ 0 & 1/2 \end{bmatrix}$.
+Therefore, combining them back into a block matrix:
+\[ M^{-1} = \begin{bmatrix} 3 & -5 & 0 & 0 \\ -1 & 2 & 0 & 0 \\ 0 & 0 & 1/4 & 0 \\ 0 & 0 & 0 & 1/2 \end{bmatrix} \]
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five solutions that contain a single, subtle conceptual or algebraic error. Your task as the grader is to spot the mistake, explain it, and correct it.
+
+\subsection{Flawed Problem 1}
+\textbf{Question:} Find the inverse of $A = \begin{bmatrix} 3 & -2 \\ 4 & -1 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+\[ \det(A) = (3)(-1) - (-2)(4) = -3 + 8 = 5 \]
+\[ A^{-1} = \frac{1}{5} \begin{bmatrix} 3 & 2 \\ -4 & -1 \end{bmatrix} = \begin{bmatrix} 3/5 & 2/5 \\ -4/5 & -1/5 \end{bmatrix} \]
+
+\textbf{Correction:}
+\textbf{Error:} The student negated the off-diagonal entries correctly but failed to swap the main diagonal entries ($a$ and $d$).
+\textbf{Correct Step:} The adjugate matrix should swap $3$ and $-1$.
+\[ A^{-1} = \frac{1}{5} \begin{bmatrix} -1 & 2 \\ -4 & 3 \end{bmatrix} = \begin{bmatrix} -1/5 & 2/5 \\ -4/5 & 3/5 \end{bmatrix} \]
+
+\subsection{Flawed Problem 2}
+\textbf{Question:} Solve the matrix equation $X A = B$ for the matrix $X$, assuming $A$ is invertible. Let $A = \begin{bmatrix} 2 & 1 \\ 1 & 1 \end{bmatrix}$ and $B = \begin{bmatrix} 3 & 4 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+Because $X A = B$, we can find $X$ by multiplying both sides by the inverse of $A$.
+\[ X = A^{-1} B \]
+\[ A^{-1} = \frac{1}{2-1} \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} \]
+\[ X = \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} \begin{bmatrix} 3 & 4 \end{bmatrix} \]
+This matrix multiplication is impossible due to dimension mismatches ($2 \times 2$ times $1 \times 2$). The problem must have a typo!
+
+\textbf{Correction:}
+\textbf{Error:} The student multiplied by $A^{-1}$ on the \textit{left} side of $B$, violating the preservation of order required in matrix multiplication. 
+\textbf{Correct Step:} To isolate $X$, you must right-multiply by $A^{-1}$.
+\[ (XA)A^{-1} = BA^{-1} \implies X = B A^{-1} \]
+\[ X = \begin{bmatrix} 3 & 4 \end{bmatrix} \begin{bmatrix} 1 & -1 \\ -1 & 2 \end{bmatrix} = \begin{bmatrix} (3)(1)+(4)(-1) & (3)(-1)+(4)(2) \end{bmatrix} = \begin{bmatrix} -1 & 5 \end{bmatrix} \]
+
+\subsection{Flawed Problem 3}
+\textbf{Question:} Simplify the expression $(C A B)^{-1}$, assuming $A$, $B$, and $C$ are all invertible $n \times n$ matrices.
+\textbf{Flawed Solution:}
+By the property of inverses, the inverse distributes over matrix multiplication.
+\[ (C A B)^{-1} = C^{-1} A^{-1} B^{-1} \]
+
+\textbf{Correction:}
+\textbf{Error:} The student distributed the inverse without reversing the order of the matrices, violating the reverse-order law for matrix inverses.
+\textbf{Correct Step:} $(C A B)^{-1} = B^{-1} A^{-1} C^{-1}$.
+
+\subsection{Flawed Problem 4}
+\textbf{Question:} Simplify the expression for the matrix $X$ if $(A + X)^{-1} = C$. Assume all matrices are invertible $n \times n$ matrices.
+\textbf{Flawed Solution:}
+Invert both sides:
+\[ ((A + X)^{-1})^{-1} = C^{-1} \implies A + X = C^{-1} \]
+Take the inverse of the sum on the left:
+\[ A^{-1} + X^{-1} = C^{-1} \]
+Isolate $X^{-1}$:
+\[ X^{-1} = C^{-1} - A^{-1} \]
+Invert again:
+\[ X = (C^{-1} - A^{-1})^{-1} \]
+
+\textbf{Correction:}
+\textbf{Error:} The student falsely assumed that the inverse of a sum is the sum of the inverses ($A^{-1} + X^{-1}$).
+\textbf{Correct Step:} From $A + X = C^{-1}$, simply subtract $A$ from both sides as a matrix operation.
+\[ X = C^{-1} - A \]
+
+\subsection{Flawed Problem 5}
+\textbf{Question:} Find the inverse of $M = 3A$, given that $A^{-1} = \begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+\[ M^{-1} = (3A)^{-1} \]
+Constants factor out directly when taking an inverse:
+\[ M^{-1} = 3 A^{-1} = 3 \begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 3 & 6 \\ 0 & 3 \end{bmatrix} \]
+
+\textbf{Correction:}
+\textbf{Error:} The student factored the scalar $3$ out directly, but the inverse of a scalar times a matrix is the \textit{reciprocal} of the scalar times the inverse matrix. $(cA)^{-1} = \frac{1}{c}A^{-1}$.
+\textbf{Correct Step:}
+\[ M^{-1} = (3A)^{-1} = \frac{1}{3} A^{-1} = \frac{1}{3} \begin{bmatrix} 1 & 2 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} 1/3 & 2/3 \\ 0 & 1/3 \end{bmatrix} \]
+
+\end{document}

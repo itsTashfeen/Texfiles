@@ -22,12 +22,12 @@
 
 **Working Directory:**
 ```
-C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\
+D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations\
 ```
 
 **Output Directory:**
 ```
-C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]\
+D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]\
 ```
 
 **Dependencies:**
@@ -41,7 +41,7 @@ C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_
 import sys
 import os
 
-BASE_DIR = r'C:\Users\Computer\Documents\GitHub\MathTex\Visualizations'
+BASE_DIR = r'D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations'
 sys.path.append(BASE_DIR)
 os.chdir(BASE_DIR)
 os.environ['MANIM_OUTPUT_DIR'] = os.path.join(BASE_DIR, 'media')
@@ -148,7 +148,7 @@ import subprocess
 import os
 
 # Configuration
-video_dir = r"C:\Users\Computer\Documents\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]"
+video_dir = r"D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Visualizations\media\videos\[PROJECT_NAME]"
 project_name = "[PROJECT_NAME]"
 
 # List all scene videos in order

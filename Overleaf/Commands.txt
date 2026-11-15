@@ -1,0 +1,67 @@
+Setup (once per terminal)
+cd "D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Overleaf"
+& "D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\.venv\Scripts\Activate.ps1"
+$env:PYTHONIOENCODING='utf-8'
+
+One-shot pull (Overleaf → local)
+python sync_courses.py --pull
+
+One-shot push (local → Overleaf)
+python sync_courses.py --push
+
+Pull and push mirror the other side. Any file missing on the source side gets a prompt:
+  d = delete it (on pull, the matching .pdf and any emptied folders are removed too; deleted files skip the Recycle Bin)
+  r = restore it to the source side
+  i = ignore (leave it alone this time)
+Files matching .olignore are never synced or deleted in either direction.
+desktop.ini, *.pyc, __pycache__, .olauth and .olignore are always ignored, even if .olignore is missing.
+Two-way sync (no flag) and the background daemon never delete anything.
+A failed file is reported at the end and does not stop the rest of the sync.
+The sync client is vendored in .\olsync (patched copy), so pip upgrades of overleaf-sync do not affect it.
+
+Remove ignored junk from Overleaf (lists everything, asks once)
+python sync_courses.py --clean-remote
+
+After slice_pdfs.py: mirror .tex chapter folders into .pdf and move Book PDF
+python .code/mirror_pdf_tree.py
+Paste the .tex course folder (quotes from Copy as path are fine). Confirms the
+.tex -> .pdf destination, creates the same subfolders, then moves each Book PDF
+folder across (merges if the dest already has files; same names are overwritten).
+
+Long paths / SUBST (pdflatex path limit)
+pdflatex cannot open some deep chapter paths on the long D:\... tree.
+watch_tex_to_pdf.py compiles from the .tex folder using only the filename, so Ctrl+S works
+even on those long paths. Mirrored PDFs still go to Overleaf/.pdf/... .
+Optional short drive (once per reboot / login) for a shorter Explorer/VS Code tree:
+  subst M: "D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Overleaf"
+Open VS Code / Cursor on M:\ (Overleaf root). Ctrl+S uses Overleaf\.vscode\settings.json
+and mirrors into M:\.pdf\... (same folders as D:\...\Overleaf\.pdf).
+
+Ctrl+S in this workspace (LaTeX Workshop onSave)
+Compiles the open .tex (PDF tab stays on the temp copy), then copies it to the mirrored
+Overleaf/.pdf/... path. Missing folders under .pdf are created on that save.
+If the .tex is empty (or only whitespace), the mirrored PDF is deleted instead of compiling.
+Does not run a background watcher. Aux cleaning uses glob, not latexmk/Perl.
+
+One-shot .tex → .pdf (only outdated/missing; files you never opened, e.g. after a pull)
+Also deletes mirrored PDFs whose .tex is missing or empty.
+python watch_tex_to_pdf.py --once
+
+Prune orphan PDFs only
+python watch_tex_to_pdf.py --prune
+
+Optional background watcher (not needed if you use Ctrl+S)
+python watch_tex_to_pdf.py
+
+Background two-way sync every 60s (no CMD window)
+After each sync, mirrored PDFs whose .tex was deleted or emptied are removed.
+Start:
+cd "D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Overleaf"
+powershell -ExecutionPolicy Bypass -File .\start_sync_daemon.ps1
+
+Stop:
+cd "D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Overleaf"
+powershell -ExecutionPolicy Bypass -File .\stop_sync_daemon.ps1
+
+Check log:
+Get-Content "D:\Users\Tashfeen Omran\Documents\Not Synced\GitHub\MathTex\Overleaf\sync_daemon.log" -Tail 50

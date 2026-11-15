@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+\noindent
+Tashfeen Hatim Said Omran\\
+UCF ID: 5862894\\
+Class: STA4321\\
+October 15, 2026
+
+\vspace{1em}
+
+\section*{1. Prove $E(Y) = \frac{nr}{N}$}
+
+To find the expected value, I use the definition of the expected value for a discrete random variable. The probability mass function of a hypergeometric distribution is given by:
+\[ P(Y = y) = \frac{\binom{r}{y}\binom{N-r}{n-y}}{\binom{N}{n}} \]
+
+I set up the expectation sum:
+\[ E(Y) = \sum_{y=0}^{n} y \frac{\binom{r}{y}\binom{N-r}{n-y}}{\binom{N}{n}} \]
+
+Since the first term is zero when $y=0$, I start the sum at $y=1$. I apply the algebraic identity $y\binom{r}{y} = r\binom{r-1}{y-1}$:
+\[ E(Y) = \sum_{y=1}^{n} \frac{r\binom{r-1}{y-1}\binom{N-r}{n-y}}{\binom{N}{n}} \]
+
+I pull the constant $r$ out of the summation:
+\[ E(Y) = \frac{r}{\binom{N}{n}} \sum_{y=1}^{n} \binom{r-1}{y-1}\binom{N-r}{n-y} \]
+
+I use a change of variables by letting $k = y - 1$. The sum limits change from $k=0$ to $k=n-1$, and $n-y$ becomes $(n-1)-k$. Notice that $N-r = (N-1)-(r-1)$.
+\[ E(Y) = \frac{r}{\binom{N}{n}} \sum_{k=0}^{n-1} \binom{r-1}{k}\binom{(N-1)-(r-1)}{(n-1)-k} \]
+
+I use Vandermonde's identity, which states $\sum_{k} \binom{A}{k}\binom{B}{m-k} = \binom{A+B}{m}$.
+\[ \sum_{k=0}^{n-1} \binom{r-1}{k}\binom{(N-1)-(r-1)}{(n-1)-k} = \binom{N-1}{n-1} \]
+
+Substituting this back into the expectation yields:
+\[ E(Y) = r \frac{\binom{N-1}{n-1}}{\binom{N}{n}} \]
+
+I expand the binomial coefficients to simplify:
+\[ E(Y) = r \frac{\frac{(N-1)!}{(n-1)!((N-1)-(n-1))!}}{\frac{N!}{n!(N-n)!}} = r \frac{\frac{(N-1)!}{(n-1)!(N-n)!}}{\frac{N!}{n!(N-n)!}} \]
+
+Canceling $(N-n)!$ and simplifying $\frac{(N-1)!}{N!} = \frac{1}{N}$ and $\frac{n!}{(n-1)!} = n$, I get my final result:
+\[ E(Y) = r \left( \frac{n}{N} \right) = \frac{nr}{N} \]
+
+
+\section*{2. Prove $V(Y) = n\left(\frac{r}{N}\right)\left(\frac{N-r}{N}\right)\left(\frac{N-n}{N-1}\right)$}
+
+To find the variance, I use the formula $V(Y) = E[Y(Y-1)] + E(Y) - [E(Y)]^2$. First, I calculate $E[Y(Y-1)]$:
+\[ E[Y(Y-1)] = \sum_{y=0}^{n} y(y-1) \frac{\binom{r}{y}\binom{N-r}{n-y}}{\binom{N}{n}} \]
+
+The terms for $y=0$ and $y=1$ are zero, so I start the sum at $y=2$. I use the identity $y(y-1)\binom{r}{y} = r(r-1)\binom{r-2}{y-2}$:
+\[ E[Y(Y-1)] = \sum_{y=2}^{n} \frac{r(r-1)\binom{r-2}{y-2}\binom{N-r}{n-y}}{\binom{N}{n}} \]
+
+I pull out the constants:
+\[ E[Y(Y-1)] = \frac{r(r-1)}{\binom{N}{n}} \sum_{y=2}^{n} \binom{r-2}{y-2}\binom{N-r}{n-y} \]
+
+Let $k = y - 2$. I use Vandermonde's identity again:
+\[ \sum_{k=0}^{n-2} \binom{r-2}{k}\binom{(N-2)-(r-2)}{(n-2)-k} = \binom{N-2}{n-2} \]
+
+So I have:
+\[ E[Y(Y-1)] = \frac{r(r-1)\binom{N-2}{n-2}}{\binom{N}{n}} \]
+
+I expand the coefficients to simplify:
+\[ E[Y(Y-1)] = r(r-1) \frac{\frac{(N-2)!}{(n-2)!(N-n)!}}{\frac{N!}{n!(N-n)!}} = \frac{r(r-1)n(n-1)}{N(N-1)} \]
+
+Next, I substitute this into the variance formula:
+\[ V(Y) = \frac{r(r-1)n(n-1)}{N(N-1)} + \frac{nr}{N} - \left(\frac{nr}{N}\right)^2 \]
+
+I factor out $\frac{nr}{N}$:
+\[ V(Y) = \frac{nr}{N} \left[ \frac{(r-1)(n-1)}{N-1} + 1 - \frac{nr}{N} \right] \]
+
+I find a common denominator of $N(N-1)$ for the terms inside the bracket:
+\[ V(Y) = \frac{nr}{N} \left[ \frac{N(r-1)(n-1) + N(N-1) - nr(N-1)}{N(N-1)} \right] \]
+
+I expand the numerator inside the bracket:
+\[ N(rn - r - n + 1) + N^2 - N - Nnr + nr \]
+\[ = Nrn - Nr - Nn + N + N^2 - N - Nnr + nr \]
+
+I cancel $Nrn$ and $-Nnr$, and $N$ and $-N$:
+\[ = -Nr - Nn + N^2 + nr \]
+
+I factor this expression by grouping:
+\[ = N(N-n) - r(N-n) = (N-r)(N-n) \]
+
+Substituting this back into my variance equation yields:
+\[ V(Y) = \frac{nr}{N} \left[ \frac{(N-r)(N-n)}{N(N-1)} \right] \]
+
+I rearrange the fractions to get the exact requested form:
+\[ V(Y) = n \left(\frac{r}{N}\right) \left(\frac{N-r}{N}\right) \left(\frac{N-n}{N-1}\right) \]
+
+\end{document}

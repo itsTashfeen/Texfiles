@@ -1,0 +1,472 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+
+\geometry{letterpaper, margin=1in}
+
+\title{\textbf{Homework 2.5: Matrix Factorizations (LU Factorization)}}
+\author{Tashfeen Omran}
+\date{September 2026}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Part 1: Comprehensive Introduction, Context, and Prerequisites}
+
+\subsection{Core Concepts}
+In algebra, we often factor numbers into simpler components (e.g., $15 = 3 \times 5$) to reveal their properties or simplify calculations. In linear algebra, \textbf{Matrix Factorization} (or decomposition) is the process of breaking down a complex matrix $A$ into a product of simpler matrices. 
+
+The most fundamental of these is the \textbf{LU Factorization}. If $A$ is an $m \times n$ matrix that can be row-reduced to an echelon form without any row swaps, it can be factored as:
+\[ A = LU \]
+Where:
+\begin{itemize}
+    \item $L$ is an $m \times m$ \textbf{unit lower triangular matrix}. This means all entries above the main diagonal are zero, and all entries exactly on the main diagonal are $1$.
+    \item $U$ is an $m \times n$ \textbf{upper triangular matrix} (specifically, an echelon form of $A$). All entries below the main diagonal are zero.
+\end{itemize}
+
+\subsection{Intuition and Derivation}
+Why does $A = LU$ exist? It is a direct mathematical record of Gaussian elimination. When you perform row operations to reduce $A$ to an echelon form $U$, you are essentially multiplying $A$ by a series of elementary matrices $E_1, E_2, \dots, E_p$:
+\[ E_p \dots E_2 E_1 A = U \]
+If no row swaps are used, these elementary matrices are all lower triangular. By multiplying both sides by the inverses of these elementary matrices, we isolate $A$:
+\[ A = (E_p \dots E_2 E_1)^{-1} U \]
+\[ A = (E_1^{-1} E_2^{-1} \dots E_p^{-1}) U \]
+Because the inverse of a lower triangular matrix is lower triangular, and the product of lower triangular matrices is lower triangular, the entire term $(E_1^{-1} \dots E_p^{-1})$ collapses into a single unit lower triangular matrix, which we call $L$. Thus, $A = LU$.
+
+\subsection{Historical Context and Motivation}
+In the mid-20th century, as the first electronic computers were being developed by pioneers like Alan Turing and John von Neumann, scientists needed to solve massive systems of linear equations for physics and engineering (e.g., aerodynamics, nuclear simulations). Often, they had to solve $Ax = b$ for the \textit{same} matrix $A$ but many different $b$ vectors. 
+
+Computing $A^{-1}$ is computationally expensive and prone to numerical instability (roundoff errors). The LU factorization was formalized as a highly efficient alternative. By factoring $A$ into $L$ and $U$ just once, one can solve $Ax = b$ for any new $b$ using simple, fast substitution steps, drastically reducing the number of floating-point operations (flops) required by the computer.
+
+\subsection{Key Formulas}
+\begin{enumerate}
+    \item \textbf{The Factorization:} \[ A = LU \]
+    \item \textbf{The Two-Step Solution Process:} To solve $Ax = b$, substitute $LU$ for $A$:
+    \[ (LU)x = b \]
+    Group the terms as $L(Ux) = b$, and define a new intermediate vector $y = Ux$. This gives us two triangular systems to solve in sequence:
+    \begin{align*}
+        Ly &= b \quad \text{(Solve for } y \text{ using forward substitution)} \\
+        Ux &= y \quad \text{(Solve for } x \text{ using backward substitution)}
+    \end{align*}
+\end{enumerate}
+
+\subsection{Prerequisites}
+To master this topic, you must be completely fluent in:
+\begin{itemize}
+    \item \textbf{Matrix Multiplication:} Understanding how rows and columns interact.
+    \item \textbf{Gaussian Elimination:} Performing row operations (specifically, adding a multiple of one row to another).
+    \item \textbf{Triangular Systems:} Solving systems where the matrix is upper or lower triangular via substitution.
+\end{itemize}
+
+\newpage
+\section{Part 2: Detailed Homework Solutions}
+
+Based on the strategic selection criteria, I have chosen five problems that cover every distinct archetype in Section 2.5: solving systems with a given LU, finding the LU factorization for $2 \times 2$ and $3 \times 3$ matrices, and proving theoretical properties of triangular matrices.
+
+\subsection{Problem 1 (Exercise 1): Solving $Ax=b$ using LU}
+\textbf{Problem Statement:} Solve the equation $Ax = b$ by using the LU factorization given for $A$.
+\[ A = \begin{bmatrix} 3 & -7 & -2 \\ -3 & 5 & 1 \\ 6 & -4 & 0 \end{bmatrix}, \quad b = \begin{bmatrix} -7 \\ 5 \\ 2 \end{bmatrix} \]
+\[ A = LU = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 2 & -5 & 1 \end{bmatrix} \begin{bmatrix} 3 & -7 & -2 \\ 0 & -2 & -1 \\ 0 & 0 & -1 \end{bmatrix} \]
+
+\textbf{Step-by-Step Solution:}
+We solve $Ax = b$ by solving $Ly = b$ first, and then $Ux = y$.
+
+\textbf{Step 1: Solve $Ly = b$ for $y$.}
+\[ \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 2 & -5 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix} = \begin{bmatrix} -7 \\ 5 \\ 2 \end{bmatrix} \]
+Using forward substitution:
+\begin{align*}
+    \text{Row 1:} \quad y_1 &= -7 \\
+    \text{Row 2:} \quad -y_1 + y_2 &= 5 \\
+    -(-7) + y_2 &= 5 \\
+    7 + y_2 &= 5 \implies y_2 = -2 \\
+    \text{Row 3:} \quad 2y_1 - 5y_2 + y_3 &= 2 \\
+    2(-7) - 5(-2) + y_3 &= 2 \\
+    -14 + 10 + y_3 &= 2 \\
+    -4 + y_3 &= 2 \implies y_3 = 6
+\end{align*}
+Thus, $y = \begin{bmatrix} -7 \\ -2 \\ 6 \end{bmatrix}$.
+
+\textbf{Step 2: Solve $Ux = y$ for $x$.}
+\[ \begin{bmatrix} 3 & -7 & -2 \\ 0 & -2 & -1 \\ 0 & 0 & -1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} -7 \\ -2 \\ 6 \end{bmatrix} \]
+Using backward substitution:
+\begin{align*}
+    \text{Row 3:} \quad -x_3 &= 6 \implies x_3 = -6 \\
+    \text{Row 2:} \quad -2x_2 - x_3 &= -2 \\
+    -2x_2 - (-6) &= -2 \\
+    -2x_2 + 6 &= -2 \\
+    -2x_2 &= -8 \implies x_2 = 4 \\
+    \text{Row 1:} \quad 3x_1 - 7x_2 - 2x_3 &= -7 \\
+    3x_1 - 7(4) - 2(-6) &= -7 \\
+    3x_1 - 28 + 12 &= -7 \\
+    3x_1 - 16 &= -7 \\
+    3x_1 &= 9 \implies x_1 = 3
+\end{align*}
+
+\textbf{Final Answer:}
+\[ x = \begin{bmatrix} 3 \\ 4 \\ -6 \end{bmatrix} \]
+
+---
+
+\subsection{Problem 2 (Exercise 2): Solving $Ax=b$ using LU}
+\textbf{Problem Statement:} Solve the equation $Ax = b$ by using the LU factorization given for $A$.
+\[ A = \begin{bmatrix} 4 & 3 & -5 \\ -4 & -5 & 7 \\ 8 & 6 & -8 \end{bmatrix}, \quad b = \begin{bmatrix} 2 \\ -4 \\ 6 \end{bmatrix} \]
+\[ A = LU = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix} \begin{bmatrix} 4 & 3 & -5 \\ 0 & -2 & 2 \\ 0 & 0 & 2 \end{bmatrix} \]
+
+\textbf{Step-by-Step Solution:}
+\textbf{Step 1: Solve $Ly = b$ for $y$.}
+\[ \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 2 & 0 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ y_3 \end{bmatrix} = \begin{bmatrix} 2 \\ -4 \\ 6 \end{bmatrix} \]
+Using forward substitution:
+\begin{align*}
+    \text{Row 1:} \quad y_1 &= 2 \\
+    \text{Row 2:} \quad -y_1 + y_2 &= -4 \\
+    -(2) + y_2 &= -4 \implies y_2 = -2 \\
+    \text{Row 3:} \quad 2y_1 + 0y_2 + y_3 &= 6 \\
+    2(2) + y_3 &= 6 \\
+    4 + y_3 &= 6 \implies y_3 = 2
+\end{align*}
+Thus, $y = \begin{bmatrix} 2 \\ -2 \\ 2 \end{bmatrix}$.
+
+\textbf{Step 2: Solve $Ux = y$ for $x$.}
+\[ \begin{bmatrix} 4 & 3 & -5 \\ 0 & -2 & 2 \\ 0 & 0 & 2 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} 2 \\ -2 \\ 2 \end{bmatrix} \]
+Using backward substitution:
+\begin{align*}
+    \text{Row 3:} \quad 2x_3 &= 2 \implies x_3 = 1 \\
+    \text{Row 2:} \quad -2x_2 + 2x_3 &= -2 \\
+    -2x_2 + 2(1) &= -2 \\
+    -2x_2 &= -4 \implies x_2 = 2 \\
+    \text{Row 1:} \quad 4x_1 + 3x_2 - 5x_3 &= 2 \\
+    4x_1 + 3(2) - 5(1) &= 2 \\
+    4x_1 + 6 - 5 &= 2 \\
+    4x_1 + 1 &= 2 \\
+    4x_1 &= 1 \implies x_1 = \frac{1}{4}
+\end{align*}
+
+\textbf{Final Answer:}
+\[ x = \begin{bmatrix} 1/4 \\ 2 \\ 1 \end{bmatrix} \]
+
+---
+
+\subsection{Problem 3 (Exercise 7): Finding an LU Factorization ($2 \times 2$)}
+\textbf{Problem Statement:} Find an LU factorization of the matrix $A = \begin{bmatrix} 2 & 5 \\ -3 & -4 \end{bmatrix}$.
+
+\textbf{Step-by-Step Solution:}
+We need to reduce $A$ to an upper triangular matrix $U$ using only row replacement operations. Simultaneously, we will build the lower triangular matrix $L$.
+
+\textbf{Step 1: Initialize $L$.}
+Since $A$ is $2 \times 2$, $L$ will be a $2 \times 2$ unit lower triangular matrix:
+\[ L = \begin{bmatrix} 1 & 0 \\ l_{21} & 1 \end{bmatrix} \]
+
+\textbf{Step 2: Row reduce $A$ to $U$.}
+We need to eliminate the $-3$ in the $(2,1)$ position. We do this by adding a multiple of Row 1 to Row 2.
+The multiplier is $\frac{-(-3)}{2} = \frac{3}{2}$.
+Operation: $R_2 \leftarrow R_2 + \frac{3}{2}R_1$.
+\[ \begin{bmatrix} 2 & 5 \\ -3 + \frac{3}{2}(2) & -4 + \frac{3}{2}(5) \end{bmatrix} = \begin{bmatrix} 2 & 5 \\ 0 & -4 + \frac{15}{2} \end{bmatrix} = \begin{bmatrix} 2 & 5 \\ 0 & \frac{7}{2} \end{bmatrix} \]
+This is our upper triangular matrix $U$.
+
+\textbf{Step 3: Construct $L$.}
+The entry $l_{21}$ in $L$ is the \textit{negative} of the multiple used in the row operation. Since we added $\frac{3}{2}R_1$, the multiplier we conceptually subtracted was $-\frac{3}{2}$. Therefore, $l_{21} = -\frac{3}{2}$.
+\[ L = \begin{bmatrix} 1 & 0 \\ -3/2 & 1 \end{bmatrix} \]
+
+\textbf{Final Answer:}
+\[ L = \begin{bmatrix} 1 & 0 \\ -3/2 & 1 \end{bmatrix}, \quad U = \begin{bmatrix} 2 & 5 \\ 0 & 7/2 \end{bmatrix} \]
+
+---
+
+\subsection{Problem 4 (Exercise 9): Finding an LU Factorization ($3 \times 3$)}
+\textbf{Problem Statement:} Find an LU factorization of the matrix $A = \begin{bmatrix} 3 & -1 & 2 \\ -3 & -2 & 10 \\ 9 & -5 & 6 \end{bmatrix}$.
+
+\textbf{Step-by-Step Solution:}
+\textbf{Step 1: Initialize $L$.}
+\[ L = \begin{bmatrix} 1 & 0 & 0 \\ l_{21} & 1 & 0 \\ l_{31} & l_{32} & 1 \end{bmatrix} \]
+
+\textbf{Step 2: Eliminate entries below the pivot in Column 1.}
+Pivot is $3$ at position $(1,1)$.
+To eliminate $-3$ at $(2,1)$: $R_2 \leftarrow R_2 + R_1$. The multiplier subtracted is $-1$, so $l_{21} = -1$.
+To eliminate $9$ at $(3,1)$: $R_3 \leftarrow R_3 - 3R_1$. The multiplier subtracted is $3$, so $l_{31} = 3$.
+
+Applying these operations to $A$:
+\[ \begin{bmatrix} 3 & -1 & 2 \\ -3+3 & -2+(-1) & 10+2 \\ 9-3(3) & -5-3(-1) & 6-3(2) \end{bmatrix} = \begin{bmatrix} 3 & -1 & 2 \\ 0 & -3 & 12 \\ 0 & -2 & 0 \end{bmatrix} \]
+
+\textbf{Step 3: Eliminate entries below the pivot in Column 2.}
+The new pivot is $-3$ at position $(2,2)$.
+To eliminate $-2$ at $(3,2)$: $R_3 \leftarrow R_3 - \frac{2}{3}R_2$. The multiplier subtracted is $\frac{2}{3}$, so $l_{32} = \frac{2}{3}$.
+
+Applying this operation:
+\[ \begin{bmatrix} 3 & -1 & 2 \\ 0 & -3 & 12 \\ 0 & -2 - \frac{2}{3}(-3) & 0 - \frac{2}{3}(12) \end{bmatrix} = \begin{bmatrix} 3 & -1 & 2 \\ 0 & -3 & 12 \\ 0 & 0 & -8 \end{bmatrix} \]
+This is our matrix $U$.
+
+\textbf{Step 4: Assemble $L$.}
+Plugging in the multipliers $l_{21} = -1$, $l_{31} = 3$, and $l_{32} = \frac{2}{3}$:
+\[ L = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 3 & 2/3 & 1 \end{bmatrix} \]
+
+\textbf{Final Answer:}
+\[ L = \begin{bmatrix} 1 & 0 & 0 \\ -1 & 1 & 0 \\ 3 & 2/3 & 1 \end{bmatrix}, \quad U = \begin{bmatrix} 3 & -1 & 2 \\ 0 & -3 & 12 \\ 0 & 0 & -8 \end{bmatrix} \]
+
+---
+
+\subsection{Problem 5 (Exercise 19): Theoretical Properties of Triangular Matrices}
+\textbf{Problem Statement:} Let $A$ be a lower triangular $n \times n$ matrix with nonzero entries on the diagonal. Show that $A$ is invertible and $A^{-1}$ is lower triangular.
+
+\textbf{Step-by-Step Solution:}
+\textbf{Step 1: Prove $A$ is invertible.}
+The determinant of any triangular matrix (upper or lower) is simply the product of its main diagonal entries.
+\[ \det(A) = a_{11} \cdot a_{22} \cdots a_{nn} \]
+Since we are given that all diagonal entries are nonzero, their product must be nonzero.
+\[ \det(A) \neq 0 \]
+By the Invertible Matrix Theorem, a matrix with a nonzero determinant is invertible.
+
+\textbf{Step 2: Prove $A^{-1}$ is lower triangular.}
+To find the inverse of $A$, we conceptually form the augmented matrix $[A \mid I]$ and apply row operations to reduce it to $[I \mid A^{-1}]$.
+Because $A$ is lower triangular, all entries \textit{above} the main diagonal are already zero. To reduce $A$ to the identity matrix $I$, we only need to perform two types of row operations:
+1. \textbf{Scaling:} Multiply each row $i$ by $1/a_{ii}$ to make the diagonal entries $1$.
+2. \textbf{Row Replacement:} Add multiples of a row to rows \textit{below} it to eliminate the non-zero entries below the diagonal. (For example, use Row 1 to clear out the rest of Column 1 below it).
+
+Crucially, we \textit{never} need to add a multiple of a row to a row \textit{above} it, because the upper triangular part is already zero.
+Every row operation of these two types corresponds to multiplying by an elementary matrix $E_k$ that is itself lower triangular.
+Thus, the reduction process can be written as:
+\[ E_p \dots E_2 E_1 A = I \]
+This implies that:
+\[ A^{-1} = E_p \dots E_2 E_1 \]
+Since the product of lower triangular matrices is always lower triangular, and each $E_k$ is lower triangular, it follows necessarily that $A^{-1}$ is lower triangular.
+
+\textbf{Final Answer:}
+$A$ is invertible because its determinant (the product of its nonzero diagonal entries) is nonzero. $A^{-1}$ is lower triangular because the elementary matrices required to row-reduce $A$ to $I$ are strictly lower triangular, and the product of lower triangular matrices is lower triangular.
+
+\newpage
+\section{Part 3: In-Depth Analysis of Problems and Techniques}
+
+\subsection{A) Problem Types and General Approach}
+\begin{itemize}
+    \item \textbf{Type 1: Solving $Ax=b$ via LU (Problems 1 \& 2).}
+    \textit{Approach:} Never multiply $L$ and $U$ together to find $A$. Instead, exploit the triangular structure. Set up $Ly = b$ and solve for $y$ from top to bottom (forward substitution). Then set up $Ux = y$ and solve for $x$ from bottom to top (backward substitution).
+    
+    \item \textbf{Type 2: Constructing the LU Factorization (Problems 3 \& 4).}
+    \textit{Approach:} Perform standard Gaussian elimination on $A$ to reach an echelon form $U$, but strictly restrict yourself to row replacement operations (no row swaps, no scaling). As you eliminate an entry $a_{ij}$, take the multiplier you used, flip its sign, and place it directly into the $l_{ij}$ position of the unit lower triangular matrix $L$.
+    
+    \item \textbf{Type 3: Theoretical Proofs on Triangular Matrices (Problem 5).}
+    \textit{Approach:} Rely on the definitions of triangular matrices and determinants. Use the algorithmic definition of matrix inversion ($[A \mid I] \to [I \mid A^{-1}]$) and analyze the specific geometry of the elementary matrices required.
+\end{itemize}
+
+\subsection{B) Key Algebraic and Calculus Manipulations}
+\begin{itemize}
+    \item \textbf{Forward Substitution:} Used in $Ly=b$. Because $L$ is lower triangular, the first equation only has one variable ($y_1$). You solve it, plug it into the second equation (which has $y_1, y_2$), solve for $y_2$, and cascade downwards.
+    \item \textbf{Backward Substitution:} Used in $Ux=y$. Because $U$ is upper triangular, the last equation only has one variable ($x_n$). You solve it, plug it into the equation above it, and cascade upwards.
+    \item \textbf{Multiplier Extraction Trick:} When reducing $A$ to $U$, if you use the operation $R_{\text{target}} \leftarrow R_{\text{target}} - c \cdot R_{\text{pivot}}$, the value $c$ goes directly into $L$ at the target's coordinates. This bypasses the need to multiply inverse elementary matrices manually.
+\end{itemize}
+
+\newpage
+\section{Part 4: "Cheatsheet" and Tips for Success}
+
+\subsection{Summary of Important Formulas}
+\begin{itemize}
+    \item \textbf{The Core Identity:} $A = LU$
+    \item \textbf{The Splitting Method:} $Ax = b \implies L(Ux) = b \implies Ly = b \text{ and } Ux = y$
+\end{itemize}
+
+\subsection{Tricks and Shortcuts}
+\begin{itemize}
+    \item \textbf{The "Sign Flip" Rule for $L$:} If you use the row operation $R_2 \leftarrow R_2 + 5R_1$ to create a zero, the multiplier you conceptually subtracted is $-5$. Therefore, the entry in $L$ is $-5$. Always think of the operation as $R_{\text{new}} = R_{\text{old}} - (\text{multiplier}) \times R_{\text{pivot}}$. The multiplier goes into $L$.
+    \item \textbf{Checking Your Work:} You can easily check your LU factorization by multiplying $L$ and $U$ back together. It should perfectly recreate $A$.
+    \item \textbf{Diagonal of $L$:} Never forget that $L$ is a \textit{unit} lower triangular matrix. Its main diagonal must consist entirely of $1$s.
+\end{itemize}
+
+\subsection{Common Pitfalls and Traps}
+\begin{itemize}
+    \item \textbf{Row Swaps:} Standard LU factorization fails if you encounter a zero pivot and need to swap rows. If you swap rows, you are no longer doing $A=LU$, but rather $PA=LU$ (where $P$ is a permutation matrix). If a homework problem asks for $A=LU$, assume no row swaps are needed.
+    \item \textbf{Scaling Rows:} Do not scale rows (e.g., $R_1 \leftarrow \frac{1}{2}R_1$) while finding $U$. This will ruin the standard algorithm for building $L$. Only use row replacements ($R_i \leftarrow R_i + cR_j$).
+    \item \textbf{Solving in the Wrong Order:} A very common exam mistake is solving $Uy = b$ and then $Lx = y$. Remember the alphabetical/logical order: $L$ comes first ($Ly=b$), then $U$ ($Ux=y$).
+\end{itemize}
+
+\newpage
+\section{Part 5: Conceptual Synthesis and The "Big Picture"}
+
+\subsection{A) Thematic Connections}
+The central theme of this chapter is \textbf{Decomposition}. Just as a complex polynomial can be factored into linear roots $(x-a)(x-b)$ to easily find its zeros, a complex matrix can be factored into triangular matrices to easily solve linear systems. This theme of breaking down complex mathematical objects into fundamental, easy-to-compute building blocks is ubiquitous in mathematics (e.g., Prime Factorization in Number Theory, Taylor Series in Calculus, Fourier Transforms in Signal Processing).
+
+\subsection{B) Forward and Backward Links}
+\textbf{Backward Links:} LU Factorization is the formal, matrix-algebraic representation of the Gaussian elimination you learned in Chapter 1. It takes the procedural algorithm of row reduction and turns it into a static algebraic equation ($A=LU$).
+
+\textbf{Forward Links:} Understanding LU factorization is the gateway to Numerical Linear Algebra. Later, you will learn about:
+\begin{itemize}
+    \item \textbf{Cholesky Decomposition ($A = LL^T$):} A specialized, twice-as-fast version of LU for symmetric positive definite matrices.
+    \item \textbf{QR Decomposition:} Factoring a matrix into an orthogonal matrix and an upper triangular matrix, crucial for finding eigenvalues and solving least-squares problems.
+    \item \textbf{Singular Value Decomposition (SVD):} The ultimate matrix factorization, used heavily in data compression and Principal Component Analysis (PCA).
+\end{itemize}
+
+\newpage
+\section{Part 6: Abstract Real-World Modeling (AI, ML, \& Quant Finance)}
+
+\subsection{A) Concrete Scenarios}
+\begin{enumerate}
+    \item \textbf{Quantitative Finance (Options Pricing):} When pricing exotic derivatives (like American or Barrier options) where no closed-form Black-Scholes formula exists, quants use numerical Partial Differential Equation (PDE) solvers. The Crank-Nicolson finite difference method transforms the continuous PDE into a massive system of linear equations $Ax = b$ that must be solved at every single time step.
+    \item \textbf{Machine Learning (Gaussian Processes):} In Bayesian optimization and Gaussian Process regression, one must frequently invert covariance matrices. While Cholesky decomposition is preferred, LU factorization is the generalized backbone for solving these massive linear systems when the matrices lose strict symmetry or positive definiteness due to numerical noise.
+\end{enumerate}
+
+\subsection{B) Model Problem Setup: Options Pricing via Finite Difference}
+Let us model the pricing of a derivative using the Black-Scholes PDE:
+\[ \frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} + rS \frac{\partial V}{\partial S} - rV = 0 \]
+To solve this numerically on a computer, we discretize the state space (Stock Price $S$) and time ($t$) into a grid. Using the implicit finite difference scheme, the derivatives are approximated by finite differences, leading to a system of equations at each time step $k$:
+\[ A V^{(k)} = V^{(k+1)} + B \]
+Where $V^{(k)}$ is the vector of option prices at time step $k$, and $A$ is a massive tridiagonal matrix containing the coefficients derived from $\sigma$, $r$, and the grid spacing.
+
+\textbf{The Computational Bottleneck:}
+If we divide time into $10,000$ steps, we must solve the system $A x = b$ exactly $10,000$ times. 
+If $A$ is a $1000 \times 1000$ matrix, computing $A^{-1}$ at every step would require $\mathcal{O}(n^3)$ operations, which is computationally devastating.
+
+\textbf{The LU Solution:}
+Because the matrix $A$ is constant across all time steps (assuming constant volatility and interest rates), we compute the LU factorization $A = LU$ \textit{exactly once} before the time loop begins.
+Then, for each of the $10,000$ time steps, we solve:
+\[ L y = V^{(k+1)} + B \]
+\[ U V^{(k)} = y \]
+Because $L$ and $U$ are triangular (and specifically bidiagonal in this tridiagonal case), forward and backward substitution take only $\mathcal{O}(n)$ operations. The LU factorization reduces the computational complexity of the pricing engine from days to milliseconds, allowing high-frequency trading algorithms to price complex derivatives in real-time.
+
+\newpage
+\section{Part 7: Common Variations and Untested Concepts}
+
+\subsection{Variation 1: $PA = LU$ Factorization (Partial Pivoting)}
+\textbf{Concept:} The standard $A=LU$ factorization fails if a zero appears in a pivot position during row reduction, because you cannot divide by zero to eliminate entries below it. In practice, computers always use \textbf{Partial Pivoting} (swapping rows to put the largest absolute value in the pivot position to minimize roundoff error). 
+When a row swap occurs, we track it using a Permutation Matrix $P$. The factorization becomes $PA = LU$.
+
+\textbf{Example:} Factor $A = \begin{bmatrix} 0 & 2 \\ 3 & 4 \end{bmatrix}$.
+We cannot use $0$ as a pivot. We must swap Row 1 and Row 2.
+The permutation matrix for this swap is $P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}$.
+\[ PA = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix} \begin{bmatrix} 0 & 2 \\ 3 & 4 \end{bmatrix} = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix} \]
+Now, $PA$ is already upper triangular! So $U = \begin{bmatrix} 3 & 4 \\ 0 & 2 \end{bmatrix}$.
+Since no further row operations were needed, $L$ is just the identity matrix $I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}$.
+Thus, $PA = LU$.
+
+\subsection{Variation 2: $LDU$ Factorization}
+\textbf{Concept:} In the standard LU factorization, $L$ has $1$s on the diagonal, but $U$ has arbitrary non-zero pivots on its diagonal. Sometimes, it is mathematically elegant to factor out the diagonal of $U$ into a separate diagonal matrix $D$, leaving a new upper triangular matrix $U'$ that \textit{also} has $1$s on its diagonal.
+\[ A = LDU' \]
+
+\textbf{Example:} From Problem 3, we had $U = \begin{bmatrix} 2 & 5 \\ 0 & 7/2 \end{bmatrix}$.
+We can factor out the diagonal entries $(2 \text{ and } 7/2)$ into a matrix $D$:
+\[ D = \begin{bmatrix} 2 & 0 \\ 0 & 7/2 \end{bmatrix} \]
+To find the new $U'$, we divide each row of $U$ by its pivot:
+\[ U' = \begin{bmatrix} 1 & 5/2 \\ 0 & 1 \end{bmatrix} \]
+So the $LDU$ factorization is:
+\[ A = \begin{bmatrix} 1 & 0 \\ -3/2 & 1 \end{bmatrix} \begin{bmatrix} 2 & 0 \\ 0 & 7/2 \end{bmatrix} \begin{bmatrix} 1 & 5/2 \\ 0 & 1 \end{bmatrix} \]
+
+\newpage
+\section{Part 8: Advanced Diagnostic Testing: "Find the Flaw"}
+
+Below are five problems with complete solutions. However, each solution contains a single, subtle, yet critical flaw. Your task is to find the error, explain why it is wrong, and provide the correct solution.
+
+\subsection{Problem 1}
+\textbf{Task:} Solve $Ax = b$ given $L = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$, $U = \begin{bmatrix} 3 & 1 \\ 0 & 2 \end{bmatrix}$, and $b = \begin{bmatrix} 3 \\ 10 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+To solve $Ax = b$, we use the LU factorization.
+Step 1: Solve $Uy = b$.
+\[ \begin{bmatrix} 3 & 1 \\ 0 & 2 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} = \begin{bmatrix} 3 \\ 10 \end{bmatrix} \]
+$2y_2 = 10 \implies y_2 = 5$.
+$3y_1 + 5 = 3 \implies 3y_1 = -2 \implies y_1 = -2/3$.
+$y = \begin{bmatrix} -2/3 \\ 5 \end{bmatrix}$.
+Step 2: Solve $Lx = y$.
+\[ \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} -2/3 \\ 5 \end{bmatrix} \]
+$x_1 = -2/3$.
+$2(-2/3) + x_2 = 5 \implies -4/3 + x_2 = 15/3 \implies x_2 = 19/3$.
+Final Answer: $x = \begin{bmatrix} -2/3 \\ 19/3 \end{bmatrix}$.
+
+\vspace{1cm}
+\textbf{Correction:}
+\textbf{Error:} The student solved the systems in the reverse order. They solved $Uy = b$ and $Lx = y$, but the correct theoretical setup is $A = LU \implies (LU)x = b \implies L(Ux) = b$. Therefore, we must solve $Ly = b$ first, and then $Ux = y$.
+\textbf{Correct Step:}
+Step 1: Solve $Ly = b$.
+\[ \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \end{bmatrix} = \begin{bmatrix} 3 \\ 10 \end{bmatrix} \]
+$y_1 = 3$.
+$2(3) + y_2 = 10 \implies 6 + y_2 = 10 \implies y_2 = 4$.
+Step 2: Solve $Ux = y$.
+\[ \begin{bmatrix} 3 & 1 \\ 0 & 2 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} 3 \\ 4 \end{bmatrix} \]
+$2x_2 = 4 \implies x_2 = 2$.
+$3x_1 + 2 = 3 \implies 3x_1 = 1 \implies x_1 = 1/3$.
+\textbf{Correct Final Answer:} $x = \begin{bmatrix} 1/3 \\ 2 \end{bmatrix}$.
+
+---
+
+\subsection{Problem 2}
+\textbf{Task:} Find the LU factorization of $A = \begin{bmatrix} 4 & -2 \\ 12 & 1 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+We reduce $A$ to $U$.
+To eliminate the $12$, we use the operation $R_2 \leftarrow R_2 - 3R_1$.
+\[ U = \begin{bmatrix} 4 & -2 \\ 12 - 3(4) & 1 - 3(-2) \end{bmatrix} = \begin{bmatrix} 4 & -2 \\ 0 & 7 \end{bmatrix} \]
+The multiplier used in the row operation was $-3$. We place this into $L$.
+\[ L = \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix} \]
+Final Answer: $L = \begin{bmatrix} 1 & 0 \\ -3 & 1 \end{bmatrix}, U = \begin{bmatrix} 4 & -2 \\ 0 & 7 \end{bmatrix}$.
+
+\vspace{1cm}
+\textbf{Correction:}
+\textbf{Error:} The student placed the negative of the correct multiplier into $L$. The standard algorithm states that if the operation is $R_2 \leftarrow R_2 - cR_1$, the value $c$ goes into $L$. Because the operation was $R_2 - 3R_1$, the multiplier $c$ is $3$, not $-3$.
+\textbf{Correct Step:}
+The multiplier is $3$. Therefore, $l_{21} = 3$.
+\textbf{Correct Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ 3 & 1 \end{bmatrix}, U = \begin{bmatrix} 4 & -2 \\ 0 & 7 \end{bmatrix}$.
+
+---
+
+\subsection{Problem 3}
+\textbf{Task:} Find the LU factorization of $A = \begin{bmatrix} 2 & 4 \\ 1 & 5 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+We reduce $A$ to $U$.
+Operation: $R_2 \leftarrow R_2 - \frac{1}{2}R_1$.
+\[ U = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix} \]
+The multiplier is $1/2$. We place this into $L$.
+\[ L = \begin{bmatrix} 2 & 0 \\ 1/2 & 3 \end{bmatrix} \]
+Final Answer: $L = \begin{bmatrix} 2 & 0 \\ 1/2 & 3 \end{bmatrix}, U = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix}$.
+
+\vspace{1cm}
+\textbf{Correction:}
+\textbf{Error:} The student placed the diagonal entries of $U$ onto the diagonal of $L$. By definition, $L$ must be a \textit{unit} lower triangular matrix, meaning its main diagonal must consist entirely of $1$s.
+\textbf{Correct Step:}
+$L$ must have $1$s on the diagonal. The multiplier $1/2$ goes into the $(2,1)$ position.
+\textbf{Correct Final Answer:} $L = \begin{bmatrix} 1 & 0 \\ 1/2 & 1 \end{bmatrix}, U = \begin{bmatrix} 2 & 4 \\ 0 & 3 \end{bmatrix}$.
+
+---
+
+\subsection{Problem 4}
+\textbf{Task:} Solve $Ly = b$ where $L = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 4 & -1 & 1 \end{bmatrix}$ and $b = \begin{bmatrix} 5 \\ -2 \\ 3 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+Row 1: $y_1 = 5$.
+Row 2: $-2y_1 + y_2 = -2 \implies -2(5) + y_2 = -2 \implies -10 + y_2 = -2 \implies y_2 = -12$.
+Row 3: $4y_1 - y_2 + y_3 = 3 \implies 4(5) - (-12) + y_3 = 3 \implies 20 + 12 + y_3 = 3 \implies 32 + y_3 = 3 \implies y_3 = -29$.
+Final Answer: $y = \begin{bmatrix} 5 \\ -12 \\ -29 \end{bmatrix}$.
+
+\vspace{1cm}
+\textbf{Correction:}
+\textbf{Error:} The student made a basic algebraic sign error in Row 2. When moving $-10$ to the other side of the equation $-10 + y_2 = -2$, they subtracted $10$ instead of adding $10$.
+\textbf{Correct Step:}
+Row 2: $-10 + y_2 = -2 \implies y_2 = -2 + 10 \implies y_2 = 8$.
+Row 3: $4(5) - (8) + y_3 = 3 \implies 20 - 8 + y_3 = 3 \implies 12 + y_3 = 3 \implies y_3 = -9$.
+\textbf{Correct Final Answer:} $y = \begin{bmatrix} 5 \\ 8 \\ -9 \end{bmatrix}$.
+
+---
+
+\subsection{Problem 5}
+\textbf{Task:} Verify if $L = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix}$ and $U = \begin{bmatrix} 3 & 5 \\ 0 & -1 \end{bmatrix}$ is the correct LU factorization for $A = \begin{bmatrix} 3 & 5 \\ 6 & 9 \end{bmatrix}$.
+\textbf{Flawed Solution:}
+To verify, we multiply $U$ and $L$ together to see if it equals $A$.
+\[ UL = \begin{bmatrix} 3 & 5 \\ 0 & -1 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \]
+Row 1, Col 1: $3(1) + 5(2) = 13$.
+Row 1, Col 2: $3(0) + 5(1) = 5$.
+Row 2, Col 1: $0(1) + (-1)(2) = -2$.
+Row 2, Col 2: $0(0) + (-1)(1) = -1$.
+\[ UL = \begin{bmatrix} 13 & 5 \\ -2 & -1 \end{bmatrix} \]
+Since $UL \neq A$, this is not the correct factorization.
+
+\vspace{1cm}
+\textbf{Correction:}
+\textbf{Error:} Matrix multiplication is not commutative. The student multiplied $U \times L$ instead of $L \times U$. The factorization is $A = LU$, so the order of multiplication matters strictly.
+\textbf{Correct Step:}
+Multiply $L$ and $U$ in the correct order:
+\[ LU = \begin{bmatrix} 1 & 0 \\ 2 & 1 \end{bmatrix} \begin{bmatrix} 3 & 5 \\ 0 & -1 \end{bmatrix} \]
+Row 1, Col 1: $1(3) + 0(0) = 3$.
+Row 1, Col 2: $1(5) + 0(-1) = 5$.
+Row 2, Col 1: $2(3) + 1(0) = 6$.
+Row 2, Col 2: $2(5) + 1(-1) = 10 - 1 = 9$.
+\[ LU = \begin{bmatrix} 3 & 5 \\ 6 & 9 \end{bmatrix} \]
+\textbf{Correct Final Answer:} Since $LU = A$, this \textit{is} the correct factorization.
+
+\end{document}

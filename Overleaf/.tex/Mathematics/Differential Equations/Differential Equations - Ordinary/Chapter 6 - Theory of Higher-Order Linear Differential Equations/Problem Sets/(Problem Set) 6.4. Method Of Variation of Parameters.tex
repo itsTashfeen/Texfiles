@@ -1,0 +1,377 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\title{Homework 6.4: Method of Variation of Parameters \\ \Large Problem Sets \& Solutions}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Concept Checklist \& Question Mapping}
+This section outlines the core concepts, problem archetypes, and common pitfalls associated with the Method of Variation of Parameters, mapped to the corresponding questions in the problem set.
+
+\begin{itemize}
+    \item \textbf{C1: 2nd-Order Constant Coefficients (Basic)} - Standard application of the Wronskian and integration. \\
+    \textit{Questions: 1, 2, 3, 4}
+    
+    \item \textbf{C2: 3rd-Order Constant Coefficients} - Requires computing a $3 \times 3$ Wronskian and three parameters ($v_1, v_2, v_3$). \\
+    \textit{Questions: 5, 6, 7}
+    
+    \item \textbf{C3: Repeated Roots} - Handling fundamental solution sets with $x$ or $x^2$ multipliers (e.g., $e^x, xe^x, x^2e^x$). \\
+    \textit{Questions: 8, 9, 10, 11}
+    
+    \item \textbf{C4: Trigonometric/Non-Polynomial Forcing Functions} - Involves advanced trigonometric integration (e.g., $\sec x, \tan x, \csc x$). \\
+    \textit{Questions: 2, 6, 12, 13, 14, 15}
+    
+    \item \textbf{C5: Variable Coefficients / Cauchy-Euler (Standard Form Trap)} - Requires dividing by the leading coefficient $a_n(x)$ before identifying $g(x)$. \\
+    \textit{Questions: 16, 17, 18, 19}
+    
+    \item \textbf{C6: Abstract Forcing Functions} - Setting up the integral representation of $y_p(x)$ without evaluating it. \\
+    \textit{Questions: 20, 21}
+    
+    \item \textbf{C7: Systems of Linear ODEs} - Using the Fundamental Matrix $\Phi(t)$ to solve first-order systems $\mathbf{x}' = A\mathbf{x} + \mathbf{f}(t)$. \\
+    \textit{Questions: 22, 23, 24}
+    
+    \item \textbf{C8: Theoretical Derivations} - Proving the underlying system of equations for the method. \\
+    \textit{Questions: 25}
+    
+    \item \textbf{C9: "Find the Flaw" / Diagnostic Testing} - Identifying common mistakes such as the Standard Form Trap, Wronskian formula errors, integration mistakes, and forgetting to multiply $v_k$ by $y_k$. \\
+    \textit{Questions: 26, 27, 28, 29, 30}
+\end{itemize}
+
+\newpage
+
+\section{Problem Sets}
+
+\textbf{Directions:} For problems 1--19, find a particular solution $y_p(x)$ to the given differential equation using the Method of Variation of Parameters. If a homogeneous solution is provided, use it to form your fundamental set.
+
+\begin{enumerate}
+    \item $y'' - 4y = e^{2x}$
+    \item $y'' + 9y = \sec(3x)$
+    \item $y'' - 2y' + y = \frac{e^x}{x}$
+    \item $y'' - y = \cosh x$
+    \item $y''' - y'' = 2x$
+    \item $y''' + y' = \tan x$
+    \item $y''' - 2y'' - y' + 2y = e^{3x}$
+    \item $y''' - 3y'' + 3y' - y = \frac{e^x}{x}$
+    \item $y'' + 4y' + 4y = x^{-2}e^{-2x}$
+    \item $y''' + 3y'' + 3y' + y = e^{-x} \ln x$
+    \item $y'' - 6y' + 9y = \frac{e^{3x}}{x^2}$
+    \item $y'' + y = \csc x$
+    \item $y'' + 4y = \tan(2x)$
+    \item $y'' - 2y' + 2y = e^x \sec x$
+    \item $y'' + y = \sec^2 x$
+    \item $x^2 y'' - 2y = 3x^2 - 1, \quad x > 0$
+    \item $x^2 y'' + xy' - y = x \ln x, \quad x > 0$
+    \item $x^3 y''' - 3x^2 y'' + 6x y' - 6y = x^4 \ln x, \quad x > 0$
+    \item $t y'' - (t+1)y' + y = t^2, \quad t > 0$. (Given fundamental solutions $y_1 = e^t, y_2 = t+1$)
+\end{enumerate}
+
+\textbf{Directions:} For problems 20--21, determine a formula involving integrals for a particular solution to the given equation.
+\begin{enumerate}[resume]
+    \item $y'' - 5y' + 6y = g(x)$
+    \item $x^2 y'' - 4xy' + 6y = g(x), \quad x > 0$
+\end{enumerate}
+
+\textbf{Directions:} For problems 22--24, find a particular solution $\mathbf{x}_p(t)$ to the given system of linear ODEs $\mathbf{x}' = A\mathbf{x} + \mathbf{f}(t)$.
+\begin{enumerate}[resume]
+    \item $\mathbf{x}' = \begin{pmatrix} 2 & 1 \\ -1 & 2 \end{pmatrix} \mathbf{x} + \begin{pmatrix} e^{2t} \\ 0 \end{pmatrix}$
+    \item $\mathbf{x}' = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} \mathbf{x} + \begin{pmatrix} 0 \\ e^t \end{pmatrix}$
+    \item $\mathbf{x}' = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \mathbf{x} + \begin{pmatrix} \sec t \\ 0 \end{pmatrix}$
+\end{enumerate}
+
+\textbf{Directions:} For problem 25, provide a theoretical derivation.
+\begin{enumerate}[resume]
+    \item Derive the system of equations $v_1'y_1 + v_2'y_2 = 0$ and $v_1'y_1' + v_2'y_2' = g(x)$ for the 2nd-order linear differential equation $y'' + p(x)y' + q(x)y = g(x)$.
+\end{enumerate}
+
+\textbf{Directions:} For problems 26--30, act as the grader. Each solution contains a single, subtle, yet critical flaw. Find the error, explain why it is wrong in one sentence, and provide the correct final solution.
+\begin{enumerate}[resume]
+    \item \textbf{Solve:} $y'' - y = e^x$ \\
+    \textbf{Flawed Solution:} $y_1 = e^x, y_2 = e^{-x}$. $W = -2$. $v_1' = \frac{-e^{-x}(e^x)}{-2} = \frac{1}{2} \implies v_1 = \frac{x}{2}$. $v_2' = \frac{e^x(e^x)}{-2} = -\frac{e^{2x}}{2} \implies v_2 = -\frac{e^{2x}}{4}$. $y_p = \frac{x}{2} - \frac{e^{2x}}{4}$.
+    
+    \item \textbf{Solve:} $x^2 y'' - 2xy' + 2y = x^3$ \\
+    \textbf{Flawed Solution:} $y_1 = x, y_2 = x^2$. $W = x^2$. $g(x) = x^3$. $v_1' = \frac{-x^2(x^3)}{x^2} = -x^3 \implies v_1 = -\frac{x^4}{4}$. $v_2' = \frac{x(x^3)}{x^2} = x^2 \implies v_2 = \frac{x^3}{3}$. $y_p = (-\frac{x^4}{4})(x) + (\frac{x^3}{3})(x^2) = \frac{x^5}{12}$.
+    
+    \item \textbf{Solve:} $y'' + y = \tan x$ \\
+    \textbf{Flawed Solution:} $y_1 = \cos x, y_2 = \sin x$. $W = 1$. $v_1' = -\sin x \tan x$. Integrating: $\int -\sin x \frac{\sin x}{\cos x} dx = \int -\cos x \tan x dx = -\sin x$.
+    
+    \item \textbf{Solve:} $y''' - y'' = 1$ \\
+    \textbf{Flawed Solution:} $y_1 = 1, y_2 = x, y_3 = e^x$. $W = e^x$. To find $W_1$, we replace the first row of the Wronskian with $[0, 0, 1]$: $W_1 = \begin{vmatrix} 0 & 0 & 1 \\ 0 & 1 & e^x \\ 0 & 0 & e^x \end{vmatrix} = 0$.
+    
+    \item \textbf{Solve:} $y'' - 4y = e^{2x}$ \\
+    \textbf{Flawed Solution:} $y_1 = e^{2x}, y_2 = e^{-2x}$. The Wronskian is $W = y_1 y_2 + y_1' y_2' = (e^{2x})(e^{-2x}) + (2e^{2x})(-2e^{-2x}) = 1 - 4 = -3$.
+\end{enumerate}
+
+\newpage
+
+\section{Detailed Solutions}
+
+\subsection*{Problem 1}
+\textbf{Equation:} $y'' - 4y = e^{2x}$ \\
+\textbf{Step 1:} Characteristic equation $r^2 - 4 = 0 \implies r = \pm 2$. Fundamental set: $\{e^{2x}, e^{-2x}\}$. \\
+\textbf{Step 2:} Wronskian $W = \begin{vmatrix} e^{2x} & e^{-2x} \\ 2e^{2x} & -2e^{-2x} \end{vmatrix} = -2 - 2 = -4$. \\
+\textbf{Step 3:} $v_1' = \frac{-e^{-2x}(e^{2x})}{-4} = \frac{1}{4} \implies v_1 = \frac{1}{4}x$. \\
+$v_2' = \frac{e^{2x}(e^{2x})}{-4} = -\frac{1}{4}e^{4x} \implies v_2 = -\frac{1}{16}e^{4x}$. \\
+\textbf{Step 4:} $y_p = (\frac{1}{4}x)e^{2x} + (-\frac{1}{16}e^{4x})e^{-2x} = \frac{1}{4}xe^{2x} - \frac{1}{16}e^{2x}$. \\
+Since $-\frac{1}{16}e^{2x}$ is a homogeneous solution, we drop it. \\
+\textbf{Final Answer:} $y_p(x) = \frac{1}{4}xe^{2x}$
+
+\subsection*{Problem 2}
+\textbf{Equation:} $y'' + 9y = \sec(3x)$ \\
+\textbf{Step 1:} $r^2 + 9 = 0 \implies r = \pm 3i$. Fundamental set: $\{\cos(3x), \sin(3x)\}$. \\
+\textbf{Step 2:} $W = \begin{vmatrix} \cos(3x) & \sin(3x) \\ -3\sin(3x) & 3\cos(3x) \end{vmatrix} = 3(\cos^2(3x) + \sin^2(3x)) = 3$. \\
+\textbf{Step 3:} $v_1' = \frac{-\sin(3x)\sec(3x)}{3} = -\frac{1}{3}\tan(3x) \implies v_1 = \frac{1}{9}\ln|\cos(3x)|$. \\
+$v_2' = \frac{\cos(3x)\sec(3x)}{3} = \frac{1}{3} \implies v_2 = \frac{1}{3}x$. \\
+\textbf{Final Answer:} $y_p(x) = \frac{1}{9}\cos(3x)\ln|\cos(3x)| + \frac{1}{3}x\sin(3x)$
+
+\subsection*{Problem 3}
+\textbf{Equation:} $y'' - 2y' + y = \frac{e^x}{x}$ \\
+\textbf{Step 1:} $r^2 - 2r + 1 = 0 \implies r = 1$ (multiplicity 2). Fundamental set: $\{e^x, xe^x\}$. \\
+\textbf{Step 2:} $W = \begin{vmatrix} e^x & xe^x \\ e^x & (x+1)e^x \end{vmatrix} = e^{2x}(x+1) - xe^{2x} = e^{2x}$. \\
+\textbf{Step 3:} $v_1' = \frac{-xe^x(e^x/x)}{e^{2x}} = -1 \implies v_1 = -x$. \\
+$v_2' = \frac{e^x(e^x/x)}{e^{2x}} = \frac{1}{x} \implies v_2 = \ln|x|$. \\
+\textbf{Step 4:} $y_p = -xe^x + xe^x\ln|x|$. The term $-xe^x$ is homogeneous, so we drop it. \\
+\textbf{Final Answer:} $y_p(x) = xe^x\ln|x|$
+
+\subsection*{Problem 4}
+\textbf{Equation:} $y'' - y = \cosh x$ \\
+\textbf{Step 1:} $r^2 - 1 = 0 \implies r = \pm 1$. Fundamental set: $\{e^x, e^{-x}\}$. Note: $\cosh x = \frac{e^x + e^{-x}}{2}$. \\
+\textbf{Step 2:} $W = \begin{vmatrix} e^x & e^{-x} \\ e^x & -e^{-x} \end{vmatrix} = -2$. \\
+\textbf{Step 3:} $v_1' = \frac{-e^{-x}(\frac{e^x + e^{-x}}{2})}{-2} = \frac{1 + e^{-2x}}{4} \implies v_1 = \frac{x}{4} - \frac{e^{-2x}}{8}$. \\
+$v_2' = \frac{e^x(\frac{e^x + e^{-x}}{2})}{-2} = -\frac{e^{2x} + 1}{4} \implies v_2 = -\frac{e^{2x}}{8} - \frac{x}{4}$. \\
+\textbf{Step 4:} $y_p = (\frac{x}{4} - \frac{e^{-2x}}{8})e^x + (-\frac{e^{2x}}{8} - \frac{x}{4})e^{-x} = \frac{x}{4}e^x - \frac{1}{8}e^{-x} - \frac{1}{8}e^x - \frac{x}{4}e^{-x}$. \\
+Dropping homogeneous terms ($-\frac{1}{8}e^{-x}$ and $-\frac{1}{8}e^x$), we get $\frac{x}{4}e^x - \frac{x}{4}e^{-x} = \frac{x}{2}\sinh x$. \\
+\textbf{Final Answer:} $y_p(x) = \frac{x}{2}\sinh x$
+
+\subsection*{Problem 5}
+\textbf{Equation:} $y''' - y'' = 2x$ \\
+\textbf{Step 1:} $r^3 - r^2 = 0 \implies r = 0, 0, 1$. Fundamental set: $\{1, x, e^x\}$. \\
+\textbf{Step 2:} $W = \begin{vmatrix} 1 & x & e^x \\ 0 & 1 & e^x \\ 0 & 0 & e^x \end{vmatrix} = e^x$. \\
+\textbf{Step 3:} $W_1 = \begin{vmatrix} 0 & x & e^x \\ 0 & 1 & e^x \\ 1 & 0 & e^x \end{vmatrix} = e^x(x-1)$. $W_2 = \begin{vmatrix} 1 & 0 & e^x \\ 0 & 0 & e^x \\ 0 & 1 & e^x \end{vmatrix} = -e^x$. $W_3 = \begin{vmatrix} 1 & x & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{vmatrix} = 1$. \\
+\textbf{Step 4:} $v_1' = \frac{2x \cdot e^x(x-1)}{e^x} = 2x^2 - 2x \implies v_1 = \frac{2}{3}x^3 - x^2$. \\
+$v_2' = \frac{2x(-e^x)}{e^x} = -2x \implies v_2 = -x^2$. \\
+$v_3' = \frac{2x(1)}{e^x} = 2xe^{-x} \implies v_3 = -2xe^{-x} - 2e^{-x}$. \\
+\textbf{Step 5:} $y_p = (\frac{2}{3}x^3 - x^2)(1) + (-x^2)(x) + (-2xe^{-x} - 2e^{-x})e^x = \frac{2}{3}x^3 - x^2 - x^3 - 2x - 2$. \\
+Drop the constant $-2$ (homogeneous). \\
+\textbf{Final Answer:} $y_p(x) = -\frac{1}{3}x^3 - x^2 - 2x$
+
+\subsection*{Problem 6}
+\textbf{Equation:} $y''' + y' = \tan x$ \\
+\textbf{Step 1:} $r^3 + r = 0 \implies r = 0, \pm i$. Fundamental set: $\{1, \cos x, \sin x\}$. \\
+\textbf{Step 2:} $W = \begin{vmatrix} 1 & \cos x & \sin x \\ 0 & -\sin x & \cos x \\ 0 & -\cos x & -\sin x \end{vmatrix} = 1(\sin^2 x + \cos^2 x) = 1$. \\
+\textbf{Step 3:} $W_1 = 1$, $W_2 = -\cos x$, $W_3 = -\sin x$. \\
+\textbf{Step 4:} $v_1' = \tan x \implies v_1 = -\ln|\cos x|$. \\
+$v_2' = -\sin x \implies v_2 = \cos x$. \\
+$v_3' = -\frac{\sin^2 x}{\cos x} = \cos x - \sec x \implies v_3 = \sin x - \ln|\sec x + \tan x|$. \\
+\textbf{Step 5:} $y_p = -\ln|\cos x| + \cos^2 x + \sin^2 x - \sin x\ln|\sec x + \tan x|$. Drop $\cos^2 x + \sin^2 x = 1$. \\
+\textbf{Final Answer:} $y_p(x) = -\ln|\cos x| - \sin x\ln|\sec x + \tan x|$
+
+\subsection*{Problem 7}
+\textbf{Equation:} $y''' - 2y'' - y' + 2y = e^{3x}$ \\
+\textbf{Step 1:} $r^3 - 2r^2 - r + 2 = 0 \implies r = 1, -1, 2$. Fundamental set: $\{e^x, e^{-x}, e^{2x}\}$. \\
+\textbf{Step 2:} $W = -6e^{2x}$. $W_1 = 3e^x$, $W_2 = -e^{3x}$, $W_3 = -2$. \\
+\textbf{Step 3:} $v_1' = \frac{e^{3x}(3e^x)}{-6e^{2x}} = -\frac{1}{2}e^{2x} \implies v_1 = -\frac{1}{4}e^{2x}$. \\
+$v_2' = \frac{e^{3x}(-e^{3x})}{-6e^{2x}} = \frac{1}{6}e^{4x} \implies v_2 = \frac{1}{24}e^{4x}$. \\
+$v_3' = \frac{e^{3x}(-2)}{-6e^{2x}} = \frac{1}{3}e^x \implies v_3 = \frac{1}{3}e^x$. \\
+\textbf{Step 4:} $y_p = -\frac{1}{4}e^{3x} + \frac{1}{24}e^{3x} + \frac{1}{3}e^{3x} = \frac{-6+1+8}{24}e^{3x} = \frac{3}{24}e^{3x}$. \\
+\textbf{Final Answer:} $y_p(x) = \frac{1}{8}e^{3x}$
+
+\subsection*{Problem 8}
+\textbf{Equation:} $y''' - 3y'' + 3y' - y = \frac{e^x}{x}$ \\
+\textbf{Step 1:} $(r-1)^3 = 0 \implies r = 1, 1, 1$. Fundamental set: $\{e^x, xe^x, x^2e^x\}$. \\
+\textbf{Step 2:} $W = 2e^{3x}$. $W_1 = x^2e^{2x}$, $W_2 = -2xe^{2x}$, $W_3 = e^{2x}$. \\
+\textbf{Step 3:} $v_1' = \frac{(e^x/x)(x^2e^{2x})}{2e^{3x}} = \frac{x}{2} \implies v_1 = \frac{x^2}{4}$. \\
+$v_2' = \frac{(e^x/x)(-2xe^{2x})}{2e^{3x}} = -1 \implies v_2 = -x$. \\
+$v_3' = \frac{(e^x/x)(e^{2x})}{2e^{3x}} = \frac{1}{2x} \implies v_3 = \frac{1}{2}\ln|x|$. \\
+\textbf{Step 4:} $y_p = \frac{x^2}{4}e^x - x^2e^x + \frac{1}{2}x^2e^x\ln|x|$. Drop $-\frac{3}{4}x^2e^x$ (homogeneous). \\
+\textbf{Final Answer:} $y_p(x) = \frac{1}{2}x^2e^x\ln|x|$
+
+\subsection*{Problem 9}
+\textbf{Equation:} $y'' + 4y' + 4y = x^{-2}e^{-2x}$ \\
+\textbf{Step 1:} $(r+2)^2 = 0 \implies r = -2, -2$. Fundamental set: $\{e^{-2x}, xe^{-2x}\}$. \\
+\textbf{Step 2:} $W = e^{-4x}$. \\
+\textbf{Step 3:} $v_1' = \frac{-xe^{-2x}(x^{-2}e^{-2x})}{e^{-4x}} = -\frac{1}{x} \implies v_1 = -\ln|x|$. \\
+$v_2' = \frac{e^{-2x}(x^{-2}e^{-2x})}{e^{-4x}} = \frac{1}{x^2} \implies v_2 = -\frac{1}{x}$. \\
+\textbf{Step 4:} $y_p = -e^{-2x}\ln|x| - e^{-2x}$. Drop $-e^{-2x}$. \\
+\textbf{Final Answer:} $y_p(x) = -e^{-2x}\ln|x|$
+
+\subsection*{Problem 10}
+\textbf{Equation:} $y''' + 3y'' + 3y' + y = e^{-x} \ln x$ \\
+\textbf{Step 1:} $(r+1)^3 = 0 \implies r = -1, -1, -1$. Fundamental set: $\{e^{-x}, xe^{-x}, x^2e^{-x}\}$. \\
+\textbf{Step 2:} $W = 2e^{-3x}$. $W_1 = x^2e^{-2x}$, $W_2 = -2xe^{-2x}$, $W_3 = e^{-2x}$. \\
+\textbf{Step 3:} $v_1' = \frac{1}{2}x^2\ln x \implies v_1 = \frac{1}{6}x^3\ln x - \frac{1}{18}x^3$. \\
+$v_2' = -x\ln x \implies v_2 = -\frac{1}{2}x^2\ln x + \frac{1}{4}x^2$. \\
+$v_3' = \frac{1}{2}\ln x \implies v_3 = \frac{1}{2}x\ln x - \frac{1}{2}x$. \\
+\textbf{Step 4:} $y_p = (\frac{1}{6} - \frac{1}{2} + \frac{1}{2})x^3e^{-x}\ln x + (-\frac{1}{18} + \frac{1}{4} - \frac{1}{2})x^3e^{-x}$. \\
+\textbf{Final Answer:} $y_p(x) = \frac{1}{6}x^3e^{-x}\ln x - \frac{11}{36}x^3e^{-x}$
+
+\subsection*{Problem 11}
+\textbf{Equation:} $y'' - 6y' + 9y = \frac{e^{3x}}{x^2}$ \\
+\textbf{Step 1:} $(r-3)^2 = 0 \implies r = 3, 3$. Fundamental set: $\{e^{3x}, xe^{3x}\}$. \\
+\textbf{Step 2:} $W = e^{6x}$. \\
+\textbf{Step 3:} $v_1' = \frac{-xe^{3x}(e^{3x}/x^2)}{e^{6x}} = -\frac{1}{x} \implies v_1 = -\ln|x|$. \\
+$v_2' = \frac{e^{3x}(e^{3x}/x^2)}{e^{6x}} = \frac{1}{x^2} \implies v_2 = -\frac{1}{x}$. \\
+\textbf{Step 4:} $y_p = -e^{3x}\ln|x| - e^{3x}$. Drop $-e^{3x}$. \\
+\textbf{Final Answer:} $y_p(x) = -e^{3x}\ln|x|$
+
+\subsection*{Problem 12}
+\textbf{Equation:} $y'' + y = \csc x$ \\
+\textbf{Step 1:} $r^2 + 1 = 0 \implies r = \pm i$. Fundamental set: $\{\cos x, \sin x\}$. \\
+\textbf{Step 2:} $W = 1$. \\
+\textbf{Step 3:} $v_1' = -\sin x \csc x = -1 \implies v_1 = -x$. \\
+$v_2' = \cos x \csc x = \cot x \implies v_2 = \ln|\sin x|$. \\
+\textbf{Final Answer:} $y_p(x) = -x\cos x + \sin x\ln|\sin x|$
+
+\subsection*{Problem 13}
+\textbf{Equation:} $y'' + 4y = \tan(2x)$ \\
+\textbf{Step 1:} $r^2 + 4 = 0 \implies r = \pm 2i$. Fundamental set: $\{\cos(2x), \sin(2x)\}$. \\
+\textbf{Step 2:} $W = 2$. \\
+\textbf{Step 3:} $v_1' = -\frac{1}{2}\sin(2x)\tan(2x) = \frac{1}{2}(\cos(2x) - \sec(2x)) \implies v_1 = \frac{1}{4}\sin(2x) - \frac{1}{4}\ln|\sec(2x) + \tan(2x)|$. \\
+$v_2' = \frac{1}{2}\cos(2x)\tan(2x) = \frac{1}{2}\sin(2x) \implies v_2 = -\frac{1}{4}\cos(2x)$. \\
+\textbf{Step 4:} $y_p = \frac{1}{4}\sin(2x)\cos(2x) - \frac{1}{4}\cos(2x)\ln|\sec(2x) + \tan(2x)| - \frac{1}{4}\sin(2x)\cos(2x)$. \\
+\textbf{Final Answer:} $y_p(x) = -\frac{1}{4}\cos(2x)\ln|\sec(2x) + \tan(2x)|$
+
+\subsection*{Problem 14}
+\textbf{Equation:} $y'' - 2y' + 2y = e^x \sec x$ \\
+\textbf{Step 1:} $r^2 - 2r + 2 = 0 \implies r = 1 \pm i$. Fundamental set: $\{e^x\cos x, e^x\sin x\}$. \\
+\textbf{Step 2:} $W = e^{2x}$. \\
+\textbf{Step 3:} $v_1' = \frac{-e^x\sin x(e^x\sec x)}{e^{2x}} = -\tan x \implies v_1 = \ln|\cos x|$. \\
+$v_2' = \frac{e^x\cos x(e^x\sec x)}{e^{2x}} = 1 \implies v_2 = x$. \\
+\textbf{Final Answer:} $y_p(x) = e^x\cos x\ln|\cos x| + xe^x\sin x$
+
+\subsection*{Problem 15}
+\textbf{Equation:} $y'' + y = \sec^2 x$ \\
+\textbf{Step 1:} $r^2 + 1 = 0 \implies r = \pm i$. Fundamental set: $\{\cos x, \sin x\}$. \\
+\textbf{Step 2:} $W = 1$. \\
+\textbf{Step 3:} $v_1' = -\sin x \sec^2 x = -\tan x \sec x \implies v_1 = -\sec x$. \\
+$v_2' = \cos x \sec^2 x = \sec x \implies v_2 = \ln|\sec x + \tan x|$. \\
+\textbf{Step 4:} $y_p = -\sec x \cos x + \sin x \ln|\sec x + \tan x| = -1 + \sin x \ln|\sec x + \tan x|$. \\
+\textbf{Final Answer:} $y_p(x) = -1 + \sin x \ln|\sec x + \tan x|$
+
+\subsection*{Problem 16}
+\textbf{Equation:} $x^2 y'' - 2y = 3x^2 - 1$ \\
+\textbf{Step 1:} Cauchy-Euler. $r(r-1) - 2 = 0 \implies r^2 - r - 2 = 0 \implies r = 2, -1$. Fundamental set: $\{x^2, x^{-1}\}$. \\
+\textbf{Step 2:} Standard form: $y'' - \frac{2}{x^2}y = 3 - x^{-2}$. Thus $g(x) = 3 - x^{-2}$. \\
+\textbf{Step 3:} $W = \begin{vmatrix} x^2 & x^{-1} \\ 2x & -x^{-2} \end{vmatrix} = -1 - 2 = -3$. \\
+\textbf{Step 4:} $v_1' = \frac{-x^{-1}(3 - x^{-2})}{-3} = x^{-1} - \frac{1}{3}x^{-3} \implies v_1 = \ln|x| + \frac{1}{6}x^{-2}$. \\
+$v_2' = \frac{x^2(3 - x^{-2})}{-3} = -x^2 + \frac{1}{3} \implies v_2 = -\frac{1}{3}x^3 + \frac{1}{3}x$. \\
+\textbf{Step 5:} $y_p = x^2\ln|x| + \frac{1}{6} - \frac{1}{3}x^2 + \frac{1}{3}$. Drop $-\frac{1}{3}x^2$. \\
+\textbf{Final Answer:} $y_p(x) = x^2\ln|x| + \frac{1}{2}$
+
+\subsection*{Problem 17}
+\textbf{Equation:} $x^2 y'' + xy' - y = x \ln x$ \\
+\textbf{Step 1:} Cauchy-Euler. $r(r-1) + r - 1 = 0 \implies r^2 - 1 = 0 \implies r = \pm 1$. Fundamental set: $\{x, x^{-1}\}$. \\
+\textbf{Step 2:} Standard form: $g(x) = \frac{\ln x}{x}$. \\
+\textbf{Step 3:} $W = -\frac{2}{x}$. \\
+\textbf{Step 4:} $v_1' = \frac{-x^{-1}(\ln x / x)}{-2/x} = \frac{\ln x}{2x} \implies v_1 = \frac{1}{4}(\ln x)^2$. \\
+$v_2' = \frac{x(\ln x / x)}{-2/x} = -\frac{x\ln x}{2} \implies v_2 = -\frac{x^2}{4}\ln x + \frac{x^2}{8}$. \\
+\textbf{Step 5:} $y_p = \frac{x}{4}(\ln x)^2 - \frac{x}{4}\ln x + \frac{x}{8}$. Drop $\frac{x}{8}$. \\
+\textbf{Final Answer:} $y_p(x) = \frac{x}{4}(\ln x)^2 - \frac{x}{4}\ln x$
+
+\subsection*{Problem 18}
+\textbf{Equation:} $x^3 y''' - 3x^2 y'' + 6x y' - 6y = x^4 \ln x$ \\
+\textbf{Step 1:} Cauchy-Euler. Roots $r = 1, 2, 3$. Fundamental set: $\{x, x^2, x^3\}$. \\
+\textbf{Step 2:} Standard form: $g(x) = x \ln x$. \\
+\textbf{Step 3:} $W = 2x^3$. $W_1 = x^4$, $W_2 = -2x^3$, $W_3 = x^2$. \\
+\textbf{Step 4:} $v_1' = \frac{1}{2}x^2\ln x \implies v_1 = \frac{1}{6}x^3\ln x - \frac{1}{18}x^3$. \\
+$v_2' = -x\ln x \implies v_2 = -\frac{1}{2}x^2\ln x + \frac{1}{4}x^2$. \\
+$v_3' = \frac{1}{2}\ln x \implies v_3 = \frac{1}{2}x\ln x - \frac{1}{2}x$. \\
+\textbf{Step 5:} $y_p = (\frac{1}{6} - \frac{1}{2} + \frac{1}{2})x^4\ln x + (-\frac{1}{18} + \frac{1}{4} - \frac{1}{2})x^4$. \\
+\textbf{Final Answer:} $y_p(x) = \frac{1}{6}x^4\ln x - \frac{11}{36}x^4$
+
+\subsection*{Problem 19}
+\textbf{Equation:} $t y'' - (t+1)y' + y = t^2$ \\
+\textbf{Step 1:} Fundamental set: $\{e^t, t+1\}$. \\
+\textbf{Step 2:} Standard form: $g(t) = t$. \\
+\textbf{Step 3:} $W = \begin{vmatrix} e^t & t+1 \\ e^t & 1 \end{vmatrix} = e^t - e^t(t+1) = -te^t$. \\
+\textbf{Step 4:} $v_1' = \frac{-(t+1)(t)}{-te^t} = (t+1)e^{-t} \implies v_1 = -(t+2)e^{-t}$. \\
+$v_2' = \frac{e^t(t)}{-te^t} = -1 \implies v_2 = -t$. \\
+\textbf{Step 5:} $y_p = -(t+2) - t(t+1) = -t^2 - 2t - 2$. Drop $-2t - 2$ (since $-2(t+1)$ is homogeneous). \\
+\textbf{Final Answer:} $y_p(t) = -t^2$
+
+\subsection*{Problem 20}
+\textbf{Equation:} $y'' - 5y' + 6y = g(x)$ \\
+\textbf{Step 1:} $r^2 - 5r + 6 = 0 \implies r = 2, 3$. Fundamental set: $\{e^{2x}, e^{3x}\}$. \\
+\textbf{Step 2:} $W = e^{5x}$. \\
+\textbf{Step 3:} $v_1' = \frac{-e^{3x}g(x)}{e^{5x}} = -e^{-2x}g(x)$. $v_2' = \frac{e^{2x}g(x)}{e^{5x}} = e^{-3x}g(x)$. \\
+\textbf{Final Answer:} $y_p(x) = -e^{2x}\int e^{-2x}g(x)dx + e^{3x}\int e^{-3x}g(x)dx$
+
+\subsection*{Problem 21}
+\textbf{Equation:} $x^2 y'' - 4xy' + 6y = g(x)$ \\
+\textbf{Step 1:} Cauchy-Euler. $r(r-1) - 4r + 6 = 0 \implies r^2 - 5r + 6 = 0 \implies r = 2, 3$. Fundamental set: $\{x^2, x^3\}$. \\
+\textbf{Step 2:} Standard form: $g_{std}(x) = \frac{g(x)}{x^2}$. \\
+\textbf{Step 3:} $W = x^4$. \\
+\textbf{Step 4:} $v_1' = \frac{-x^3(g(x)/x^2)}{x^4} = -x^{-3}g(x)$. $v_2' = \frac{x^2(g(x)/x^2)}{x^4} = x^{-4}g(x)$. \\
+\textbf{Final Answer:} $y_p(x) = -x^2\int x^{-3}g(x)dx + x^3\int x^{-4}g(x)dx$
+
+\subsection*{Problem 22}
+\textbf{Equation:} $\mathbf{x}' = \begin{pmatrix} 2 & 1 \\ -1 & 2 \end{pmatrix} \mathbf{x} + \begin{pmatrix} e^{2t} \\ 0 \end{pmatrix}$ \\
+\textbf{Step 1:} Eigenvalues $\lambda = 2 \pm i$. Fundamental matrix $\Phi(t) = e^{2t} \begin{pmatrix} \cos t & \sin t \\ -\sin t & \cos t \end{pmatrix}$. \\
+\textbf{Step 2:} $\Phi^{-1}(t) = e^{-2t} \begin{pmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{pmatrix}$. \\
+\textbf{Step 3:} $\Phi^{-1}(t)\mathbf{f}(t) = e^{-2t} \begin{pmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{pmatrix} \begin{pmatrix} e^{2t} \\ 0 \end{pmatrix} = \begin{pmatrix} \cos t \\ \sin t \end{pmatrix}$. \\
+\textbf{Step 4:} $\int \Phi^{-1}(t)\mathbf{f}(t) dt = \begin{pmatrix} \sin t \\ -\cos t \end{pmatrix}$. \\
+\textbf{Step 5:} $\mathbf{x}_p = e^{2t} \begin{pmatrix} \cos t & \sin t \\ -\sin t & \cos t \end{pmatrix} \begin{pmatrix} \sin t \\ -\cos t \end{pmatrix} = e^{2t} \begin{pmatrix} 0 \\ -1 \end{pmatrix}$. \\
+\textbf{Final Answer:} $\mathbf{x}_p(t) = \begin{pmatrix} 0 \\ -e^{2t} \end{pmatrix}$
+
+\subsection*{Problem 23}
+\textbf{Equation:} $\mathbf{x}' = \begin{pmatrix} 1 & 1 \\ 0 & 1 \end{pmatrix} \mathbf{x} + \begin{pmatrix} 0 \\ e^t \end{pmatrix}$ \\
+\textbf{Step 1:} $\Phi(t) = e^t \begin{pmatrix} 1 & t \\ 0 & 1 \end{pmatrix}$. \\
+\textbf{Step 2:} $\Phi^{-1}(t) = e^{-t} \begin{pmatrix} 1 & -t \\ 0 & 1 \end{pmatrix}$. \\
+\textbf{Step 3:} $\Phi^{-1}(t)\mathbf{f}(t) = e^{-t} \begin{pmatrix} 1 & -t \\ 0 & 1 \end{pmatrix} \begin{pmatrix} 0 \\ e^t \end{pmatrix} = \begin{pmatrix} -t \\ 1 \end{pmatrix}$. \\
+\textbf{Step 4:} $\int \Phi^{-1}(t)\mathbf{f}(t) dt = \begin{pmatrix} -t^2/2 \\ t \end{pmatrix}$. \\
+\textbf{Step 5:} $\mathbf{x}_p = e^t \begin{pmatrix} 1 & t \\ 0 & 1 \end{pmatrix} \begin{pmatrix} -t^2/2 \\ t \end{pmatrix} = e^t \begin{pmatrix} t^2/2 \\ t \end{pmatrix}$. \\
+\textbf{Final Answer:} $\mathbf{x}_p(t) = \begin{pmatrix} \frac{t^2}{2}e^t \\ te^t \end{pmatrix}$
+
+\subsection*{Problem 24}
+\textbf{Equation:} $\mathbf{x}' = \begin{pmatrix} 0 & 1 \\ -1 & 0 \end{pmatrix} \mathbf{x} + \begin{pmatrix} \sec t \\ 0 \end{pmatrix}$ \\
+\textbf{Step 1:} $\Phi(t) = \begin{pmatrix} \cos t & \sin t \\ -\sin t & \cos t \end{pmatrix}$. \\
+\textbf{Step 2:} $\Phi^{-1}(t) = \begin{pmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{pmatrix}$. \\
+\textbf{Step 3:} $\Phi^{-1}(t)\mathbf{f}(t) = \begin{pmatrix} \cos t & -\sin t \\ \sin t & \cos t \end{pmatrix} \begin{pmatrix} \sec t \\ 0 \end{pmatrix} = \begin{pmatrix} 1 \\ \tan t \end{pmatrix}$. \\
+\textbf{Step 4:} $\int \Phi^{-1}(t)\mathbf{f}(t) dt = \begin{pmatrix} t \\ -\ln|\cos t| \end{pmatrix}$. \\
+\textbf{Step 5:} $\mathbf{x}_p = \begin{pmatrix} \cos t & \sin t \\ -\sin t & \cos t \end{pmatrix} \begin{pmatrix} t \\ -\ln|\cos t| \end{pmatrix}$. \\
+\textbf{Final Answer:} $\mathbf{x}_p(t) = \begin{pmatrix} t\cos t - \sin t \ln|\cos t| \\ -t\sin t - \cos t \ln|\cos t| \end{pmatrix}$
+
+\subsection*{Problem 25}
+\textbf{Derivation:} \\
+Assume a particular solution of the form $y_p = v_1y_1 + v_2y_2$. \\
+Differentiating yields $y_p' = (v_1y_1' + v_2y_2') + (v_1'y_1 + v_2'y_2)$. \\
+To prevent second derivatives of $v_k$ from appearing, we impose the first condition: $v_1'y_1 + v_2'y_2 = 0$. \\
+This simplifies the first derivative to $y_p' = v_1y_1' + v_2y_2'$. \\
+Differentiating again yields $y_p'' = v_1y_1'' + v_2y_2'' + v_1'y_1' + v_2'y_2'$. \\
+Substitute $y_p, y_p', y_p''$ into the original ODE $y'' + p(x)y' + q(x)y = g(x)$: \\
+$(v_1y_1'' + v_2y_2'' + v_1'y_1' + v_2'y_2') + p(x)(v_1y_1' + v_2y_2') + q(x)(v_1y_1 + v_2y_2) = g(x)$. \\
+Rearranging by factoring out $v_1$ and $v_2$: \\
+$v_1(y_1'' + p(x)y_1' + q(x)y_1) + v_2(y_2'' + p(x)y_2' + q(x)y_2) + v_1'y_1' + v_2'y_2' = g(x)$. \\
+Since $y_1$ and $y_2$ are solutions to the homogeneous equation, the terms in the parentheses are exactly zero. \\
+This leaves the second condition: $v_1'y_1' + v_2'y_2' = g(x)$. $\blacksquare$
+
+\subsection*{Problem 26}
+\textbf{Correction:} \textit{Error:} The student forgot to multiply the integrated parameters $v_1$ and $v_2$ by their respective fundamental solutions $y_1$ and $y_2$ when forming $y_p$. \\
+\textit{Correct Step:} $y_p = v_1y_1 + v_2y_2 = (\frac{x}{2})(e^x) + (-\frac{e^{2x}}{4})(e^{-x}) = \frac{x}{2}e^x - \frac{1}{4}e^x$.
+
+\subsection*{Problem 27}
+\textbf{Correction:} \textit{Error:} The student failed to divide the ODE by $x^2$ to put it in standard form, incorrectly identifying $g(x)$ as $x^3$ instead of $x$. \\
+\textit{Correct Step:} $g(x) = x$. Then $v_1' = \frac{-x^2(x)}{x^2} = -x \implies v_1 = -\frac{x^2}{2}$. $v_2' = \frac{x(x)}{x^2} = 1 \implies v_2 = x$. $y_p = (-\frac{x^2}{2})(x) + (x)(x^2) = \frac{x^3}{2}$.
+
+\subsection*{Problem 28}
+\textbf{Correction:} \textit{Error:} The student incorrectly simplified $-\sin x \tan x$ to $-\cos x \tan x$ during integration. \\
+\textit{Correct Step:} $-\sin x \tan x = -\frac{\sin^2 x}{\cos x} = \frac{\cos^2 x - 1}{\cos x} = \cos x - \sec x$. Integrating this yields $\sin x - \ln|\sec x + \tan x|$.
+
+\subsection*{Problem 29}
+\textbf{Correction:} \textit{Error:} The student replaced the first \textit{row} of the Wronskian with $[0, 0, 1]$ instead of replacing the first \textit{column} with $[0, 0, 1]^T$. \\
+\textit{Correct Step:} $W_1 = \begin{vmatrix} 0 & x & e^x \\ 0 & 1 & e^x \\ 1 & 0 & e^x \end{vmatrix} = 1(xe^x - e^x) = e^x(x-1)$.
+
+\subsection*{Problem 30}
+\textbf{Correction:} \textit{Error:} The student calculated the Wronskian using the incorrect formula $y_1 y_2 + y_1' y_2'$ instead of the determinant $y_1 y_2' - y_1' y_2$. \\
+\textit{Correct Step:} $W = (e^{2x})(-2e^{-2x}) - (2e^{2x})(e^{-2x}) = -2 - 2 = -4$.
+
+\end{document}
