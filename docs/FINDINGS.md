@@ -176,3 +176,37 @@ AI Studio often emits **two** ```latex fences for long docs. Single outer-fence 
 ## 14. Windows Rich width
 
 `Console.legacy_windows=True` subtracts 1 from width; `os.get_terminal_size` for cmd often stays 80 even after maximize if the screen buffer width is not increased. Dedicated `no_wrap` columns + two tables avoid ellipsis regardless.
+
+---
+
+## 15. Explicit Context Cache support (Nov 16 2026)
+
+Live `v1beta` checks:
+- **`gemini-3.1-pro-preview`**: `client.caches.create` succeeds; generate with `cached_content=` reports `cached_content_token_count` ≈ system+prompt (~3,847 with current Math Topics prompt + LaTeX system instructions). Flex + Standard both work with cache.
+- **`gemini-4-argon` / `gemini-4-hydrogen`**: `400 INVALID_ARGUMENT` — *"Explicit caching is not supported for models/…"*. Automation creates cache when possible and falls back to prefix-aligned prompt layout (invariant prompt first, scope guard second) without failing the job.
+- Implicit prefix caching on Gemini 4 did **not** populate `cached_content_token_count` in short smoke tests even above 4,096 invariant tokens — do not rely on it for the Cache column yet.
+
+**Measured 3-PDF Flex calibration (Ch. 5.1–5.3, 3.1-pro, READY override):**
+- Cache column: **3,847** per section (11,541 total)
+- Input-only USD: **$0.016824 → $0.011400** (**32.2%** input $ drop)
+
+Pricing already uses `cached` rates (~25% of input) in `MODEL_PRICING_PER_1M`.
+
+---
+
+## 16. API-only overlap trim (keep `slice_pdfs.py` unchanged)
+
+Sliced Book PDFs intentionally include 1 page of next-section start. Dropping the **entire** last page blindly is unsafe when the next-section heading starts mid-page (e.g. Linear Algebra 7.2 last page still contains 7.2 practice-solution content above the 7.3 heading).
+
+Safe heuristic implemented:
+- Only when `page_count ≥ 3`
+- Drop **last** page only if it *starts with* the next-section heading (pure overlap, e.g. Stats 5.2 / LA 7.3), or the heading sits in the top ~12%
+- Keep mid-page boundaries intact (e.g. LA 7.2 last page still has practice-solution content above the 7.3 heading — scope guard handles those)
+- Drop **first** page only if current-section heading is absent on page 1 but present on page 2+
+- On-disk PDFs never modified; trim applies to API `Part` bytes only (~560 InitIn tok/page at medium)
+
+---
+
+## 17. Custom target folders
+
+`prefix_for_folder()` maps Homework / Problem Sets / Book Section(s); any other name uses `f"({folder_name})"`. `resolve_target_tex()` always `mkdir(parents=True)` for the custom subfolder and writes `(Folder) <stem>.tex`.

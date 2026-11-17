@@ -11,10 +11,12 @@ from dotenv import load_dotenv
 from rich.console import Console
 from rich.table import Table
 
-from .config import MATHTEX_ROOT, ensure_runtime_dirs
+from .config import MATHTEX_ROOT, MEDIA_RESOLUTIONS, PDF_MEDIA_RESOLUTION, ensure_runtime_dirs
 from .gemini_runner import (
     WorkItem,
+    confirm_budget_or_abort,
     create_client,
+    estimate_job_preflight_costs,
     manage_batches_cli,
     outcome_to_report,
     run_items,
@@ -25,6 +27,7 @@ from .job_store import (
     STATUS_SUCCEEDED,
     ask_job_name_and_confirm,
     summarize_token_diagnostics,
+    sync_section_statuses_from_reports,
     update_job,
 )
 from .jobs_manager import manage_jobs_cli
@@ -97,6 +100,9 @@ def _print_dry_run(items: list[WorkItem], selection: RunSelection) -> None:
     console.print(table)
     console.print(f"Model: {selection.model}")
     console.print(f"Thinking: {selection.thinking_level}")
+    console.print(f"Media: {selection.media_resolution}")
+    console.print(f"API trim: {'yes' if selection.trim_overlap_pages else 'no'}")
+    console.print(f"Skip completed: {'yes' if selection.skip_completed else 'no'}")
     console.print(f"Tier: {selection.execution_tier}")
     console.print(f"Prompts: {', '.join(p.name for p in selection.prompt_paths)}")
     if selection.system_instruction_path:
@@ -128,6 +134,25 @@ def run_pipeline(
         _print_dry_run(items, selection)
         return 0
 
+    api_key = _load_api_key()
+    client = create_client(api_key)
+
+    if require_named_job:
+        console.print("[bold]Counting tokens for pre-submit cost estimate…[/bold]")
+        estimate = estimate_job_preflight_costs(
+            client,
+            items,
+            model=selection.model,
+            thinking_level=selection.thinking_level,
+            execution_tier=selection.execution_tier,
+            system_instruction=selection.system_instruction_text,
+            media_resolution=selection.media_resolution,
+            trim_overlap_pages=selection.trim_overlap_pages,
+        )
+        if not confirm_budget_or_abort(estimate):
+            console.print("[yellow]Submission cancelled at cost gate.[/yellow]")
+            return 0
+
     local_job_id: str | None = None
     job_name: str | None = None
     if require_named_job:
@@ -137,8 +162,6 @@ def run_pipeline(
         local_job_id = job["id"]
         job_name = job["name"]
 
-    api_key = _load_api_key()
-    client = create_client(api_key)
     console.print(
         f"[bold]Running {len(items)} section(s)"
         + (f" for job '{job_name}'…" if job_name else "…")
@@ -153,6 +176,10 @@ def run_pipeline(
         execution_tier=selection.execution_tier,
         system_instruction=selection.system_instruction_text,
         local_job_id=local_job_id,
+        skip_completed=selection.skip_completed,
+        media_resolution=selection.media_resolution,
+        trim_overlap_pages=selection.trim_overlap_pages,
+        backup_existing_tex=selection.backup_existing_tex,
     )
     rows = [outcome_to_report(o, selection.model) for o in outcomes]
     print_summary_table(rows)
@@ -173,6 +200,7 @@ def run_pipeline(
     )
     token_diag = summarize_token_diagnostics(rows)
     if local_job_id:
+        sync_section_statuses_from_reports(local_job_id, rows)
         if pending and failures == pending:
             # Left waiting on Gemini Batch — keep running/submitted state
             update_job(
@@ -292,6 +320,28 @@ def build_parser() -> argparse.ArgumentParser:
         default="flex_batch_fallback",
         help="Execution tier.",
     )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        help="Skip sections whose target .tex validates OK and compiled PDF exists.",
+    )
+    parser.add_argument(
+        "--media",
+        type=str,
+        choices=MEDIA_RESOLUTIONS,
+        default=None,
+        help="PDF media_resolution for API tokenization (low/medium/high).",
+    )
+    parser.add_argument(
+        "--no-trim",
+        action="store_true",
+        help="Disable API-only overlap page trimming.",
+    )
+    parser.add_argument(
+        "--no-backup",
+        action="store_true",
+        help="Do not write .tex.bak before overwrite.",
+    )
     return parser
 
 
@@ -326,6 +376,10 @@ def selection_from_args(args: argparse.Namespace) -> RunSelection:
         model=args.model or DEFAULT_MODEL,
         thinking_level=args.thinking,
         execution_tier=args.tier,
+        skip_completed=bool(getattr(args, "skip_existing", False)),
+        media_resolution=str(getattr(args, "media", None) or PDF_MEDIA_RESOLUTION),
+        trim_overlap_pages=not bool(getattr(args, "no_trim", False)),
+        backup_existing_tex=not bool(getattr(args, "no_backup", False)),
     )
 
 
@@ -337,7 +391,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.jobs:
         api_key = _load_api_key()
         client = create_client(api_key)
-        return manage_jobs_cli(client)
+        return manage_jobs_cli(client, api_key=api_key)
 
     if args.batches:
         api_key = _load_api_key()
@@ -372,6 +426,10 @@ def main(argv: list[str] | None = None) -> int:
             execution_tier=selection.execution_tier,
             system_instruction=selection.system_instruction_text,
             local_job_id=job["id"],
+            skip_completed=selection.skip_completed,
+            media_resolution=selection.media_resolution,
+            trim_overlap_pages=selection.trim_overlap_pages,
+            backup_existing_tex=selection.backup_existing_tex,
         )
         rows = [outcome_to_report(o, selection.model) for o in outcomes]
         print_summary_table(rows)
@@ -383,6 +441,7 @@ def main(argv: list[str] | None = None) -> int:
             job_id=job["id"],
         )
         failures = sum(1 for o in outcomes if not o.success)
+        sync_section_statuses_from_reports(job["id"], rows)
         update_job(
             job["id"],
             status=STATUS_SUCCEEDED if failures == 0 else STATUS_PARTIAL,

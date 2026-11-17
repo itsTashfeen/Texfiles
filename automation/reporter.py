@@ -12,7 +12,7 @@ from typing import Any
 from rich.console import Console
 from rich.table import Table
 
-from .config import MODEL_PRICING_PER_1M, REPORTS_DIR, ensure_runtime_dirs
+from .config import MODEL_PRICING_PER_1M, REPORTS_DIR, TOKEN_MISMATCH_RATIO, ensure_runtime_dirs
 
 _FORBIDDEN_WIN_CHARS_RE = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
 _RESERVED_WIN_NAMES = frozenset(
@@ -147,11 +147,59 @@ def estimate_cost_usd(
 
 
 def pricing_tier_for_execution(tier_used: str) -> str:
-    if tier_used in {"flex", "flex_batch_fallback", "batch_fallback"}:
+    if tier_used in {"flex", "flex_batch_fallback", "batch_fallback", "flex_only"}:
         return "flex"
     if tier_used in {"batch", "batch_only"}:
         return "batch"
     return "standard"
+
+
+def project_section_cost_band(
+    model: str,
+    execution_tier: str,
+    *,
+    init_in_tokens: int,
+    thinking_level: str = "high",
+) -> dict[str, float]:
+    """
+    Project min / likely / max USD for one section from preflight InitIn.
+
+    Bands are calibrated from real MathTex Homework runs (Flex Argon/3.1-pro):
+    - Out roughly 2.5×–4.5× InitIn for long study guides
+    - Think roughly 0.4×–1.5× InitIn at thinking=high; ~0.05×–0.3× at low
+    """
+    pricing = pricing_tier_for_execution(execution_tier)
+    init_in = max(0, int(init_in_tokens))
+    if thinking_level == "low":
+        think_mults = (0.05, 0.15, 0.30)
+    else:
+        think_mults = (0.40, 0.80, 1.50)
+    out_mults = (2.5, 3.5, 4.5)
+    # Continuation hop inflation on billed input: 1.0× / 2.5× / 4.0× InitIn
+    billed_mults = (1.0, 2.5, 4.0)
+
+    def _band(billed_m: float, think_m: float, out_m: float) -> float:
+        return estimate_cost_usd(
+            model,
+            pricing,
+            input_tokens=int(init_in * billed_m),
+            cached_tokens=0,
+            thinking_tokens=int(init_in * think_m),
+            output_tokens=int(init_in * out_m),
+        )
+
+    return {
+        "min_usd": _band(billed_mults[0], think_mults[0], out_mults[0]),
+        "likely_usd": _band(billed_mults[1], think_mults[1], out_mults[1]),
+        "max_usd": _band(billed_mults[2], think_mults[2], out_mults[2]),
+        "init_in_tokens": float(init_in),
+    }
+
+
+def has_token_mismatch(init_in: int, billed_in: int, *, ratio: float = TOKEN_MISMATCH_RATIO) -> bool:
+    if init_in <= 0 or billed_in <= 0:
+        return False
+    return billed_in > (ratio * init_in)
 
 
 def usage_from_response(response: Any, *, preflight_tokens: int = 0) -> dict[str, int]:
@@ -259,6 +307,23 @@ def print_summary_table(rows: list[SectionReport], *, console: Console | None = 
         "BilledIn = cumulative input across multi-hop continuations.[/dim]"
     )
     console.print(f"[bold]Total estimated cost:[/bold] ${total_cost:.4f}")
+
+    mismatches = [
+        row
+        for row in rows
+        if has_token_mismatch(
+            row.initial_input_tokens or row.preflight_tokens or row.input_tokens,
+            row.input_tokens,
+        )
+    ]
+    if mismatches:
+        names = ", ".join(_section_label(r) for r in mismatches[:5])
+        more = f" (+{len(mismatches) - 5} more)" if len(mismatches) > 5 else ""
+        console.print(
+            f"[yellow]TOKEN_MISMATCH:[/yellow] BilledIn > {TOKEN_MISMATCH_RATIO:.0f}× InitIn on "
+            f"{len(mismatches)} section(s): {names}{more}. "
+            "Usually means Long Decode / continuation hop inflation — expected on long docs."
+        )
 
 
 def write_reports(

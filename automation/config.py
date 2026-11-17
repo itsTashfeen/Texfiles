@@ -27,6 +27,11 @@ HTTP_TIMEOUT_MS = 1_800_000  # 30 min — multi-hop Long Decode can exceed 15 mi
 MAX_WORKERS = 1
 MAX_LATEX_CONTINUATION_TURNS = 2
 PDF_MEDIA_RESOLUTION = "medium"  # "low" (280/pg) | "medium" (560/pg) | "high" (1120/pg)
+MEDIA_RESOLUTIONS = ("low", "medium", "high")
+CONTEXT_CACHE_TTL_SECONDS = 3600
+DEFAULT_BUDGET_USD = 2.00
+TOKEN_MISMATCH_RATIO = 3.0  # warn when BilledIn > ratio * InitIn
+API_TRIM_MIN_PAGES = 3
 FLEX_RETRY_BACKOFF_SECONDS = (15, 45, 90)
 BATCH_POLL_INTERVAL_SECONDS = 30
 
@@ -70,6 +75,10 @@ FOLDER_PREFIX_MAP = {
     "Book Section": "(Book Section)",
     "Book Sections": "(Book Section)",
 }
+
+# Chapter leaf folders that sit beside each other under Domain/Subject/Chapter.
+# Selecting a PDF from any of these must still resolve RelPath to the Chapter.
+CHAPTER_LEAF_FOLDERS = frozenset({BOOK_PDF_FOLDER, *FOLDER_PREFIX_MAP.keys()})
 
 # USD per 1M tokens. Flex/Batch are 50% of standard list rates.
 # Update when Google publishes final Gemini 4 pricing.

@@ -28,6 +28,124 @@ STATUS_PARTIAL = "partial"
 ACTIVE_STATUSES = frozenset({STATUS_SUBMITTED, STATUS_RUNNING})
 FAILED_LIKE_STATUSES = frozenset({STATUS_FAILED, STATUS_PARTIAL, STATUS_CANCELLED})
 
+SECTION_PENDING = "pending"
+SECTION_SUCCEEDED = "succeeded"
+SECTION_SKIPPED = "skipped"
+SECTION_FAILED = "failed"
+
+
+def _classify_section_row(
+    latex_validation: str,
+    compile_status: str,
+    tier_used: str = "",
+    error: str = "",
+) -> str:
+    if tier_used == "skipped":
+        return SECTION_SKIPPED
+    if "Pending batch" in (error or ""):
+        return SECTION_PENDING
+    if latex_validation != "OK":
+        return SECTION_FAILED
+    if compile_status.startswith("Failed") or (error and not compile_status.startswith("Compiled")):
+        return SECTION_FAILED
+    if compile_status.startswith("Compiled") or compile_status == "Skipped":
+        return SECTION_SUCCEEDED
+    return SECTION_FAILED if error else SECTION_SUCCEEDED
+
+
+def get_section_statuses(job: dict[str, Any]) -> list[dict[str, Any]]:
+    """
+    Return normalized per-section status dicts for a job.
+
+    Uses persisted `section_statuses` when present, falling back to `token_diagnostics`
+    + `settings.items` for historical jobs created before per-section persistence.
+    """
+    persisted = job.get("section_statuses")
+    if isinstance(persisted, list) and persisted:
+        return [dict(entry) for entry in persisted if isinstance(entry, dict)]
+
+    settings = job.get("settings") or {}
+    items = settings.get("items") or []
+    diag = job.get("token_diagnostics")
+    diag_sections = diag.get("sections") if isinstance(diag, dict) else []
+    by_pdf_name: dict[str, dict[str, Any]] = {}
+    if isinstance(diag_sections, list):
+        for sec in diag_sections:
+            if isinstance(sec, dict) and sec.get("pdf_name"):
+                by_pdf_name[str(sec["pdf_name"])] = sec
+
+    synthesized: list[dict[str, Any]] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        pdf_path = str(item.get("pdf_path") or "")
+        pdf_name = Path(pdf_path).name if pdf_path else str(item.get("topic") or "")
+        sec = by_pdf_name.get(pdf_name)
+        if sec:
+            latex_val = str(sec.get("latex_validation") or "")
+            comp_val = str(sec.get("compile_status") or "")
+            status = _classify_section_row(latex_val, comp_val)
+            cost = float(sec.get("estimated_cost_usd") or 0.0)
+        else:
+            latex_val = ""
+            comp_val = ""
+            job_st = str(job.get("status") or "")
+            status = SECTION_PENDING if job_st in ACTIVE_STATUSES else (
+                SECTION_SUCCEEDED if job_st == STATUS_SUCCEEDED else SECTION_FAILED
+            )
+            cost = 0.0
+        synthesized.append(
+            {
+                "pdf_path": pdf_path,
+                "pdf_name": pdf_name,
+                "topic": str(item.get("topic") or ""),
+                "section_number": str(item.get("section_number") or ""),
+                "target_tex_path": str(item.get("target_tex_path") or ""),
+                "status": status,
+                "latex_validation": latex_val,
+                "compile_status": comp_val,
+                "estimated_cost_usd": cost,
+                "error": "",
+            }
+        )
+    return synthesized
+
+
+def get_failed_section_items(
+    job: dict[str, Any],
+    *,
+    verify_disk: bool = True,
+) -> list[dict[str, Any]]:
+    """
+    Return the subset of `job['settings']['items']` whose section failed, was truncated,
+    never finished, or (when verify_disk=True) lacks a valid `.tex` + compiled `.pdf`.
+    """
+    from .latex_processor import validate_existing_tex_and_pdf
+
+    settings = job.get("settings") or {}
+    items = [i for i in (settings.get("items") or []) if isinstance(i, dict)]
+    statuses = get_section_statuses(job)
+    by_pdf_path = {str(s.get("pdf_path") or ""): s for s in statuses}
+    by_pdf_name = {str(s.get("pdf_name") or ""): s for s in statuses}
+
+    failed_items: list[dict[str, Any]] = []
+    for item in items:
+        pdf_path = str(item.get("pdf_path") or "")
+        pdf_name = Path(pdf_path).name if pdf_path else ""
+        target_tex = str(item.get("target_tex_path") or "")
+        st_entry = by_pdf_path.get(pdf_path) or by_pdf_name.get(pdf_name)
+        st = str((st_entry or {}).get("status") or SECTION_FAILED)
+
+        if st not in {SECTION_SUCCEEDED, SECTION_SKIPPED}:
+            failed_items.append(item)
+            continue
+
+        if verify_disk and target_tex:
+            ok_disk, _, _ = validate_existing_tex_and_pdf(Path(target_tex))
+            if not ok_disk:
+                failed_items.append(item)
+    return failed_items
+
 
 def effective_job_status(job: dict[str, Any]) -> str:
     """
@@ -40,6 +158,20 @@ def effective_job_status(job: dict[str, Any]) -> str:
     if stored in ACTIVE_STATUSES:
         return stored
 
+    persisted = job.get("section_statuses")
+    if isinstance(persisted, list) and persisted:
+        bad = sum(
+            1
+            for s in persisted
+            if isinstance(s, dict)
+            and str(s.get("status") or "") not in {SECTION_SUCCEEDED, SECTION_SKIPPED}
+        )
+        if bad == 0:
+            return STATUS_SUCCEEDED if stored != STATUS_CANCELLED else STATUS_CANCELLED
+        if bad >= len(persisted):
+            return STATUS_FAILED if stored != STATUS_CANCELLED else STATUS_CANCELLED
+        return STATUS_PARTIAL
+
     diag = job.get("token_diagnostics")
     sections = diag.get("sections") if isinstance(diag, dict) else None
     if not isinstance(sections, list) or not sections:
@@ -51,7 +183,7 @@ def effective_job_status(job: dict[str, Any]) -> str:
             continue
         latex = str(sec.get("latex_validation") or "")
         compile_status = str(sec.get("compile_status") or "")
-        if latex in {"TRUNCATED_LATEX", "MISSING_DOCUMENTCLASS"}:
+        if latex in {"TRUNCATED_LATEX", "MISSING_DOCUMENTCLASS", "UNBALANCED_DOCUMENT", "LEFTOVER_FENCES"}:
             bad += 1
         elif compile_status.startswith("Failed"):
             bad += 1
@@ -200,6 +332,10 @@ def selection_snapshot(selection: RunSelection, items_meta: list[dict[str, Any]]
         "thinking_level": selection.thinking_level,
         "execution_tier": selection.execution_tier,
         "execution_tier_label": tier_label(selection.execution_tier),
+        "skip_completed": bool(getattr(selection, "skip_completed", False)),
+        "media_resolution": str(getattr(selection, "media_resolution", "medium")),
+        "trim_overlap_pages": bool(getattr(selection, "trim_overlap_pages", True)),
+        "backup_existing_tex": bool(getattr(selection, "backup_existing_tex", True)),
         "items": items_meta,
     }
 
@@ -209,6 +345,7 @@ def summarize_token_diagnostics(rows: list[SectionReport]) -> dict[str, Any]:
     sections = []
     total_init = 0
     total_billed = 0
+    total_cached = 0
     total_think = 0
     total_out = 0
     total_cost = 0.0
@@ -216,6 +353,7 @@ def summarize_token_diagnostics(rows: list[SectionReport]) -> dict[str, Any]:
         init_in = r.initial_input_tokens or r.preflight_tokens or r.input_tokens
         total_init += init_in
         total_billed += r.input_tokens
+        total_cached += r.cached_tokens
         total_think += r.thinking_tokens
         total_out += r.output_tokens
         total_cost += r.estimated_cost_usd
@@ -237,11 +375,98 @@ def summarize_token_diagnostics(rows: list[SectionReport]) -> dict[str, Any]:
     return {
         "total_initial_input_tokens": total_init,
         "total_billed_input_tokens": total_billed,
+        "total_cached_tokens": total_cached,
         "total_thinking_tokens": total_think,
         "total_output_tokens": total_out,
         "total_estimated_cost_usd": round(total_cost, 6),
         "sections": sections,
     }
+
+
+def _initial_section_statuses(items_meta: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    for item in items_meta:
+        pdf_path = str(item.get("pdf_path") or "")
+        entries.append(
+            {
+                "pdf_path": pdf_path,
+                "pdf_name": Path(pdf_path).name if pdf_path else "",
+                "topic": str(item.get("topic") or ""),
+                "section_number": str(item.get("section_number") or ""),
+                "target_tex_path": str(item.get("target_tex_path") or ""),
+                "status": SECTION_PENDING,
+                "latex_validation": "N/A",
+                "compile_status": "Pending",
+                "estimated_cost_usd": 0.0,
+                "error": "",
+                "updated_at": _now(),
+            }
+        )
+    return entries
+
+
+def update_job_section_from_report(job_id: str, row: SectionReport, *, pdf_path: str = "") -> None:
+    """Persist live completion/failure status for a single section on an active job."""
+    job = get_job(job_id)
+    if not job:
+        return
+    statuses = get_section_statuses(job)
+    new_status = _classify_section_row(
+        row.latex_validation,
+        row.compile_status,
+        tier_used=row.tier_used,
+        error=row.error,
+    )
+    matched = False
+    for entry in statuses:
+        same_path = bool(pdf_path) and str(entry.get("pdf_path") or "") == pdf_path
+        same_name = str(entry.get("pdf_name") or "") == row.pdf_name
+        if same_path or same_name:
+            entry.update(
+                {
+                    "status": new_status,
+                    "tier_used": row.tier_used,
+                    "latex_validation": row.latex_validation,
+                    "compile_status": row.compile_status,
+                    "estimated_cost_usd": row.estimated_cost_usd,
+                    "error": row.error,
+                    "updated_at": _now(),
+                }
+            )
+            matched = True
+            break
+    if not matched:
+        statuses.append(
+            {
+                "pdf_path": pdf_path,
+                "pdf_name": row.pdf_name,
+                "topic": row.topic,
+                "section_number": "",
+                "target_tex_path": row.target_tex_path,
+                "status": new_status,
+                "tier_used": row.tier_used,
+                "latex_validation": row.latex_validation,
+                "compile_status": row.compile_status,
+                "estimated_cost_usd": row.estimated_cost_usd,
+                "error": row.error,
+                "updated_at": _now(),
+            }
+        )
+    update_job(job_id, section_statuses=statuses)
+
+
+def sync_section_statuses_from_reports(
+    job_id: str,
+    rows: list[SectionReport],
+) -> list[dict[str, Any]]:
+    """Merge a batch/subset of SectionReports into the job's persisted `section_statuses`."""
+    job = get_job(job_id)
+    if not job:
+        return []
+    for row in rows:
+        update_job_section_from_report(job_id, row)
+    refreshed = get_job(job_id)
+    return get_section_statuses(refreshed) if refreshed else []
 
 
 def create_named_job(
@@ -260,6 +485,7 @@ def create_named_job(
         "report_md": None,
         "report_json": None,
         "token_diagnostics": None,
+        "section_statuses": _initial_section_statuses(items_meta),
         "section_count": len(items_meta),
         "error_summary": None,
     }
@@ -314,9 +540,10 @@ def print_job_settings(job: dict[str, Any]) -> None:
     diag = job.get("token_diagnostics")
     if isinstance(diag, dict):
         lines.append(
-            f"[bold]Tokens (InitIn / BilledIn / Think / Out):[/bold] "
+            f"[bold]Tokens (InitIn / BilledIn / Cache / Think / Out):[/bold] "
             f"{diag.get('total_initial_input_tokens', 0):,} / "
             f"{diag.get('total_billed_input_tokens', 0):,} / "
+            f"{diag.get('total_cached_tokens', 0):,} / "
             f"{diag.get('total_thinking_tokens', 0):,} / "
             f"{diag.get('total_output_tokens', 0):,} "
             f"(${diag.get('total_estimated_cost_usd', 0.0):.4f})"
@@ -329,6 +556,34 @@ def print_job_settings(job: dict[str, Any]) -> None:
         console.print(pdf_table)
     if items:
         console.print(map_table)
+    sec_statuses = get_section_statuses(job)
+    if sec_statuses and job.get("id") != "(pending)":
+        sec_table = Table(title="Per-section status", show_lines=True)
+        sec_table.add_column("Section", overflow="fold")
+        sec_table.add_column("Status", no_wrap=True)
+        sec_table.add_column("LaTeX", no_wrap=True)
+        sec_table.add_column("Compile", overflow="fold")
+        sec_table.add_column("Cost", justify="right", no_wrap=True)
+        for sec in sec_statuses:
+            st = str(sec.get("status") or "")
+            style = (
+                "green"
+                if st == SECTION_SUCCEEDED
+                else ("cyan" if st == SECTION_SKIPPED else ("yellow" if st == SECTION_PENDING else "red"))
+            )
+            comp_short = str(sec.get("compile_status") or "")
+            if comp_short.startswith("Compiled ("):
+                comp_short = "Compiled"
+            elif len(comp_short) > 44:
+                comp_short = comp_short[:41] + "..."
+            sec_table.add_row(
+                str(sec.get("pdf_name") or sec.get("topic") or ""),
+                f"[{style}]{st}[/{style}]",
+                str(sec.get("latex_validation") or "-"),
+                comp_short or "-",
+                f"${float(sec.get('estimated_cost_usd') or 0.0):.4f}",
+            )
+        console.print(sec_table)
 
 
 def print_jobs_table(
