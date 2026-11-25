@@ -23,6 +23,8 @@ INLINE_PDF_MAX_BYTES = 18 * 1024 * 1024
 # Default synchronous ceiling; Gemini 4 Long Decode uses MODEL_MAX_OUTPUT_TOKENS.
 MAX_OUTPUT_TOKENS = 65_536
 LONG_DECODE_MAX_OUTPUT_TOKENS = 1_048_576
+# Batch API rejects decoding continuation / max_output_tokens above 65_536.
+BATCH_MAX_OUTPUT_TOKENS = MAX_OUTPUT_TOKENS
 HTTP_TIMEOUT_MS = 1_800_000  # 30 min — multi-hop Long Decode can exceed 15 min
 MAX_WORKERS = 1
 MAX_LATEX_CONTINUATION_TURNS = 2

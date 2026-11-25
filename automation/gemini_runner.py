@@ -17,6 +17,7 @@ from rich.console import Console
 from .config import (
     API_TRIM_MIN_PAGES,
     BATCH_JOBS_PATH,
+    BATCH_MAX_OUTPUT_TOKENS,
     BATCH_POLL_INTERVAL_SECONDS,
     CONTEXT_CACHE_TTL_SECONDS,
     FLEX_RETRY_BACKOFF_SECONDS,
@@ -1089,13 +1090,14 @@ def _build_inline_requests(
     trim_overlap_pages: bool = True,
 ) -> list[dict[str, Any]]:
     requests: list[dict[str, Any]] = []
-    # Batch inline requests: omit automatic_continuation (SDK-side only for sync).
+    # Batch rejects Long Decode / automatic continuation: hard-cap at 65_536.
     config = build_generate_config(
         model,
         thinking_level,
         service_tier=None,
         system_instruction=system_instruction,
         automatic_continuation=False,
+        max_output_tokens_override=BATCH_MAX_OUTPUT_TOKENS,
     )
     config_dict: dict[str, Any]
     if hasattr(config, "model_dump"):
@@ -1103,8 +1105,12 @@ def _build_inline_requests(
     elif hasattr(config, "to_json_dict"):
         config_dict = config.to_json_dict()
     else:
-        config_dict = {"max_output_tokens": max_output_tokens_for_model(model)}
+        config_dict = {"max_output_tokens": BATCH_MAX_OUTPUT_TOKENS}
     config_dict.pop("automatic_continuation", None)
+    config_dict["max_output_tokens"] = min(
+        int(config_dict.get("max_output_tokens") or BATCH_MAX_OUTPUT_TOKENS),
+        BATCH_MAX_OUTPUT_TOKENS,
+    )
 
     total = len(items)
     for idx, item in enumerate(items, start=1):
@@ -1613,16 +1619,30 @@ def run_items(
         return [by_pdf[i.mapped.pdf_path] for i in items if i.mapped.pdf_path in by_pdf]
 
     if execution_tier == TIER_BATCH_ONLY:
-        record = submit_batch_job(
-            client,
-            active_items,
-            model=model,
-            thinking_level=thinking_level,
-            system_instruction=system_instruction,
-            local_job_id=local_job_id,
-            media_resolution=media_resolution,
-            trim_overlap_pages=trim_overlap_pages,
-        )
+        try:
+            record = submit_batch_job(
+                client,
+                active_items,
+                model=model,
+                thinking_level=thinking_level,
+                system_instruction=system_instruction,
+                local_job_id=local_job_id,
+                media_resolution=media_resolution,
+                trim_overlap_pages=trim_overlap_pages,
+            )
+        except Exception as exc:  # noqa: BLE001
+            console.print(f"[red]Batch submit failed:[/red] {exc}")
+            return _merge_with_skipped(
+                [
+                    GenerationOutcome(
+                        item=item,
+                        success=False,
+                        tier_used="batch",
+                        error=f"Batch submit failed: {exc}",
+                    )
+                    for item in active_items
+                ]
+            )
         action = prompt_batch_action(record["job_name"])
         if action == "cancel":
             cancel_batch(client, record["job_name"], local_job_id=local_job_id)
@@ -1777,16 +1797,24 @@ def run_items(
         f"[yellow]Flex exhausted for {len(fallback_items)} item(s); "
         "submitting Batch fallback…[/yellow]"
     )
-    record = submit_batch_job(
-        client,
-        fallback_items,
-        model=model,
-        thinking_level=thinking_level,
-        system_instruction=system_instruction,
-        local_job_id=local_job_id,
-        media_resolution=media_resolution,
-        trim_overlap_pages=trim_overlap_pages,
-    )
+    try:
+        record = submit_batch_job(
+            client,
+            fallback_items,
+            model=model,
+            thinking_level=thinking_level,
+            system_instruction=system_instruction,
+            local_job_id=local_job_id,
+            media_resolution=media_resolution,
+            trim_overlap_pages=trim_overlap_pages,
+        )
+    except Exception as exc:  # noqa: BLE001
+        console.print(f"[red]Batch fallback submit failed:[/red] {exc}")
+        console.print(
+            "[yellow]Keeping Flex outcomes. Retry failed sections from Run Jobs.bat.[/yellow]"
+        )
+        return _merge_with_skipped(ordered)
+
     action = prompt_batch_action(record["job_name"])
     if action == "cancel":
         cancel_batch(client, record["job_name"], local_job_id=local_job_id)
