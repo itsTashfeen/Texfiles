@@ -170,8 +170,13 @@ def project_section_cost_band(
     """
     pricing = pricing_tier_for_execution(execution_tier)
     init_in = max(0, int(init_in_tokens))
-    if thinking_level == "low":
+    level = (thinking_level or "high").strip().lower()
+    if level == "low":
         think_mults = (0.05, 0.15, 0.30)
+    elif level == "medium":
+        think_mults = (0.20, 0.40, 0.80)
+    elif level == "xhigh":
+        think_mults = (0.80, 1.50, 2.50)
     else:
         think_mults = (0.40, 0.80, 1.50)
     out_mults = (2.5, 3.5, 4.5)

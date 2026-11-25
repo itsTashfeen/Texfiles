@@ -9,7 +9,7 @@ import questionary
 from questionary import Choice
 from rich.console import Console
 
-from .config import DEFAULT_MODEL, PROMPTS_DIR, SYSTEM_INSTRUCTIONS_DIR
+from .config import DEFAULT_MODEL, PROMPTS_DIR, SYSTEM_INSTRUCTIONS_DIR, clamp_thinking_level
 from .gemini_runner import (
     WorkItem,
     _batch_state,
@@ -223,7 +223,7 @@ def _execute_job_rerun(
         return
 
     model = str(settings.get("model") or DEFAULT_MODEL)
-    thinking = str(settings.get("thinking_level") or "high")
+    thinking = clamp_thinking_level(model, str(settings.get("thinking_level") or "high"))
     tier = str(settings.get("execution_tier") or "flex_batch_fallback")
 
     label = (

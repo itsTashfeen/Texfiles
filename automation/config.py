@@ -39,22 +39,36 @@ DEFAULT_MODEL = "gemini-4-argon"
 AVAILABLE_MODELS = (
     "gemini-4-argon",
     "gemini-4-carbon",
+    "gemini-4-neon",
     "gemini-4-hydrogen",
     "gemini-3.1-pro-preview",
 )
-GEMINI4_MODELS = frozenset({"gemini-4-argon", "gemini-4-carbon", "gemini-4-hydrogen"})
+GEMINI4_MODELS = frozenset(
+    {"gemini-4-argon", "gemini-4-carbon", "gemini-4-neon", "gemini-4-hydrogen"}
+)
 
 # Per-model output ceilings. Gemini 4 thinking+output share max_output_tokens;
 # Long Decode (1_048_576) lets automatic_continuation finish past 65_536.
 MODEL_MAX_OUTPUT_TOKENS: dict[str, int] = {
     "gemini-4-argon": LONG_DECODE_MAX_OUTPUT_TOKENS,
     "gemini-4-carbon": LONG_DECODE_MAX_OUTPUT_TOKENS,
+    "gemini-4-neon": LONG_DECODE_MAX_OUTPUT_TOKENS,
     "gemini-4-hydrogen": LONG_DECODE_MAX_OUTPUT_TOKENS,
     "gemini-3.1-pro-preview": MAX_OUTPUT_TOKENS,
 }
 
 DEFAULT_THINKING_LEVEL = "high"
-THINKING_LEVELS = ("high", "low")
+# Full AI Studio ladder. Not every model accepts every level — see MODEL_THINKING_LEVELS.
+THINKING_LEVELS = ("low", "medium", "high", "xhigh")
+
+# Supported thinking_level values per model (Gemini API / AI Studio).
+MODEL_THINKING_LEVELS: dict[str, tuple[str, ...]] = {
+    "gemini-4-argon": ("low", "medium", "high"),
+    "gemini-4-carbon": ("low", "medium", "high"),
+    "gemini-4-neon": ("low", "medium", "high", "xhigh"),
+    "gemini-4-hydrogen": ("low", "medium", "high", "xhigh"),
+    "gemini-3.1-pro-preview": ("low", "medium", "high"),
+}
 
 TIER_FLEX_BATCH_FALLBACK = "flex_batch_fallback"
 TIER_FLEX_ONLY = "flex_only"
@@ -93,6 +107,12 @@ MODEL_PRICING_PER_1M = {
         "flex": {"input": 1.25, "output": 7.50, "cached": 0.3125},
         "batch": {"input": 1.25, "output": 7.50, "cached": 0.3125},
     },
+    "gemini-4-neon": {
+        # List rates (Nov 2026): $3 / $15; implicit cache $0.15. Flex/Batch = 50%.
+        "standard": {"input": 3.00, "output": 15.00, "cached": 0.15},
+        "flex": {"input": 1.50, "output": 7.50, "cached": 0.075},
+        "batch": {"input": 1.50, "output": 7.50, "cached": 0.075},
+    },
     "gemini-4-hydrogen": {
         "standard": {"input": 0.50, "output": 3.00, "cached": 0.125},
         "flex": {"input": 0.25, "output": 1.50, "cached": 0.0625},
@@ -108,6 +128,28 @@ MODEL_PRICING_PER_1M = {
 
 def max_output_tokens_for_model(model: str) -> int:
     return MODEL_MAX_OUTPUT_TOKENS.get(model, MAX_OUTPUT_TOKENS)
+
+
+def thinking_levels_for_model(model: str) -> tuple[str, ...]:
+    return MODEL_THINKING_LEVELS.get(model, THINKING_LEVELS)
+
+
+def clamp_thinking_level(model: str, level: str) -> str:
+    """Return a thinking_level the model accepts (e.g. xhigh → high on Argon/Carbon)."""
+    normalized = (level or DEFAULT_THINKING_LEVEL).strip().lower()
+    aliases = {
+        "extra high": "xhigh",
+        "extra_high": "xhigh",
+        "extrahigh": "xhigh",
+        "med": "medium",
+    }
+    normalized = aliases.get(normalized, normalized)
+    allowed = thinking_levels_for_model(model)
+    if normalized in allowed:
+        return normalized
+    if "high" in allowed:
+        return "high"
+    return allowed[-1] if allowed else DEFAULT_THINKING_LEVEL
 
 
 def prefix_for_folder(folder_name: str) -> str:

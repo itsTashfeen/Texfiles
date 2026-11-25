@@ -22,8 +22,9 @@ from .config import (
     PROMPTS_DIR,
     SYSTEM_INSTRUCTIONS_DIR,
     TEX_ROOT,
-    THINKING_LEVELS,
     TIER_FLEX_BATCH_FALLBACK,
+    clamp_thinking_level,
+    thinking_levels_for_model,
 )
 from .latex_processor import validate_existing_tex_and_pdf
 from .path_mapper import extract_rel_path, list_existing_tex_subfolders, resolve_target_tex
@@ -574,6 +575,7 @@ def pick_model(*, allow_back: bool = False) -> str | Any:
             title=(
                 f"{m}"
                 + (" (default — quality Homework)" if m == DEFAULT_MODEL else "")
+                + (" — frontier, between Hydrogen & Carbon" if m == "gemini-4-neon" else "")
                 + (" — cheapest overnight sweeps" if m == "gemini-4-hydrogen" else "")
                 + (" — explicit Context Cache supported" if m == "gemini-3.1-pro-preview" else "")
             ),
@@ -592,31 +594,42 @@ def pick_model(*, allow_back: bool = False) -> str | Any:
     return resolved or DEFAULT_MODEL
 
 
-def pick_thinking_level(target_subfolder: str = "", *, allow_back: bool = False) -> str | Any:
-    suggested = suggested_thinking_level(target_subfolder)
+def pick_thinking_level(
+    target_subfolder: str = "",
+    *,
+    model: str = DEFAULT_MODEL,
+    allow_back: bool = False,
+) -> str | Any:
+    allowed = thinking_levels_for_model(model)
+    suggested = clamp_thinking_level(model, suggested_thinking_level(target_subfolder))
+    labels = {
+        "low": "low — fewest think tokens / fastest",
+        "medium": "medium — balanced latency",
+        "high": "high — deep reasoning (recommended)",
+        "xhigh": "xhigh — max reasoning (Neon / Hydrogen only)",
+    }
     choices: list[Choice] = []
     if allow_back:
         choices.append(_back_choice())
     choices.extend(
         Choice(
             title=(
-                f"{lvl}"
+                labels.get(lvl, lvl)
                 + (" (suggested for this folder)" if lvl == suggested else "")
-                + (" — lower Think $ when quality allows" if lvl == "low" else "")
             ),
             value=lvl,
         )
-        for lvl in THINKING_LEVELS
+        for lvl in allowed
     )
     answer = questionary.select(
-        "Thinking level",
+        f"Thinking level ({model})",
         choices=choices,
-        default=suggested,
+        default=suggested if suggested in allowed else allowed[-1],
     ).ask()
     resolved = _resolve_select(answer, allow_back=allow_back)
     if resolved is BACK:
         return BACK
-    return resolved or suggested
+    return clamp_thinking_level(model, resolved or suggested)
 
 
 def pick_media_resolution(target_subfolder: str = "", *, allow_back: bool = False) -> str | Any:
@@ -845,7 +858,7 @@ def run_interactive_selection() -> RunSelection:
             continue
 
         if step == STEP_THINKING:
-            result = pick_thinking_level(target_subfolder, allow_back=True)
+            result = pick_thinking_level(target_subfolder, model=model, allow_back=True)
             if result is BACK:
                 step = STEP_MODEL
                 continue

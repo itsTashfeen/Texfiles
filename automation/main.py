@@ -299,14 +299,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--model",
         type=str,
         default=None,
-        help="Model id (default: gemini-4-argon).",
+        help="Model id (default: gemini-4-argon). Also: gemini-4-carbon, gemini-4-neon, gemini-4-hydrogen, gemini-3.1-pro-preview.",
     )
     parser.add_argument(
         "--thinking",
         type=str,
-        choices=("high", "low"),
+        choices=("low", "medium", "high", "xhigh"),
         default="high",
-        help="Thinking level for Gemini 4 models.",
+        help="Thinking level: low|medium|high|xhigh (xhigh only on neon/hydrogen; clamped per model).",
     )
     parser.add_argument(
         "--tier",
@@ -346,7 +346,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def selection_from_args(args: argparse.Namespace) -> RunSelection:
-    from .config import DEFAULT_MODEL
+    from .config import DEFAULT_MODEL, clamp_thinking_level
     from .ui_selector import RunSelection as RS
 
     if not args.pdf or not args.prompt:
@@ -366,6 +366,7 @@ def selection_from_args(args: argparse.Namespace) -> RunSelection:
         if not p.is_file():
             raise SystemExit(f"PDF not found: {p}")
 
+    model = args.model or DEFAULT_MODEL
     return RS(
         pdf_paths=pdf_paths,
         prompt_paths=prompt_paths,
@@ -373,8 +374,8 @@ def selection_from_args(args: argparse.Namespace) -> RunSelection:
         system_instruction_path=system_path,
         system_instruction_text=system_text,
         target_subfolder=args.target,
-        model=args.model or DEFAULT_MODEL,
-        thinking_level=args.thinking,
+        model=model,
+        thinking_level=clamp_thinking_level(model, args.thinking),
         execution_tier=args.tier,
         skip_completed=bool(getattr(args, "skip_existing", False)),
         media_resolution=str(getattr(args, "media", None) or PDF_MEDIA_RESOLUTION),

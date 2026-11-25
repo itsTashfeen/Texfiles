@@ -30,6 +30,7 @@ from .config import (
     TIER_BATCH_ONLY,
     TIER_FLEX_BATCH_FALLBACK,
     TIER_STANDARD,
+    clamp_thinking_level,
     ensure_runtime_dirs,
     max_output_tokens_for_model,
 )
@@ -217,6 +218,8 @@ def build_generate_config(
     max_output_tokens_override: int | None = None,
 ):
     from google.genai import types
+
+    thinking_level = clamp_thinking_level(model, thinking_level)
 
     kwargs: dict[str, Any] = {
         "max_output_tokens": (
